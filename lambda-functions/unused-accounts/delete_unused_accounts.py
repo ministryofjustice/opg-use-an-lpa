@@ -13,6 +13,11 @@ Structured like the merge-duplicate-identities lambda it replaces:
      deletes the account. Plans are then moved to done/ (deleted) or skipped/ (no longer eligible).
 
 No table scans are performed - only GetItem/Query against the accounts named in the work files.
+
+ActorUsers also holds "IDENTITY#<identity>" pinning rows, written by the API (service-api ActorUsers::add) to stop a
+second account being created for the same OneLogin identity. They are not accounts and are never planned for deletion
+on their own. When an account is deleted, its pinning row is deleted in the same transaction (as ActorUsers::delete
+does), unless another account still has the same identity, in which case the pin is left in place for that account.
 """
 
 import calendar
@@ -33,6 +38,7 @@ logger.setLevel("INFO")
 WORK_FILE_NAME = "unused-accounts"
 DONE_PREFIX = "done"
 SKIPPED_PREFIX = "skipped"
+IDENTITY_PIN_PREFIX = "IDENTITY#"
 
 # Create connections to AWS services
 dynamodb = None
@@ -107,6 +113,38 @@ def get_user_lpa_count(table_prefix, user_id):
         kwargs["ExclusiveStartKey"] = response["LastEvaluatedKey"]
 
 
+def is_identity_pin(user_id):
+    return user_id.startswith(IDENTITY_PIN_PREFIX)
+
+
+def other_accounts_with_identity(table_prefix, identity, user_id):
+    """Ids of other accounts with the same identity, via the IdentityIndex GSI (pinning rows have no Identity)."""
+    table = get_actor_users_table(table_prefix)
+    others = []
+    kwargs = {
+        "IndexName": "IdentityIndex",
+        "KeyConditionExpression": Key("Identity").eq(identity),
+        "ProjectionExpression": "Id",
+    }
+
+    while True:
+        response = table.query(**kwargs)
+        others.extend(item["Id"] for item in response.get("Items", []) if item["Id"] != user_id)
+        if "LastEvaluatedKey" not in response:
+            return sorted(others)
+        kwargs["ExclusiveStartKey"] = response["LastEvaluatedKey"]
+
+
+def identity_pin_to_delete(table_prefix, actor):
+    """The account's IDENTITY# pinning row id, or None if it has no identity or the identity is shared."""
+    identity = actor.get("Identity")
+    if not identity:
+        return None
+    if other_accounts_with_identity(table_prefix, identity, actor["Id"]):
+        return None
+    return f"{IDENTITY_PIN_PREFIX}{identity}"
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 # Eligibility - must match the Athena query in scripts/unused_accounts/discover_unused_accounts.py
 # ---------------------------------------------------------------------------------------------------------------------
@@ -138,6 +176,9 @@ def assess_account(table_prefix, user_id, months_inactive, threshold):
 
     Returns (plan, None) if the account should be deleted, otherwise (None, reason).
     """
+    if is_identity_pin(user_id):
+        return None, "identity pinning record, not an account"
+
     actor = get_actor(table_prefix, user_id)
     if actor is None:
         return None, "account no longer exists"
@@ -161,6 +202,7 @@ def assess_account(table_prefix, user_id, months_inactive, threshold):
         "email": actor.get("Email"),
         "last_login": last_login,
         "lpa_count": lpa_count,
+        "identity_pin": identity_pin_to_delete(table_prefix, actor),
         "reason": reason,
     }, None
 
@@ -300,8 +342,19 @@ def execute_deletion_plan(table_prefix, plan, months_inactive, threshold):
     if values:
         delete["ExpressionAttributeValues"] = values
 
+    transact_items = [{"Delete": delete}]
+
+    # remove the identity pin with the account (as the API's ActorUsers::delete does), so no orphan is left behind
+    if plan.get("identity_pin"):
+        transact_items.append({
+            "Delete": {
+                "TableName": get_table_name(table_prefix, "ActorUsers"),
+                "Key": {"Id": {"S": plan["identity_pin"]}},
+            }
+        })
+
     try:
-        dynamodb_client.transact_write_items(TransactItems=[{"Delete": delete}])
+        dynamodb_client.transact_write_items(TransactItems=transact_items)
     except ClientError as e:
         if e.response.get("Error", {}).get("Code") == "TransactionCanceledException":
             return "skipped", "account changed during execution"

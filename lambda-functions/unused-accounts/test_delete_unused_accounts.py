@@ -78,8 +78,16 @@ def aws(monkeypatch):
         ddb = boto3.client("dynamodb", region_name="eu-west-1")
         ddb.create_table(
             TableName=f"{PREFIX}-ActorUsers",
-            AttributeDefinitions=[{"AttributeName": "Id", "AttributeType": "S"}],
+            AttributeDefinitions=[
+                {"AttributeName": "Id", "AttributeType": "S"},
+                {"AttributeName": "Identity", "AttributeType": "S"},
+            ],
             KeySchema=[{"AttributeName": "Id", "KeyType": "HASH"}],
+            GlobalSecondaryIndexes=[{
+                "IndexName": "IdentityIndex",
+                "KeySchema": [{"AttributeName": "Identity", "KeyType": "HASH"}],
+                "Projection": {"ProjectionType": "ALL"},
+            }],
             BillingMode="PAY_PER_REQUEST",
         )
         ddb.create_table(
@@ -103,11 +111,14 @@ def aws(monkeypatch):
         yield ddb, s3
 
 
-def add_actor(ddb, user_id, last_login=None):
-    item = {"Id": {"S": user_id}, "Email": {"S": f"{user_id}@example.org"}, "Identity": {"S": f"urn:{user_id}"}}
+def add_actor(ddb, user_id, last_login=None, identity=None):
+    """Add an account and its IDENTITY# pinning row, as the API does (service-api ActorUsers::add)."""
+    identity = identity or f"urn:{user_id}"
+    item = {"Id": {"S": user_id}, "Email": {"S": f"{user_id}@example.org"}, "Identity": {"S": identity}}
     if last_login:
         item["LastLogin"] = {"S": last_login}
     ddb.put_item(TableName=f"{PREFIX}-ActorUsers", Item=item)
+    ddb.put_item(TableName=f"{PREFIX}-ActorUsers", Item={"Id": {"S": f"IDENTITY#{identity}"}})
 
 
 def add_lpa(ddb, user_id):
@@ -201,5 +212,67 @@ def test_execute_skips_when_plan_no_longer_matches(aws):
 
     assert summary["skipped"] == 1
     assert actor_exists(ddb, "old")
+
+
+def test_identity_pins_are_never_planned(aws):
+    ddb, s3 = aws
+    add_actor(ddb, "old", "2020-01-01T00:00:00Z")
+    write_work_file(s3, ["IDENTITY#urn:old"])
+
+    summary = dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6)
+
+    assert summary["plans_saved"] == 0
+    assert summary["skipped"] == 1
+    assert actor_exists(ddb, "IDENTITY#urn:old")
+
+
+def test_execute_deletes_identity_pin_with_account(aws):
+    ddb, s3 = aws
+    add_actor(ddb, "old", "2020-01-01T00:00:00Z")
+    add_actor(ddb, "active", "2999-01-01T00:00:00Z")
+    write_work_file(s3, ["old"])
+    dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6)
+
+    plan = json.loads(s3.get_object(Bucket=BUCKET, Key=keys(s3, "plan/")[0])["Body"].read())
+    assert plan["identity_pin"] == "IDENTITY#urn:old"
+
+    assert dua.execute_all_deletion_plans(BUCKET, "plan", PREFIX, 6)["deleted"] == 1
+    assert not actor_exists(ddb, "old")
+    assert not actor_exists(ddb, "IDENTITY#urn:old")
+    # other accounts and their pins are untouched
+    assert actor_exists(ddb, "active")
+    assert actor_exists(ddb, "IDENTITY#urn:active")
+
+
+def test_execute_keeps_identity_pin_shared_with_another_account(aws):
+    ddb, s3 = aws
+    add_actor(ddb, "old", "2020-01-01T00:00:00Z", identity="urn:shared")
+    add_actor(ddb, "active", "2999-01-01T00:00:00Z", identity="urn:shared")
+    write_work_file(s3, ["old"])
+    dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6)
+
+    plan = json.loads(s3.get_object(Bucket=BUCKET, Key=keys(s3, "plan/")[0])["Body"].read())
+    assert plan["identity_pin"] is None
+
+    assert dua.execute_all_deletion_plans(BUCKET, "plan", PREFIX, 6)["deleted"] == 1
+    assert not actor_exists(ddb, "old")
+    assert actor_exists(ddb, "active")
+    assert actor_exists(ddb, "IDENTITY#urn:shared")
+
+
+def test_execute_skips_when_identity_becomes_shared(aws):
+    ddb, s3 = aws
+    add_actor(ddb, "old", "2020-01-01T00:00:00Z", identity="urn:shared")
+    write_work_file(s3, ["old"])
+    dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6)
+
+    # another account with the same identity appears after the plan was made
+    add_actor(ddb, "new", "2999-01-01T00:00:00Z", identity="urn:shared")
+
+    summary = dua.execute_all_deletion_plans(BUCKET, "plan", PREFIX, 6)
+
+    assert summary["skipped"] == 1
+    assert actor_exists(ddb, "old")
+    assert actor_exists(ddb, "IDENTITY#urn:shared")
 
 

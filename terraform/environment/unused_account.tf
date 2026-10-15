@@ -50,13 +50,15 @@ data "aws_iam_policy_document" "unused_accounts_bucket_policy" {
     ]
   }
 
-  # Accounts are re-checked (GetItem + UserIndex query) and deleted individually - no table scans
+  # Accounts are re-checked (GetItem + UserIndex/IdentityIndex queries) and deleted individually,
+  # together with their IDENTITY# pinning row - no table scans
   statement {
     sid    = "DynamoTable"
     effect = "Allow"
     resources = [
       "${aws_dynamodb_table.user_lpa_actor_map.arn}/index/UserIndex",
       aws_dynamodb_table.use_users_table.arn,
+      "${aws_dynamodb_table.use_users_table.arn}/index/IdentityIndex",
     ]
     actions = [
       "dynamodb:GetItem",
