@@ -28,5 +28,5 @@ tests/vendor
 auth.json
 docker-compose.override.yml
 
-# Compiled local seeding binary (built by test_unused_accounts.sh)
+# Compiled local seeding binary (built by scripts/unused_accounts/test_unused_accounts.sh)
 scripts/seed_unused_accounts/seed_unused_accounts
