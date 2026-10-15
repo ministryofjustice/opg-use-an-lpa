@@ -54,6 +54,7 @@ check_localstack() {
     done
     echo "✗ LocalStack failed to start after 60 seconds"
     echo "  Make sure 'make up' completed successfully and LocalStack is running"
+    echo "  Port 4566 must be published to the host: see docker-compose.override.yml in LOCAL_TESTING_GUIDE.md"
     exit 1
 }
 
@@ -439,7 +440,8 @@ Local Athena (Trino):
   - Requires 'uv' to run the Python scripts (brew install uv)
 
 LocalStack Configuration:
-  - LocalStack runs on port 4566 (must be exposed for host-level access)
+  - LocalStack runs on port 4566. It must be published to the host with a git-ignored docker-compose.override.yml:
+      services: { localstack: { ports: ["4566:4566"] } }
   - DynamoDB tables created without prefix (ActorUsers, UserLpaActorMap, ...) by the api-seeding
     container (service-api/docker/seeding/start.sh), which 'make up' runs
   - S3 bucket: unused-accounts-bucket
