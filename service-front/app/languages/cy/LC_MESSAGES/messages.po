@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-15 13:07+0000\n"
+"PO-Revision-Date: 2026-10-15 15:47+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -4462,7 +4462,7 @@ msgstr "Eiddo a materion ariannol"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:12
 msgid "We could not find an LPA with those details"
-msgstr "Ni ddaethom o hyd i <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> gyda’r manylion una"
+msgstr "Nid oeddem yn gallu dod o hyd i LPA gyda’r manylion yna"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:15
 msgid "Although we could not find this LPA, it does not mean it does not exist, or is not able to be viewed somewhere else."
@@ -4486,15 +4486,15 @@ msgstr "Efallai eich bod wedi nodi’r cod yn anghywir, neu wedi defnyddio rhif 
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:54
 msgid "It should not be confused with:"
-msgstr "Ni ddylid ei gymysgu â:"
+msgstr "Nid yw’r cod yr un peth â:"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:59
 msgid "an LPA activation key - normally sent to donors and attorneys when the LPA is registered"
-msgstr "cod actifadu <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> – a anfonir fel arfer at roddwyr ac atwrneiod pan fydd yr LPA wedi’i chofrestru"
+msgstr "chod actifadu LPA – a anfonir fel arfer at roddwyr ac atwrneiod pan fydd yr LPA wedi’i chofrestru"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:60
 msgid "the LPA reference number - a unique number we give to each LPA"
-msgstr "cyfeirnod yr LPA - rhif unigryw a roir i bob LPA"
+msgstr "cyfeirnod yr LPA – rhif unigryw a roir i bob LPA"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:63
 msgid "Are you using the right service?"
@@ -4673,7 +4673,7 @@ msgstr "Os nad yw’r cod actifadu wedi cyrraedd erbyn %dueDate%, <a class=\"gov
 
 #: src/Viewer/templates/viewer/enter-code.html.twig:52
 msgid "The code I’ve been given does not begin with a V"
-msgstr "Nid yw’r cod yr wyf wedi ei gael yn dechrau efo V"
+msgstr "Nid yw’r cod a gefais yn dechrau gyda V"
 
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:15
 msgid "Is this the LPA you need an activation key for?"
