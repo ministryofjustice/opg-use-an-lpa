@@ -85,6 +85,18 @@ case "${1:-help}" in
     unset AWS_SESSION_TOKEN
 
     echo ""
+    echo "Step 0: Waiting for the DynamoDB tables (created by the api-seeding container on 'make up')..."
+    # service-api/docker/seeding/start.sh creates the tables; this avoids racing it straight after 'make up'
+    for TABLE in ActorUsers UserLpaActorMap; do
+      TABLE_NAME="${TABLE_PREFIX:+${TABLE_PREFIX}-}$TABLE"
+      if ! aws dynamodb wait table-exists --table-name "$TABLE_NAME" --region $REGION --endpoint-url $ENDPOINT; then
+        echo "✗ Table $TABLE_NAME not found. Is api-seeding running? Check 'make logs api-seeding'"
+        exit 1
+      fi
+    done
+    echo "✓ Tables ready"
+
+    echo ""
     echo "Step 1: Creating S3 bucket..."
     aws s3 mb s3://$BUCKET --region $REGION --endpoint-url $ENDPOINT || true
     echo "✓ Bucket ready"
@@ -428,7 +440,8 @@ Local Athena (Trino):
 
 LocalStack Configuration:
   - LocalStack runs on port 4566 (must be exposed for host-level access)
-  - DynamoDB tables created without prefix (ActorUsers, UserLpaActorMap, ViewerCodes)
+  - DynamoDB tables created without prefix (ActorUsers, UserLpaActorMap, ...) by the api-seeding
+    container (service-api/docker/seeding/start.sh), which 'make up' runs
   - S3 bucket: unused-accounts-bucket
   - Endpoint: http://localhost:4566 (from host) or http://localstack:4566 (from container)
 
