@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-14 17:10+0000\n"
+"PO-Revision-Date: 2026-10-15 13:07+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -4632,7 +4632,7 @@ msgstr "Os ydych am i’r cod hwn gael ei ganslo, cysylltwch â %createdBy%."
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:265
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:135
 msgid "Yes, the donor entered words in this part of the LPA form."
-msgstr "Oes, rhoddodd y rhoddwr eiriau yn y rhan hon o'r ffurflen <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
+msgstr "Oes, gwnaeth y rhoddwr roi geiriau yn y rhan hon o'r ffurflen <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:267
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:137
