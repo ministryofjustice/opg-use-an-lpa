@@ -17,7 +17,7 @@ The lambda (lambda-functions/unused-accounts) reads these files, re-checks every
 DynamoDB, and produces deletion plans for review before anything is deleted.
 
 The query is written in Trino SQL, which is what Athena (engine v3) runs. For local testing the same
-query can be run against a local Trino container with `--engine trino` (see test_unused_accounts.sh).
+query can be run against a local Trino container with `--engine trino` (see test_unused_accounts.sh in this directory).
 """
 
 import argparse
