@@ -82,10 +82,6 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // Clean out the session if expired
     $app->pipe(SessionAttributeAllowlistMiddleware::class);
 
-    $app->pipe(CsrfMiddleware::class);
-    $app->pipe(UserContextMiddleware::class);
-    $app->pipe(StatePersistenceMiddleware::class);
-
     // The following handle routing failures for common conditions:
     // - HEAD request but no routes answer that method
     // - OPTIONS request but no routes answer that method
@@ -101,6 +97,10 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
 
     // Load up the twig environment with global things like the user details or flash messages
     $app->pipe(TwigRequestGlobalsMiddleware::class);
+
+    $app->pipe(CsrfMiddleware::class);
+    $app->pipe(UserContextMiddleware::class);
+    $app->pipe(StatePersistenceMiddleware::class);
 
     // Add more middleware here that needs to introspect the routing results; this
     // might include:
