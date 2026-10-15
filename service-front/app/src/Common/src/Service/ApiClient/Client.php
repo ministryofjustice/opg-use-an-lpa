@@ -17,29 +17,20 @@ use Psr\Http\Message\ResponseInterface;
 
 class Client
 {
-    private ?UserContext $userContext = null;
-
     /**
      * Client constructor
      *
      * @param ClientInterface $httpClient
      * @param string $apiBaseUri
      * @param ?string $traceId
+     * @param UserContext $userContext Shared context populated and cleared by UserContextMiddleware for each request.
      */
     public function __construct(
         private ClientInterface $httpClient,
         private string $apiBaseUri,
         private ?string $traceId,
+        private UserContext $userContext,
     ) {
-    }
-
-    /**
-     * Sets up the client object to attach authentication headers
-     * to outgoing requests.
-     */
-    public function setUserContext(UserContext $userContext): void
-    {
-        $this->userContext = $userContext;
     }
 
     /**
