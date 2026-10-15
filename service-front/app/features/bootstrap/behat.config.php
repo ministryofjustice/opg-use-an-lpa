@@ -8,7 +8,6 @@ use BehatTest\Common\Service\Aws\SdkFactory;
 use Common\Service\Log\RequestTracingLogProcessorFactory;
 use Elie\PHPDI\Config\ConfigInterface;
 use GuzzleHttp\Client;
-use Laminas\Cache\Storage\Adapter\Memory;
 use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\Stdlib\ArrayUtils\MergeRemoveKey;
 use Mezzio\Container\ErrorResponseGeneratorFactory;
@@ -74,16 +73,6 @@ return [
     'ratelimits'                             => [
         'viewer_code_failure' => [
             'type'    => 'keyed',
-            'storage' => [
-                'adapter' => Memory::class,
-                'options' => [
-                    'memory_limit'  => '96M',
-                    'ttl'           => 60,
-                    'persistent_id' => new MergeRemoveKey(),
-                    'server'        => new MergeRemoveKey(),
-                    'lib_options'   => new MergeRemoveKey(),
-                ],
-            ],
             'options' => [
                 'interval'              => 60,
                 'requests_per_interval' => 4,
@@ -91,16 +80,6 @@ return [
         ],
         'actor_code_failure'  => [
             'type'    => 'keyed',
-            'storage' => [
-                'adapter' => Memory::class,
-                'options' => [
-                    'memory_limit'  => '96M',
-                    'ttl'           => 60,
-                    'persistent_id' => new MergeRemoveKey(),
-                    'server'        => new MergeRemoveKey(),
-                    'lib_options'   => new MergeRemoveKey(),
-                ],
-            ],
             'options' => [
                 'interval'              => 60,
                 'requests_per_interval' => 4,
@@ -108,16 +87,6 @@ return [
         ],
         'actor_login_failure' => [
             'type'    => 'keyed',
-            'storage' => [
-                'adapter' => Memory::class,
-                'options' => [
-                    'memory_limit'  => '96M',
-                    'ttl'           => 60,
-                    'persistent_id' => new MergeRemoveKey(),
-                    'server'        => new MergeRemoveKey(),
-                    'lib_options'   => new MergeRemoveKey(),
-                ],
-            ],
             'options' => [
                 'interval'              => 60,
                 'requests_per_interval' => 4,
@@ -125,19 +94,31 @@ return [
         ],
         'download_lpa'        => [
             'type'    => 'keyed',
-            'storage' => [
-                'adapter' => Memory::class,
-                'options' => [
-                    'memory_limit'  => '96M',
-                    'ttl'           => 60,
-                    'persistent_id' => new MergeRemoveKey(),
-                    'server'        => new MergeRemoveKey(),
-                    'lib_options'   => new MergeRemoveKey(),
-                ],
-            ],
             'options' => [
                 'interval'              => 15,
                 'requests_per_interval' => 2,
+            ],
+        ],
+    ],
+    'symfony_cache'                          => [
+        'namespace' => 'opg-use-an-lpa-front-test',
+        'version'   => 'test',
+        'pools'     => [
+            'cache.ratelimits.viewer_code_failure' => [
+                'adapter'          => 'array',
+                'default_lifetime' => 60,
+            ],
+            'cache.ratelimits.actor_code_failure'  => [
+                'adapter'          => 'array',
+                'default_lifetime' => 60,
+            ],
+            'cache.ratelimits.actor_login_failure' => [
+                'adapter'          => 'array',
+                'default_lifetime' => 60,
+            ],
+            'cache.ratelimits.download_lpa'        => [
+                'adapter'          => 'array',
+                'default_lifetime' => 60,
             ],
         ],
     ],

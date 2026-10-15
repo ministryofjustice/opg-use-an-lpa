@@ -16,12 +16,6 @@
             "php": "8.4.21"
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/ministryofjustice/laminas-cache"
-        }
-    ],
     "extra": {
         "zf": {
             "component-whitelist": [
@@ -56,10 +50,6 @@
         "friendsofphp/proxy-manager-lts": "^1.0",
         "guzzlehttp/guzzle": "7.15.5",
         "guzzlehttp/psr7": "2.13.1",
-        "laminas/laminas-cache": "dev-3.x-psrcache-v2-backport as 3.14.0",
-        "laminas/laminas-cache-storage-adapter-apcu": "^2.2",
-        "laminas/laminas-cache-storage-adapter-memory": "^2.1",
-        "laminas/laminas-cache-storage-adapter-redis": "^2.3",
         "laminas/laminas-component-installer": "^3.0.0",
         "laminas/laminas-config-aggregator": "^1.0",
         "laminas/laminas-diactoros": "^3.0",
@@ -79,7 +69,9 @@
         "open-telemetry/exporter-otlp": "^1.0",
         "open-telemetry/sdk": "^1.0",
         "open-telemetry/sem-conv": "^1.0",
-        "paragonie/halite": "^5.0"
+        "paragonie/halite": "^5.0",
+        "psr/simple-cache": "^2.0",
+        "symfony/cache": "^7.4"
     },
     "require-dev": {
         "behat/behat": "^3.6",
@@ -97,20 +89,6 @@
         "slevomat/coding-standard": "^8.9",
         "squizlabs/php_codesniffer": "^4.0",
         "vimeo/psalm": "^6.0"
-    },
-    "replace": {
-        "laminas/laminas-cache-storage-adapter-apc": "*",
-        "laminas/laminas-cache-storage-adapter-blackhole": "*",
-        "laminas/laminas-cache-storage-adapter-dba": "*",
-        "laminas/laminas-cache-storage-adapter-ext-mongodb": "*",
-        "laminas/laminas-cache-storage-adapter-filesystem": "*",
-        "laminas/laminas-cache-storage-adapter-memcache": "*",
-        "laminas/laminas-cache-storage-adapter-memcached": "*",
-        "laminas/laminas-cache-storage-adapter-mongodb": "*",
-        "laminas/laminas-cache-storage-adapter-session": "*",
-        "laminas/laminas-cache-storage-adapter-wincache": "*",
-        "laminas/laminas-cache-storage-adapter-xcache": "*",
-        "laminas/laminas-cache-storage-adapter-zend-server": "*"
     },
     "autoload": {
         "psr-4": {
