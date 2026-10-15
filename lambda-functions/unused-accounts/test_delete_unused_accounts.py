@@ -1,4 +1,3 @@
-import importlib
 import json
 from datetime import date
 
@@ -8,8 +7,6 @@ from moto import mock_aws
 
 import delete_unused_accounts as dua
 
-# the handler module is named "lambda", which is a Python keyword, so it can't be imported with `import lambda`
-parse_execute = importlib.import_module("lambda").parse_execute
 
 BUCKET = "test-bucket"
 PREFIX = "test"
@@ -46,20 +43,6 @@ def test_subtract_months(today, months, expected):
 )
 def test_is_inactive(last_login, expected):
     assert dua.is_inactive(last_login, "2026-04-14") is expected
-
-
-@pytest.mark.parametrize(
-    "event, expected",
-    [
-        ({"Execute": True}, True),
-        ({"Execute": False}, False),
-        ({"Execute": "True"}, True),
-        ({"Execute": "false"}, False),
-        ({}, False),
-    ],
-)
-def test_parse_execute(event, expected):
-    assert parse_execute(event) is expected
 
 
 # ---------------------------------------------------------------------------------------------------------------------

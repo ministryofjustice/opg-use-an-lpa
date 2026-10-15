@@ -7,19 +7,12 @@ logger = logging.getLogger()
 logger.setLevel("INFO")
 
 
-def parse_execute(event):
-    """Execute may be passed as a boolean or as the string "True"/"False"."""
-    execute = event.get("Execute", False)
-    if isinstance(execute, str):
-        return execute.strip().lower() == "true"
-    return bool(execute)
-
-
 def lambda_handler(event, context):
     try:
         initialise()
 
-        execute = parse_execute(event or {})
+        # Only an explicit {"Execute": true} deletes accounts; anything else just generates plans
+        execute = event.get("Execute") is True
 
         # Access environment variables
         bucket_name = os.environ.get("BUCKET")
