@@ -425,15 +425,20 @@ class ClientTest extends TestCase
     public function it_should_set_the_user_token_header_from_the_context(
         UserContext $userContext,
         ?string $expectedToken,
+        ?string $expectedSession,
     ): void {
         $this->apiClient->expects(self::exactly(5))->method('sendRequest')
-            ->with(self::callback(function (RequestInterface $request) use ($expectedToken): bool {
-                if ($expectedToken === null) {
+            ->with(self::callback(function (RequestInterface $request) use ($expectedToken, $expectedSession): bool {
+                if ($expectedToken === null || $expectedSession === null) {
                     self::assertFalse($request->hasHeader('User-Token'));
+                    self::assertFalse($request->hasHeader('User-Session'));
                 } else {
                     self::assertTrue($request->hasHeader('User-Token'));
                     self::assertSame($expectedToken, $request->getHeaderLine('User-Token'));
+                    self::assertTrue($request->hasHeader('User-Session'));
+                    self::assertSame($expectedSession, $request->getHeaderLine('User-Session'));
                 }
+
                 return true;
             }))
             ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK));
@@ -462,21 +467,31 @@ class ClientTest extends TestCase
             'empty context'        => [
                 new UserContext(),
                 null,
+                null,
             ],
             'anonymous context'    => [
                 new UserContext(sessionId: 'session-id'),
+                null,
                 null,
             ],
             'authenticated user'   => [
                 new UserContext('test_token', 'session-id'),
                 'test_token',
+                'session-id',
             ],
             'user without session' => [
                 new UserContext('test_token'),
-                'test_token',
+                null,
+                null,
             ],
             'empty user id'        => [
-                new UserContext(''),
+                new UserContext('', 'session-id'),
+                '',
+                'session-id',
+            ],
+            'empty session id'     => [
+                new UserContext('test_token', ''),
+                'test_token',
                 '',
             ],
         ];
@@ -499,7 +514,7 @@ class ClientTest extends TestCase
             }))
             ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK));
 
-        $context = new UserContext();
+        $context = new UserContext(sessionId: 'session-id');
         $client  = new Client($this->apiClient, 'https://localhost', '', $context);
         foreach (['first-user', 'second-user', null] as $userId) {
             $context->userId = $userId;
