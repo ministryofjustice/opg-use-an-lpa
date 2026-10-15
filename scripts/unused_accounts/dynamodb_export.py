@@ -6,6 +6,8 @@ import re
 import csv
 from time import sleep
 
+from discover_unused_accounts import build_unused_accounts_query
+
 
 class DynamoDBExporterAndQuerier:
     athena_database_name = "ual"
@@ -273,10 +275,10 @@ class DynamoDBExporterAndQuerier:
                 print(outputRow)
                 wr.writerow(csvRow)
 
-    def get_unused_accounts(self):
-        sql_string = f"SELECT a.Item.Id.S as UserId, a.Item.Email.S as Email, a.Item.LastLogin.S as LastLogin FROM actor_users a WHERE a.Item.Id.S NOT IN (SELECT b.Item.UserId.S FROM user_lpa_actor_map b WHERE b.Item.UserId.S IS NOT NULL) AND a.Item.LastLogin.S IS NOT NULL AND a.Item.LastLogin.S < date_add('month', -6, current_date) ORDER BY a.Item.LastLogin.S"
+    def get_unused_accounts(self, months_inactive=6):
+        # Same query as discover_unused_accounts.py, so the CSV report matches the lambda's work files
         self.run_athena_query(
-            sql_string,
+            build_unused_accounts_query(months_inactive),
             outputFileName="UnusedAccounts",
         )
 
