@@ -10,6 +10,12 @@ Feature: The user is able to see correct information on their dashboard
     And I have added an LPA to my account
 
   @ui
+  Scenario: The dashboard renders the signed-in header using the session user
+    When I am on the dashboard page
+    Then I should see "Last signed in:"
+    And I should see "Your LPAs"
+
+  @ui
   Scenario Outline: Old lPA type label is correctly displayed on dashboard
     Given I am on the dashboard page to check "Old" LPA of subtype "<subtype>" and uid "<uid>"
     Then I can see the lpa type added is "<expectedLabel>"
@@ -80,6 +86,13 @@ Feature: The user is able to see correct information on their dashboard
     Given A system message is set
     When I am on the dashboard page
     Then I can see the message System Message Use English
+
+  @ui
+  Scenario: As a user I am shown the Welsh system message on the Welsh dashboard
+    Given A system message is set
+    When I am on the dashboard page in Welsh
+    Then I can see the message System Message Use Welsh
+    And I should not see "System Message Use English"
 
   @ui
   Scenario: As a user I am not shown the system message if it is not set

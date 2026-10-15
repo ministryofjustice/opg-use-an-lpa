@@ -1,0 +1,8 @@
+--TEST--
+The flash function exposes the bound flash container and its messages remain autoescaped
+--TEMPLATE--
+{{ flash().getFlash("added") }}
+--DATA--
+return [];
+--EXPECT--
+&lt;LPA added&gt;

@@ -124,11 +124,6 @@
       <code><![CDATA[$lpaData->lpa]]></code>
     </UndefinedPropertyFetch>
   </file>
-  <file src="src/Actor/src/Handler/LpaDashboardHandler.php">
-    <UnusedProperty>
-      <code><![CDATA[$viewerCodeService]]></code>
-    </UnusedProperty>
-  </file>
   <file src="src/Actor/src/Handler/RemoveLpaHandler.php">
     <UndefinedClass>
       <code><![CDATA[BadRequestException]]></code>
