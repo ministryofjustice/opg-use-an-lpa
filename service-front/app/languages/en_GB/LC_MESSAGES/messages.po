@@ -2,22 +2,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-02 13:47+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: en\n"
+"PO-Revision-Date: 2026-10-14 17:10+0000\n"
+"Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
+"Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
+"Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.10.1\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
 msgid "This LPA has restrictions and conditions.<br>"
-msgstr "This LPA has restrictions and conditions.<br>"
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has restrictions and conditions.<br>"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:12
 msgid "This LPA has instructions.<br>"
-msgstr "This LPA has instructions.<br>"
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has instructions.<br>"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:61
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:26
@@ -26,15 +27,15 @@ msgstr "Read more"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:27
 msgid "This LPA has preferences.<br>"
-msgstr "This LPA has preferences.<br>"
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences.<br>"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:40
 msgid "This LPA has preferences and instructions.<br>"
-msgstr "This LPA has preferences and instructions.<br>"
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences and instructions.<br>"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:53
 msgid "This LPA has preferences and/or instructions.<br>"
-msgstr "This LPA has preferences and/or instructions.<br>"
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences and/or instructions.<br>"
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:10
 msgid "LPA reference number:"
@@ -91,19 +92,19 @@ msgstr "Remove LPA"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:2
 msgid "This LPA has preferences or instructions. You might need to show organisations the paper LPA."
-msgstr "This LPA has preferences or instructions. You might need to show organisations the paper LPA."
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences or instructions. You might need to show organisations the paper LPA."
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:6
 msgid "This LPA has instructions. You might need to show organisations the paper LPA."
-msgstr "This LPA has instructions. You might need to show organisations the paper LPA."
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has instructions. You might need to show organisations the paper LPA."
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:10
 msgid "This LPA has preferences. You might need to show organisations the paper LPA."
-msgstr "This LPA has preferences. You might need to show organisations the paper LPA."
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences. You might need to show organisations the paper LPA."
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:14
 msgid "This LPA has preferences and instructions."
-msgstr "This LPA has preferences and instructions."
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences and instructions."
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:17
 msgid "You might need to show organisations the paper LPA."
@@ -577,17 +578,17 @@ msgstr "Give %organisation% this access code. They should go to <a href=\"%link_
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:73
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:71
 msgid "Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
-msgstr "Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
+msgstr "Scanned copies of the donor’s preferences and instructions will be shown in the <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:77
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:75
 msgid "Scanned copies of the donor’s preferences will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
-msgstr "Scanned copies of the donor’s preferences will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
+msgstr "Scanned copies of the donor’s preferences will be shown in the <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:81
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:79
 msgid "Scanned copies of the donor’s instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
-msgstr "Scanned copies of the donor’s instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
+msgstr "Scanned copies of the donor’s instructions will be shown in the <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You’ll need to show organisations the paper <abbr title=\"lasting power of attorney\">LPA</abbr> if any part of these cannot be read properly."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:91
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:89
@@ -1158,11 +1159,11 @@ msgstr "Who manages the Use a lasting power of attorney service"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:45
 msgid "This service is managed by OPG, which is an executive agency sponsored by the Ministry of Justice (MOJ)."
-msgstr "This service is managed by OPG, which is an executive agency sponsored by the Ministry of Justice (MOJ)."
+msgstr "This service is managed by <abbr title=\"Office of the Public Guardian\">OPG</abbr>, which is an executive agency sponsored by the Ministry of Justice (MOJ)."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:47
 msgid "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"> OPG’s personal information charter </a> explains how we process personal data."
-msgstr "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"> OPG’s personal information charter </a> explains how we process personal data."
+msgstr "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"><abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter</a> explains how we process personal data."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:56
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:52
@@ -1644,7 +1645,7 @@ msgstr "If you remove an LPA from your Use a lasting power of attorney account:"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:29
 msgid "all access codes you’ve created for this LPA will be valid until they are cancelled or expire"
-msgstr "all access codes you’ve created for this LPA will be valid until they are cancelled or expire"
+msgstr "all access codes you’ve created for this <abbr title=\"lasting power of attorney\">LPA</abbr> will be valid until they are cancelled or expire"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:30
 msgid "you’ll not be able to see how the LPA is being used or has been used"
@@ -1726,7 +1727,7 @@ msgstr "For example, 31 03 1980"
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:18
 #: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:35
 msgid "What is the LPA reference number?"
-msgstr "What is the LPA reference number?"
+msgstr "What is the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number?"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:23
 msgid "Where to find the reference number"
@@ -1857,19 +1858,19 @@ msgstr "County (optional)"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:60
 msgid "Is this the same address as your address on the paper LPA?"
-msgstr "Is this the same address as your address on the paper LPA?"
+msgstr "Is this the same address as your address on the paper <abbr title=\"lasting power of attorney\">LPA</abbr>?"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:67
 msgid "Yes, it is the same as my address on the paper LPA"
-msgstr "Yes, it’s the same as my address in the paper LPA"
+msgstr "Yes, it’s the same as my address in the paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:71
 msgid "No, it is different to my address on the paper LPA"
-msgstr "No, it’s different to my address in the paper LPA"
+msgstr "No, it’s different to my address in the paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:75
 msgid "I am not sure if it's the same address on the paper LPA"
-msgstr "I’m not sure if it’s the same address in the paper LPA"
+msgstr "I’m not sure if it’s the same address in the paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:17
 msgid "You cannot request an activation key if you are a replacement attorney"
@@ -1889,7 +1890,7 @@ msgstr "have died"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:35
 msgid "have <a href=\"%link%\" class=\"govuk-link\">formally stepped down</a>(‘disclaimed their appointment’)"
-msgstr "have <a href=\"%link%\" class=\"govuk-link\">formally stepped down</a>(‘disclaimed their appointment’)"
+msgstr "have <a href=\"%link%\" class=\"govuk-link\">formally stepped down</a> (‘disclaimed their appointment’)"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:41
 msgid "have been <a href=\"%link%\" class=\"govuk-link\">removed from the LPA by the donor</a>"
@@ -2006,7 +2007,7 @@ msgstr "Check your answers"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:18
 msgid "Current address"
-msgstr "Current address"
+msgstr "Your current address"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:49
 msgid "Change<span class=\"govuk-visually-hidden\"> address</span>"
@@ -2014,7 +2015,7 @@ msgstr "Change<span class=\"govuk-visually-hidden\"> address</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:33
 msgid "Address on paper LPA"
-msgstr "Address on paper LPA"
+msgstr "Your address on paper LPA"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:37
 msgid "Not sure"
@@ -2058,7 +2059,7 @@ msgstr "Change<span class=\"govuk-visually-hidden\"> attorney’s date of birth<
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:134
 msgid "Telephone number"
-msgstr "Phone number"
+msgstr "Your phone number"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:140
 msgid "Not provided"
@@ -2078,7 +2079,7 @@ msgstr "Confirm and submit request"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:3
 msgid "You've already added this LPA to your account"
-msgstr "You’ve already added this LPA to your account"
+msgstr "You’ve already added this <abbr title=\"lasting power of attorney\">LPA</abbr> to your account"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:16
 msgid "You've already added this <abbr title=\"lasting power of attorney\">LPA</abbr> to your account"
@@ -2514,7 +2515,7 @@ msgstr "Enter the attorney’s date of birth"
 #: src/Actor/templates/actor/form-error-messages.html.twig:56
 msgctxt "error"
 msgid "Select whether this is the same address as your address on the paper LPA"
-msgstr "Select whether this is the same address as your address on the paper LPA"
+msgstr "Select whether this is the same address as your address on the paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #. Create viewer code
 #: src/Actor/templates/actor/form-error-messages.html.twig:59
@@ -3539,29 +3540,29 @@ msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> can be used as
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:50
 msgid "This LPA has preferences and/or instructions (sometimes known as “restrictions and conditions”)"
-msgstr "This LPA has preferences and/or instructions (sometimes known as ‘restrictions and conditions’)"
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences and/or instructions (sometimes known as ‘restrictions and conditions’)"
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:52
 msgid "This LPA has preferences and instructions (sometimes known as “restrictions and conditions”)"
-msgstr "This LPA has preferences and instructions (sometimes known as ‘restrictions and conditions’)"
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences and instructions (sometimes known as ‘restrictions and conditions’)"
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:54
 msgid "This LPA has preferences (sometimes known as “restrictions and conditions”)"
-msgstr "This LPA has preferences (sometimes known as ‘restrictions and conditions’)"
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences (sometimes known as ‘restrictions and conditions’)"
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:56
 msgid "This LPA has instructions (sometimes known as “restrictions and conditions”)"
-msgstr "This LPA has instructions (sometimes known as ‘restrictions and conditions’)"
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has instructions (sometimes known as ‘restrictions and conditions’)"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:75
 #: src/Common/templates/partials/full-lpa-display.html.twig:75
 msgid "You should download and save this LPA summary. You can use it as evidence that you viewed the LPA summary before acting on it."
-msgstr "You should download and save this LPA summary. You can use it as evidence that you viewed the LPA summary before acting on it."
+msgstr "You should download and save this <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You can use it as evidence that you viewed the LPA summary before acting on it."
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:143
 #: src/Common/templates/partials/full-lpa-display.html.twig:143
 msgid "Download this LPA summary"
-msgstr "Download this LPA summary"
+msgstr "Download this <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:119
 #: src/Common/templates/partials/full-lpa-display.html.twig:119
@@ -3615,19 +3616,19 @@ msgstr "Office of the Public Guardian<br> PO Box 16185<br> Birmingham<br> B2 2WH
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:50
 msgid "This LPA has preferences and/or instructions"
-msgstr "This LPA has preferences and/or instructions"
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences and/or instructions"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:52
 msgid "This LPA has preferences and instructions"
-msgstr "This LPA has preferences and instructions"
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences and instructions"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:54
 msgid "This LPA has preferences"
-msgstr "This LPA has preferences"
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:56
 msgid "This LPA has instructions"
-msgstr "This LPA has instructions"
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has instructions"
 
 #: src/Common/templates/partials/header/one-login-logged-in.html.twig:123
 #: src/Common/templates/partials/header/one-login.html.twig:50
@@ -3793,7 +3794,7 @@ msgstr "This service is managed by <abbr title=\"Office of the Public Guardian\"
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:44
 msgid "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"%link%\"> <abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter </a> explains how we process personal data."
-msgstr "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"%link%\"> <abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter </a> explains how we process personal data."
+msgstr "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"><abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter</a> explains how we process personal data."
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:55
 msgid "What data we collect and how we use it"
@@ -4090,7 +4091,7 @@ msgstr "needs more time to process this LPA"
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:55
 #: src/Viewer/templates/viewer/check-code-found.html.twig:55
 msgid "need to see this LPA at a later date"
-msgstr "need to see this LPA at a later date"
+msgstr "need to see this <abbr title=\"lasting power of attorney\">LPA</abbr> at a later date"
 
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:65
 #: src/Viewer/templates/viewer/check-code-found.html.twig:65
@@ -4514,7 +4515,7 @@ msgstr "Menu"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:134
 msgid "Who can make the joint decisions on this LPA has changed. This is because an attorney has been removed or replaced."
-msgstr "Who can make the joint decisions on this LPA has changed. This is because an attorney has been removed or replaced."
+msgstr "Who can make the joint decisions on this <abbr title=\"lasting power of attorney\">LPA</abbr> has changed. This is because an attorney has been removed or replaced."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:98
 msgid "There are no longer attorneys who can make the joint decisions on this LPA."
@@ -4530,19 +4531,19 @@ msgstr "All other decisions can still be made jointly and severally by:"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:112
 msgid "The donor and the attorney have been informed of this. They can contact the Office of the Public Guardian (OPG) for advice on how these decisions can be made available again in future. Changes made to this LPA have been checked and processed by OPG."
-msgstr "The donor and the attorney have been informed of this. They can contact the Office of the Public Guardian (OPG) for advice on how these decisions can be made available again in future. Changes made to this LPA have been checked and processed by OPG."
+msgstr "The donor and the attorney have been informed of this. They can contact the Office of the Public Guardian (OPG) for advice on how these decisions can be made available again in future. Changes made to this <abbr title=\"lasting power of attorney\">LPA</abbr> have been checked and processed by <abbr title=\"Office of the Public Guardian\">OPG</abbr>."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:119
 msgid "The joint decisions for this LPA can now only be made by:"
-msgstr "The joint decisions for this LPA can now only be made by:"
+msgstr "The joint decisions for this <abbr title=\"lasting power of attorney\">LPA</abbr> can now only be made by:"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:147
 msgid "The donor and the attorneys have been informed of this. Changes made to this LPA have been checked and processed by the Office of the Public Guardian."
-msgstr "The donor and the attorneys have been informed of this. Changes made to this LPA have been checked and processed by the Office of the Public Guardian."
+msgstr "The donor and the attorneys have been informed of this. Changes made to this <abbr title=\"lasting power of attorney\">LPA</abbr> have been checked and processed by the Office of the Public Guardian."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:135
 msgid "The joint decisions for this LPA can now only be made, and must be agreed, by:"
-msgstr "The joint decisions for this LPA can now only be made, and must be agreed, by:"
+msgstr "The joint decisions for this <abbr title=\"lasting power of attorney\">LPA</abbr> can now only be made, and must be agreed, by:"
 
 #: src/Common/src/View/Twig/LpaExtension.php:273
 msgid "Personal welfare"
@@ -4633,7 +4634,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:10
 msgid "You’ve already asked for an activation key for this LPA today"
-msgstr "You’ve already asked for an activation key for this LPA today"
+msgstr "You’ve already asked for an activation key for this <abbr title=\"lasting power of attorney\">LPA</abbr> today"
 
 #: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:18
 msgid "LPA type"

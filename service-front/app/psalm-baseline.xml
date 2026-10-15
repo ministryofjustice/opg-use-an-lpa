@@ -447,12 +447,6 @@
       <code><![CDATA[isset($this->token)]]></code>
     </RedundantPropertyInitializationCheck>
   </file>
-  <file src="src/Common/src/Service/Cache/RedisAdapterPluginManagerDelegatorFactory.php">
-    <UnusedParam>
-      <code><![CDATA[$container]]></code>
-      <code><![CDATA[$name]]></code>
-    </UnusedParam>
-  </file>
   <file src="src/Common/src/Service/Container/PhpDiModifiableContainer.php">
     <UndefinedInterfaceMethod>
       <code><![CDATA[set]]></code>

@@ -313,7 +313,7 @@ class LpaContext implements Context
     public function iAmOnTheActivationKeyInformationPage(): void
     {
         $this->ui->visit('/lpa/add-by-paper-information');
-        $this->ui->assertPageContainsText('Ask for an activation key');
+        $this->assertPageContainsTranslatedText('activation-key-request.start.heading-page');
     }
 
     #[Given('/^I am on the add an LPA page$/')]
@@ -1040,6 +1040,12 @@ class LpaContext implements Context
     public function iClickTheContinueLink(): void
     {
         $this->ui->clickLink('Continue');
+    }
+
+    #[When('/^I click the Continue button on the page$/')]
+    public function iClickTheContinueButtonOnThePage(): void
+    {
+        $this->ui->getSession()->getPage()->find('css', '#continue-button')->click();
     }
 
     #[When('/^I click the (.*) link in the instructions or preference message$/')]
@@ -2784,7 +2790,7 @@ class LpaContext implements Context
     #[Then('/^I will be taken to the appropriate (.*) to add an lpa$/')]
     public function iWillBeTakenToTheAppropriateToAddAnLpa($page): void
     {
-        $this->ui->assertPageContainsText($page);
+        $this->assertPageContainsTranslatedText($page);
     }
 
     #[Then('/^I will be told that I must select whether I have an activation key$/')]
