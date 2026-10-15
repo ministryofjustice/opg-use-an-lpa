@@ -72,7 +72,8 @@ use Common\View\Twig\{
     LpaExtension,
     OrdinalNumberExtension,
     TranslationExtensionFactory,
-    TranslationSwitchExtension
+    TranslationSwitchExtension,
+    RequestGlobalsExtension
 };
 use Gettext\{Generator\GeneratorInterface, Generator\PoGenerator, Loader\LoaderInterface, Loader\PoLoader};
 use GuzzleHttp\Client as GuzzleClient;
@@ -224,6 +225,7 @@ class ConfigProvider
                 GenericGlobalVariableExtension::class,
                 TranslationSwitchExtension::class,
                 FeatureFlagExtension::class,
+                RequestGlobalsExtension::class,
             ],
             'runtime_loaders' => [
                 ContainerRuntimeLoader::class,

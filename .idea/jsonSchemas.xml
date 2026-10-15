@@ -3,6 +3,22 @@
   <component name="JsonSchemaMappingsProjectConfiguration">
     <state>
       <map>
+        <entry key="behat.yml">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="behat.yml" />
+              <option name="relativePathToSchema" value="https://www.schemastore.org/behat.json" />
+              <option name="applicationDefined" value="true" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="tests/smoke/behat.yml" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
         <entry key="composer.json">
           <value>
             <SchemaInfo>
@@ -19,6 +35,9 @@
                   </Item>
                   <Item>
                     <option name="path" value="tests/smoke/composer.json" />
+                  </Item>
+                  <Item>
+                    <option name="path" value="tests/smoke/packages/behat-axe-extension/composer.json" />
                   </Item>
                 </list>
               </option>

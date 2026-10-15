@@ -8,12 +8,8 @@ use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
-use Common\Service\Lpa\ViewerCodeService;
-use Common\Service\SystemMessage\SystemMessageService;
 use Exception;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Flash\FlashMessageMiddleware;
-use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -32,8 +28,6 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         private LpaService $lpaService,
-        private ViewerCodeService $viewerCodeService,
-        private SystemMessageService $systemMessageService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
@@ -47,9 +41,6 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        /** @var FlashMessagesInterface $flash */
-        $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
-
         $user     = $this->getUser($request);
         $identity = $user?->getIdentity();
 
@@ -67,17 +58,11 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
 
         $totalLpas = array_sum(array_map('count', $lpas->getArrayCopy())) ?? 0;
 
-        $systemMessages = $this->systemMessageService->getMessages();
-
         return new HtmlResponse($this->renderer->render('actor::lpa-dashboard', [
-            'user'               => $user,
             'lpas'               => $lpas,
             'has_active_codes'   => $hasActiveCodes,
-            'flash'              => $flash,
             'total_lpas'         => $totalLpas,
             'has_duplicate_lpas' => $hasDuplicates,
-            'en_message'         => $systemMessages['use/en'] ?? null,
-            'cy_message'         => $systemMessages['use/cy'] ?? null,
         ]));
     }
 }
