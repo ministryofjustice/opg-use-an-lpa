@@ -9,7 +9,6 @@ use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
-use Common\Service\Context\UserContext;
 use Common\Service\Lpa\RemoveLpa;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -31,18 +30,13 @@ class RemoveLpaTest extends TestCase
     private ArrayObject $lpaParsedData;
     private LoggerInterface&MockObject $loggerProphecy;
     private RemoveLpa $removeLpa;
-    private string $userToken;
 
     public function setUp(): void
     {
         $this->actorLpaToken = '0123-01-01-01-012345';
-        $this->userToken     = '12-1-1-1-1234';
 
         $this->apiClientProphecy = $this->createMock(ApiClient::class);
         $this->loggerProphecy    = $this->createMock(LoggerInterface::class);
-
-        $this->apiClientProphecy->expects($this->once())->method('setUserContext')
-            ->with(new UserContext($this->userToken));
 
         $this->removeLpa = new RemoveLpa(
             $this->apiClientProphecy,
@@ -81,7 +75,7 @@ class RemoveLpaTest extends TestCase
             ->method('httpDelete')->with('/v1/lpas/' . $this->actorLpaToken)
             ->willReturn($this->lpaArrayData);
 
-        $result = ($this->removeLpa)($this->userToken, $this->actorLpaToken);
+        $result = ($this->removeLpa)($this->actorLpaToken);
 
         $this > self::assertEquals($result, new ArrayObject($this->lpaArrayData));
     }
@@ -102,7 +96,7 @@ class RemoveLpaTest extends TestCase
         $this->expectExceptionMessage('User actor lpa record not found for actor token - ' . $this->actorLpaToken);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
 
-        ($this->removeLpa)($this->userToken, $this->actorLpaToken);
+        ($this->removeLpa)($this->actorLpaToken);
     }
 
     #[Test]
@@ -124,6 +118,6 @@ class RemoveLpaTest extends TestCase
         );
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
 
-        ($this->removeLpa)($this->userToken, $this->actorLpaToken);
+        ($this->removeLpa)($this->actorLpaToken);
     }
 }

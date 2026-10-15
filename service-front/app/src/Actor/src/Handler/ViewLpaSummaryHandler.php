@@ -6,8 +6,6 @@ namespace Actor\Handler;
 
 use Common\Exception\InvalidRequestException;
 use Common\Handler\AbstractHandler;
-use Common\Handler\Traits\User;
-use Common\Handler\UserAware;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\InstAndPrefImagesService;
 use Common\Service\Lpa\LpaService;
@@ -21,10 +19,8 @@ use Psr\Log\LoggerInterface;
 /**
  * @codeCoverageIgnore
  */
-class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
+class ViewLpaSummaryHandler extends AbstractHandler
 {
-    use User;
-
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
@@ -49,11 +45,8 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
             throw new InvalidRequestException('No actor-lpa token specified');
         }
 
-        $user     = $this->getUser($request);
-        $identity = !is_null($user) ? $user->getIdentity() : null;
-
         //UML-1394 TO BE REMOVED IN FUTURE TO SHOW PAGE NOT FOUND WITH APPROPRIATE CONTENT
-        $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
+        $lpaData = $this->lpaService->getLpaById($actorLpaToken);
 
         if (is_null($lpaData)) {
             return $this->redirectToRoute('lpa.dashboard');
@@ -61,7 +54,6 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
 
         $renderData = [
             'actorToken' => $actorLpaToken,
-            'user'       => $user,
             'lpa'        => $lpaData->lpa,
             'actor'      => $lpaData->actor,
         ];
@@ -73,7 +65,7 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
                 ($lpaData->lpa->getApplicationHasGuidance() ?? false) ||
                 ($lpaData->lpa->getApplicationHasRestrictions() ?? false)
         ) {
-            $renderData['iap_images'] = $this->instAndPrefImagesService->getImagesById($identity, $actorLpaToken);
+            $renderData['iap_images'] = $this->instAndPrefImagesService->getImagesById($actorLpaToken);
         }
 
         $templateName = 'actor::view-lpa-summary';

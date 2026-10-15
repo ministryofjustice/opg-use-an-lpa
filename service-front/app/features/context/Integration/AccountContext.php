@@ -41,8 +41,9 @@ class AccountContext extends BaseIntegrationContext
     #[Given('/^I am currently signed in$/')]
     public function iAmCurrentlySignedIn(): void
     {
-        $this->userEmail    = 'test@test.com';
-        $this->userIdentity = '123';
+        $this->userEmail                                  = 'test@test.com';
+        $this->userIdentity                               = '123';
+        $this->container->get(UserContext::class)->userId = $this->userIdentity;
     }
 
     #[Given('/^I am logged out of the service and taken to the deleted account confirmation page$/')]
@@ -81,7 +82,7 @@ class AccountContext extends BaseIntegrationContext
             )
         );
 
-        $lpas = $this->container->get(LpaService::class)->getLpas(new UserContext($this->userIdentity));
+        $lpas = $this->container->get(LpaService::class)->getLpas();
 
         Assert::assertEmpty($lpas);
     }
@@ -104,7 +105,7 @@ class AccountContext extends BaseIntegrationContext
             )
         );
 
-        $lpas = $this->container->get(LpaService::class)->getLpas(new UserContext($this->userIdentity));
+        $lpas = $this->container->get(LpaService::class)->getLpas();
 
         Assert::assertEmpty($lpas);
     }

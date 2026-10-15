@@ -12,46 +12,33 @@ use Common\Service\Lpa\ViewerCodeService;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Exception\Doubler\DoubleException;
-use Prophecy\Exception\Doubler\InterfaceNotFoundException;
-use Prophecy\Exception\Prophecy\MethodProphecyException;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Log\LoggerInterface;
 
-/**
- * @property string            userToken
- * @property string            actorToken
- * @property ViewerCodeService viewerCodeServiceProphecy
- * @property ArrayObject       lpas
- * @property CaseActor         lpaActor
- */
 #[CoversClass(PopulateLpaMetadata::class)]
 class PopulateLpaMetadataTest extends TestCase
 {
-    use ProphecyTrait;
-
-    public string $userToken;
     public string $actorToken;
+
+    /** @var array<string, mixed> */
     public array $siriusLpa;
+
+    /** @var array<string, mixed> */
     public array $combinedLpa;
-    public ViewerCodeService|ObjectProphecy $viewerCodeServiceProphecy;
+    public ViewerCodeService&MockObject $viewerCodeService;
 
     /**
-     * @throws InterfaceNotFoundException
      * @throws UnableToHydrateObject
-     * @throws DoubleException
-     * @throws MethodProphecyException
      */
     public function setUp(): void
     {
-        $this->userToken  = '12-1-1-1-1234';
         $this->actorToken = '34-3-3-3-3456';
 
-        $this->viewerCodeServiceProphecy = $this->prophesize(ViewerCodeService::class);
-        $this->viewerCodeServiceProphecy
-            ->getShareCodes($this->userToken, $this->actorToken, true)
+        $this->viewerCodeService = $this->createMock(ViewerCodeService::class);
+        $this->viewerCodeService
+            ->expects($this->atLeastOnce())
+            ->method('getShareCodes')
+            ->with($this->actorToken, true)
             ->willReturn(
                 new ArrayObject(
                     [
@@ -109,8 +96,8 @@ class PopulateLpaMetadataTest extends TestCase
             ]
         );
 
-        $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal(), $this->prophesize(LoggerInterface::class)->reveal());
-        $result = $sut($lpas, $this->userToken);
+        $sut    = new PopulateLpaMetadata($this->viewerCodeService);
+        $result = $sut($lpas);
 
         $this->assertObjectHasProperty($this->actorToken, $result);
         $this->assertEquals(1, $result->{$this->actorToken}->activeCodeCount);
@@ -126,35 +113,50 @@ class PopulateLpaMetadataTest extends TestCase
             ]
         );
 
-        $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal(), $this->prophesize(LoggerInterface::class)->reveal());
-        $result = $sut($lpas, $this->userToken);
+        $sut    = new PopulateLpaMetadata($this->viewerCodeService);
+        $result = $sut($lpas);
 
         $this->assertObjectHasProperty('56-5-5-5-5678', $result);
         $this->assertEquals(true, $result->{'56-5-5-5-5678'}->actorActive);
     }
 
     #[Test]
+    public function it_should_mark_an_inactive_attorney_as_inactive(): void
+    {
+        $actor = new CaseActor();
+        $actor->setSystemStatus(false);
+        $this->siriusLpa['actor']['details'] = $actor;
+
+        $lpas = $this->getLpas([$this->actorToken => $this->siriusLpa]);
+
+        $sut    = new PopulateLpaMetadata($this->viewerCodeService);
+        $result = $sut($lpas);
+
+        $this->assertFalse($result->{$this->actorToken}->actorActive);
+    }
+
+    #[Test]
     public function it_always_makes_a_donor_be_active(): void
     {
-        $lpaData    = new ArrayObject(
+        $lpaData = new ArrayObject(
             [
                 'user-lpa-actor-token' => $this->actorToken,
                 'actor'                => [
                     'type'    => 'donor',
-                    'details' => $this->lpaActor,
+                    'details' => new CaseActor(),
                 ],
             ],
             ArrayObject::ARRAY_AS_PROPS
         );
-        $this->lpas = new ArrayObject(
+        $lpas    = new ArrayObject(
             [
                 '56-5-5-5-5678' => $lpaData,
             ],
             ArrayObject::ARRAY_AS_PROPS
         );
 
-        $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal(), $this->prophesize(LoggerInterface::class)->reveal());
-        $result = $sut($this->lpas, $this->userToken);
+        $sut    = new PopulateLpaMetadata($this->viewerCodeService);
+        $result = $sut($lpas);
 
         $this->assertObjectHasProperty('56-5-5-5-5678', $result);
         $this->assertEquals(true, $result->{'56-5-5-5-5678'}->actorActive);

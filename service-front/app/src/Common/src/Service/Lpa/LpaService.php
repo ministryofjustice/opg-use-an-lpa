@@ -22,21 +22,19 @@ class LpaService
         private SortLpas $sortLpas,
         private GroupLpas $groupLpas,
         private LoggerInterface $logger,
+        private UserContext $userContext,
     ) {
     }
 
     /**
      * Get the users currently registered LPAs
      *
-     * @param UserContext $userContext
      * @param bool   $sortAndPopulate Sort group and populate metadata for LPA dashboard
      * @return ArrayObject|null
      * @throws Exception
      */
-    public function getLpas(UserContext $userContext, bool $sortAndPopulate = false): ?ArrayObject
+    public function getLpas(bool $sortAndPopulate = false): ?ArrayObject
     {
-        $this->apiClient->setUserContext($userContext);
-
         $lpaData = $this->apiClient->httpGet('/v1/lpas');
 
         $lpaData = ($this->parseLpaData)($lpaData);
@@ -44,7 +42,7 @@ class LpaService
         $this->logger->info(
             'Account with Id {id} retrieved {count} LPA(s)',
             [
-                'id'    => $userContext->userId,
+                'id'    => $this->userContext->userId,
                 'count' => count($lpaData),
             ]
         );
@@ -52,22 +50,19 @@ class LpaService
         return $sortAndPopulate
             ? ($this->groupLpas)(
                 ($this->sortLpas)(
-                    ($this->populateLpaMetadata)($lpaData, $userContext->userId)
+                    ($this->populateLpaMetadata)($lpaData)
                 )
             )
             : $lpaData;
     }
 
     /**
-     * @param string $userToken
      * @param string $actorLpaToken
      * @return ArrayObject|null
      * @throws Exception
      */
-    public function getLpaById(string $userToken, string $actorLpaToken): ?ArrayObject
+    public function getLpaById(string $actorLpaToken): ?ArrayObject
     {
-        $this->apiClient->setUserContext(new UserContext($userToken));
-
         $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken);
 
         $lpaData = ($this->parseLpaData)($lpaData);
@@ -77,7 +72,7 @@ class LpaService
             $this->logger->info(
                 'Account with Id {id} fetched LPA with Id {uId}',
                 [
-                    'id'  => $userToken,
+                    'id'  => $this->userContext->userId,
                     'uId' => $lpaData->lpa->getUId(),
                 ]
             );

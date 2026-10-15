@@ -8,7 +8,6 @@ use Common\Entity\InstructionsAndPreferences\Images;
 use Common\Entity\InstructionsAndPreferences\ImagesStatus;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
-use Common\Service\Context\UserContext;
 use Common\Service\Lpa\Factory\InstAndPrefImages;
 use Common\Service\Lpa\InstAndPrefImagesService;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -39,7 +38,6 @@ class InstAndPrefImagesServiceTest extends TestCase
     #[Test]
     public function it_gets_images_for_an_lpa(): void
     {
-        $userToken     = 'i-am-a-user-token';
         $actorLpaToken = '01234567-01234-01234-01234-012345678901';
         $uId           = 123;
 
@@ -55,10 +53,7 @@ class InstAndPrefImagesServiceTest extends TestCase
         $this->apiClientProphecy->method('httpGet')->with('/v1/lpas/' . $actorLpaToken . '/images')
             ->willReturn($imageDataFromApi);
 
-        $this->apiClientProphecy->expects($this->once())->method('setUserContext')
-            ->with(new UserContext($userToken));
-
-        $images = $this->instAndPrefImagesService->getImagesById($userToken, $actorLpaToken);
+        $images = $this->instAndPrefImagesService->getImagesById($actorLpaToken);
         $this->assertInstanceOf(Images::class, $images);
         $this->assertEquals(ImagesStatus::COLLECTION_COMPLETE, $images->status);
 
@@ -78,17 +73,14 @@ class InstAndPrefImagesServiceTest extends TestCase
     #[Test]
     public function it_handles_api_exceptions(): void
     {
-        $userToken     = 'i-am-a-user-token';
         $actorLpaToken = '01234567-01234-01234-01234-012345678901';
 
-        $this->apiClientProphecy->expects($this->once())->method('setUserContext')
-            ->with(new UserContext($userToken));
         $this->apiClientProphecy->method('httpGet')->with('/v1/lpas/' . $actorLpaToken . '/images')
             ->willThrowException(new ApiException('Error whilst making http GET request', 404));
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(404);
 
-        $this->instAndPrefImagesService->getImagesById($userToken, $actorLpaToken);
+        $this->instAndPrefImagesService->getImagesById($actorLpaToken);
     }
 }

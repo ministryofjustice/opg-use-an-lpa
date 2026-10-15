@@ -6,7 +6,6 @@ namespace CommonTest\Service\Lpa;
 
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
-use Common\Service\Context\UserContext;
 use Common\Service\Lpa\AccessForAllApiResult;
 use Common\Service\Lpa\CleanseLpa;
 use Common\Service\Lpa\Response\AccessForAllResult;
@@ -25,20 +24,15 @@ class CleanseLpaTest extends TestCase
     private LoggerInterface&MockObject $loggerProphecy;
     private string $lpaUid;
     private CleanseLpa $sut;
-    private string $userToken;
 
     public function setUp(): void
     {
         $this->apiClientProphecy = $this->createMock(ApiClient::class);
         $this->loggerProphecy    = $this->createMock(LoggerInterface::class);
 
-        $this->userToken      = '00000000-0000-4000-A000-000000000000';
         $this->lpaUid         = '70000000013';
         $this->additionalInfo = "This is a notes field with \n information about the user \n over multiple lines";
         $this->actorId        = '1';
-
-        $this->apiClientProphecy->expects($this->once())->method('setUserContext')
-            ->with(new UserContext($this->userToken));
     }
 
     #[Test]
@@ -54,7 +48,7 @@ class CleanseLpaTest extends TestCase
             )->willReturn([]);
 
         $this->sut = new CleanseLpa($this->apiClientProphecy, $this->loggerProphecy);
-        $response  = $this->sut->cleanse($this->userToken, $this->lpaUid, $this->additionalInfo, null);
+        $response  = $this->sut->cleanse($this->lpaUid, $this->additionalInfo, null);
 
         self::assertEquals(new AccessForAllApiResult(AccessForAllResult::SUCCESS, []), $response);
     }
@@ -73,7 +67,7 @@ class CleanseLpaTest extends TestCase
             )->willReturn([]);
 
         $this->sut = new CleanseLpa($this->apiClientProphecy, $this->loggerProphecy);
-        $response  = $this->sut->cleanse($this->userToken, $this->lpaUid, $this->additionalInfo, $this->actorId);
+        $response  = $this->sut->cleanse($this->lpaUid, $this->additionalInfo, $this->actorId);
 
         self::assertEquals(new AccessForAllApiResult(AccessForAllResult::SUCCESS, []), $response);
     }
@@ -93,6 +87,6 @@ class CleanseLpaTest extends TestCase
         $this->expectException(ApiException::class);
 
         $this->sut = new CleanseLpa($this->apiClientProphecy, $this->loggerProphecy);
-        $response  = $this->sut->cleanse($this->userToken, (string) $this->lpaUid, $this->additionalInfo, null);
+        $response  = $this->sut->cleanse((string) $this->lpaUid, $this->additionalInfo, null);
     }
 }

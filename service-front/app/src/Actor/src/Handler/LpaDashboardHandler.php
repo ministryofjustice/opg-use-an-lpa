@@ -7,7 +7,6 @@ namespace Actor\Handler;
 use Common\Handler\AbstractHandler;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
-use Common\Service\Context\UserContext;
 use Common\Service\Lpa\LpaService;
 use Exception;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -42,8 +41,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $user = $request->getAttribute(UserContext::class);
-        $lpas = $this->lpaService->getLpas($user, true);
+        $lpas = $this->lpaService->getLpas(true);
 
         $hasDuplicates = array_reduce($lpas->getArrayCopy(), function ($duplicate, $lpaArray) {
             $uids = array_map(fn ($lpa) => $lpa->lpa->getUId(), $lpaArray);

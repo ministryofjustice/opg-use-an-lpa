@@ -36,9 +36,11 @@ class AddLpaTest extends TestCase
     private ParseLpaData&MockObject $parseLpaDataProphecy;
     private LoggerInterface&MockObject $loggerProphecy;
     private ParseLpaAlreadyAdded&MockObject $parseAlreadyAddedProphecy;
+    private UserContext $userContext;
 
     public function setUp(): void
     {
+        $this->userContext               = new UserContext('12-1-1-1-1234', 'session-id');
         $this->apiClientProphecy         = $this->createMock(ApiClient::class);
         $this->parseLpaDataProphecy      = $this->createMock(ParseLpaData::class);
         $this->loggerProphecy            = $this->createMock(LoggerInterface::class);
@@ -50,14 +52,12 @@ class AddLpaTest extends TestCase
             'dob'        => '1980-11-07',
         ];
 
-        $this->apiClientProphecy->expects($this->once())->method('setUserContext')
-            ->with(new UserContext('12-1-1-1-1234'));
-
         $this->addLpa = new AddLpa(
             $this->apiClientProphecy,
             $this->loggerProphecy,
             $this->parseLpaDataProphecy,
-            $this->parseAlreadyAddedProphecy
+            $this->parseAlreadyAddedProphecy,
+            $this->userContext,
         );
 
         $actor = new CaseActor();
@@ -112,7 +112,6 @@ class AddLpaTest extends TestCase
             ->willReturn($this->lpaParsedData);
 
         $result = $this->addLpa->validate(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']
@@ -169,7 +168,6 @@ class AddLpaTest extends TestCase
             ->willReturn($dto);
 
         $result = $this->addLpa->validate(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']
@@ -204,7 +202,6 @@ class AddLpaTest extends TestCase
             ->willReturn(new ArrayObject());
 
         $result = $this->addLpa->validate(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']
@@ -239,7 +236,6 @@ class AddLpaTest extends TestCase
             ->willReturn(new ArrayObject());
 
         $result = $this->addLpa->validate(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']
@@ -271,7 +267,6 @@ class AddLpaTest extends TestCase
         $this->expectExceptionMessage('Service Error');
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $this->addLpa->validate(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']
@@ -302,7 +297,6 @@ class AddLpaTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->addLpa->validate(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']
@@ -326,7 +320,6 @@ class AddLpaTest extends TestCase
             )->willReturn($this->lpaArrayData);
 
         $result = $this->addLpa->confirm(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']
@@ -349,7 +342,6 @@ class AddLpaTest extends TestCase
             )->willReturn($this->lpaArrayData);
 
         $result = $this->addLpa->confirm(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']

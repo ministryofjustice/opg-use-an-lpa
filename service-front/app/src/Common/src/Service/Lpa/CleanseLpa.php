@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Common\Service\Lpa;
 
 use Common\Service\ApiClient\Client as ApiClient;
-use Common\Service\Context\UserContext;
 use Common\Service\Lpa\Response\AccessForAllResult;
 
 /**
@@ -22,7 +21,6 @@ class CleanseLpa
     }
 
     public function cleanse(
-        string $userToken,
         string $lpaUid,
         string $additionalInformation,
         ?string $actorId,
@@ -35,8 +33,6 @@ class CleanseLpa
         if ($actorId !== null) {
             $data['actor_id'] = $actorId;
         }
-
-        $this->apiClient->setUserContext(new UserContext($userToken));
 
         $response = $this->apiClient->httpPost('/v1/older-lpa/cleanse', $data);
 

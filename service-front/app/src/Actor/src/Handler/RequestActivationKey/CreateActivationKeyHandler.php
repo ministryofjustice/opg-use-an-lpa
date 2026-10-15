@@ -78,7 +78,6 @@ class CreateActivationKeyHandler extends AbstractHandler implements
             $state = $this->state($request);
 
             $result = $this->addAccessForAllLpa->confirm(
-                $user->getIdentity(),
                 $state->referenceNumber,
                 $state->firstNames,
                 $state->lastName,
@@ -104,7 +103,6 @@ class CreateActivationKeyHandler extends AbstractHandler implements
                             'actor::send-activation-key-confirmation',
                             [
                                 'date' => $letterExpectedDate,
-                                'user' => $user,
                             ]
                         )
                     );

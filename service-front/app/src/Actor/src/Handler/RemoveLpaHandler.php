@@ -11,13 +11,10 @@ use Common\Exception\InvalidRequestException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
-use Common\Handler\Traits\User;
-use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\RemoveLpa;
 use Exception;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Authentication\UserInterface;
 use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\UrlHelper;
@@ -30,16 +27,14 @@ use Actor\Handler\ResolveLpaTypeTrait\LpaTypeResolver;
 /**
  * @codeCoverageIgnore
  */
-class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAware
+class RemoveLpaHandler extends AbstractHandler implements CsrfGuardAware
 {
     use CsrfGuard;
-    use User;
     use LpaTypeResolver;
 
     public const REMOVE_LPA_FLASH_MSG = 'remove_lpa_flash_msg';
 
     private RemoveLpaForm $form;
-    private ?UserInterface $user;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -59,7 +54,6 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->user = $this->getUser($request);
         $this->form = new RemoveLpaForm($this->getCsrfGuard($request));
 
         return match ($request->getMethod()) {
@@ -81,9 +75,7 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             throw new InvalidRequestException('No actor-lpa token specified');
         }
 
-        $identity = $this->user?->getIdentity();
-
-        $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
+        $lpaData = $this->lpaService->getLpaById($actorLpaToken);
 
         $this->form->setData(['actor_lpa_token' => $actorLpaToken]);
 
@@ -97,7 +89,6 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
         }
 
         return new HtmlResponse($this->renderer->render('actor::confirm-remove-lpa', [
-            'user'       => $this->user,
             'actorToken' => $actorLpaToken,
             'form'       => $this->form,
             'lpa'        => $lpaData['lpa'],
@@ -113,7 +104,7 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             $formData      = $this->form->getData();
             $actorLpaToken = $formData['actor_lpa_token'];
 
-            $removedLpaData = ($this->removeLpa)($this->user->getIdentity(), $actorLpaToken);
+            $removedLpaData = ($this->removeLpa)($actorLpaToken);
 
             /** @var FlashMessagesInterface $flash */
             $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);

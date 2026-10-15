@@ -40,10 +40,12 @@ class AddAccessForAllLpaTest extends TestCase
     private ParseActivationKeyExists&MockObject $parseKeyExistsProphecy;
     private ParseActivationKeyAlreadyRequested&MockObject $parseKeyAlreadyRequestedProphecy;
     private ParseLpaAlreadyAdded&MockObject $parseAlreadyAddedProphecy;
+    private UserContext $userContext;
     private ParseLpaMatch&MockObject $parseOlderLpaMatchProphecy;
 
     public function setUp(): void
     {
+        $this->userContext                      = new UserContext('12-1-1-1-1234', 'session-id');
         $this->apiClientProphecy                = $this->createMock(ApiClient::class);
         $this->loggerProphecy                   = $this->createMock(LoggerInterface::class);
         $this->parseKeyExistsProphecy           = $this->createMock(ParseActivationKeyExists::class);
@@ -59,16 +61,14 @@ class AddAccessForAllLpaTest extends TestCase
             'postcode'         => 'EX4 MPL',
         ];
 
-        $this->apiClientProphecy->expects($this->once())->method('setUserContext')
-            ->with(new UserContext('12-1-1-1-1234'));
-
         $this->sut = new AddAccessForAllLpa(
             $this->apiClientProphecy,
             $this->loggerProphecy,
             $this->parseAlreadyAddedProphecy,
             $this->parseKeyExistsProphecy,
             $this->parseKeyAlreadyRequestedProphecy,
-            $this->parseOlderLpaMatchProphecy
+            $this->parseOlderLpaMatchProphecy,
+            $this->userContext,
         );
     }
 
@@ -115,7 +115,6 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($dto);
 
         $result = $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -172,7 +171,6 @@ class AddAccessForAllLpaTest extends TestCase
             );
 
         $result = $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -233,7 +231,6 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($dto);
 
         $result = $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -296,7 +293,6 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($dto);
 
         $result = $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -358,7 +354,6 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($dto);
 
         $result = $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -392,7 +387,6 @@ class AddAccessForAllLpaTest extends TestCase
             );
 
         $result = $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -428,7 +422,6 @@ class AddAccessForAllLpaTest extends TestCase
         $this->expectExceptionMessage('Service Error');
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -460,7 +453,6 @@ class AddAccessForAllLpaTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -493,7 +485,6 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($dto);
 
         $result = $this->sut->confirm(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -530,7 +521,6 @@ class AddAccessForAllLpaTest extends TestCase
         $this->expectExceptionMessage('Service Error');
 
         $this->sut->confirm(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -564,7 +554,6 @@ class AddAccessForAllLpaTest extends TestCase
             );
 
         $result = $this->sut->confirm(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -600,7 +589,6 @@ class AddAccessForAllLpaTest extends TestCase
 
         $this->expectException(ApiException::class);
         $this->sut->confirm(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],

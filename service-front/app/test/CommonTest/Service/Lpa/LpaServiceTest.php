@@ -47,16 +47,14 @@ class LpaServiceTest extends TestCase
             $this->populateLpaMetadata,
             $this->sortLpas,
             $this->groupLpas,
-            $this->loggerProphecy
+            $this->loggerProphecy,
+            new UserContext('01234567-01234-01234-01234-012345678901', 'session-id'),
         );
     }
 
     #[Test]
     public function it_gets_a_list_of_lpas_for_a_user(): void
     {
-        $token       = '01234567-01234-01234-01234-012345678901';
-        $userContext = new UserContext($token, 'session-id');
-
         $lpaData = [
             '0123-01-01-01-012345' => [
                 'lpa' => [
@@ -77,12 +75,10 @@ class LpaServiceTest extends TestCase
         );
 
         $this->apiClientProphecy->method('httpGet')->with('/v1/lpas')->willReturn($lpaData);
-        $this->apiClientProphecy->expects($this->once())->method('setUserContext')
-            ->with(self::identicalTo($userContext));
 
         $this->parseLpaData->method('__invoke')->with($lpaData)->willReturn($parsedLpaData);
 
-        $lpas = $this->lpaService->getLpas($userContext);
+        $lpas = $this->lpaService->getLpas();
 
         $this->assertInstanceOf(ArrayObject::class, $lpas);
         $this->assertArrayHasKey('0123-01-01-01-012345', $lpas);
@@ -91,9 +87,6 @@ class LpaServiceTest extends TestCase
     #[Test]
     public function it_gets_a_list_of_sorted_lpas_for_a_user(): void
     {
-        $token       = '01234567-01234-01234-01234-012345678901';
-        $userContext = new UserContext($token, 'session-id');
-
         $lpaData = [
             '0123-01-01-01-012345' => [
                 'lpa' => [
@@ -114,15 +107,15 @@ class LpaServiceTest extends TestCase
         );
 
         $this->apiClientProphecy->method('httpGet')->with('/v1/lpas')->willReturn($lpaData);
-        $this->apiClientProphecy->expects($this->once())->method('setUserContext')
-            ->with(self::identicalTo($userContext));
 
         $this->parseLpaData->method('__invoke')->with($lpaData)->willReturn($parsedLpaData);
-        $this->populateLpaMetadata->method('__invoke')->with($parsedLpaData, $token)->willReturn($parsedLpaData);
+        $this->populateLpaMetadata->method('__invoke')
+            ->with($parsedLpaData)
+            ->willReturn($parsedLpaData);
         $this->sortLpas->method('__invoke')->with($parsedLpaData)->willReturn($parsedLpaData);
         $this->groupLpas->method('__invoke')->with($parsedLpaData)->willReturn($parsedLpaData);
 
-        $lpas = $this->lpaService->getLpas($userContext, true);
+        $lpas = $this->lpaService->getLpas(true);
 
         $this->assertInstanceOf(ArrayObject::class, $lpas);
         $this->assertArrayHasKey('0123-01-01-01-012345', $lpas);
@@ -198,7 +191,6 @@ class LpaServiceTest extends TestCase
     #[Test]
     public function it_finds_an_expired_share_code_by_passcode_and_surname(): void
     {
-
         $this->apiClientProphecy->method('httpPost')->with('/v1/viewer-codes/summary', [
             'code' => 'P9H8A6MLD3AM',
             'name' => 'Sanderson',
@@ -228,8 +220,6 @@ class LpaServiceTest extends TestCase
     #[Test]
     public function it_gets_an_Lpa_by_Id(): void
     {
-        $token = '01234567-01234-01234-01234-012345678901';
-
         $lpaData = [
             'lpa'   => [
                 'id'     => '70000000047',
@@ -245,11 +235,9 @@ class LpaServiceTest extends TestCase
         $this->apiClientProphecy->method('httpGet')->with('/v1/lpas/' . $lpaData['lpa']['id'])
             ->willReturn($lpaData);
 
-        $this->apiClientProphecy->expects($this->once())->method('setUserContext')->with(new UserContext($token));
-
         $this->parseLpaData->method('__invoke')->with($lpaData)->willReturn($parsedLpaData);
 
-        $lpa = $this->lpaService->getLpaById($token, $lpaData['lpa']['id']);
+        $lpa = $this->lpaService->getLpaById($lpaData['lpa']['id']);
 
         $this->assertInstanceOf(Lpa::class, $lpa->lpa);
     }
@@ -257,17 +245,14 @@ class LpaServiceTest extends TestCase
     #[Test]
     public function an_invalid_Lpa_id_throws_exception(): void
     {
-        $token = '01234567-01234-01234-01234-012345678901';
         $lpaId = '98765432-01234-01234-01234-012345678901';
 
         $this->apiClientProphecy->method('httpGet')->with('/v1/lpas/' . $lpaId)
             ->willThrowException(new ApiException('Error whilst making http GET request', 404));
 
-        $this->apiClientProphecy->expects($this->once())->method('setUserContext')->with(new UserContext($token));
-
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(404);
 
-        $this->lpaService->getLpaById($token, $lpaId);
+        $this->lpaService->getLpaById($lpaId);
     }
 }

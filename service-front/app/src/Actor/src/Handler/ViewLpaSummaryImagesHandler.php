@@ -50,10 +50,7 @@ class ViewLpaSummaryImagesHandler extends AbstractHandler implements UserAware
             throw new InvalidRequestException('No actor-lpa token specified');
         }
 
-        $user     = $this->getUser($request);
-        $identity = !is_null($user) ? $user->getIdentity() : null;
-
-        $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
+        $lpaData = $this->lpaService->getLpaById($actorLpaToken);
 
         // In order to reduce initial load on the images service we do data backed checks
         // to see if we should call it. Ideally these would live in the api layer but we
@@ -63,7 +60,7 @@ class ViewLpaSummaryImagesHandler extends AbstractHandler implements UserAware
             (($lpaData->lpa->getApplicationHasGuidance() ?? false) ||
             ($lpaData->lpa->getApplicationHasRestrictions() ?? false))
         ) {
-            return new JsonResponse($this->instAndPrefImagesService->getImagesById($identity, $actorLpaToken));
+            return new JsonResponse($this->instAndPrefImagesService->getImagesById($actorLpaToken));
         }
 
         return new JsonResponse(

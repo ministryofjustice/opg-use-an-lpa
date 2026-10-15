@@ -6,7 +6,6 @@ namespace CommonTest\Service\Lpa;
 
 use ArrayObject;
 use Common\Service\ApiClient\Client;
-use Common\Service\Context\UserContext;
 use Common\Service\Lpa\ViewerCodeService;
 use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -30,10 +29,6 @@ class ViewerCodeServiceTest extends TestCase
     public function setUp(): void
     {
         $this->apiClientProphecy = $this->createMock(Client::class);
-
-        // all methods in this
-        $this->apiClientProphecy
-            ->expects($this->once())->method('setUserContext')->with(new UserContext(self::IDENTITY_TOKEN));
     }
 
     #[Test]
@@ -56,7 +51,7 @@ class ViewerCodeServiceTest extends TestCase
 
         $viewerCodeService = new ViewerCodeService($this->apiClientProphecy);
 
-        $codeData = $viewerCodeService->createShareCode(self::IDENTITY_TOKEN, $lpaId, $orgName);
+        $codeData = $viewerCodeService->createShareCode($lpaId, $orgName);
 
         $this->assertInstanceOf(ArrayObject::class, $codeData);
         $this->assertEquals($viewerCode, $codeData->code);
@@ -81,7 +76,7 @@ class ViewerCodeServiceTest extends TestCase
 
         $viewerCodeService = new ViewerCodeService($this->apiClientProphecy);
 
-        $shareCodes = $viewerCodeService->getShareCodes(self::IDENTITY_TOKEN, $lpaId, false);
+        $shareCodes = $viewerCodeService->getShareCodes($lpaId, false);
 
         $this->assertInstanceOf(ArrayObject::class, $shareCodes);
         $this->assertEquals($lpaId, $shareCodes[0]['UserLpaActor']);
@@ -98,7 +93,7 @@ class ViewerCodeServiceTest extends TestCase
 
         $viewerCodeService = new ViewerCodeService($this->apiClientProphecy);
 
-        $shareCodes = $viewerCodeService->getShareCodes(self::IDENTITY_TOKEN, $lpaId, false);
+        $shareCodes = $viewerCodeService->getShareCodes($lpaId, false);
 
         $this->assertInstanceOf(ArrayObject::class, $shareCodes);
         $this->assertEmpty($shareCodes);
@@ -138,7 +133,7 @@ class ViewerCodeServiceTest extends TestCase
 
         $viewerCodeService = new ViewerCodeService($this->apiClientProphecy);
 
-        $shareCodes = $viewerCodeService->getShareCodes(self::IDENTITY_TOKEN, $lpaId, true);
+        $shareCodes = $viewerCodeService->getShareCodes($lpaId, true);
 
         $this->assertInstanceOf(ArrayObject::class, $shareCodes);
         $this->assertEquals($lpaId, $shareCodes[0]['UserLpaActor']);
@@ -162,7 +157,7 @@ class ViewerCodeServiceTest extends TestCase
 
         $viewerCodeService = new ViewerCodeService($this->apiClientProphecy);
 
-        $codeData = $viewerCodeService->cancelShareCode(self::IDENTITY_TOKEN, $lpaId, $viewerCode);
+        $codeData = $viewerCodeService->cancelShareCode($lpaId, $viewerCode);
 
         $this->assertEquals(null, $codeData);
     }
@@ -203,7 +198,7 @@ class ViewerCodeServiceTest extends TestCase
 
         $viewerCodeService = new ViewerCodeService($this->apiClientProphecy);
 
-        $codeData = $viewerCodeService->getShareCodes(self::IDENTITY_TOKEN, $lpaId, false, self::SORT_ADDED);
+        $codeData = $viewerCodeService->getShareCodes($lpaId, false, self::SORT_ADDED);
         $codeData = $codeData->getArrayCopy();
 
         $this->assertIsArray($codeData);

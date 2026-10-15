@@ -7,7 +7,6 @@ namespace Common\Service\Lpa;
 use ArrayObject;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
-use Common\Service\Context\UserContext;
 use DateTime;
 
 class ViewerCodeService
@@ -21,15 +20,12 @@ class ViewerCodeService
     /**
      * Creates a viewer/share code for the given lpa
      *
-     * @param string $userToken
      * @param string $lpaId
      * @param string $organisation
      * @return ArrayObject|null
      */
-    public function createShareCode(string $userToken, string $lpaId, string $organisation): ?ArrayObject
+    public function createShareCode(string $lpaId, string $organisation): ?ArrayObject
     {
-        $this->apiClient->setUserContext(new UserContext($userToken));
-
         $lpaData = $this->apiClient->httpPost('/v1/lpas/' . $lpaId . '/codes', [
             'organisation' => $organisation,
         ]);
@@ -40,16 +36,13 @@ class ViewerCodeService
     /**
      * Cancels a viewer/share code for the given lpa
      *
-     * @param string $userToken
      * @param string $lpaId
      * @param string $shareCode
      * @return void
      * @throws ApiException
      */
-    public function cancelShareCode(string $userToken, string $lpaId, string $shareCode): void
+    public function cancelShareCode(string $lpaId, string $shareCode): void
     {
-        $this->apiClient->setUserContext(new UserContext($userToken));
-
         $this->apiClient->httpPut('/v1/lpas/' . $lpaId . '/codes', [
             'code' => $shareCode,
         ]);
@@ -58,15 +51,12 @@ class ViewerCodeService
     /**
      * Gets a list of viewer codes for a given lpa
      *
-     * @param string $userToken
      * @param string $lpaId
      * @param bool $withActiveCount
      * @return ArrayObject|null
      */
-    public function getShareCodes(string $userToken, string $lpaId, bool $withActiveCount): ?ArrayObject
+    public function getShareCodes(string $lpaId, bool $withActiveCount): ?ArrayObject
     {
-        $this->apiClient->setUserContext(new UserContext($userToken));
-
         $shareCodes = $this->apiClient->httpGet('/v1/lpas/' . $lpaId . '/codes');
 
         //sort the result array to appear in order of most recent added
