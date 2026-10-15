@@ -156,8 +156,8 @@ services:
     build:
       context: .
       dockerfile: localstack/Dockerfile
-    ports:
-      - "4566:4566"
+#    ports:
+#      - "4566:4566"
     environment:
       - DEBUG=1
       - DOCKER_HOST=unix:///var/run/docker.sock
