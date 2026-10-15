@@ -28,14 +28,14 @@ class LpaService
     /**
      * Get the users currently registered LPAs
      *
-     * @param string $userToken
+     * @param UserContext $userContext
      * @param bool   $sortAndPopulate Sort group and populate metadata for LPA dashboard
      * @return ArrayObject|null
      * @throws Exception
      */
     public function getLpas(UserContext $userContext, bool $sortAndPopulate = false): ?ArrayObject
     {
-        $this->apiClient->setUserTokenHeader($userContext->userId);
+        $this->apiClient->setUserContext($userContext);
 
         $lpaData = $this->apiClient->httpGet('/v1/lpas');
 
@@ -66,7 +66,7 @@ class LpaService
      */
     public function getLpaById(string $userToken, string $actorLpaToken): ?ArrayObject
     {
-        $this->apiClient->setUserTokenHeader($userToken);
+        $this->apiClient->setUserContext(new UserContext($userToken));
 
         $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken);
 

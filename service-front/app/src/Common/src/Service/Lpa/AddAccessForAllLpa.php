@@ -6,6 +6,7 @@ namespace Common\Service\Lpa;
 
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\Context\UserContext;
 use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\Response\AccessForAllResult;
 use Common\Service\Lpa\Response\Parse\ParseLpaMatch;
@@ -63,7 +64,7 @@ class AddAccessForAllLpa
             'force_activation_key' => false,
         ];
 
-        $this->apiClient->setUserTokenHeader($userToken);
+        $this->apiClient->setUserContext(new UserContext($userToken));
 
         try {
             $response = $this->apiClient->httpPost('/v1/older-lpa/validate', $data);
@@ -115,7 +116,7 @@ class AddAccessForAllLpa
             'force_activation_key' => $forceActivationKey,
         ];
 
-        $this->apiClient->setUserTokenHeader($userToken);
+        $this->apiClient->setUserContext(new UserContext($userToken));
 
         try {
             $response = $this->apiClient->httpPatch('/v1/older-lpa/confirm', $data);

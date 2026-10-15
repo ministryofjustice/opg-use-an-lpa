@@ -4,44 +4,43 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\ApiClient;
 
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
+use Common\Service\Context\UserContext;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Exception\BadResponseException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
+#[CoversClass(Client::class)]
 class ClientTest extends TestCase
 {
-    use ProphecyTrait;
-
-    protected ObjectProphecy|ClientInterface $apiClient;
+    protected ClientInterface&MockObject $apiClient;
 
     public function setUp(): void
     {
-        $this->apiClient = $this->prophesize(ClientInterface::class);
+        $this->apiClient = $this->createMock(ClientInterface::class);
     }
 
-    protected function setupResponse(string $body, int $code): ObjectProphecy
+    protected function setupResponse(string $body, int $code): ResponseInterface
     {
-        $streamProphecy = $this->prophesize(StreamInterface::class);
-        $streamProphecy->getContents()
+        $streamProphecy = $this->createMock(StreamInterface::class);
+        $streamProphecy->method('getContents')->with()
             ->willReturn($body);
 
-        $responseProphecy = $this->prophesize(ResponseInterface::class);
-        $responseProphecy->getStatusCode()
+        $responseProphecy = $this->createMock(ResponseInterface::class);
+        $responseProphecy->method('getStatusCode')->with()
             ->willReturn($code);
-        $responseProphecy->getBody()
-            ->willReturn($streamProphecy->reveal());
+        $responseProphecy->method('getBody')->with()
+            ->willReturn($streamProphecy);
 
         return $responseProphecy;
     }
@@ -52,10 +51,10 @@ class ClientTest extends TestCase
     #[Test]
     public function can_get_a_simple_endpoint_returning_valid_json(): void
     {
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
+            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK));
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $data = $client->httpGet('/simple_get');
 
@@ -65,10 +64,10 @@ class ClientTest extends TestCase
     #[Test]
     public function can_get_an_endpoint_with_parameters_returning_valid_json(): void
     {
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
+            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK));
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $data = $client->httpGet('/simple_get', ['simple_query' => 'query_value']);
 
@@ -78,7 +77,7 @@ class ClientTest extends TestCase
     #[Test]
     public function correctly_processeses_a_non_200_response_to_a_get_request(): void
     {
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
@@ -87,10 +86,10 @@ class ClientTest extends TestCase
                         'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_NOT_FOUND
-                )->reveal()
+                )
             );
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -100,8 +99,8 @@ class ClientTest extends TestCase
     #[Test]
     public function client_throws_error_with_get_request(): void
     {
-        $exceptionProphecy = $this->prophesize(BadResponseException::class);
-        $exceptionProphecy->getResponse()
+        $exceptionProphecy = $this->createMock(BadResponseException::class);
+        $exceptionProphecy->method('getResponse')->with()
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
@@ -110,13 +109,13 @@ class ClientTest extends TestCase
                         'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_BAD_GATEWAY
-                )->reveal()
+                )
             );
 
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willThrow($exceptionProphecy->reveal());
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
+            ->willThrowException($exceptionProphecy);
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_GATEWAY);
@@ -130,10 +129,10 @@ class ClientTest extends TestCase
     #[Test]
     public function can_post_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode): void
     {
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
+            ->willReturn($this->setupResponse('[]', $statusCode));
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $data = $client->httpPost('/simple_post', ['simple_query' => 'query_value']);
 
@@ -143,7 +142,7 @@ class ClientTest extends TestCase
     #[Test]
     public function correctly_processes_a_non_2xx_response_to_a_post_request(): void
     {
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
@@ -152,10 +151,10 @@ class ClientTest extends TestCase
                         'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_NOT_FOUND
-                )->reveal()
+                )
             );
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -165,8 +164,8 @@ class ClientTest extends TestCase
     #[Test]
     public function client_throws_error_with_post_request(): void
     {
-        $exceptionProphecy = $this->prophesize(BadResponseException::class);
-        $exceptionProphecy->getResponse()
+        $exceptionProphecy = $this->createMock(BadResponseException::class);
+        $exceptionProphecy->method('getResponse')->with()
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
@@ -175,13 +174,13 @@ class ClientTest extends TestCase
                         'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_BAD_GATEWAY
-                )->reveal()
+                )
             );
 
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willThrow($exceptionProphecy->reveal());
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
+            ->willThrowException($exceptionProphecy);
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_GATEWAY);
@@ -195,10 +194,10 @@ class ClientTest extends TestCase
     #[Test]
     public function can_put_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode): void
     {
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
+            ->willReturn($this->setupResponse('[]', $statusCode));
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $data = $client->httpPut('/simple_put', ['simple_query' => 'query_value']);
 
@@ -208,7 +207,7 @@ class ClientTest extends TestCase
     #[Test]
     public function correctly_processes_a_non_2xx_response_to_a_put_request(): void
     {
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
@@ -217,10 +216,10 @@ class ClientTest extends TestCase
                         'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_NOT_FOUND
-                )->reveal()
+                )
             );
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -230,8 +229,8 @@ class ClientTest extends TestCase
     #[Test]
     public function client_throws_error_with_put_request(): void
     {
-        $exceptionProphecy = $this->prophesize(BadResponseException::class);
-        $exceptionProphecy->getResponse()
+        $exceptionProphecy = $this->createMock(BadResponseException::class);
+        $exceptionProphecy->method('getResponse')->with()
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
@@ -240,13 +239,13 @@ class ClientTest extends TestCase
                         'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_BAD_GATEWAY
-                )->reveal()
+                )
             );
 
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willThrow($exceptionProphecy->reveal());
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
+            ->willThrowException($exceptionProphecy);
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_GATEWAY);
@@ -260,10 +259,10 @@ class ClientTest extends TestCase
     #[Test]
     public function can_patch_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode): void
     {
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
+            ->willReturn($this->setupResponse('[]', $statusCode));
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $data = $client->httpPatch('/simple_patch', ['simple_query' => 'query_value']);
 
@@ -273,7 +272,7 @@ class ClientTest extends TestCase
     #[Test]
     public function correctly_processes_a_non_2xx_response_to_a_patch_request(): void
     {
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
@@ -282,10 +281,10 @@ class ClientTest extends TestCase
                         'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_NOT_FOUND
-                )->reveal()
+                )
             );
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -295,8 +294,8 @@ class ClientTest extends TestCase
     #[Test]
     public function client_throws_error_with_patch_request(): void
     {
-        $exceptionProphecy = $this->prophesize(BadResponseException::class);
-        $exceptionProphecy->getResponse()
+        $exceptionProphecy = $this->createMock(BadResponseException::class);
+        $exceptionProphecy->method('getResponse')->with()
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
@@ -305,13 +304,13 @@ class ClientTest extends TestCase
                         'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_BAD_GATEWAY
-                )->reveal()
+                )
             );
 
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willThrow($exceptionProphecy->reveal());
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
+            ->willThrowException($exceptionProphecy);
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_GATEWAY);
@@ -325,10 +324,10 @@ class ClientTest extends TestCase
     #[Test]
     public function can_delete_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode): void
     {
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willReturn($this->setupResponse('[]', $statusCode)->reveal());
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
+            ->willReturn($this->setupResponse('[]', $statusCode));
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $data = $client->httpDelete('/simple_delete', ['simple_query' => 'query_value']);
 
@@ -338,7 +337,7 @@ class ClientTest extends TestCase
     #[Test]
     public function correctly_processes_a_non_2xx_response_to_a_delete_request(): void
     {
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
@@ -347,10 +346,10 @@ class ClientTest extends TestCase
                         'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_NOT_FOUND
-                )->reveal()
+                )
             );
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -360,8 +359,8 @@ class ClientTest extends TestCase
     #[Test]
     public function client_throws_error_with_delete_request(): void
     {
-        $exceptionProphecy = $this->prophesize(BadResponseException::class);
-        $exceptionProphecy->getResponse()
+        $exceptionProphecy = $this->createMock(BadResponseException::class);
+        $exceptionProphecy->method('getResponse')->with()
             ->willReturn(
                 $this->setupResponse(
                     json_encode([
@@ -370,13 +369,13 @@ class ClientTest extends TestCase
                         'data'    => [],
                     ]),
                     StatusCodeInterface::STATUS_BAD_GATEWAY
-                )->reveal()
+                )
             );
 
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
-            ->willThrow($exceptionProphecy->reveal());
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
+            ->willThrowException($exceptionProphecy);
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_GATEWAY);
@@ -391,7 +390,7 @@ class ClientTest extends TestCase
     #[Test]
     public function sets_appropriate_request_headers_for_request(): void
     {
-        $this->apiClient->sendRequest(Argument::that(function ($request) {
+        $this->apiClient->method('sendRequest')->with(self::callback(function ($request) {
             $this->assertInstanceOf(RequestInterface::class, $request);
 
             $headers = $request->getHeaders();
@@ -401,9 +400,9 @@ class ClientTest extends TestCase
             $this->assertEquals('application/json', $headers['Content-Type'][0]);
             return true;
         }))
-            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
+            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK));
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         $data = $client->httpGet('/simple_get');
         $this->assertIsArray($data);
@@ -422,20 +421,27 @@ class ClientTest extends TestCase
     }
 
     #[Test]
-    public function sets_token_in_header_if_supplied(): void
-    {
-        $this->apiClient->sendRequest(Argument::that(function ($request) {
-            $this->assertInstanceOf(RequestInterface::class, $request);
+    #[DataProvider('userContexts')]
+    public function it_should_set_the_user_token_header_from_the_context(
+        ?UserContext $userContext,
+        ?string $expectedToken,
+    ): void {
+        $this->apiClient->expects(self::exactly(5))->method('sendRequest')
+            ->with(self::callback(function (RequestInterface $request) use ($expectedToken): bool {
+                if ($expectedToken === null) {
+                    self::assertFalse($request->hasHeader('User-Token'));
+                } else {
+                    self::assertTrue($request->hasHeader('User-Token'));
+                    self::assertSame($expectedToken, $request->getHeaderLine('User-Token'));
+                }
+                return true;
+            }))
+            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK));
 
-            $headers = $request->getHeaders();
-            $this->assertArrayHasKey('User-Token', $headers);
-            $this->assertEquals('test_token', $headers['User-Token'][0]);
-            return true;
-        }))
-            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
-
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
-        $client->setUserTokenHeader('test_token');
+        $client = new Client($this->apiClient, 'https://localhost', '');
+        if ($userContext !== null) {
+            $client->setUserContext($userContext);
+        }
 
         $data = $client->httpGet('/simple_get');
         $this->assertIsArray($data);
@@ -451,12 +457,62 @@ class ClientTest extends TestCase
 
         $data = $client->httpDelete('/simple_delete');
         $this->assertIsArray($data);
+    }
+
+    public static function userContexts(): array
+    {
+        return [
+            'no context'           => [
+                null,
+                null,
+            ],
+            'anonymous context'    => [
+                new UserContext(sessionId: 'session-id'),
+                null,
+            ],
+            'authenticated user'   => [
+                new UserContext('test_token', 'session-id'),
+                'test_token',
+            ],
+            'user without session' => [
+                new UserContext('test_token'),
+                'test_token',
+            ],
+            'empty user id'        => [
+                new UserContext(''),
+                '',
+            ],
+        ];
+    }
+
+    #[Test]
+    public function it_should_replace_the_previous_user_context(): void
+    {
+        $expectedTokens = [
+            'first-user',
+            'second-user',
+            null,
+        ];
+        $this->apiClient->expects(self::exactly(3))->method('sendRequest')
+            ->with(self::callback(function (RequestInterface $request) use (&$expectedTokens): bool {
+                $expectedToken = array_shift($expectedTokens);
+                self::assertSame($expectedToken !== null, $request->hasHeader('User-Token'));
+                self::assertSame($expectedToken ?? '', $request->getHeaderLine('User-Token'));
+                return true;
+            }))
+            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK));
+
+        $client = new Client($this->apiClient, 'https://localhost', '');
+        foreach ([new UserContext('first-user'), new UserContext('second-user'), new UserContext()] as $context) {
+            $client->setUserContext($context);
+            $client->httpGet('/simple_get');
+        }
     }
 
     #[Test]
     public function sets_trace_id_in_header_if_supplied(): void
     {
-        $this->apiClient->sendRequest(Argument::that(function ($request) {
+        $this->apiClient->method('sendRequest')->with(self::callback(function ($request) {
             $this->assertInstanceOf(RequestInterface::class, $request);
 
             $headers = $request->getHeaders();
@@ -464,10 +520,10 @@ class ClientTest extends TestCase
             $this->assertEquals('Root=1-1-11', $headers['x-amzn-trace-id'][0]);
             return true;
         }))
-            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK)->reveal());
+            ->willReturn($this->setupResponse('[]', StatusCodeInterface::STATUS_OK));
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', 'Root=1-1-11');
-        $client->setUserTokenHeader('test_token');
+        $client = new Client($this->apiClient, 'https://localhost', 'Root=1-1-11');
+        $client->setUserContext(new UserContext('test_token'));
 
         $data = $client->httpGet('/simple_get');
         $this->assertIsArray($data);
@@ -488,10 +544,10 @@ class ClientTest extends TestCase
     #[Test]
     public function gracefully_handles_malformed_response_data(): void
     {
-        $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
             ->willReturn($this->setupResponse('<xml>we_dont_do_xml</xml>', StatusCodeInterface::STATUS_OK));
 
-        $client = new Client($this->apiClient->reveal(), 'https://localhost', '');
+        $client = new Client($this->apiClient, 'https://localhost', '');
 
         try {
             $data = $client->httpGet('/simple_get');

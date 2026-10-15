@@ -6,6 +6,7 @@ namespace Common\Service\Lpa;
 
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\Context\UserContext;
 use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAdded;
 use Exception;
@@ -42,7 +43,7 @@ class AddLpa
             'dob'        => $dob,
         ];
 
-        $this->apiClient->setUserTokenHeader($userToken);
+        $this->apiClient->setUserContext(new UserContext($userToken));
 
         try {
             $lpaData = $this->apiClient->httpPost('/v1/add-lpa/validate', $data);
@@ -81,7 +82,7 @@ class AddLpa
         string $lpaUid,
         string $dob,
     ): AddLpaApiResult {
-        $this->apiClient->setUserTokenHeader($userToken);
+        $this->apiClient->setUserContext(new UserContext($userToken));
 
         $lpaData = $this->apiClient->httpPost('/v1/add-lpa/confirm', [
             'actor-code' => $activation_key,

@@ -10,6 +10,7 @@ use Behat\Step\When;
 use BehatTest\Context\ActorContextTrait;
 use BehatTest\Context\ContextUtilities;
 use Common\Entity\CaseActor;
+use Common\Service\Context\UserContext;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\AccessForAllApiResult;
 use Common\Service\Lpa\AddAccessForAllLpa;
@@ -413,7 +414,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $lpa = $this->container->get(LpaService::class)->getLpas($this->userIdentity);
+        $lpa = $this->container->get(LpaService::class)->getLpas(new UserContext($this->userIdentity));
 
         $lpaObject = $this->container->get(LpaFactory::class)->createLpaFromData($this->lpa);
 
@@ -446,7 +447,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $lpa = $this->container->get(LpaService::class)->getLpas($this->userIdentity);
+        $lpa = $this->container->get(LpaService::class)->getLpas(new UserContext($this->userIdentity));
 
         $lpaObject = $this->container->get(LpaFactory::class)->createLpaFromData($this->lpa);
 

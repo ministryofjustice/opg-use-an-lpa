@@ -7,6 +7,7 @@ namespace Common\Service\Lpa;
 use Common\Entity\InstructionsAndPreferences\Images;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\Context\UserContext;
 use Psr\Log\LoggerInterface;
 
 class InstAndPrefImagesService
@@ -20,7 +21,7 @@ class InstAndPrefImagesService
 
     public function getImagesById(string $userToken, string $actorLpaToken): Images
     {
-        $this->apiClient->setUserTokenHeader($userToken);
+        $this->apiClient->setUserContext(new UserContext($userToken));
 
         try {
             $imagesData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken . '/images');

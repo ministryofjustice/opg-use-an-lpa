@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
-use PHPUnit\Framework\Attributes\Test;
 use ArrayObject;
 use Common\Service\ApiClient\Client;
+use Common\Service\Context\UserContext;
 use Common\Service\Lpa\ViewerCodeService;
 use DateTime;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 
+#[CoversClass(ViewerCodeService::class)]
 class ViewerCodeServiceTest extends TestCase
 {
-    use ProphecyTrait;
-
     private const IDENTITY_TOKEN = '01234567-01234-01234-01234-012345678901';
     private const SORT_ADDED     = 'Added';
     private const LPA_ID         = '98765432-12345-54321-12345-9876543210';
@@ -25,16 +25,15 @@ class ViewerCodeServiceTest extends TestCase
     private const SUR_NAME       = 'Will';
     private const CSRF_CODE      = '1234';
 
-    private ObjectProphecy|Client $apiClientProphecy;
+    private Client&MockObject $apiClientProphecy;
 
     public function setUp(): void
     {
-        $this->apiClientProphecy = $this->prophesize(Client::class);
+        $this->apiClientProphecy = $this->createMock(Client::class);
 
         // all methods in this
         $this->apiClientProphecy
-            ->setUserTokenHeader(self::IDENTITY_TOKEN)
-            ->shouldBeCalled();
+            ->expects($this->once())->method('setUserContext')->with(new UserContext(self::IDENTITY_TOKEN));
     }
 
     #[Test]
@@ -52,10 +51,10 @@ class ViewerCodeServiceTest extends TestCase
         ];
 
         $this->apiClientProphecy
-            ->httpPost('/v1/lpas/' . $lpaId . '/codes', ['organisation' => $orgName])
+            ->method('httpPost')->with('/v1/lpas/' . $lpaId . '/codes', ['organisation' => $orgName])
             ->willReturn($return);
 
-        $viewerCodeService = new ViewerCodeService($this->apiClientProphecy->reveal());
+        $viewerCodeService = new ViewerCodeService($this->apiClientProphecy);
 
         $codeData = $viewerCodeService->createShareCode(self::IDENTITY_TOKEN, $lpaId, $orgName);
 
@@ -77,10 +76,10 @@ class ViewerCodeServiceTest extends TestCase
         ];
 
         $this->apiClientProphecy
-            ->httpGet('/v1/lpas/' . $lpaId . '/codes')
+            ->method('httpGet')->with('/v1/lpas/' . $lpaId . '/codes')
             ->willReturn($return);
 
-        $viewerCodeService = new ViewerCodeService($this->apiClientProphecy->reveal());
+        $viewerCodeService = new ViewerCodeService($this->apiClientProphecy);
 
         $shareCodes = $viewerCodeService->getShareCodes(self::IDENTITY_TOKEN, $lpaId, false);
 
@@ -94,10 +93,10 @@ class ViewerCodeServiceTest extends TestCase
         $lpaId = '98765432-01234-01234-01234-012345678902';
 
         $this->apiClientProphecy
-            ->httpGet('/v1/lpas/' . $lpaId . '/codes')
+            ->method('httpGet')->with('/v1/lpas/' . $lpaId . '/codes')
             ->willReturn([]);
 
-        $viewerCodeService = new ViewerCodeService($this->apiClientProphecy->reveal());
+        $viewerCodeService = new ViewerCodeService($this->apiClientProphecy);
 
         $shareCodes = $viewerCodeService->getShareCodes(self::IDENTITY_TOKEN, $lpaId, false);
 
@@ -134,10 +133,10 @@ class ViewerCodeServiceTest extends TestCase
         ];
 
         $this->apiClientProphecy
-            ->httpGet('/v1/lpas/' . $lpaId . '/codes')
+            ->method('httpGet')->with('/v1/lpas/' . $lpaId . '/codes')
             ->willReturn($return);
 
-        $viewerCodeService = new ViewerCodeService($this->apiClientProphecy->reveal());
+        $viewerCodeService = new ViewerCodeService($this->apiClientProphecy);
 
         $shareCodes = $viewerCodeService->getShareCodes(self::IDENTITY_TOKEN, $lpaId, true);
 
@@ -158,10 +157,10 @@ class ViewerCodeServiceTest extends TestCase
         $return = [];
 
         $this->apiClientProphecy
-            ->httpPut('/v1/lpas/' . $lpaId . '/codes', ['code' => $viewerCode])
+            ->method('httpPut')->with('/v1/lpas/' . $lpaId . '/codes', ['code' => $viewerCode])
             ->willReturn($return);
 
-        $viewerCodeService = new ViewerCodeService($this->apiClientProphecy->reveal());
+        $viewerCodeService = new ViewerCodeService($this->apiClientProphecy);
 
         $codeData = $viewerCodeService->cancelShareCode(self::IDENTITY_TOKEN, $lpaId, $viewerCode);
 
@@ -199,10 +198,10 @@ class ViewerCodeServiceTest extends TestCase
         ];
 
         $this->apiClientProphecy
-            ->httpGet('/v1/lpas/' . $lpaId . '/codes')
+            ->method('httpGet')->with('/v1/lpas/' . $lpaId . '/codes')
             ->willReturn($shareCodes);
 
-        $viewerCodeService = new ViewerCodeService($this->apiClientProphecy->reveal());
+        $viewerCodeService = new ViewerCodeService($this->apiClientProphecy);
 
         $codeData = $viewerCodeService->getShareCodes(self::IDENTITY_TOKEN, $lpaId, false, self::SORT_ADDED);
         $codeData = $codeData->getArrayCopy();

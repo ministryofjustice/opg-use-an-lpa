@@ -4,32 +4,32 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use ArrayObject;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\Context\UserContext;
 use Common\Service\Lpa\RemoveLpa;
 use Fig\Http\Message\StatusCodeInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 #[CoversClass(RemoveLpa::class)]
 class RemoveLpaTest extends TestCase
 {
-    use ProphecyTrait;
-
     private CaseActor $actor;
     private string $actorLpaToken;
-    private ObjectProphecy|ApiClient $apiClientProphecy;
+    private ApiClient&MockObject $apiClientProphecy;
     private Lpa $lpa;
+
+    /** @var array<string, mixed> */
     private array $lpaArrayData;
     private ArrayObject $lpaParsedData;
-    private ObjectProphecy|LoggerInterface $loggerProphecy;
+    private LoggerInterface&MockObject $loggerProphecy;
     private RemoveLpa $removeLpa;
     private string $userToken;
 
@@ -38,14 +38,15 @@ class RemoveLpaTest extends TestCase
         $this->actorLpaToken = '0123-01-01-01-012345';
         $this->userToken     = '12-1-1-1-1234';
 
-        $this->apiClientProphecy = $this->prophesize(ApiClient::class);
-        $this->loggerProphecy    = $this->prophesize(LoggerInterface::class);
+        $this->apiClientProphecy = $this->createMock(ApiClient::class);
+        $this->loggerProphecy    = $this->createMock(LoggerInterface::class);
 
-        $this->apiClientProphecy->setUserTokenHeader($this->userToken)->shouldBeCalled();
+        $this->apiClientProphecy->expects($this->once())->method('setUserContext')
+            ->with(new UserContext($this->userToken));
 
         $this->removeLpa = new RemoveLpa(
-            $this->apiClientProphecy->reveal(),
-            $this->loggerProphecy->reveal(),
+            $this->apiClientProphecy,
+            $this->loggerProphecy,
         );
 
         $this->actor = new CaseActor();
@@ -77,7 +78,7 @@ class RemoveLpaTest extends TestCase
     public function it_returns_lpa_data_when_lpa_successfully_removed(): void
     {
         $this->apiClientProphecy
-            ->httpDelete('/v1/lpas/' . $this->actorLpaToken)
+            ->method('httpDelete')->with('/v1/lpas/' . $this->actorLpaToken)
             ->willReturn($this->lpaArrayData);
 
         $result = ($this->removeLpa)($this->userToken, $this->actorLpaToken);
@@ -89,8 +90,8 @@ class RemoveLpaTest extends TestCase
     public function it_will_fail_if_actor_lpa_token_not_found(): void
     {
         $this->apiClientProphecy
-            ->httpDelete('/v1/lpas/' . $this->actorLpaToken)
-            ->willThrow(
+            ->method('httpDelete')->with('/v1/lpas/' . $this->actorLpaToken)
+            ->willThrowException(
                 new ApiException(
                     'User actor lpa record not found for actor token - ' . $this->actorLpaToken,
                     StatusCodeInterface::STATUS_NOT_FOUND
@@ -108,8 +109,8 @@ class RemoveLpaTest extends TestCase
     public function it_will_fail_if_actor_lpa_token_does_not_match_user_id(): void
     {
         $this->apiClientProphecy
-            ->httpDelete('/v1/lpas/' . $this->actorLpaToken)
-            ->willThrow(
+            ->method('httpDelete')->with('/v1/lpas/' . $this->actorLpaToken)
+            ->willThrowException(
                 new ApiException(
                     'User Id passed does not match the user in userActorLpaMap for token - ' . $this->actorLpaToken,
                     StatusCodeInterface::STATUS_NOT_FOUND

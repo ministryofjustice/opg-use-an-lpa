@@ -4,35 +4,35 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
-use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\InstructionsAndPreferences\Images;
 use Common\Entity\InstructionsAndPreferences\ImagesStatus;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
+use Common\Service\Context\UserContext;
 use Common\Service\Lpa\Factory\InstAndPrefImages;
 use Common\Service\Lpa\InstAndPrefImagesService;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
+#[CoversClass(InstAndPrefImagesService::class)]
 class InstAndPrefImagesServiceTest extends TestCase
 {
-    use ProphecyTrait;
-
-    private ObjectProphecy|Client $apiClientProphecy;
-    private ObjectProphecy|LoggerInterface $loggerProphecy;
+    private Client&MockObject $apiClientProphecy;
+    private LoggerInterface&MockObject $loggerProphecy;
     private InstAndPrefImagesService $instAndPrefImagesService;
 
     public function setUp(): void
     {
-        $this->apiClientProphecy = $this->prophesize(Client::class);
-        $this->loggerProphecy    = $this->prophesize(LoggerInterface::class);
+        $this->apiClientProphecy = $this->createMock(Client::class);
+        $this->loggerProphecy    = $this->createMock(LoggerInterface::class);
 
         $this->instAndPrefImagesService = new InstAndPrefImagesService(
-            $this->apiClientProphecy->reveal(),
+            $this->apiClientProphecy,
             new InstAndPrefImages(),
-            $this->loggerProphecy->reveal(),
+            $this->loggerProphecy,
         );
     }
 
@@ -52,9 +52,11 @@ class InstAndPrefImagesServiceTest extends TestCase
                 'iap-' . $uId . '-continuation_unknown_1' => 'http://www.example.com/image3.jpg',
             ],
         ];
-        $this->apiClientProphecy->httpGet('/v1/lpas/' . $actorLpaToken . '/images')->willReturn($imageDataFromApi);
+        $this->apiClientProphecy->method('httpGet')->with('/v1/lpas/' . $actorLpaToken . '/images')
+            ->willReturn($imageDataFromApi);
 
-        $this->apiClientProphecy->setUserTokenHeader($userToken)->shouldBeCalled();
+        $this->apiClientProphecy->expects($this->once())->method('setUserContext')
+            ->with(new UserContext($userToken));
 
         $images = $this->instAndPrefImagesService->getImagesById($userToken, $actorLpaToken);
         $this->assertInstanceOf(Images::class, $images);
@@ -79,9 +81,10 @@ class InstAndPrefImagesServiceTest extends TestCase
         $userToken     = 'i-am-a-user-token';
         $actorLpaToken = '01234567-01234-01234-01234-012345678901';
 
-        $this->apiClientProphecy->setUserTokenHeader($userToken)->shouldBeCalled();
-        $this->apiClientProphecy->httpGet('/v1/lpas/' . $actorLpaToken . '/images')
-            ->willThrow(new ApiException('Error whilst making http GET request', 404));
+        $this->apiClientProphecy->expects($this->once())->method('setUserContext')
+            ->with(new UserContext($userToken));
+        $this->apiClientProphecy->method('httpGet')->with('/v1/lpas/' . $actorLpaToken . '/images')
+            ->willThrowException(new ApiException('Error whilst making http GET request', 404));
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(404);

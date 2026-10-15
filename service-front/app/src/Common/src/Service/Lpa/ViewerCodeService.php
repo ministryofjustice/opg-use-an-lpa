@@ -7,6 +7,7 @@ namespace Common\Service\Lpa;
 use ArrayObject;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\Context\UserContext;
 use DateTime;
 
 class ViewerCodeService
@@ -27,17 +28,13 @@ class ViewerCodeService
      */
     public function createShareCode(string $userToken, string $lpaId, string $organisation): ?ArrayObject
     {
-        $this->apiClient->setUserTokenHeader($userToken);
+        $this->apiClient->setUserContext(new UserContext($userToken));
 
         $lpaData = $this->apiClient->httpPost('/v1/lpas/' . $lpaId . '/codes', [
             'organisation' => $organisation,
         ]);
 
-        if (is_array($lpaData)) {
-            $lpaData = new ArrayObject($lpaData, ArrayObject::ARRAY_AS_PROPS);
-        }
-
-        return $lpaData;
+        return new ArrayObject($lpaData, ArrayObject::ARRAY_AS_PROPS);
     }
 
     /**
@@ -51,10 +48,10 @@ class ViewerCodeService
      */
     public function cancelShareCode(string $userToken, string $lpaId, string $shareCode): void
     {
-        $this->apiClient->setUserTokenHeader($userToken);
+        $this->apiClient->setUserContext(new UserContext($userToken));
 
         $this->apiClient->httpPut('/v1/lpas/' . $lpaId . '/codes', [
-             'code' => $shareCode,
+            'code' => $shareCode,
         ]);
     }
 
@@ -68,7 +65,7 @@ class ViewerCodeService
      */
     public function getShareCodes(string $userToken, string $lpaId, bool $withActiveCount): ?ArrayObject
     {
-        $this->apiClient->setUserTokenHeader($userToken);
+        $this->apiClient->setUserContext(new UserContext($userToken));
 
         $shareCodes = $this->apiClient->httpGet('/v1/lpas/' . $lpaId . '/codes');
 
@@ -77,23 +74,22 @@ class ViewerCodeService
             return strtotime($b[self::SORT_ADDED]) - strtotime($a[self::SORT_ADDED]);
         });
 
-        if (is_array($shareCodes)) {
-            $shareCodes = new ArrayObject($shareCodes, ArrayObject::ARRAY_AS_PROPS);
-        }
+        /** @var ArrayObject<int|string, mixed> $shareCodeData */
+        $shareCodeData = new ArrayObject($shareCodes, ArrayObject::ARRAY_AS_PROPS);
 
         if ($withActiveCount) {
-            $shareCodes = $this->getNumberOfActiveCodes($shareCodes);
+            $shareCodeData = $this->getNumberOfActiveCodes($shareCodeData);
         }
 
-        return $shareCodes;
+        return $shareCodeData;
     }
 
     /**
-     * @param ArrayObject $shareCodes
-     * @return ArrayObject|null
+     * @param ArrayObject<int|string, mixed> $shareCodes
+     * @return ArrayObject<int|string, mixed>
      * @throws \Exception
      */
-    private function getNumberOfActiveCodes(ArrayObject $shareCodes): ?ArrayObject
+    private function getNumberOfActiveCodes(ArrayObject $shareCodes): ArrayObject
     {
         $counter = 0;
 

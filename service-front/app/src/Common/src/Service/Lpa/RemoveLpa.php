@@ -6,6 +6,7 @@ namespace Common\Service\Lpa;
 
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\Context\UserContext;
 use Common\Service\Log\EventCodes;
 use Psr\Log\LoggerInterface;
 use ArrayObject;
@@ -25,7 +26,7 @@ class RemoveLpa
 
     public function __invoke(string $userToken, string $actorLpaToken)
     {
-        $this->apiClient->setUserTokenHeader($userToken);
+        $this->apiClient->setUserContext(new UserContext($userToken));
 
         try {
             $removedLpaData = $this->apiClient->httpDelete('/v1/lpas/' . $actorLpaToken);

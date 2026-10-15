@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\ApiClient;
 
 use Common\Exception\ApiException;
+use Common\Service\Context\UserContext;
 use Common\Service\Log\RequestTracing;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Exception\BadResponseException;
@@ -16,7 +17,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class Client
 {
-    private string $token;
+    private ?UserContext $userContext = null;
 
     /**
      * Client constructor
@@ -35,12 +36,10 @@ class Client
     /**
      * Sets up the client object to attach authentication headers
      * to outgoing requests.
-     *
-     * @param string $token
      */
-    public function setUserTokenHeader(string $token): void
+    public function setUserContext(UserContext $userContext): void
     {
-        $this->token = $token;
+        $this->userContext = $userContext;
     }
 
     /**
@@ -225,8 +224,8 @@ class Client
         }
 
         //  If the logged in user has an auth token already then set that in the header
-        if (isset($this->token)) {
-            $headerLines['User-Token'] = $this->token;
+        if (isset($this->userContext->userId)) {
+            $headerLines['User-Token'] = $this->userContext->userId;
         }
 
         return $headerLines;
@@ -257,7 +256,7 @@ class Client
     }
 
     /**
-     * @param ResponseInterface|null $response
+     * @param ResponseInterface $response
      * @param $defaultMessage
      * @return mixed|string
      */
