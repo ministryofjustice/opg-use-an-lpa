@@ -2,6 +2,7 @@
 Find unused accounts with an Athena query and write work files for the unused-accounts lambda.
 
 An account is "unused" when:
+  - it is a real account, not an "IDENTITY#<identity>" pinning row (see service-api ActorUsers::add), and
   - it has no rows in UserLpaActorMap (no LPAs), and
   - it has never logged in, or its LastLogin date is on or before the date N months ago (default 6).
 
@@ -58,6 +59,8 @@ LEFT JOIN (
 ) lpas
   ON lpas.user_id = a.item.id.s
 WHERE a.item.id.s IS NOT NULL
+  -- exclude the API's IDENTITY#<identity> pinning rows: they are not accounts (no LastLogin, no LPAs)
+  AND a.item.id.s NOT LIKE 'IDENTITY#%'
   AND lpas.user_id IS NULL
   AND (
         a.item.lastlogin.s IS NULL

@@ -162,6 +162,19 @@ func writeData(tablePrefix string, accounts []account) {
 			},
 		})
 
+		// identity pinning row, as written by the API when an account is created (service-api ActorUsers::add)
+		if acc.Identity != "" {
+			items = append(items, types.TransactWriteItem{
+				Put: &types.Put{
+					Item: map[string]types.AttributeValue{
+						"Id": &types.AttributeValueMemberS{Value: "IDENTITY#" + acc.Identity},
+					},
+					TableName:           &tableName,
+					ConditionExpression: &notExists,
+				},
+			})
+		}
+
 		for _, lpa := range acc.Lpas {
 			item, err := attributevalue.MarshalMap(lpa)
 			if err != nil {
