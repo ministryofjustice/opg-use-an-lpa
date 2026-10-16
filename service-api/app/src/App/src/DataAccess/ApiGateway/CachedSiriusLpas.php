@@ -45,15 +45,15 @@ final class CachedSiriusLpas implements LpasInterface
     {
         $uids = array_values(array_unique($uids));
 
-        $cached = [];
+        $results = [];
         foreach ($uids as $uid) {
             $lpa = $this->cache->get($this->cacheKey($uid));
             if ($lpa instanceof LpaInterface) {
-                $cached[$uid] = $lpa;
+                $results[$uid] = $lpa;
             }
         }
 
-        $missing = array_values(array_diff($uids, array_keys($cached)));
+        $missing = array_values(array_diff($uids, array_keys($results)));
 
         $this->logger->debug(
             'Sirius LPA cache lookup of {count} LPAs had {hits} hits and {misses} misses',
@@ -67,16 +67,9 @@ final class CachedSiriusLpas implements LpasInterface
 
         if ($missing !== []) {
             foreach ($this->siriusLpas->lookup($missing) as $uid => $lpa) {
-                $uid          = (string) $uid;
-                $cached[$uid] = $lpa;
+                $uid           = (string) $uid;
+                $results[$uid] = $lpa;
                 $this->cache->set($this->cacheKey($uid), $lpa);
-            }
-        }
-
-        $results = [];
-        foreach ($uids as $uid) {
-            if (array_key_exists($uid, $cached)) {
-                $results[$uid] = $cached[$uid];
             }
         }
 

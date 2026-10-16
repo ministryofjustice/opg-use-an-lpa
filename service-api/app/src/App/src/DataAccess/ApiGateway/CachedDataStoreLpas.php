@@ -78,15 +78,15 @@ final class CachedDataStoreLpas implements AuditableLpasInterface
 
         $uids         = array_values(array_unique($uids));
         $originatorId = $this->originatorId;
-        $cached       = [];
+        $results      = [];
         foreach ($uids as $uid) {
             $lpa = $this->cache->get($this->cacheKey($originatorId, $uid));
             if ($lpa instanceof LpaInterface) {
-                $cached[$uid] = $lpa;
+                $results[$uid] = $lpa;
             }
         }
 
-        $missing = array_values(array_diff($uids, array_keys($cached)));
+        $missing = array_values(array_diff($uids, array_keys($results)));
 
         $this->logger->debug(
             'Data store LPA cache lookup of {count} LPAs had {hits} hits and {misses} misses',
@@ -102,21 +102,15 @@ final class CachedDataStoreLpas implements AuditableLpasInterface
             foreach ($this->dataStoreLpas->lookup($missing) as $lpa) {
                 $data = $lpa->getData();
                 if ($data instanceof Lpa) {
-                    $uid          = $data->getUid();
-                    $cached[$uid] = $lpa;
+                    $uid           = $data->getUid();
+                    $results[$uid] = $lpa;
                     $this->cache->set($this->cacheKey($originatorId, $uid), $lpa);
                 }
             }
         }
 
-        $results = [];
-        foreach ($uids as $uid) {
-            if (isset($cached[$uid])) {
-                $results[] = $cached[$uid];
-            }
-        }
-
-        return $results;
+        // Why datastore lpas don't have keys and sirius ones do? Unsure.
+        return array_values($results);
     }
 
     private function cacheKey(string $originatorId, string $uid): string
