@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
-use Common\Service\Lpa\Response\ActivationKeyAlreadyRequested;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Entity\CaseActor;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\Context\UserContext;
 use Common\Service\Lpa\AddAccessForAllLpa;
 use Common\Service\Lpa\Response\AccessForAllResult;
+use Common\Service\Lpa\Response\ActivationKeyAlreadyRequested;
 use Common\Service\Lpa\Response\ActivationKeyExists;
 use Common\Service\Lpa\Response\LpaAlreadyAdded;
 use Common\Service\Lpa\Response\LpaMatch;
@@ -22,9 +20,11 @@ use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAdded;
 use Common\Service\Lpa\Response\Parse\ParseLpaMatch;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
@@ -35,23 +35,23 @@ use RuntimeException;
 #[CoversClass(AddAccessForAllLpa::class)]
 class AddAccessForAllLpaTest extends TestCase
 {
-    use ProphecyTrait;
-
-    private ObjectProphecy|ApiClient $apiClientProphecy;
-    private ObjectProphecy|LoggerInterface $loggerProphecy;
-    private ObjectProphecy|ParseActivationKeyExists $parseKeyExistsProphecy;
-    private ObjectProphecy|ParseActivationKeyAlreadyRequested $parseKeyAlreadyRequestedProphecy;
-    private ObjectProphecy|ParseLpaAlreadyAdded $parseAlreadyAddedProphecy;
-    private ObjectProphecy|ParseLpaMatch $parseOlderLpaMatchProphecy;
+    private ApiClient&MockObject $apiClientProphecy;
+    private LoggerInterface&MockObject $loggerProphecy;
+    private ParseActivationKeyExists&MockObject $parseKeyExistsProphecy;
+    private ParseActivationKeyAlreadyRequested&MockObject $parseKeyAlreadyRequestedProphecy;
+    private ParseLpaAlreadyAdded&MockObject $parseAlreadyAddedProphecy;
+    private UserContext $userContext;
+    private ParseLpaMatch&MockObject $parseOlderLpaMatchProphecy;
 
     public function setUp(): void
     {
-        $this->apiClientProphecy                = $this->prophesize(ApiClient::class);
-        $this->loggerProphecy                   = $this->prophesize(LoggerInterface::class);
-        $this->parseKeyExistsProphecy           = $this->prophesize(ParseActivationKeyExists::class);
-        $this->parseKeyAlreadyRequestedProphecy = $this->prophesize(ParseActivationKeyAlreadyRequested::class);
-        $this->parseAlreadyAddedProphecy        = $this->prophesize(ParseLpaAlreadyAdded::class);
-        $this->parseOlderLpaMatchProphecy       = $this->prophesize(ParseLpaMatch::class);
+        $this->userContext                      = new UserContext('12-1-1-1-1234', 'session-id');
+        $this->apiClientProphecy                = $this->createMock(ApiClient::class);
+        $this->loggerProphecy                   = $this->createMock(LoggerInterface::class);
+        $this->parseKeyExistsProphecy           = $this->createMock(ParseActivationKeyExists::class);
+        $this->parseKeyAlreadyRequestedProphecy = $this->createMock(ParseActivationKeyAlreadyRequested::class);
+        $this->parseAlreadyAddedProphecy        = $this->createMock(ParseLpaAlreadyAdded::class);
+        $this->parseOlderLpaMatchProphecy       = $this->createMock(ParseLpaMatch::class);
 
         $this->olderLpa = [
             'reference_number' => '700000000000',
@@ -61,15 +61,14 @@ class AddAccessForAllLpaTest extends TestCase
             'postcode'         => 'EX4 MPL',
         ];
 
-        $this->apiClientProphecy->setUserTokenHeader('12-1-1-1-1234')->shouldBeCalled();
-
         $this->sut = new AddAccessForAllLpa(
-            $this->apiClientProphecy->reveal(),
-            $this->loggerProphecy->reveal(),
-            $this->parseAlreadyAddedProphecy->reveal(),
-            $this->parseKeyExistsProphecy->reveal(),
-            $this->parseKeyAlreadyRequestedProphecy->reveal(),
-            $this->parseOlderLpaMatchProphecy->reveal()
+            $this->apiClientProphecy,
+            $this->loggerProphecy,
+            $this->parseAlreadyAddedProphecy,
+            $this->parseKeyExistsProphecy,
+            $this->parseKeyAlreadyRequestedProphecy,
+            $this->parseOlderLpaMatchProphecy,
+            $this->userContext,
         );
     }
 
@@ -89,7 +88,7 @@ class AddAccessForAllLpaTest extends TestCase
         ];
 
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'     => (string) $this->olderLpa['reference_number'],
@@ -112,11 +111,10 @@ class AddAccessForAllLpaTest extends TestCase
         $dto->setCaseSubtype($response['caseSubtype']);
 
         $this->parseOlderLpaMatchProphecy
-            ->__invoke($response)
+            ->method('__invoke')->with($response)
             ->willReturn($dto);
 
         $result = $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -155,7 +153,7 @@ class AddAccessForAllLpaTest extends TestCase
     public function it_will_fail_to_validate_due_to_bad_request_exception($message, $accessForAllResult): void
     {
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'     => (string) $this->olderLpa['reference_number'],
@@ -165,7 +163,7 @@ class AddAccessForAllLpaTest extends TestCase
                     'postcode'             => $this->olderLpa['postcode'],
                     'force_activation_key' => false,
                 ]
-            )->willThrow(
+            )->willThrowException(
                 new ApiException(
                     $message,
                     StatusCodeInterface::STATUS_BAD_REQUEST
@@ -173,7 +171,6 @@ class AddAccessForAllLpaTest extends TestCase
             );
 
         $result = $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -200,7 +197,7 @@ class AddAccessForAllLpaTest extends TestCase
         ];
 
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'     => (string) $this->olderLpa['reference_number'],
@@ -210,7 +207,7 @@ class AddAccessForAllLpaTest extends TestCase
                     'postcode'             => $this->olderLpa['postcode'],
                     'force_activation_key' => false,
                 ]
-            )->willThrow(
+            )->willThrowException(
                 new ApiException(
                     'LPA has an activation key already',
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -230,11 +227,10 @@ class AddAccessForAllLpaTest extends TestCase
         $dto->setCaseSubtype($response['caseSubtype']);
 
         $this->parseKeyExistsProphecy
-            ->__invoke($response)
+            ->method('__invoke')->with($response)
             ->willReturn($dto);
 
         $result = $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -260,7 +256,7 @@ class AddAccessForAllLpaTest extends TestCase
         ];
 
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'     => (string) $this->olderLpa['reference_number'],
@@ -270,7 +266,7 @@ class AddAccessForAllLpaTest extends TestCase
                     'postcode'             => $this->olderLpa['postcode'],
                     'force_activation_key' => false,
                 ]
-            )->willThrow(
+            )->willThrowException(
                 new ApiException(
                     'Activation key already requested for LPA',
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -293,11 +289,10 @@ class AddAccessForAllLpaTest extends TestCase
         );
 
         $this->parseKeyAlreadyRequestedProphecy
-            ->__invoke($response)
+            ->method('__invoke')->with($response)
             ->willReturn($dto);
 
         $result = $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -324,7 +319,7 @@ class AddAccessForAllLpaTest extends TestCase
         ];
 
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'     => (string) $this->olderLpa['reference_number'],
@@ -334,7 +329,7 @@ class AddAccessForAllLpaTest extends TestCase
                     'postcode'             => $this->olderLpa['postcode'],
                     'force_activation_key' => false,
                 ]
-            )->willThrow(
+            )->willThrowException(
                 new ApiException(
                     'LPA already added',
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -355,11 +350,10 @@ class AddAccessForAllLpaTest extends TestCase
         $dto->setLpaActorToken($response['lpaActorToken']);
 
         $this->parseAlreadyAddedProphecy
-            ->__invoke($response)
+            ->method('__invoke')->with($response)
             ->willReturn($dto);
 
         $result = $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -375,7 +369,7 @@ class AddAccessForAllLpaTest extends TestCase
     public function it_will_fail_to_validate_due_to_not_finding_the_lpa(): void
     {
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'     => (string) $this->olderLpa['reference_number'],
@@ -385,7 +379,7 @@ class AddAccessForAllLpaTest extends TestCase
                     'postcode'             => $this->olderLpa['postcode'],
                     'force_activation_key' => false,
                 ]
-            )->willThrow(
+            )->willThrowException(
                 new ApiException(
                     'Not Found',
                     StatusCodeInterface::STATUS_NOT_FOUND
@@ -393,7 +387,6 @@ class AddAccessForAllLpaTest extends TestCase
             );
 
         $result = $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -408,7 +401,7 @@ class AddAccessForAllLpaTest extends TestCase
     public function it_will_fail_to_validate_due_to_an_api_exception(): void
     {
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'     => (string) $this->olderLpa['reference_number'],
@@ -418,7 +411,7 @@ class AddAccessForAllLpaTest extends TestCase
                     'postcode'             => $this->olderLpa['postcode'],
                     'force_activation_key' => false,
                 ]
-            )->willThrow(
+            )->willThrowException(
                 new ApiException(
                     'Service Error',
                     StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
@@ -429,7 +422,6 @@ class AddAccessForAllLpaTest extends TestCase
         $this->expectExceptionMessage('Service Error');
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -442,7 +434,7 @@ class AddAccessForAllLpaTest extends TestCase
     public function it_will_fail_to_validate_due_to_an_unknown_request_exception(): void
     {
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/older-lpa/validate',
                 [
                     'reference_number'     => (string) $this->olderLpa['reference_number'],
@@ -452,7 +444,7 @@ class AddAccessForAllLpaTest extends TestCase
                     'postcode'             => $this->olderLpa['postcode'],
                     'force_activation_key' => false,
                 ]
-            )->willThrow(
+            )->willThrowException(
                 new ApiException(
                     'This message will not be recognised',
                     StatusCodeInterface::STATUS_BAD_REQUEST
@@ -461,7 +453,6 @@ class AddAccessForAllLpaTest extends TestCase
 
         $this->expectException(RuntimeException::class);
         $this->sut->validate(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -476,7 +467,7 @@ class AddAccessForAllLpaTest extends TestCase
         $response = [];
 
         $this->apiClientProphecy
-            ->httpPatch(
+            ->method('httpPatch')->with(
                 '/v1/older-lpa/confirm',
                 [
                     'reference_number'     => (string)$this->olderLpa['reference_number'],
@@ -490,11 +481,10 @@ class AddAccessForAllLpaTest extends TestCase
 
         $dto = new LpaMatch();
         $this->parseOlderLpaMatchProphecy
-            ->__invoke($response)
+            ->method('__invoke')->with($response)
             ->willReturn($dto);
 
         $result = $this->sut->confirm(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -510,7 +500,7 @@ class AddAccessForAllLpaTest extends TestCase
     public function it_will_fail_to_confirm_due_to_an_api_exception(): void
     {
         $this->apiClientProphecy
-            ->httpPatch(
+            ->method('httpPatch')->with(
                 '/v1/older-lpa/confirm',
                 [
                     'reference_number'     => (string)$this->olderLpa['reference_number'],
@@ -520,7 +510,7 @@ class AddAccessForAllLpaTest extends TestCase
                     'postcode'             => $this->olderLpa['postcode'],
                     'force_activation_key' => true,
                 ]
-            )->willThrow(
+            )->willThrowException(
                 new ApiException(
                     'Service Error',
                     StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
@@ -531,7 +521,6 @@ class AddAccessForAllLpaTest extends TestCase
         $this->expectExceptionMessage('Service Error');
 
         $this->sut->confirm(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -545,7 +534,7 @@ class AddAccessForAllLpaTest extends TestCase
     public function it_will_fail_to_add_lpa_when_lpa_is_not_cleansed(): void
     {
         $this->apiClientProphecy
-            ->httpPatch(
+            ->method('httpPatch')->with(
                 '/v1/older-lpa/confirm',
                 [
                     'reference_number'     => (string) $this->olderLpa['reference_number'],
@@ -555,7 +544,7 @@ class AddAccessForAllLpaTest extends TestCase
                     'postcode'             => $this->olderLpa['postcode'],
                     'force_activation_key' => true,
                 ]
-            )->willThrow(
+            )->willThrowException(
                 new ApiException(
                     'LPA needs cleansing',
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -565,7 +554,6 @@ class AddAccessForAllLpaTest extends TestCase
             );
 
         $result = $this->sut->confirm(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],
@@ -582,7 +570,7 @@ class AddAccessForAllLpaTest extends TestCase
     public function it_will_fail_to_add_lpa_due_to_an_unknown_request_exception(): void
     {
         $this->apiClientProphecy
-            ->httpPatch(
+            ->method('httpPatch')->with(
                 '/v1/older-lpa/confirm',
                 [
                     'reference_number'     => (string)$this->olderLpa['reference_number'],
@@ -592,7 +580,7 @@ class AddAccessForAllLpaTest extends TestCase
                     'postcode'             => $this->olderLpa['postcode'],
                     'force_activation_key' => true,
                 ]
-            )->willThrow(
+            )->willThrowException(
                 new ApiException(
                     'This message will not be recognised',
                     StatusCodeInterface::STATUS_BAD_REQUEST
@@ -601,7 +589,6 @@ class AddAccessForAllLpaTest extends TestCase
 
         $this->expectException(ApiException::class);
         $this->sut->confirm(
-            '12-1-1-1-1234',
             $this->olderLpa['reference_number'],
             $this->olderLpa['first_names'],
             $this->olderLpa['last_name'],

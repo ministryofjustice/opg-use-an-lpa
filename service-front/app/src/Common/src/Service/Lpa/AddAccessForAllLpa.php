@@ -6,6 +6,7 @@ namespace Common\Service\Lpa;
 
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\Context\UserContext;
 use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\Response\AccessForAllResult;
 use Common\Service\Lpa\Response\Parse\ParseLpaMatch;
@@ -43,11 +44,11 @@ class AddAccessForAllLpa
         private ParseActivationKeyExists $parseActivationKeyExistsResponse,
         private ParseActivationKeyAlreadyRequested $parseActivationKeyAlreadyRequestedResponse,
         private ParseLpaMatch $parseAccessForAllLpaMatchResponse,
+        private UserContext $userContext,
     ) {
     }
 
     public function validate(
-        string $userToken,
         string $lpaUid,
         string $firstnames,
         string $lastname,
@@ -62,8 +63,6 @@ class AddAccessForAllLpa
             'postcode'             => $postcode,
             'force_activation_key' => false,
         ];
-
-        $this->apiClient->setUserTokenHeader($userToken);
 
         try {
             $response = $this->apiClient->httpPost('/v1/older-lpa/validate', $data);
@@ -86,7 +85,7 @@ class AddAccessForAllLpa
             'Successfully matched LPA {uId} for account with Id {id} ',
             [
                 'event_code' => EventCodes::OLDER_LPA_FOUND,
-                'id'         => $userToken,
+                'id'         => $this->userContext->userId,
                 'uId'        => $data['reference_number'],
             ]
         );
@@ -98,7 +97,6 @@ class AddAccessForAllLpa
     }
 
     public function confirm(
-        string $userToken,
         string $lpaUid,
         string $firstnames,
         string $lastname,
@@ -114,8 +112,6 @@ class AddAccessForAllLpa
             'postcode'             => $postcode,
             'force_activation_key' => $forceActivationKey,
         ];
-
-        $this->apiClient->setUserTokenHeader($userToken);
 
         try {
             $response = $this->apiClient->httpPatch('/v1/older-lpa/confirm', $data);
@@ -142,7 +138,7 @@ class AddAccessForAllLpa
                 'event_code' => $forceActivationKey
                     ? EventCodes::OLDER_LPA_FORCE_ACTIVATION_KEY
                     : EventCodes::OLDER_LPA_SUCCESS,
-                'id'         => $userToken,
+                'id'         => $this->userContext->userId,
                 'uId'        => $data['reference_number'],
             ]
         );

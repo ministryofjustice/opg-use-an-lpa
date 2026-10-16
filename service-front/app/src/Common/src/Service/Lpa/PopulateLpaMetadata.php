@@ -21,16 +21,14 @@ class PopulateLpaMetadata
      * metadata to the LPA record withing the ArrayObject.
      *
      * @param ArrayObject $lpas      A list of LPAs to attach metadata to
-     * @param string      $userToken An identity used to query the viewer code service
      * @return ArrayObject
      */
-    public function __invoke(ArrayObject $lpas, string $userToken): ArrayObject
+    public function __invoke(ArrayObject $lpas): ArrayObject
     {
         foreach ($lpas as $lpaKey => $lpaData) {
             $actorToken = $lpaData['user-lpa-actor-token'];
 
             $shareCodes = $this->viewerCodeService->getShareCodes(
-                $userToken,
                 $actorToken,
                 true
             );

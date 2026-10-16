@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Test;
 use ArrayObject;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\Context\UserContext;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResult;
 use Common\Service\Lpa\ParseLpaData;
 use Common\Service\Lpa\Response\LpaAlreadyAdded;
 use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAdded;
 use Fig\Http\Message\StatusCodeInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
@@ -32,19 +32,19 @@ use RuntimeException;
 #[CoversClass(AddLpa::class)]
 class AddLpaTest extends TestCase
 {
-    use ProphecyTrait;
-
-    private ObjectProphecy|ApiClient $apiClientProphecy;
-    private ObjectProphecy|ParseLpaData $parseLpaDataProphecy;
-    private ObjectProphecy|LoggerInterface $loggerProphecy;
-    private ObjectProphecy|ParseLpaAlreadyAdded $parseAlreadyAddedProphecy;
+    private ApiClient&MockObject $apiClientProphecy;
+    private ParseLpaData&MockObject $parseLpaDataProphecy;
+    private LoggerInterface&MockObject $loggerProphecy;
+    private ParseLpaAlreadyAdded&MockObject $parseAlreadyAddedProphecy;
+    private UserContext $userContext;
 
     public function setUp(): void
     {
-        $this->apiClientProphecy         = $this->prophesize(ApiClient::class);
-        $this->parseLpaDataProphecy      = $this->prophesize(ParseLpaData::class);
-        $this->loggerProphecy            = $this->prophesize(LoggerInterface::class);
-        $this->parseAlreadyAddedProphecy = $this->prophesize(ParseLpaAlreadyAdded::class);
+        $this->userContext               = new UserContext('12-1-1-1-1234', 'session-id');
+        $this->apiClientProphecy         = $this->createMock(ApiClient::class);
+        $this->parseLpaDataProphecy      = $this->createMock(ParseLpaData::class);
+        $this->loggerProphecy            = $this->createMock(LoggerInterface::class);
+        $this->parseAlreadyAddedProphecy = $this->createMock(ParseLpaAlreadyAdded::class);
 
         $this->data = [
             'uid'        => '700000000321',
@@ -52,13 +52,12 @@ class AddLpaTest extends TestCase
             'dob'        => '1980-11-07',
         ];
 
-        $this->apiClientProphecy->setUserTokenHeader('12-1-1-1-1234')->shouldBeCalled();
-
         $this->addLpa = new AddLpa(
-            $this->apiClientProphecy->reveal(),
-            $this->loggerProphecy->reveal(),
-            $this->parseLpaDataProphecy->reveal(),
-            $this->parseAlreadyAddedProphecy->reveal()
+            $this->apiClientProphecy,
+            $this->loggerProphecy,
+            $this->parseLpaDataProphecy,
+            $this->parseAlreadyAddedProphecy,
+            $this->userContext,
         );
 
         $actor = new CaseActor();
@@ -99,7 +98,7 @@ class AddLpaTest extends TestCase
     public function it_will_validate_the_data_and_fetch_the_lpa(): void
     {
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/add-lpa/validate',
                 [
                     'actor-code' => $this->data['actor-code'],
@@ -109,11 +108,10 @@ class AddLpaTest extends TestCase
             )->willReturn($this->lpaArrayData);
 
         $this->parseLpaDataProphecy
-            ->__invoke($this->lpaArrayData)
+            ->method('__invoke')->with($this->lpaArrayData)
             ->willReturn($this->lpaParsedData);
 
         $result = $this->addLpa->validate(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']
@@ -138,14 +136,14 @@ class AddLpaTest extends TestCase
         ];
 
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/add-lpa/validate',
                 [
                     'actor-code' => $this->data['actor-code'],
                     'uid'        => $this->data['uid'],
                     'dob'        => $this->data['dob'],
                 ]
-            )->willThrow(
+            )->willThrowException(
                 new ApiException(
                     'LPA already added',
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -166,11 +164,10 @@ class AddLpaTest extends TestCase
         $dto->setLpaActorToken($response['lpaActorToken']);
 
         $this->parseAlreadyAddedProphecy
-            ->__invoke($response)
+            ->method('__invoke')->with($response)
             ->willReturn($dto);
 
         $result = $this->addLpa->validate(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']
@@ -184,14 +181,14 @@ class AddLpaTest extends TestCase
     public function it_will_fail_to_add_an_lpa_which_is_not_registered(): void
     {
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/add-lpa/validate',
                 [
                     'actor-code' => $this->data['actor-code'],
                     'uid'        => $this->data['uid'],
                     'dob'        => $this->data['dob'],
                 ]
-            )->willThrow(
+            )->willThrowException(
                 new ApiException(
                     'LPA status is not registered',
                     StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -201,11 +198,10 @@ class AddLpaTest extends TestCase
             );
 
         $this->parseLpaDataProphecy
-            ->__invoke([])
+            ->method('__invoke')->with([])
             ->willReturn(new ArrayObject());
 
         $result = $this->addLpa->validate(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']
@@ -219,14 +215,14 @@ class AddLpaTest extends TestCase
     public function it_will_fail_to_add_an_lpa_if_code_validation_fails(): void
     {
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/add-lpa/validate',
                 [
                     'actor-code' => $this->data['actor-code'],
                     'uid'        => $this->data['uid'],
                     'dob'        => $this->data['dob'],
                 ]
-            )->willThrow(
+            )->willThrowException(
                 new ApiException(
                     'Code validation failed',
                     StatusCodeInterface::STATUS_NOT_FOUND,
@@ -236,11 +232,10 @@ class AddLpaTest extends TestCase
             );
 
         $this->parseLpaDataProphecy
-            ->__invoke([])
+            ->method('__invoke')->with([])
             ->willReturn(new ArrayObject());
 
         $result = $this->addLpa->validate(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']
@@ -254,14 +249,14 @@ class AddLpaTest extends TestCase
     public function it_will_fail_to_add_due_to_an_api_exception(): void
     {
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/add-lpa/validate',
                 [
                     'actor-code' => $this->data['actor-code'],
                     'uid'        => $this->data['uid'],
                     'dob'        => $this->data['dob'],
                 ]
-            )->willThrow(
+            )->willThrowException(
                 new ApiException(
                     'Service Error',
                     StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR
@@ -272,7 +267,6 @@ class AddLpaTest extends TestCase
         $this->expectExceptionMessage('Service Error');
         $this->expectExceptionCode(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR);
         $this->addLpa->validate(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']
@@ -283,14 +277,14 @@ class AddLpaTest extends TestCase
     public function it_will_fail_to_add_due_to_an_unknown_request_exception(): void
     {
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/add-lpa/validate',
                 [
                     'actor-code' => $this->data['actor-code'],
                     'uid'        => $this->data['uid'],
                     'dob'        => $this->data['dob'],
                 ]
-            )->willThrow(
+            )->willThrowException(
                 new ApiException(
                     'This message will not be recognised',
                     StatusCodeInterface::STATUS_BAD_REQUEST
@@ -298,12 +292,11 @@ class AddLpaTest extends TestCase
             );
 
         $this->parseLpaDataProphecy
-            ->__invoke([])
+            ->method('__invoke')->with([])
             ->willReturn(new ArrayObject());
 
         $this->expectException(RuntimeException::class);
         $this->addLpa->validate(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']
@@ -317,7 +310,7 @@ class AddLpaTest extends TestCase
         $this->lpaArrayData['user-lpa-actor-token'] = '1234-abcd';
 
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/add-lpa/confirm',
                 [
                     'actor-code' => $this->data['actor-code'],
@@ -327,7 +320,6 @@ class AddLpaTest extends TestCase
             )->willReturn($this->lpaArrayData);
 
         $result = $this->addLpa->confirm(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']
@@ -340,7 +332,7 @@ class AddLpaTest extends TestCase
     public function it_will_return_failed_event_code_if_failed_when_adding_the_lpa(): void
     {
         $this->apiClientProphecy
-            ->httpPost(
+            ->method('httpPost')->with(
                 '/v1/add-lpa/confirm',
                 [
                     'actor-code' => $this->data['actor-code'],
@@ -350,7 +342,6 @@ class AddLpaTest extends TestCase
             )->willReturn($this->lpaArrayData);
 
         $result = $this->addLpa->confirm(
-            '12-1-1-1-1234',
             $this->data['actor-code'],
             $this->data['uid'],
             $this->data['dob']

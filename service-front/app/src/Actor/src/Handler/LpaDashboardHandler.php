@@ -41,10 +41,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $user     = $this->getUser($request);
-        $identity = $user?->getIdentity();
-
-        $lpas = $this->lpaService->getLpas($identity, true);
+        $lpas = $this->lpaService->getLpas(true);
 
         $hasDuplicates = array_reduce($lpas->getArrayCopy(), function ($duplicate, $lpaArray) {
             $uids = array_map(fn ($lpa) => $lpa->lpa->getUId(), $lpaArray);

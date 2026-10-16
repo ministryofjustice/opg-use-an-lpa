@@ -23,10 +23,8 @@ class RemoveLpa
     ) {
     }
 
-    public function __invoke(string $userToken, string $actorLpaToken)
+    public function __invoke(string $actorLpaToken)
     {
-        $this->apiClient->setUserTokenHeader($userToken);
-
         try {
             $removedLpaData = $this->apiClient->httpDelete('/v1/lpas/' . $actorLpaToken);
 

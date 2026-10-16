@@ -7,6 +7,7 @@ namespace Common\Middleware\Authentication;
 use Common\Entity\User;
 use Common\Middleware\Session\SessionAttributeAllowlistMiddleware;
 use Common\Middleware\Session\SessionExpiryMiddleware;
+use Common\Service\Context\UserContext;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\Session\Exception\MissingSessionContainerException;
 use Mezzio\Authentication\UserInterface;
@@ -40,6 +41,9 @@ class AuthenticationMiddleware implements MiddlewareInterface
         $user = $this->loadUser($session);
 
         if (null !== $user) {
+            $userContext         = $request->getAttribute(UserContext::class);
+            $userContext->userId = $user->getIdentity();
+
             $response = $handler->handle($request->withAttribute(UserInterface::class, $user));
 
             // something in the handler has removed the users login (probably logout) ensure we tell the

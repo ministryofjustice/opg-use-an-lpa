@@ -14,8 +14,6 @@ use Common\Service\Lpa\Response\AccessForAllResult;
 class CleanseLpa
 {
     /**
-     * @param ApiClient       $apiClient
-     * @param LoggerInterface $logger
      * @codeCoverageIgnore
      */
     public function __construct(private ApiClient $apiClient)
@@ -23,7 +21,6 @@ class CleanseLpa
     }
 
     public function cleanse(
-        string $userToken,
         string $lpaUid,
         string $additionalInformation,
         ?string $actorId,
@@ -36,8 +33,6 @@ class CleanseLpa
         if ($actorId !== null) {
             $data['actor_id'] = $actorId;
         }
-
-        $this->apiClient->setUserTokenHeader($userToken);
 
         $response = $this->apiClient->httpPost('/v1/older-lpa/cleanse', $data);
 

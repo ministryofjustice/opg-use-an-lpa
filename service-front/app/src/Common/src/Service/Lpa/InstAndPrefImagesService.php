@@ -18,10 +18,8 @@ class InstAndPrefImagesService
     ) {
     }
 
-    public function getImagesById(string $userToken, string $actorLpaToken): Images
+    public function getImagesById(string $actorLpaToken): Images
     {
-        $this->apiClient->setUserTokenHeader($userToken);
-
         try {
             $imagesData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken . '/images');
 
