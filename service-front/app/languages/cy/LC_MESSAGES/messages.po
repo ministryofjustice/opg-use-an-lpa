@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-16 10:36+0000\n"
+"PO-Revision-Date: 2026-10-16 10:57+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -1159,7 +1159,7 @@ msgstr "Dylech ddarllen yr hysbysiad preifatrwydd hwn ochr yn ochr â:"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:29
 msgid "<a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"> OPG’s personal information charter </a>, which sets out the standards you can expect when we ask for, use or share your personal information"
-msgstr "<a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter.cy\">siarter gwybodaeth bersonol <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr></a>, sy’n nodi’r safonau y gallwch eu disgwyl pan fyddwn yn gofyn am eich gwybodaeth bersonol, yn ei defnyddio neu’n ei rhannu"
+msgstr "<a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter.cy\">siarter gwybodaeth bersonol OPG</a>, sy’n nodi’r safonau y gallwch eu disgwyl pan fyddwn yn gofyn am eich gwybodaeth bersonol, yn ei defnyddio neu’n ei rhannu"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:36
 msgid "<a class=\"govuk-link\" href=\"https://www.gov.uk/government/publications/opg-privacy-notice-lasting-and-enduring-powers-of-attorney\"> OPG’s lasting power of attorney privacy notice </a>, which explains how we use and protect your data when you’re named on an <abbr title=\"lasting power of attorney\">LPA</abbr>"
@@ -1180,7 +1180,7 @@ msgstr "<abbr title=\"Weinyddiaeth Gyfiawnder\">MOJ</abbr> yw’r rheolydd data 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:56
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:52
 msgid "You can find more information about using the Use a lasting power of attorney service in our <a class=\"govuk-link\" href=\"%terms-of-use%\">terms of use</a> and <a class=\"govuk-link\" href=\"%cookie%\">cookie policy."
-msgstr "Mae rhagor o wybodaeth am y gwasanaeth Defnyddio atwrneiaeth arhosol i’w gweld yn ein <a class=\"govuk-link\" href=\"%terms-of-use%\">telerau defnyddio</a> a’r <a class=\"govuk-link\" href=\"%cookie%\">polisi cwcis."
+msgstr "Mae rhagor o wybodaeth am y gwasanaeth Defnyddio atwrneiaeth arhosol i’w gweld yn ein <a class=\"govuk-link\" href=\"%terms-of-use%\">telerau defnyddio</a> a’r <a class=\"govuk-link\" href=\"%cookie%\">polisi cwcis.</a>"
 
 # What data we collect and how we use it
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:59
@@ -1583,7 +1583,7 @@ msgstr "Os cofrestrwyd yr LPA cyn y dyddiad hwn, bydd angen i chi ddangos yr LPA
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:15
 msgid "If the paper LPA has been lost or destroyed, you can ask OPG for an office copy by calling 0300 456 0300 - office copies cost £35."
-msgstr "Os yw’r LPA bapur wedi’i cholli neu ei dinistrio, gallwch ofyn i OPG am gopi swyddfa drwy ffonio 0300 456 0300 – mae copi swyddfa o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn costio £35."
+msgstr "Os yw’r LPA bapur wedi’i cholli neu ei dinistrio, gallwch ofyn i OPG am gopi swyddfa drwy ffonio 0300 456 0300 – mae copi swyddfa yn costio £35."
 
 #: src/Actor/templates/actor/service-names.html.twig:1
 #: src/Common/src/View/Twig/GenericGlobalVariableExtension.php:23
