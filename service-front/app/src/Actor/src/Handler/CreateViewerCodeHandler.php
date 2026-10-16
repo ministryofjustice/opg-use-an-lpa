@@ -24,7 +24,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @codeCoverageIgnore
  */
-class CreateViewerCodeHandler extends AbstractHandler implements CsrfGuardAware
+final class CreateViewerCodeHandler extends AbstractHandler implements CsrfGuardAware
 {
     use CsrfGuard;
     use Session;

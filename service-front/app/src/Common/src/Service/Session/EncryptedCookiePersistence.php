@@ -21,7 +21,7 @@ use Random\RandomException;
 /**
  * Utilises Amazon KMS to encrypt the session cookie sent to users
  */
-class EncryptedCookiePersistence implements SessionPersistenceInterface, InitializePersistenceIdInterface
+final class EncryptedCookiePersistence implements SessionPersistenceInterface, InitializePersistenceIdInterface
 {
     use CacheHeadersGeneratorTrait;
     use SessionCookieAwareTrait;

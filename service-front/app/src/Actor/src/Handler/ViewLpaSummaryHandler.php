@@ -19,7 +19,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @codeCoverageIgnore
  */
-class ViewLpaSummaryHandler extends AbstractHandler
+final class ViewLpaSummaryHandler extends AbstractHandler
 {
     public function __construct(
         TemplateRendererInterface $renderer,

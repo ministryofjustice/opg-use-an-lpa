@@ -22,7 +22,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @codeCoverageIgnore
  */
-class CheckAccessCodesHandler extends AbstractHandler implements CsrfGuardAware
+final class CheckAccessCodesHandler extends AbstractHandler implements CsrfGuardAware
 {
     use CsrfGuard;
     use Session;
@@ -100,7 +100,12 @@ class CheckAccessCodesHandler extends AbstractHandler implements CsrfGuardAware
         string $actorLpaToken,
         array $code,
     ): CancelCode {
-        $form = new CancelCode($this->getCsrfGuard($request));
+        $csrfGuard = $this->getCsrfGuard($request);
+        if ($csrfGuard === null) {
+            throw new InvalidRequestException('CSRF guard is unavailable');
+        }
+
+        $form = new CancelCode($csrfGuard);
         $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-cancel-code'));
         $form->setData([
             'lpa_token'    => $actorLpaToken,
@@ -125,16 +130,20 @@ class CheckAccessCodesHandler extends AbstractHandler implements CsrfGuardAware
             ]
         );
 
-        $this->logger->debug(
-            'Donor Id is {type}:{donor_id}',
-            [
-                'donor_id' => $lpa->getDonor()->getUId(),
-                'type'     => gettype($lpa->getDonor()->getUId()),
-            ]
-        );
+        $donor = $lpa->getDonor();
 
-        if ($this->idMatch($lpa->getDonor(), $code)) {
-            $code['CreatedBy'] = $lpa->getDonor()->getFirstname() . ' ' . $lpa->getDonor()->getSurname();
+        if ($donor !== null) {
+            $this->logger->debug(
+                'Donor Id is {type}:{donor_id}',
+                [
+                    'donor_id' => $donor->getUId(),
+                    'type'     => gettype($donor->getUId()),
+                ]
+            );
+
+            if ($this->idMatch($donor, $code)) {
+                $code['CreatedBy'] = ($donor->getFirstname() ?? '') . ' ' . ($donor->getSurname() ?? '');
+            }
         }
 
         foreach ($lpa->getAttorneys() as $attorney) {
@@ -147,7 +156,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements CsrfGuardAware
             );
 
             if ($this->idMatch($attorney, $code)) {
-                $code['CreatedBy'] = $attorney->getFirstname() . ' ' . $attorney->getSurname();
+                $code['CreatedBy'] = ($attorney->getFirstname() ?? '') . ' ' . ($attorney->getSurname() ?? '');
             }
         }
 

@@ -249,10 +249,10 @@ class Client
 
     /**
      * @param ResponseInterface|null $response
-     * @param $defaultMessage
+     * @param string $defaultMessage
      * @return mixed|string
      */
-    public function getResponseMessage(?ResponseInterface $response, $defaultMessage): string
+    public function getResponseMessage(?ResponseInterface $response, string $defaultMessage): string
     {
         if ($response === null) {
             return $defaultMessage;

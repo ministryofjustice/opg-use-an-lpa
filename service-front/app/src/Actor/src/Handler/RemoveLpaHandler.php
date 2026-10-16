@@ -27,7 +27,7 @@ use Actor\Handler\ResolveLpaTypeTrait\LpaTypeResolver;
 /**
  * @codeCoverageIgnore
  */
-class RemoveLpaHandler extends AbstractHandler implements CsrfGuardAware
+final class RemoveLpaHandler extends AbstractHandler implements CsrfGuardAware
 {
     use CsrfGuard;
     use LpaTypeResolver;
