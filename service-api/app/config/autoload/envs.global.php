@@ -64,7 +64,7 @@ return [
                 'adapter'          => 'array',
                 'default_lifetime' => 0,
                 'options'          => [
-                    'serialise' => false,
+                    'serialise' => false, // SiriusLPAs contain Logger instances which can't be serialised
                 ],
             ],
             'cache.app'            => [

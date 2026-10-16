@@ -20,7 +20,7 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
  *
  * @codeCoverageIgnore
  */
-class ConfigProvider
+final class ConfigProvider
 {
     /**
      * Returns the configuration array
@@ -82,6 +82,9 @@ class ConfigProvider
                 // when setup in the delegators section. This is a PHP-DI specific configuration
                 Service\Secrets\OneLoginIdentityKeyPairManager::class,
                 Service\Secrets\LpaDataStoreSecretManager::class,
+            ],
+            'invokables' => [
+                Service\Cache\RedisFactory::class => Service\Cache\RedisFactory::class,
             ],
             'factories'  => [
                 // Cache
