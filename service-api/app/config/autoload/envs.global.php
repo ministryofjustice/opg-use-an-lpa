@@ -63,6 +63,9 @@ return [
             'cache.request'        => [
                 'adapter'          => 'array',
                 'default_lifetime' => 0,
+                'options'          => [
+                    'serialise' => false,
+                ],
             ],
             'cache.app'            => [
                 'adapter'          => 'apcu',

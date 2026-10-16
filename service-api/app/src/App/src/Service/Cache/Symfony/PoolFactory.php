@@ -31,7 +31,7 @@ final class PoolFactory implements FactoryInterface
             'apcu' => $this->createApcuPool($config['namespace'], $config['default_lifetime'], $config['version']),
             'array' => new ArrayAdapter(
                 $config['default_lifetime'],
-                $requestedName !== 'cache.request',
+                $config['options']['serialise'] ?? false,
             ),
             default => throw new UnexpectedValueException('Unsupported Symfony cache adapter: ' . $config['adapter']),
         };
@@ -83,6 +83,7 @@ final class PoolFactory implements FactoryInterface
             'version'          => $version,
             'adapter'          => $adapter,
             'default_lifetime' => $lifetime,
+            'options'          => $pool['options'] ?? [],
         ];
     }
 
