@@ -25,6 +25,7 @@ final class AccountContext implements Context
     #[Given('I am currently signed in')]
     public function iAmCurrentlySignedIn(): void
     {
+        $this->ui->getSession()->setRequestHeader('User-Token', $this->base->userAccountId);
         $this->ui->getSession()->setRequestHeader('User-Session', 'test-session-123');
     }
 
