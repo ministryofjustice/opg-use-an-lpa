@@ -27,13 +27,14 @@ class ClientFactoryTest extends TestCase
     #[Test]
     public function it_creates_an_apiclient(): void
     {
-        $context    = new UserContext();
         $httpClient = $this->createMock(ClientInterface::class);
         $httpClient->expects(self::once())->method('sendRequest')
             ->with(self::callback(
                 fn (RequestInterface $request): bool => $request->getHeaderLine('User-Token') === 'current-user'
             ))
             ->willReturn(new JsonResponse([]));
+
+        $context   = new UserContext('current-user', 'current-session');
         $container = $this->createMock(ContainerInterface::class);
         $container->expects(self::exactly(4))->method('get')->willReturnMap([
             [
@@ -58,8 +59,6 @@ class ClientFactoryTest extends TestCase
 
         $client = $factory($container);
 
-        $this->assertInstanceOf(Client::class, $client);
-        $context->userId = 'current-user';
         self::assertSame([], $client->httpGet('/lpas'));
     }
 

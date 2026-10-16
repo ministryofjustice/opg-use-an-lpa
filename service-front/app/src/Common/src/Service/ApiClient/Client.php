@@ -215,7 +215,7 @@ class Client
         }
 
         //  If the logged in user has an auth token already then set that in the header
-        if ($this->userContext->userId !== null || $this->userContext->sessionId !== null) {
+        if ($this->userContext->userId !== null && $this->userContext->sessionId !== null) {
             $headerLines['User-Token']   = $this->userContext->userId;
             $headerLines['User-Session'] = $this->userContext->sessionId;
         }

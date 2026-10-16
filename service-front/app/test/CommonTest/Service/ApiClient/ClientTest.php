@@ -505,6 +505,7 @@ class ClientTest extends TestCase
             'second-user',
             null,
         ];
+
         $this->apiClient->expects(self::exactly(3))->method('sendRequest')
             ->with(self::callback(function (RequestInterface $request) use (&$expectedTokens): bool {
                 $expectedToken = array_shift($expectedTokens);
