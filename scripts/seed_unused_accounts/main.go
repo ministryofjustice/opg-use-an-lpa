@@ -68,7 +68,7 @@ func main() {
 }
 
 func run(args []string, ctx context.Context) int {
-	fs := flag.NewFlagSet("seed_duplicate_accounts", flag.ContinueOnError)
+	fs := flag.NewFlagSet("seed_unused_accounts", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 
 	fs.Usage = func() {
@@ -88,6 +88,11 @@ func run(args []string, ctx context.Context) int {
 		return 2
 	}
 
+	if fs.NArg() > 0 {
+		slog.Error("unexpected positional arguments (check flag values are quoted)", slog.Any("args", fs.Args()))
+		return 2
+	}
+
 	if cfg.tablePrefix != "" {
 		cfg.tablePrefix = fmt.Sprintf("%s-", cfg.tablePrefix)
 	}
@@ -104,7 +109,7 @@ func run(args []string, ctx context.Context) int {
 
 	dynamoClient = dynamodb.NewFromConfig(awsCfg)
 
-	// Generate initial accounts
+	// Generate initial accounts - no LPAs, last login 6+ months ago
 	var accounts []account
 	for i := 0; i < 10000; i++ {
 		email := faker.Email(options.WithCustomDomain("example.org"))
@@ -116,30 +121,21 @@ func run(args []string, ctx context.Context) int {
 			Id:        uuid.NewString(),
 			Email:     email,
 			Identity:  "urn:fdc:mock-one-login:2023:" + encodedEmail,
-			LastLogin: LastLogin(),
+			LastLogin: LastLoginUnused(),
 			Lpas:      []lpa{},
-			Comment:   "Seeded Account: Duplicate user bulk seeding",
+			Comment:   "Seeded Account: Unused accounts bulk seeding",
 		}
 
 		accounts = append(accounts, account)
 	}
 
-	// add 1 - 3 lpas to 33% of those accounts
-	accounts, lpasGenerated, addedToAccounts, viewerCodes := generateLpas(accounts)
-
-	// duplicate 10% of the accounts
-	accounts, duplicatedAccounts := duplicateAccounts(accounts)
-
+	// Write the seeded accounts (no LPA generation, no duplication)
 	writeData(cfg.tablePrefix, accounts)
 
 	logger.Info(
 		fmt.Sprintf(
-			"Generated %d total accounts with %d LPAs added to %d of them, %d viewercodes and %d duplicated accounts",
+			"Generated %d accounts with no LPAs and last login 6+ months ago",
 			len(accounts),
-			lpasGenerated,
-			addedToAccounts,
-			viewerCodes,
-			duplicatedAccounts,
 		),
 	)
 
@@ -165,6 +161,19 @@ func writeData(tablePrefix string, accounts []account) {
 				ConditionExpression: &notExists,
 			},
 		})
+
+		// identity pinning row, as written by the API when an account is created (service-api ActorUsers::add)
+		if acc.Identity != "" {
+			items = append(items, types.TransactWriteItem{
+				Put: &types.Put{
+					Item: map[string]types.AttributeValue{
+						"Id": &types.AttributeValueMemberS{Value: "IDENTITY#" + acc.Identity},
+					},
+					TableName:           &tableName,
+					ConditionExpression: &notExists,
+				},
+			})
+		}
 
 		for _, lpa := range acc.Lpas {
 			item, err := attributevalue.MarshalMap(lpa)
@@ -215,119 +224,20 @@ func writeData(tablePrefix string, accounts []account) {
 	}
 }
 
-func LastLogin() string {
+func LastLoginUnused() string {
 	location, _ := time.LoadLocation("Europe/London")
 
-	startdate := time.Date(2019, 07, 1, 0, 0, 0, 0, location).Unix()
-	now := time.Now().Unix()
-	randomTime := rand.Int63n(now-startdate) + startdate
+	// Calculate 6 months ago and 1 year ago from now
+	now := time.Now().In(location)
+	sixMonthsAgo := now.AddDate(0, -6, 0)
+	oneYearAgo := now.AddDate(-1, 0, 0)
+
+	// Generate random time between 1 year ago and 6 months ago
+	startTimestamp := oneYearAgo.Unix()
+	endTimestamp := sixMonthsAgo.Unix()
+	randomTime := rand.Int63n(endTimestamp-startTimestamp) + startTimestamp
 
 	return time.Unix(randomTime, 0).In(time.UTC).Format(time.RFC3339)
 }
 
-func generateLpas(accounts []account) ([]account, int, int, int) {
-	var data []account
-	lpasGenerated := 0
-	addedToAccounts := 0
-	viewerCodes := 0
 
-	for _, acc := range accounts {
-		acc.Lpas = []lpa{}
-
-		if randomChanceOne(3) {
-			for i := 0; i < (rand.Intn(3) + 1); i++ {
-				actorId := rand.Intn(99999999)
-				siriusUid := rand.Intn(99999999)
-
-				lpa := lpa{
-					Id:        uuid.NewString(),
-					UserId:    acc.Id,
-					ActorId:   fmt.Sprintf("7000%08d", actorId),
-					LpaUid:    "",
-					SiriusUid: fmt.Sprintf("7000%08d", siriusUid),
-					Comment:   "Seeded LPA: Duplicate user bulk seeding",
-				}
-
-				// LPA has viewercodes. It's probably lower than 1 in 10 tbh.
-				if randomChanceOne(10) {
-					lpa.ViewerCodes = generateViewerCodes(lpa.Id, lpa.SiriusUid)
-					viewerCodes = viewerCodes + len(lpa.ViewerCodes)
-				}
-
-				acc.Lpas = append(acc.Lpas, lpa)
-				lpasGenerated++
-			}
-
-			addedToAccounts++
-		}
-
-		data = append(data, acc)
-	}
-
-	return data, lpasGenerated, addedToAccounts, viewerCodes
-}
-
-func generateViewerCodes(id string, siriusUid string) []viewercode {
-	var codes []viewercode
-
-	for i := 0; i < (rand.Intn(15) + 1); i++ {
-		code := viewercode{
-			ViewerCode:   fmt.Sprintf("%012d", rand.Intn(99999999)),
-			SiriusUid:    siriusUid,
-			UserLpaActor: id,
-			Comment:      "Seeded Viewercode: Duplicate user bulk seeding",
-		}
-
-		codes = append(codes, code)
-	}
-
-	return codes
-}
-
-func randomChanceOne(in int) bool {
-	result := rand.Intn(in) + 1
-	return result == in
-}
-
-func duplicateAccounts(accounts []account) ([]account, int) {
-	var duplicated []account
-	duplicatedAccounts := 0
-
-	for _, acc := range accounts {
-		duplicated = append(duplicated, acc)
-
-		if randomChanceOne(10) {
-			duplicate := acc
-			duplicate.Id = uuid.NewString()
-			duplicate.LastLogin = LastLogin()
-			duplicate.Lpas = []lpa{}
-
-			// the duplicate account also has a lpa in it.
-			if len(acc.Lpas) > 0 && randomChanceOne(3) {
-				duplicateLpa := acc.Lpas[0]
-				duplicateLpa.Id = uuid.NewString()
-				duplicateLpa.UserId = duplicate.Id
-				duplicateLpa.ViewerCodes = []viewercode{}
-				duplicate.Lpas = []lpa{duplicateLpa} // just one will do
-			}
-
-			duplicated = append(duplicated, duplicate)
-			duplicatedAccounts++
-
-			// some duplicate accounts have more than one duplicate
-			if !randomChanceOne(4) {
-				continue
-			}
-
-			secondDuplicate := duplicate
-			secondDuplicate.Id = uuid.NewString()
-			secondDuplicate.LastLogin = LastLogin()
-			secondDuplicate.Lpas = []lpa{}
-			duplicated = append(duplicated, secondDuplicate)
-			duplicatedAccounts++
-		}
-
-	}
-
-	return duplicated, duplicatedAccounts
-}

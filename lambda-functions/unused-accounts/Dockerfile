@@ -38,7 +38,7 @@ RUN apt-get update && \
 COPY --from=builder /app/ .
 
 # Copy the application code.
-COPY merge_duplicate_identities.py lambda.py ./
+COPY delete_unused_accounts.py lambda.py ./
 
 ENTRYPOINT ["python", "-m", "awslambdaric"]
 CMD ["lambda.lambda_handler"]

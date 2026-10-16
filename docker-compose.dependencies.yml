@@ -166,3 +166,19 @@ services:
       - ./mock-integrations/secrets-manager/private_key.pem:/private_key.pem
       - ./mock-integrations/secrets-manager/public_key.pem:/public_key.pem
       - "/var/run/docker.sock:/var/run/docker.sock"
+
+  # ---------------------------
+  # LOCAL TESTING ONLY: stand-in for AWS Athena (engine v3 is Trino) for the unused-accounts workflow.
+  # Not started by default - only with the "unused-accounts" profile (see scripts/unused_accounts/test_unused_accounts.sh).
+  trino:
+    image: trinodb/trino:483@sha256:db58cc93e593a2706553745f276bb119c9810e69918be56ecde088ba7ccb0534
+    profiles: ["unused-accounts"]
+    ports:
+      - "8085:8080"
+    mem_limit: 2g
+    volumes:
+      - ./local-config/trino/catalog/hive.properties:/etc/trino/catalog/hive.properties:ro
+    depends_on:
+      localstack:
+        condition: service_healthy
+
