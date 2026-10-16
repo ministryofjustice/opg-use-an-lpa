@@ -10,7 +10,7 @@ use Laminas\ServiceManager\Factory\DelegatorFactoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
-class CachedSiriusLpasDelegatorFactory implements DelegatorFactoryInterface
+final class CachedSiriusLpasDelegatorFactory implements DelegatorFactoryInterface
 {
     public function __invoke(
         ContainerInterface $container,
