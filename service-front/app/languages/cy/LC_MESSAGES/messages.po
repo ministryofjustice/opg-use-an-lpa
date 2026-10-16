@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-15 15:47+0000\n"
+"PO-Revision-Date: 2026-10-16 10:36+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -4348,7 +4348,7 @@ msgstr "Ydych chi’n defnyddio’r gwasanaeth cywir?"
 
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:54
 msgid "This service is for organisations such as care homes or banks to view a summary of an LPA. They do this by using an access or paper verification code given to them by attorneys or donors."
-msgstr "Ar gyfer sefydliadau fel cartrefi gofal neu fanciau mae’r gwasanaeth hwn, i’w galluogi i weld crynodeb o atwrneiaeth arhosol. Maent yn gwneud hyn drwy ddefnyddio cod mynediad neu god gwirio papur a roddir iddynt gan atwrneiod neu roddwyr."
+msgstr "Mae’r gwasanaeth hwn ar gyfer sefydliadau fel cartrefi gofal neu fanciau, i’w galluogi i weld crynodeb o LPA. Maent yn gwneud hyn drwy ddefnyddio cod mynediad neu god gwirio papur a roddir iddynt gan atwrneiod neu roddwyr."
 
 # Hardcoded welsh link
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:57
@@ -4506,11 +4506,11 @@ msgstr "Dyma’r gwasanaeth Gweld atwrneiaeth arhosol. Fe’i defnyddir fel arfe
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:70
 msgid "Attorneys or donors who want to see a summary of an LPA, or give organisations access to a summary of an LPA, can do this through the <a class=\"govuk-link\" href=\"https://www.gov.uk/use-lasting-power-of-attorney\">Use a lasting power of attorney service</a>."
-msgstr "Gall atwrneiod neu roddwyr sydd am weld crynodeb o LPA, neu sy’n rhoi mynediad i sefydliadau at grynodeb o LPA, wneud hyn drwy’r <a class=\"govuk-link\" href=\"https://www.gov.uk/use-lasting-power-of-attorney\">gwasanaeth defnyddio atwrneiaeth arhosol</a>."
+msgstr "Gall atwrneiod neu roddwyr sydd am weld crynodeb o LPA, neu sy’n rhoi mynediad i sefydliadau at grynodeb o LPA, wneud hyn drwy’r <a class=\"govuk-link\" href=\"https://www.gov.uk/use-lasting-power-of-attorney\">gwasanaeth Defnyddio atwrneiaeth arhosol</a>."
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:75
 msgid "To do this you will need your own unique LPA activation key. This is normally found on the letter that told you the LPA had been registered."
-msgstr "I wneud hyn, bydd angen eich cod actifadu LPA unigryw eich hun arnoch. Mae hwn fel arfer i’w weld yn y llythyr yn dweud wrthych fod yr LPA wedi’i chofrestru."
+msgstr "I wneud hyn, bydd angen eich cod actifadu LPA unigryw eich hun arnoch. Mae hwn fel arfer i’w weld yn y llythyr sy’n dweud wrthych fod yr LPA wedi’i chofrestru."
 
 #: src/Actor/src/Handler/RemoveLpaHandler.php:119
 msgctxt "flashMessage"
