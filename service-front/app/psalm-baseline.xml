@@ -605,11 +605,6 @@
       <code><![CDATA[$formatter]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="src/Common/src/Workflow/State.php">
-    <TooManyTemplateParams>
-      <code><![CDATA[WorkflowState<T>]]></code>
-    </TooManyTemplateParams>
-  </file>
   <file src="src/Viewer/src/Handler/CheckCodeHandler.php">
     <ImplementationRequirementViolation>
       <code><![CDATA[SessionTrait]]></code>
