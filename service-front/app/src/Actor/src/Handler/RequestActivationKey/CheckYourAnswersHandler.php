@@ -48,7 +48,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
     use CsrfGuard;
     use Logger;
     use SessionTrait;
-    /** @use State<RequestActivationKey> */
     use State;
 
     private CheckYourAnswers $form;
@@ -256,7 +255,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements
         throw new InvalidRequestException('Invalid CSRF when submitting form');
     }
 
-    public function state(ServerRequestInterface $request): WorkflowState
+    public function state(ServerRequestInterface $request): RequestActivationKey
     {
         return $this->loadState($request, RequestActivationKey::class);
     }
