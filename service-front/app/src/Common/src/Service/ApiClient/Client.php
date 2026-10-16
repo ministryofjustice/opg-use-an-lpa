@@ -248,12 +248,16 @@ class Client
     }
 
     /**
-     * @param ResponseInterface $response
+     * @param ResponseInterface|null $response
      * @param $defaultMessage
      * @return mixed|string
      */
-    public function getResponseMessage(ResponseInterface $response, $defaultMessage): string
+    public function getResponseMessage(?ResponseInterface $response, $defaultMessage): string
     {
+        if ($response === null) {
+            return $defaultMessage;
+        }
+
         $body = json_decode($response->getBody()->getContents(), true);
         return $body['details'] ?? $defaultMessage;
     }

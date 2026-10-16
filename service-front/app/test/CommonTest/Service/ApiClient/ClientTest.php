@@ -10,6 +10,7 @@ use Common\Service\Context\UserContext;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\ConnectException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -185,6 +186,20 @@ class ClientTest extends TestCase
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_GATEWAY);
         $data = $client->httpPost('/simple_post', ['simple_query' => 'query_value']);
+    }
+
+    #[Test]
+    public function it_should_use_the_default_message_when_post_fails_without_a_response(): void
+    {
+        $this->apiClient->method('sendRequest')->with(self::isInstanceOf(RequestInterface::class))
+            ->willThrowException($this->createMock(ConnectException::class));
+
+        $client = new Client($this->apiClient, 'https://localhost', '', new UserContext());
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(502);
+        $this->expectExceptionMessage('Error whilst making http POST request');
+        $client->httpPost('/simple_post', ['simple_query' => 'query_value']);
     }
 
     // ============

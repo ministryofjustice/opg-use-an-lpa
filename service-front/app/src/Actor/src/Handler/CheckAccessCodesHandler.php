@@ -56,6 +56,10 @@ class CheckAccessCodesHandler extends AbstractHandler implements CsrfGuardAware
 
         $lpaData = $this->lpaService->getLpaById($actorLpaToken);
 
+        if ($lpaData === null) {
+            return $this->redirectToRoute('lpa.dashboard');
+        }
+
         /**
          * @var Lpa $lpa
          * @psalm-suppress UndefinedPropertyFetch # Psalm doesn't like ArrayObjects, and why should it?
