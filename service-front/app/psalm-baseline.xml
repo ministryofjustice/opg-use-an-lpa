@@ -98,9 +98,6 @@
     </ImplementationRequirementViolation>
   </file>
   <file src="src/Actor/src/Handler/CheckLpaHandler.php">
-    <MissingTemplateParam>
-      <code><![CDATA[State]]></code>
-    </MissingTemplateParam>
     <UnusedProperty>
       <code><![CDATA[$lpaService]]></code>
       <code><![CDATA[$state]]></code>
@@ -147,11 +144,6 @@
     <UnusedParam>
       <code><![CDATA[$request]]></code>
     </UnusedParam>
-  </file>
-  <file src="src/Actor/src/Handler/RequestActivationKey/AttorneyDetailsHandler.php">
-    <MissingTemplateParam>
-      <code><![CDATA[State]]></code>
-    </MissingTemplateParam>
   </file>
   <file src="src/Actor/src/Handler/RequestActivationKey/CheckDetailsAndConsentHandler.php">
     <ImplementationRequirementViolation>
