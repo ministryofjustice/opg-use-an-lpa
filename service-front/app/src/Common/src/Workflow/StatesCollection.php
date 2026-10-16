@@ -29,7 +29,6 @@ final class StatesCollection implements JsonSerializable
      * @param class-string<T> $workflowStateClass
      * @return T
      * @throws StateNotInitialisedException
-     * @throws UnexpectedValueException
      */
     public function get(string $workflowStateClass): WorkflowState
     {
