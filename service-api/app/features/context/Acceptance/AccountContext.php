@@ -17,7 +17,7 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
 
-class AccountContext implements Context
+final class AccountContext implements Context
 {
     use BaseAcceptanceContextTrait;
     use SetupEnv;
@@ -25,7 +25,7 @@ class AccountContext implements Context
     #[Given('I am currently signed in')]
     public function iAmCurrentlySignedIn(): void
     {
-        // Not needed in this context
+        $this->ui->getSession()->setRequestHeader('User-Session', 'test-session-123');
     }
 
     #[Given('/^I confirm that I want to delete my account$/')]
