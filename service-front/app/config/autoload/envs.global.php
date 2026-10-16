@@ -125,6 +125,9 @@ return [
             'cache.request'                        => [
                 'adapter'          => 'array',
                 'default_lifetime' => 0,
+                'options'          => [
+                    'serialise' => true, // default option
+                ],
             ],
             'cache.app'                            => [
                 'adapter'          => 'apcu',
@@ -133,22 +136,30 @@ return [
             'cache.ratelimits.viewer_code_failure' => [
                 'adapter'          => 'redis',
                 'default_lifetime' => 60,
-                'redis'            => $rateLimitRedis,
+                'options'          => [
+                    'connection' => $rateLimitRedis,
+                ],
             ],
             'cache.ratelimits.actor_code_failure'  => [
                 'adapter'          => 'redis',
                 'default_lifetime' => 60,
-                'redis'            => $rateLimitRedis,
+                'options'          => [
+                    'connection' => $rateLimitRedis,
+                ],
             ],
             'cache.ratelimits.actor_login_failure' => [
                 'adapter'          => 'redis',
                 'default_lifetime' => 60,
-                'redis'            => $rateLimitRedis,
+                'options'          => [
+                    'connection' => $rateLimitRedis,
+                ],
             ],
             'cache.ratelimits.download_lpa'        => [
                 'adapter'          => 'redis',
                 'default_lifetime' => 60,
-                'redis'            => $rateLimitRedis,
+                'options'          => [
+                    'connection' => $rateLimitRedis,
+                ],
             ],
         ],
     ],

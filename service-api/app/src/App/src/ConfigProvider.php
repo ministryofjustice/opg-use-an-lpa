@@ -20,7 +20,7 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
  *
  * @codeCoverageIgnore
  */
-class ConfigProvider
+final class ConfigProvider
 {
     /**
      * Returns the configuration array
@@ -63,9 +63,8 @@ class ConfigProvider
                 DataAccess\Repository\ViewerCodeActivityInterface::class               => DataAccess\DynamoDb\ViewerCodeActivity::class,
                 DataAccess\Repository\ViewerCodesInterface::class                      => DataAccess\DynamoDb\ViewerCodes::class,
                 DataAccess\Repository\UserLpaActorMapInterface::class                  => DataAccess\DynamoDb\UserLpaActorMap::class,
-                DataAccess\Repository\LpasInterface::class                             => DataAccess\ApiGateway\CachedSiriusLpas::class,
-                DataAccess\Repository\AuditableLpasInterface::class                    => DataAccess\ApiGateway\CachedDataStoreLpas::class,
-                DataAccess\Repository\RequestLetterInterface::class                    => DataAccess\ApiGateway\SiriusLpas::class,
+                DataAccess\Repository\LpasInterface::class                             => DataAccess\ApiGateway\SiriusLpas::class,
+                DataAccess\Repository\AuditableLpasInterface::class                    => DataAccess\ApiGateway\DataStoreLpas::class,
                 DataAccess\Repository\InstructionsAndPreferencesImagesInterface::class => DataAccess\ApiGateway\InstructionsAndPreferencesImages::class,
                 DataAccess\Repository\PaperVerificationCodesInterface::class           => DataAccess\ApiGateway\PaperVerificationCodes::class,
 
@@ -83,6 +82,9 @@ class ConfigProvider
                 // when setup in the delegators section. This is a PHP-DI specific configuration
                 Service\Secrets\OneLoginIdentityKeyPairManager::class,
                 Service\Secrets\LpaDataStoreSecretManager::class,
+            ],
+            'invokables' => [
+                Service\Cache\RedisFactory::class => Service\Cache\RedisFactory::class,
             ],
             'factories'  => [
                 // Cache
@@ -115,6 +117,7 @@ class ConfigProvider
                 DataAccess\DynamoDb\ViewerCodes::class                        => DataAccess\DynamoDb\ViewerCodesFactory::class,
                 DataAccess\DynamoDb\UserLpaActorMap::class                    => DataAccess\DynamoDb\UserLpaActorMapFactory::class,
                 DataAccess\ApiGateway\SiriusLpas::class                       => DataAccess\ApiGateway\SiriusLpasFactory::class,
+                DataAccess\Repository\RequestLetterInterface::class           => DataAccess\ApiGateway\SiriusLpasFactory::class,
                 DataAccess\ApiGateway\DataStoreLpas::class                    => DataAccess\ApiGateway\DataStoreLpasFactory::class,
                 DataAccess\ApiGateway\InstructionsAndPreferencesImages::class => DataAccess\ApiGateway\InstructionsAndPreferencesImagesFactory::class,
                 DataAccess\ApiGateway\PaperVerificationCodes::class           => DataAccess\ApiGateway\PaperVerificationCodesFactory::class,
@@ -147,6 +150,12 @@ class ConfigProvider
                 ],
                 Service\SystemMessage\SystemMessage::class            => [
                     Service\SystemMessage\CachedSystemMessageDelegatorFactory::class,
+                ],
+                DataAccess\ApiGateway\SiriusLpas::class               => [
+                    DataAccess\ApiGateway\CachedSiriusLpasDelegatorFactory::class,
+                ],
+                DataAccess\ApiGateway\DataStoreLpas::class            => [
+                    DataAccess\ApiGateway\CachedDataStoreLpasDelegatorFactory::class,
                 ],
             ],
         ];

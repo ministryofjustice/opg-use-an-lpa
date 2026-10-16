@@ -8,11 +8,16 @@ use App\DataAccess\ApiGateway\CachedDataStoreLpas;
 use App\DataAccess\ApiGateway\DataStoreLpas;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Entity\Lpa;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Psr\SimpleCache\CacheInterface;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\Psr16Cache;
 
+#[CoversClass(CachedDataStoreLpas::class)]
 class CachedDataStoreLpasTest extends TestCase
 {
     private DataStoreLpas&MockObject $dataStoreLpas;
@@ -31,7 +36,7 @@ class CachedDataStoreLpasTest extends TestCase
             ->with('originator')
             ->willReturnSelf();
 
-        $sut = new CachedDataStoreLpas($this->dataStoreLpas, $this->createStub(LoggerInterface::class));
+        $sut = $this->createCachedDataStoreLpas();
 
         $this->assertSame($sut, $sut->setOriginatorId('originator'));
     }
@@ -47,7 +52,7 @@ class CachedDataStoreLpasTest extends TestCase
             ->with('M-0000-0000-0001')
             ->willReturn($lpa);
 
-        $sut = new CachedDataStoreLpas($this->dataStoreLpas, $this->createStub(LoggerInterface::class));
+        $sut = $this->createCachedDataStoreLpas();
 
         $this->assertSame($lpa, $sut->setOriginatorId('originator')->get('M-0000-0000-0001'));
         $this->assertSame($lpa, $sut->setOriginatorId('originator')->get('M-0000-0000-0001'));
@@ -62,7 +67,7 @@ class CachedDataStoreLpasTest extends TestCase
             ->with('M-0000-0000-0001')
             ->willReturn(null);
 
-        $sut = new CachedDataStoreLpas($this->dataStoreLpas, $this->createStub(LoggerInterface::class));
+        $sut = $this->createCachedDataStoreLpas();
         $sut->setOriginatorId('originator');
 
         $this->assertNull($sut->get('M-0000-0000-0001'));
@@ -81,11 +86,43 @@ class CachedDataStoreLpasTest extends TestCase
             ->with('M-0000-0000-0001')
             ->willReturnOnConsecutiveCalls($lpaOne, $lpaTwo);
 
-        $sut = new CachedDataStoreLpas($this->dataStoreLpas, $this->createStub(LoggerInterface::class));
+        $sut = $this->createCachedDataStoreLpas();
 
         $this->assertSame($lpaOne, $sut->setOriginatorId('originator-one')->get('M-0000-0000-0001'));
         $this->assertSame($lpaTwo, $sut->setOriginatorId('originator-two')->get('M-0000-0000-0001'));
         $this->assertSame($lpaOne, $sut->setOriginatorId('originator-one')->get('M-0000-0000-0001'));
+    }
+
+    #[Test]
+    public function it_should_share_cached_lpas_between_instances_using_the_request_cache(): void
+    {
+        $lpa = $this->createLpa('M-0000-0000-0001');
+
+        $this->dataStoreLpas
+            ->expects($this->once())
+            ->method('get')
+            ->with('M-0000-0000-0001')
+            ->willReturn($lpa);
+        $this->dataStoreLpas
+            ->expects($this->exactly(2))
+            ->method('setOriginatorId')
+            ->with('originator')
+            ->willReturnSelf();
+
+        $cache  = $this->createCache();
+        $first  = new CachedDataStoreLpas(
+            $this->dataStoreLpas,
+            $cache,
+            $this->createStub(LoggerInterface::class),
+        );
+        $second = new CachedDataStoreLpas(
+            $this->dataStoreLpas,
+            $cache,
+            $this->createStub(LoggerInterface::class),
+        );
+
+        self::assertSame($lpa, $first->setOriginatorId('originator')->get('M-0000-0000-0001'));
+        self::assertSame($lpa, $second->setOriginatorId('originator')->get('M-0000-0000-0001'));
     }
 
     #[Test]
@@ -105,7 +142,7 @@ class CachedDataStoreLpasTest extends TestCase
             ->with(['M-0000-0000-0001'])
             ->willReturn([$lpa]);
 
-        $sut = new CachedDataStoreLpas($this->dataStoreLpas, $this->createStub(LoggerInterface::class));
+        $sut = $this->createCachedDataStoreLpas();
 
         $sut->get('M-0000-0000-0001');
         $sut->get('M-0000-0000-0001');
@@ -149,7 +186,7 @@ class CachedDataStoreLpasTest extends TestCase
                 ]
             );
 
-        $sut = new CachedDataStoreLpas($this->dataStoreLpas, $this->createStub(LoggerInterface::class));
+        $sut = $this->createCachedDataStoreLpas();
         $sut->setOriginatorId('originator');
 
         $sut->get('M-0000-0000-0001');
@@ -179,7 +216,7 @@ class CachedDataStoreLpasTest extends TestCase
 
         $this->dataStoreLpas->expects($this->never())->method('lookup');
 
-        $sut = new CachedDataStoreLpas($this->dataStoreLpas, $this->createStub(LoggerInterface::class));
+        $sut = $this->createCachedDataStoreLpas();
         $sut->setOriginatorId('originator');
 
         $sut->get('M-0000-0000-0001');
@@ -195,7 +232,7 @@ class CachedDataStoreLpasTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
         $logger->expects($this->atLeastOnce())->method('debug');
 
-        $sut = new CachedDataStoreLpas($this->dataStoreLpas, $logger);
+        $sut = new CachedDataStoreLpas($this->dataStoreLpas, $this->createCache(), $logger);
         $sut->setOriginatorId('originator');
         $sut->get('M-0000-0000-0001');
     }
@@ -209,5 +246,19 @@ class CachedDataStoreLpasTest extends TestCase
         $lpa->method('getData')->willReturn($data);
 
         return $lpa;
+    }
+
+    private function createCachedDataStoreLpas(): CachedDataStoreLpas
+    {
+        return new CachedDataStoreLpas(
+            $this->dataStoreLpas,
+            $this->createCache(),
+            $this->createStub(LoggerInterface::class),
+        );
+    }
+
+    private function createCache(): CacheInterface
+    {
+        return new Psr16Cache(new ArrayAdapter(0, false));
     }
 }

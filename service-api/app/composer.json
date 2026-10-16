@@ -40,6 +40,7 @@
         "ext-apcu": "*",
         "ext-gmp": "*",
         "ext-openssl": "*",
+        "ext-redis": "*",
         "alphagov/notifications-php-client": "^7.0.0",
         "aws/aws-sdk-php": "3.399.2",
         "blazon/psr11-monolog": "^5.0.1",
