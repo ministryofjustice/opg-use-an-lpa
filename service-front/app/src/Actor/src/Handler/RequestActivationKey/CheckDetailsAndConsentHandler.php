@@ -52,7 +52,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
     use CsrfGuard;
     use Logger;
     use SessionTrait;
-    /** @use State<RequestActivationKey> */
     use State;
     use User;
 
