@@ -41,7 +41,6 @@ class CreateActivationKeyHandler extends AbstractHandler implements
 {
     use CsrfGuard;
     use Session;
-    /** @use State<RequestActivationKey> */
     use State;
     use User;
 
@@ -118,7 +117,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements
         throw new InvalidRequestException('Invalid form');
     }
 
-    public function state(ServerRequestInterface $request): WorkflowState
+    public function state(ServerRequestInterface $request): RequestActivationKey
     {
         return $this->loadState($request, RequestActivationKey::class);
     }
