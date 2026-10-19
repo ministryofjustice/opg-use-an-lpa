@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\ApiClient;
 
 use Common\Service\Log\RequestTracing;
+use Common\Service\Context\UserContext;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use RuntimeException;
@@ -26,7 +27,8 @@ class ClientFactory
         return new Client(
             $container->get(ClientInterface::class),
             $config['api']['uri'],
-            $container->get(RequestTracing::TRACE_PARAMETER_NAME)
+            $container->get(RequestTracing::TRACE_PARAMETER_NAME),
+            $container->get(UserContext::class),
         );
     }
 }

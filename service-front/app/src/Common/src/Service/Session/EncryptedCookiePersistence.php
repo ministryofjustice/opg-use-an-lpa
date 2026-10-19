@@ -6,19 +6,22 @@ namespace Common\Service\Session;
 
 use Common\Exception\SessionEncryptionFailureException;
 use Common\Service\Session\Encryption\EncryptInterface;
+use Mezzio\Session\InitializePersistenceIdInterface;
 use Mezzio\Session\Persistence\CacheHeadersGeneratorTrait;
 use Mezzio\Session\Persistence\Http;
 use Mezzio\Session\Persistence\SessionCookieAwareTrait;
 use Mezzio\Session\Session;
+use Mezzio\Session\SessionIdentifierAwareInterface;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionPersistenceInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Random\RandomException;
 
 /**
  * Utilises Amazon KMS to encrypt the session cookie sent to users
  */
-class EncryptedCookiePersistence implements SessionPersistenceInterface
+final class EncryptedCookiePersistence implements SessionPersistenceInterface, InitializePersistenceIdInterface
 {
     use CacheHeadersGeneratorTrait;
     use SessionCookieAwareTrait;
@@ -32,6 +35,11 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
      * Key used within the session to flag that the session has been expired
      */
     public const string SESSION_EXPIRED_KEY = '__EXPIRED__';
+
+    /**
+     * Key used within the session to hold the sessions ID value
+     */
+    public const string SESSION_ID_KEY = '__ID__';
 
     public function __construct(
         private EncryptInterface $encrypter,
@@ -73,7 +81,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         $sessionData = $this->getSessionCookieValueFromRequest($request);
         $data        = $this->encrypter->decodeCookieValue($sessionData);
 
-        return new Session($data);
+        return new Session($data, $data[self::SESSION_ID_KEY] ?? '');
     }
 
     public function persistSession(SessionInterface $session, ResponseInterface $response): ResponseInterface
@@ -82,6 +90,9 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         if ($session->toArray() === [] || ! $session->hasChanged()) {
             return $response;
         }
+
+        // regenerates/creates if needed
+        $session = $this->initializeId($session);
 
         $encryptedCookieValue = '';
         try {
@@ -97,5 +108,33 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
 
         $response = $this->addSessionCookieHeaderToResponse($response, $encryptedCookieValue, $session);
         return $this->addCacheHeadersToResponse($response);
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @throws RandomException
+     */
+    public function initializeId(SessionInterface $session): SessionInterface
+    {
+        if (
+            ($session instanceof SessionIdentifierAwareInterface && $session->getId() === '')
+            || $session->isRegenerated()
+        ) {
+            $session = new Session($session->toArray(), $this->generateSessionId());
+            $session->set(self::SESSION_ID_KEY, $session->getId());
+        }
+
+        return $session;
+    }
+
+    /**
+     * Generate a session identifier.
+     *
+     * @throws RandomException
+     */
+    private function generateSessionId(): string
+    {
+        return bin2hex(random_bytes(16));
     }
 }

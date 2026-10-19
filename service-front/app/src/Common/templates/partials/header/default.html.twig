@@ -25,13 +25,13 @@
 
 {% if not forDownload|default(false) %}
     <div class="govuk-width-container">
-        {% if application == "actor" and user is defined %}
+        {% if application == "actor" and user() %}
             <nav class="signin js-signed-in" role="navigation" aria-labelledby="account-bar-navigation">
                 <p class="govuk-body-s">
                     {% trans %}Last signed in:{% endtrans %}
-                    {{ user.getDetail('LastLogin') is empty
+                    {{ user().getDetail('LastLogin') is empty
                     ? "Never" | trans
-                    : lpa_date(user.getDetail('LastLogin'))
+                    : lpa_date(user().getDetail('LastLogin'))
                     }}
                 </p>
                 <div class="govuk-body-s" id="account-bar-navigation">

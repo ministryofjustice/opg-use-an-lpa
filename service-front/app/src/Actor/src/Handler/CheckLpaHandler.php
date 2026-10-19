@@ -122,7 +122,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         string $dob,
     ): ResponseInterface {
         $result = $this->addLpa->validate(
-            $this->identity,
             $activation_key,
             $referenceNumber,
             $dob,
@@ -137,7 +136,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     $this->renderer->render(
                         'actor::lpa-already-added',
                         [
-                            'user'       => $this->user,
                             'lpaUid'     => $referenceNumber,
                             'donor'      => $lpaAddedData->getDonor(),
                             'lpaType'    => $lpaAddedData->getCaseSubtype(),
@@ -155,7 +153,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     $this->renderer->render(
                         'actor::lpa-not-found',
                         [
-                            'user'            => $this->user,
                             'dob'             => $dob,
                             'referenceNumber' => $referenceNumber,
                             'activation_key'  => $activation_key,
@@ -212,7 +209,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         [
                             'form'     => $this->form,
                             'lpa'      => $lpa,
-                            'user'     => $this->user,
                             'actor'    => $actor,
                             'userRole' => $actorRole,
                         ]
@@ -237,7 +233,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
 
         if ($this->form->isValid()) {
             $result = $this->addLpa->confirm(
-                $this->identity,
                 $activation_key,
                 $referenceNumber,
                 $dob
@@ -279,7 +274,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         }
 
         return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-            'user'            => $this->user,
             'dob'             => $dob,
             'referenceNumber' => $referenceNumber,
             'activation_key'  => $activation_key,

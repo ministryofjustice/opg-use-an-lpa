@@ -124,11 +124,6 @@
       <code><![CDATA[$lpaData->lpa]]></code>
     </UndefinedPropertyFetch>
   </file>
-  <file src="src/Actor/src/Handler/LpaDashboardHandler.php">
-    <UnusedProperty>
-      <code><![CDATA[$viewerCodeService]]></code>
-    </UnusedProperty>
-  </file>
   <file src="src/Actor/src/Handler/RemoveLpaHandler.php">
     <UndefinedClass>
       <code><![CDATA[BadRequestException]]></code>
@@ -439,20 +434,6 @@
       <code><![CDATA[$reflect->implementsInterface(WorkflowState::class)]]></code>
     </TypeDoesNotContainType>
   </file>
-  <file src="src/Common/src/Service/ApiClient/Client.php">
-    <MismatchingDocblockParamType>
-      <code><![CDATA[ResponseInterface|null]]></code>
-    </MismatchingDocblockParamType>
-    <RedundantPropertyInitializationCheck>
-      <code><![CDATA[isset($this->token)]]></code>
-    </RedundantPropertyInitializationCheck>
-  </file>
-  <file src="src/Common/src/Service/Cache/RedisAdapterPluginManagerDelegatorFactory.php">
-    <UnusedParam>
-      <code><![CDATA[$container]]></code>
-      <code><![CDATA[$name]]></code>
-    </UnusedParam>
-  </file>
   <file src="src/Common/src/Service/Container/PhpDiModifiableContainer.php">
     <UndefinedInterfaceMethod>
       <code><![CDATA[set]]></code>
@@ -480,11 +461,6 @@
       <code><![CDATA[sprintf]]></code>
     </RedundantFunctionCall>
   </file>
-  <file src="src/Common/src/Service/Lpa/CleanseLpa.php">
-    <UnusedDocblockParam>
-      <code><![CDATA[$logger]]></code>
-    </UnusedDocblockParam>
-  </file>
   <file src="src/Common/src/Service/Lpa/PaperVerificationCodeResult.php">
     <PossiblyUnusedProperty>
       <code><![CDATA[$data]]></code>
@@ -505,15 +481,6 @@
     <InvalidArgument>
       <code><![CDATA[$data]]></code>
     </InvalidArgument>
-  </file>
-  <file src="src/Common/src/Service/Lpa/ViewerCodeService.php">
-    <InvalidArgument>
-      <code><![CDATA[$shareCodes]]></code>
-    </InvalidArgument>
-    <RedundantCondition>
-      <code><![CDATA[is_array($lpaData)]]></code>
-      <code><![CDATA[is_array($shareCodes)]]></code>
-    </RedundantCondition>
   </file>
   <file src="src/Common/src/Service/Notify/NotifyService.php">
     <PossiblyUnusedReturnValue>

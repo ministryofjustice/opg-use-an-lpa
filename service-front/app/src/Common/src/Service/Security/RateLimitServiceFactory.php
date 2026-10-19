@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Common\Service\Security;
 
 use Common\Service\Security\RateLimit\KeyedRateLimitService;
-use Laminas\Cache\Service\StorageAdapterFactoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -23,6 +22,7 @@ class RateLimitServiceFactory
      * @return RateLimitService
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws RuntimeException
      */
     public function factory(string $limitName): RateLimiterInterface
     {
@@ -40,16 +40,15 @@ class RateLimitServiceFactory
             throw new RuntimeException('Missing rate limit type configuration for ' . $limitName);
         }
 
-        $factory = $this->container->get(StorageAdapterFactoryInterface::class);
-
-        $config['ratelimits'][$limitName]['storage']['options']['namespace'] = $limitName;
-        $cacheAdaptor = $factory->createFromArrayConfiguration($config['ratelimits'][$limitName]['storage']);
+        $cachePoolName = $config['ratelimits'][$limitName]['cache_pool'] ?? 'cache.ratelimits.' . $limitName;
+        $cachePool     = $this->container->get($cachePoolName);
 
         $type = $config['ratelimits'][$limitName]['type'];
         switch ($type) {
             case 'keyed':
                 return new KeyedRateLimitService(
-                    $cacheAdaptor,
+                    $cachePool,
+                    $limitName,
                     $config['ratelimits'][$limitName]['options']['interval'] ?? 300,
                     $config['ratelimits'][$limitName]['options']['requests_per_interval'] ?? 60,
                     $this->container->get(LoggerInterface::class)
@@ -65,6 +64,7 @@ class RateLimitServiceFactory
      * @return RateLimitService[]
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws RuntimeException
      */
     public function all(): array
     {

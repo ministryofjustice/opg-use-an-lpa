@@ -2,27 +2,38 @@
 
 declare(strict_types=1);
 
+use Actor\ConfigProvider as ActorConfigProvider;
+use Common\ConfigProvider as CommonConfigProvider;
 use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\ConfigAggregator\PhpFileProvider;
-use Mezzio\Authentication\Session\ConfigProvider;
+use Laminas\HttpHandlerRunner\ConfigProvider as HttpHandlerRunnerConfigProvider;
+use Mezzio\Authentication\ConfigProvider as AuthenticationConfigProvider;
+use Mezzio\Authentication\Session\ConfigProvider as AuthenticationSessionConfigProvider;
+use Mezzio\ConfigProvider as MezzioConfigProvider;
+use Mezzio\Csrf\ConfigProvider as CsrfConfigProvider;
+use Mezzio\Helper\ConfigProvider as HelperConfigProvider;
+use Mezzio\Router\ConfigProvider as RouterConfigProvider;
+use Mezzio\Router\FastRouteRouter\ConfigProvider as FastRouteConfigProvider;
+use Mezzio\Session\ConfigProvider as SessionConfigProvider;
+use Mezzio\Twig\ConfigProvider as TwigConfigProvider;
+use Viewer\ConfigProvider as ViewerConfigProvider;
 
 $aggregator = new ConfigAggregator([
-    ConfigProvider::class,
-    Mezzio\Router\FastRouteRouter\ConfigProvider::class,
-    Laminas\HttpHandlerRunner\ConfigProvider::class,
-    Laminas\Cache\ConfigProvider::class,
-    Mezzio\Authentication\ConfigProvider::class,
-    Mezzio\Session\ConfigProvider::class,
-    Mezzio\Helper\ConfigProvider::class,
-    Mezzio\Router\ConfigProvider::class,
-    Mezzio\Csrf\ConfigProvider::class,
-    Mezzio\Twig\ConfigProvider::class,
-    Mezzio\ConfigProvider::class,
+    AuthenticationSessionConfigProvider::class,
+    FastRouteConfigProvider::class,
+    HttpHandlerRunnerConfigProvider::class,
+    AuthenticationConfigProvider::class,
+    SessionConfigProvider::class,
+    HelperConfigProvider::class,
+    RouterConfigProvider::class,
+    CsrfConfigProvider::class,
+    TwigConfigProvider::class,
+    MezzioConfigProvider::class,
 
     // App module(s) config
-    Common\ConfigProvider::class,
-    Actor\ConfigProvider::class,
-    Viewer\ConfigProvider::class,
+    CommonConfigProvider::class,
+    ActorConfigProvider::class,
+    ViewerConfigProvider::class,
 
     // Load application config in a pre-defined order in such a way that local settings
     // overwrite global settings. (Loaded as first to last):

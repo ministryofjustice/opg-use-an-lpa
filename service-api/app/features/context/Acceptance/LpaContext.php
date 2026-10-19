@@ -23,7 +23,7 @@ use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 use stdClass;
 
-class LpaContext implements Context
+final class LpaContext implements Context
 {
     use BaseAcceptanceContextTrait;
     use SetupEnv;
@@ -37,7 +37,6 @@ class LpaContext implements Context
     public string $oneTimeCode;
     public string $organisation;
     public string $actorId;
-    public string $userId;
     public stdClass $lpa;
     public string $accessCode;
 
@@ -117,9 +116,6 @@ class LpaContext implements Context
                 'actor-code' => null,
                 'uid'        => $this->lpaUid,
                 'dob'        => $this->userDob,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
             ]
         );
     }
@@ -135,9 +131,6 @@ class LpaContext implements Context
                 'actor-code' => $this->oneTimeCode,
                 'uid'        => $this->lpaUid,
                 'dob'        => null,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
             ]
         );
     }
@@ -153,9 +146,6 @@ class LpaContext implements Context
                 'actor-code' => $this->oneTimeCode,
                 'uid'        => null,
                 'dob'        => $this->userDob,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
             ]
         );
     }
@@ -221,7 +211,7 @@ class LpaContext implements Context
                                 'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'Id'        => $this->userLpaActorToken,
                                 'ActorId'   => $this->actorId,
-                                'UserId'    => $this->userId,
+                                'UserId'    => $this->base->userAccountId,
                             ]
                         ),
                     ],
@@ -244,9 +234,6 @@ class LpaContext implements Context
                 'actor-code' => $this->oneTimeCode,
                 'uid'        => $this->lpaUid,
                 'dob'        => $this->userDob,
-            ],
-            [
-                'user-token' => $this->base->userAccountId,
             ]
         );
 
@@ -283,7 +270,7 @@ class LpaContext implements Context
                                 'SiriusUid'  => $this->lpaUid,
                                 'Added'      => (new DateTimeImmutable('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'Id'         => $this->userLpaActorToken,
-                                'UserId'     => $this->userId,
+                                'UserId'     => $this->base->userAccountId,
                                 'ActivateBy' => (new DateTimeImmutable('now'))->format('U'),
                                 'DueBy'      => (new DateTimeImmutable('+2 weeks'))->format('Y-m-d\TH:i:s.u\Z'),
                             ]
@@ -302,7 +289,7 @@ class LpaContext implements Context
                             'SiriusUid'  => $this->lpaUid,
                             'Added'      => (new DateTimeImmutable('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'         => $this->userLpaActorToken,
-                            'UserId'     => $this->userId,
+                            'UserId'     => $this->base->userAccountId,
                             'ActivateBy' => (new DateTimeImmutable('now'))->format('U'),
                             'DueBy'      => (new DateTimeImmutable('+2 weeks'))->format('Y-m-d\TH:i:s.u\Z'),
                         ]
@@ -319,9 +306,6 @@ class LpaContext implements Context
                 json_encode($this->lpa)
             )
         );
-
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // AWS Request letter response in Given steps
         $this->awsFixtures->append(
@@ -345,11 +329,8 @@ class LpaContext implements Context
             '/v1/older-lpa/cleanse',
             [
                 'reference_number' => $this->lpaUid,
-                'user-token'       => $this->userId,
+                'user-token'       => $this->base->userAccountId,
                 'notes'            => 'Notes',
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 
@@ -372,7 +353,7 @@ class LpaContext implements Context
                                 'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'Id'        => $this->userLpaActorToken,
                                 'ActorId'   => $this->actorId,
-                                'UserId'    => $this->userId,
+                                'UserId'    => $this->base->userAccountId,
                             ]
                         ),
                         $this->marshalAwsResultData(
@@ -381,7 +362,7 @@ class LpaContext implements Context
                                 'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'Id'        => 'abcd-12345-efgh',
                                 'ActorId'   => $this->actorId,
-                                'UserId'    => $this->userId,
+                                'UserId'    => $this->base->userAccountId,
                             ]
                         ),
                     ],
@@ -398,7 +379,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -424,9 +405,6 @@ class LpaContext implements Context
                 'dob'                  => $this->userDob,
                 'postcode'             => $this->userPostCode,
                 'force_activation_key' => false,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 
@@ -466,7 +444,7 @@ class LpaContext implements Context
                                 'Added'      => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'Id'         => $this->userLpaActorToken,
                                 'ActorId'    => $this->actorId,
-                                'UserId'     => $this->userId,
+                                'UserId'     => $this->base->userAccountId,
                                 'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp(),
                             ]
                         ),
@@ -485,7 +463,7 @@ class LpaContext implements Context
                             'Added'      => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'         => $this->userLpaActorToken,
                             'ActorId'    => $this->actorId,
-                            'UserId'     => $this->userId,
+                            'UserId'     => $this->base->userAccountId,
                             'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp(),
                         ]
                     ),
@@ -501,21 +479,12 @@ class LpaContext implements Context
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
         );
 
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         $this->apiPost(
             '/v1/add-lpa/validate',
             [
                 'actor-code' => $this->oneTimeCode,
                 'uid'        => $this->lpaUid,
                 'dob'        => $this->userDob,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
             ]
         );
 
@@ -543,12 +512,6 @@ class LpaContext implements Context
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
         );
 
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         //UserLpaActorMapRepository: getUsersLpas
         $this->awsFixtures->append(
             new Result(
@@ -560,7 +523,7 @@ class LpaContext implements Context
                                 'Added'      => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'Id'         => $this->userLpaActorToken,
                                 'ActorId'    => $this->actorId,
-                                'UserId'     => $this->userId,
+                                'UserId'     => $this->base->userAccountId,
                                 'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp(),
                             ]
                         ),
@@ -579,7 +542,7 @@ class LpaContext implements Context
                             'Added'      => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'         => $this->userLpaActorToken,
                             'ActorId'    => $this->actorId,
-                            'UserId'     => $this->userId,
+                            'UserId'     => $this->base->userAccountId,
                             'ActivateBy' => (new DateTime())->modify('+1 year')->getTimestamp(),
                         ]
                     ),
@@ -596,9 +559,6 @@ class LpaContext implements Context
                 'actor-code' => $this->oneTimeCode,
                 'uid'        => $this->lpaUid,
                 'dob'        => $this->userDob,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
             ]
         );
 
@@ -629,7 +589,7 @@ class LpaContext implements Context
                                 'Added'      => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'Id'         => $this->userLpaActorToken,
                                 'ActorId'    => $this->actorId,
-                                'UserId'     => $this->userId,
+                                'UserId'     => $this->base->userAccountId,
                                 'ActivateBy' => 123456789,
                                 'DueBy'      => $activationKeyDueDate,
                             ]
@@ -649,7 +609,7 @@ class LpaContext implements Context
                             'Added'      => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'         => $this->userLpaActorToken,
                             'ActorId'    => $this->actorId,
-                            'UserId'     => $this->userId,
+                            'UserId'     => $this->base->userAccountId,
                             'ActivateBy' => 123456789,
                             'DueBy'      => $activationKeyDueDate,
                         ]
@@ -667,24 +627,6 @@ class LpaContext implements Context
             )
         );
 
-        // LpaRepository::get
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($this->lpa)
-            )
-        );
-
-        // check if actor has a code
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode(['Created' => $createdDate->format('Y-m-d')])
-            )
-        );
-
         // API call to request an activation key
         $this->apiPost(
             '/v1/older-lpa/validate',
@@ -695,9 +637,6 @@ class LpaContext implements Context
                 'dob'                  => $this->userDob,
                 'postcode'             => $this->userPostCode,
                 'force_activation_key' => false,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 
@@ -747,17 +686,12 @@ class LpaContext implements Context
 
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         $this->apiPost(
             '/v1/add-lpa/validate',
             [
                 'actor-code' => $this->oneTimeCode,
                 'uid'        => $this->lpaUid,
                 'dob'        => $this->userDob,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
             ]
         );
 
@@ -805,7 +739,7 @@ class LpaContext implements Context
                                 'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'Id'        => $this->userLpaActorToken,
                                 'ActorId'   => $this->actorId,
-                                'UserId'    => $this->userId,
+                                'UserId'    => $this->base->userAccountId,
                             ]
                         ),
                     ],
@@ -824,10 +758,7 @@ class LpaContext implements Context
 
         // LpaService::getLpas
         $this->apiGet(
-            '/v1/lpas',
-            [
-                'user-token' => $this->userLpaActorToken,
-            ]
+            '/v1/lpas'
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -851,7 +782,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -887,7 +818,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -913,10 +844,7 @@ class LpaContext implements Context
 
         // LpaService::getLpas
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
-            [
-                'user-token' => $this->userId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes'
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -954,7 +882,7 @@ class LpaContext implements Context
                                 'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'Id'        => $this->userLpaActorToken,
                                 'ActorId'   => $this->actorId,
-                                'UserId'    => $this->userId,
+                                'UserId'    => $this->base->userAccountId,
                             ]
                         ),
                     ],
@@ -973,10 +901,7 @@ class LpaContext implements Context
 
         // LpaService::getLpas
         $this->apiGet(
-            '/v1/lpas',
-            [
-                'user-token' => $this->userLpaActorToken,
-            ]
+            '/v1/lpas'
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -1000,7 +925,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1012,10 +937,7 @@ class LpaContext implements Context
 
         // LpaService::getLpas
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
-            [
-                'user-token' => $this->userId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes'
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -1038,7 +960,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1056,10 +978,7 @@ class LpaContext implements Context
 
         // API call to get lpa
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken,
-            [
-                'user-token' => $this->userId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken
         );
         Assert::assertEquals(0, $this->awsFixtures->count());
 
@@ -1085,7 +1004,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1125,7 +1044,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1134,10 +1053,7 @@ class LpaContext implements Context
 
         // API call to get access codes
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
-            [
-                'user-token' => $this->userId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes'
         );
         Assert::assertEquals(0, $this->awsFixtures->count());
 
@@ -1162,7 +1078,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1195,7 +1111,6 @@ class LpaContext implements Context
         $this->apiPut(
             '/v1/lpas/' . $this->userLpaActorToken . '/codes',
             ['code' => $this->accessCode],
-            ['User-Token' => $this->userId],
         );
         Assert::assertEquals(0, $this->awsFixtures->count());
 
@@ -1215,7 +1130,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1233,10 +1148,7 @@ class LpaContext implements Context
 
         // API call to get lpa
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken,
-            [
-                'user-token' => $this->userId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -1261,7 +1173,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1301,7 +1213,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1310,10 +1222,7 @@ class LpaContext implements Context
 
         // API call to get access codes
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
-            [
-                'user-token' => $this->userId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes'
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -1337,7 +1246,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1365,7 +1274,6 @@ class LpaContext implements Context
         $this->apiPut(
             '/v1/lpas/' . $this->userLpaActorToken . '/codes',
             ['code' => $this->accessCode],
-            ['User-Token' => $this->userId],
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -1392,7 +1300,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1410,10 +1318,7 @@ class LpaContext implements Context
 
         // API call to get lpa
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken,
-            [
-                'user-token' => $this->userId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -1438,7 +1343,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1478,7 +1383,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1487,10 +1392,7 @@ class LpaContext implements Context
 
         // API call to get access codes
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
-            [
-                'user-token' => $this->userId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes'
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -1528,7 +1430,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1546,10 +1448,7 @@ class LpaContext implements Context
 
         // API call to get lpa
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken,
-            [
-                'user-token' => $this->userId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -1574,7 +1473,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1614,7 +1513,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1623,10 +1522,7 @@ class LpaContext implements Context
 
         // API call to get access codes
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
-            [
-                'user-token' => $this->userId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes'
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -1682,10 +1578,7 @@ class LpaContext implements Context
         // ViewerCodeService::cancelShareCode
         $this->apiPut(
             '/v1/lpas/' . $this->userLpaActorToken . '/codes',
-            ['code' => $this->accessCode],
-            [
-                'user-token' => $this->base->userAccountId,
-            ]
+            ['code' => $this->accessCode]
         );
         Assert::assertEquals(0, $this->awsFixtures->count());
     }
@@ -1696,20 +1589,8 @@ class LpaContext implements Context
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(new Result([]));
 
-        // API call for finding all the users added LPAs
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode([])
-            )
-        );
-
         $this->apiGet(
-            '/v1/lpas',
-            [
-                'user-token' => $this->userLpaActorToken,
-            ]
+            '/v1/lpas'
         );
     }
 
@@ -1730,7 +1611,6 @@ class LpaContext implements Context
         $this->lpaUid            = '700000000054';
         $this->userDob           = '1975-10-05';
         $this->actorId           = '700000000054';
-        $this->userId            = '111222333444';
         $this->userLpaActorToken = '111222333444';
     }
 
@@ -1771,9 +1651,6 @@ class LpaContext implements Context
                 'actor-code' => $this->oneTimeCode,
                 'uid'        => $this->lpaUid,
                 'dob'        => $this->userDob,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
             ]
         );
 
@@ -1790,9 +1667,6 @@ class LpaContext implements Context
                 'actor-code' => null,
                 'uid'        => $this->lpaUid,
                 'dob'        => $this->userDob,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
             ]
         );
     }
@@ -1806,9 +1680,6 @@ class LpaContext implements Context
                 'actor-code' => $this->oneTimeCode,
                 'uid'        => $this->lpaUid,
                 'dob'        => null,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
             ]
         );
 
@@ -1824,9 +1695,6 @@ class LpaContext implements Context
                 'actor-code' => $this->oneTimeCode,
                 'uid'        => null,
                 'dob'        => $this->userDob,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
             ]
         );
     }
@@ -1847,17 +1715,12 @@ class LpaContext implements Context
 
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         $this->apiPost(
             '/v1/add-lpa/validate',
             [
                 'actor-code' => $this->oneTimeCode,
                 'uid'        => $this->lpaUid,
                 'dob'        => $this->userDob,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
             ]
         );
 
@@ -1886,7 +1749,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => (string)$actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1899,10 +1762,7 @@ class LpaContext implements Context
         // ViewerCodeService::createShareCode
         $this->apiPost(
             '/v1/lpas/' . $this->userLpaActorToken . '/codes',
-            ['organisation' => $this->organisation],
-            [
-                'user-token' => $this->userId,
-            ]
+            ['organisation' => $this->organisation]
         );
     }
 
@@ -1925,7 +1785,7 @@ class LpaContext implements Context
                                                               ->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'                       => $this->userLpaActorToken,
                             'ActorId'                  => $actorId,
-                            'UserId'                   => $this->userId,
+                            'UserId'                   => $this->base->userAccountId,
                             'HasPaperVerificationCode' => true,
                         ]
                     ),
@@ -1944,7 +1804,7 @@ class LpaContext implements Context
                                 ->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'      => $this->userLpaActorToken,
                             'ActorId' => $actorId,
-                            'UserId'  => $this->userId,
+                            'UserId'  => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -1974,10 +1834,7 @@ class LpaContext implements Context
         // ViewerCodeService::createShareCode
         $this->apiPost(
             '/v1/lpas/' . $this->userLpaActorToken . '/codes',
-            ['organisation' => $this->organisation],
-            [
-                'user-token' => $this->userId,
-            ]
+            ['organisation' => $this->organisation]
         );
     }
 
@@ -2020,10 +1877,7 @@ class LpaContext implements Context
 
         // API call to request an activation key
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken . '/images',
-            [
-                'user-token' => $this->base->userAccountId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken . '/images'
         );
     }
 
@@ -2055,10 +1909,7 @@ class LpaContext implements Context
 
         // LpaService::getLpaById
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken,
-            [
-                'user-token' => $this->base->userAccountId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -2093,7 +1944,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -2134,7 +1985,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -2143,10 +1994,7 @@ class LpaContext implements Context
 
         // API call to get access codes
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
-            [
-                'user-token' => $this->userId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes'
         );
         Assert::assertEquals(0, $this->awsFixtures->count());
 
@@ -2201,10 +2049,7 @@ class LpaContext implements Context
 
         // LpaService::getLpaById
         $this->apiGet(
-            '/v1/lpas',
-            [
-                'user-token' => $this->userLpaActorToken,
-            ]
+            '/v1/lpas'
         );
 
         $this->setLastRequest($this->apiFixtures->getLastRequest());
@@ -2293,11 +2138,6 @@ class LpaContext implements Context
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
         );
 
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
-        // called twice
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(new Result([]));
         // UserLpaActorMap::create
@@ -2326,9 +2166,6 @@ class LpaContext implements Context
                 'actor-code' => $this->oneTimeCode,
                 'uid'        => $this->lpaUid,
                 'dob'        => $this->userDob,
-            ],
-            [
-                'user-token' => $this->userLpaActorToken,
             ]
         );
 
@@ -2380,7 +2217,7 @@ class LpaContext implements Context
                                 'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'Id'        => $this->userLpaActorToken,
                                 'ActorId'   => $this->actorId,
-                                'UserId'    => $this->userId,
+                                'UserId'    => $this->base->userAccountId,
                             ]
                         ),
                     ],
@@ -2399,10 +2236,7 @@ class LpaContext implements Context
 
         // LpaService::getLpas
         $this->apiGet(
-            '/v1/lpas',
-            [
-                'user-token' => $this->userLpaActorToken,
-            ]
+            '/v1/lpas'
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -2426,7 +2260,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -2462,7 +2296,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -2488,10 +2322,7 @@ class LpaContext implements Context
 
         // LpaService::getLpas
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
-            [
-                'user-token' => $this->userId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes'
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -2572,7 +2403,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -2590,10 +2421,7 @@ class LpaContext implements Context
 
         // API call to get lpa
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken,
-            [
-                'user-token' => $this->userId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -2614,7 +2442,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -2649,7 +2477,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ],
                     ),
                 ]
@@ -2666,7 +2494,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -2675,10 +2503,7 @@ class LpaContext implements Context
 
         // API call to get access codes
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
-            [
-                'user-token' => $this->userId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes'
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -2717,7 +2542,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -2776,7 +2601,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime())->modify('-3 months')->format('Y-m-d'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -2795,7 +2620,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime())->modify('-3 months')->format('Y-m-d'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -2814,7 +2639,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime())->modify('-3 months')->format('Y-m-d'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -2843,7 +2668,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime())->modify('-6 months')->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -2853,9 +2678,6 @@ class LpaContext implements Context
         // API call to remove an LPA
         $this->apiDelete(
             '/v1/lpas/' . $this->userLpaActorToken,
-            [
-                'user-token' => $this->userId,
-            ],
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -2916,28 +2738,6 @@ class LpaContext implements Context
             )
         );
 
-        // LpaRepository::get
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($this->lpa)
-            )
-        );
-
-        // Done twice due to our codes interdependencies
-        // LpaRepository::get
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($this->lpa)
-            )
-        );
-
-        // CheckLpaCleansed: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         // request a code to be generated and letter to be sent
         $this->apiFixtures->append(
             new Response(
@@ -2972,9 +2772,6 @@ class LpaContext implements Context
                 'dob'                  => $this->userDob,
                 'postcode'             => $this->userPostCode,
                 'force_activation_key' => true,
-            ],
-            [
-                'user-token' => $this->base->userAccountId,
             ]
         );
 
@@ -2997,15 +2794,6 @@ class LpaContext implements Context
             new Result([])
         );
 
-        // LpaRepository::get
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($this->lpa)
-            )
-        );
-
         // check if actor has a code
         $this->apiFixtures->append(
             new Response(
@@ -3018,9 +2806,6 @@ class LpaContext implements Context
                 )
             )
         );
-
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // request a code to be generated and letter to be sent
         $this->apiFixtures->append(
@@ -3056,9 +2841,6 @@ class LpaContext implements Context
                 'dob'                  => $this->userDob,
                 'postcode'             => $this->userPostCode,
                 'force_activation_key' => false,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 
@@ -3105,9 +2887,6 @@ class LpaContext implements Context
                 'dob'                  => $this->userDob,
                 'postcode'             => $this->userPostCode,
                 'force_activation_key' => false,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 
@@ -3141,9 +2920,6 @@ class LpaContext implements Context
                 'dob'                  => $dob,
                 'postcode'             => $postcode,
                 'force_activation_key' => false,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 
@@ -3191,9 +2967,6 @@ class LpaContext implements Context
                 'dob'                  => $this->userDob,
                 'postcode'             => $this->userPostCode,
                 'force_activation_key' => false,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 
@@ -3254,9 +3027,6 @@ class LpaContext implements Context
                 'dob'                  => $this->userDob,
                 'postcode'             => $this->userPostCode,
                 'force_activation_key' => false,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 
@@ -3312,9 +3082,6 @@ class LpaContext implements Context
                 'dob'                  => $this->userDob,
                 'postcode'             => $this->userPostCode,
                 'force_activation_key' => false,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 
@@ -3363,10 +3130,7 @@ class LpaContext implements Context
             // API call to request an activation key
             $this->apiPost(
                 '/v1/older-lpa/validate',
-                $dataAttributes,
-                [
-                    'user-token' => $this->userId,
-                ]
+                $dataAttributes
             );
 
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -3395,7 +3159,7 @@ class LpaContext implements Context
                                 'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                                 'Id'        => $this->userLpaActorToken,
                                 'ActorId'   => $this->actorId,
-                                'UserId'    => $this->userId,
+                                'UserId'    => $this->base->userAccountId,
                             ]
                         ),
                     ],
@@ -3414,10 +3178,7 @@ class LpaContext implements Context
 
         // LpaService::getLpas
         $this->apiGet(
-            '/v1/lpas',
-            [
-                'user-token' => $this->userLpaActorToken,
-            ]
+            '/v1/lpas'
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -3445,7 +3206,7 @@ class LpaContext implements Context
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
                             'ActorId'   => $this->actorId,
-                            'UserId'    => $this->userId,
+                            'UserId'    => $this->base->userAccountId,
                         ]
                     ),
                 ]
@@ -3463,10 +3224,7 @@ class LpaContext implements Context
 
         // API call to get lpa
         $this->apiGet(
-            '/v1/lpas/' . $this->userLpaActorToken,
-            [
-                'user-token' => $this->userId,
-            ]
+            '/v1/lpas/' . $this->userLpaActorToken
         );
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -3515,9 +3273,6 @@ class LpaContext implements Context
             )
         );
 
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         // request a code to be generated and letter to be sent
         $this->apiFixtures->append(
             new Response(
@@ -3552,9 +3307,6 @@ class LpaContext implements Context
                 'dob'                  => $this->userDob,
                 'postcode'             => $this->userPostCode,
                 'force_activation_key' => true,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 
@@ -3600,9 +3352,6 @@ class LpaContext implements Context
                 'dob'                  => $this->lpa->attorneys[0]->dob,
                 'postcode'             => $this->lpa->attorneys[0]->addresses[0]->postcode,
                 'force_activation_key' => false,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 
@@ -3677,9 +3426,6 @@ class LpaContext implements Context
                 'dob'                  => $this->userDob,
                 'postcode'             => $this->userPostCode,
                 'force_activation_key' => false,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 
@@ -3722,15 +3468,6 @@ class LpaContext implements Context
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(new Result([]));
 
-        // LpaRepository::get
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($this->lpa)
-            )
-        );
-
         // check if actor has a code
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
 
@@ -3744,9 +3481,6 @@ class LpaContext implements Context
                 'dob'                  => $this->userDob,
                 'postcode'             => $this->userPostCode,
                 'force_activation_key' => false,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 
@@ -3810,9 +3544,6 @@ class LpaContext implements Context
                 'dob'                  => $this->userDob,
                 'postcode'             => $this->userPostCode,
                 'force_activation_key' => false,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 
@@ -3823,7 +3554,8 @@ class LpaContext implements Context
     #[Then('/^I am told my activation key is being sent$/')]
     public function iConfirmDetailsOfTheFoundLPAAreCorrect(): void
     {
-        $earliestRegDate = '2019-09-01';
+        $earliestRegDate            = '2019-09-01';
+        $isEligibleForActivationKey = $this->lpa->lpaIsCleansed || $this->lpa->registrationDate >= $earliestRegDate;
 
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -3839,32 +3571,31 @@ class LpaContext implements Context
             )
         );
 
-        // LpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        if ($isEligibleForActivationKey) {
+            // request a code to be generated and letter to be sent
+            $this->apiFixtures->append(
+                new Response(
+                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    []
+                )
+            );
 
-        // request a code to be generated and letter to be sent
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_NO_CONTENT,
-                []
-            )
-        );
-
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'Id'        => $this->userLpaActorToken,
-                            'UserId'    => $this->base->userAccountId,
-                            'SiriusUid' => $this->lpaUid,
-                            'ActorId'   => $this->actorId,
-                            'Added'     => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
-                        ]
-                    ),
-                ]
-            )
-        );
+            $this->awsFixtures->append(
+                new Result(
+                    [
+                        'Item' => $this->marshalAwsResultData(
+                            [
+                                'Id'        => $this->userLpaActorToken,
+                                'UserId'    => $this->base->userAccountId,
+                                'SiriusUid' => $this->lpaUid,
+                                'ActorId'   => $this->actorId,
+                                'Added'     => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
+                            ]
+                        ),
+                    ]
+                )
+            );
+        }
 
         // API call to request an activation key
         $this->apiPatch(
@@ -3876,12 +3607,9 @@ class LpaContext implements Context
                 'dob'                  => $this->userDob,
                 'postcode'             => $this->userPostCode,
                 'force_activation_key' => true,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
-        if (!$this->lpa->lpaIsCleansed && $this->lpa->registrationDate < $earliestRegDate) {
+        if (!$isEligibleForActivationKey) {
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         } else {
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
@@ -3930,12 +3658,9 @@ class LpaContext implements Context
             '/v1/older-lpa/cleanse',
             [
                 'reference_number' => $this->lpaUid,
-                'user-token'       => $this->userId,
+                'user-token'       => $this->base->userAccountId,
                 'notes'            => 'Notes',
                 'actor_id'         => $this->actorId,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 
@@ -3980,9 +3705,6 @@ class LpaContext implements Context
                 'dob'                  => $this->userDob,
                 'postcode'             => 'Wrong',
                 'force_activation_key' => false,
-            ],
-            [
-                'user-token' => $this->userId,
             ]
         );
 

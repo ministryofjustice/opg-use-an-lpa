@@ -315,7 +315,7 @@ class LpaContext implements Context
     public function iAmOnTheActivationKeyInformationPage(): void
     {
         $this->ui->visit('/lpa/add-by-paper-information');
-        $this->ui->assertPageContainsText('Ask for an activation key');
+        $this->assertPageContainsTranslatedText('activation-key-request.start.heading-page');
     }
 
     #[Given('/^I am on the add an LPA page$/')]
@@ -352,8 +352,8 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/check');
     }
 
-    #[Given('/^I am on the dashboard page$/')]
-    public function iAmOnTheDashboardPage(): void
+    #[Given('/^I am on the dashboard page(?: in (Welsh))?$/')]
+    public function iAmOnTheDashboardPage(?string $language = null): void
     {
         if (isset($this->dashboardLPAs)) {
             //API call for getting all the users added LPAs
@@ -384,10 +384,11 @@ class LpaContext implements Context
             )
         );
 
-        $this->ui->visit('/lpa/dashboard');
+        $path = $language === 'Welsh' ? '/cy/lpa/dashboard' : '/lpa/dashboard';
+        $this->ui->visit($path);
 
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
-        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageAddress($path);
     }
 
     #[Given('/^I am on the death notification page$/')]
@@ -1048,6 +1049,12 @@ class LpaContext implements Context
     public function iClickTheContinueLink(): void
     {
         $this->ui->clickLink('Continue');
+    }
+
+    #[When('/^I click the Continue button on the page$/')]
+    public function iClickTheContinueButtonOnThePage(): void
+    {
+        $this->ui->getSession()->getPage()->find('css', '#continue-button')->click();
     }
 
     #[When('/^I click the (.*) link in the instructions or preference message$/')]
@@ -2792,7 +2799,7 @@ class LpaContext implements Context
     #[Then('/^I will be taken to the appropriate (.*) to add an lpa$/')]
     public function iWillBeTakenToTheAppropriateToAddAnLpa($page): void
     {
-        $this->ui->assertPageContainsText($page);
+        $this->assertPageContainsTranslatedText($page);
     }
 
     #[Then('/^I will be told that I must select whether I have an activation key$/')]

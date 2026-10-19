@@ -7,6 +7,7 @@ namespace Common\Service\Lpa;
 use ArrayObject;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\Context\UserContext;
 use Common\Service\Log\EventCodes;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
@@ -21,21 +22,19 @@ class LpaService
         private SortLpas $sortLpas,
         private GroupLpas $groupLpas,
         private LoggerInterface $logger,
+        private UserContext $userContext,
     ) {
     }
 
     /**
      * Get the users currently registered LPAs
      *
-     * @param string $userToken
      * @param bool   $sortAndPopulate Sort group and populate metadata for LPA dashboard
      * @return ArrayObject|null
      * @throws Exception
      */
-    public function getLpas(string $userToken, bool $sortAndPopulate = false): ?ArrayObject
+    public function getLpas(bool $sortAndPopulate = false): ?ArrayObject
     {
-        $this->apiClient->setUserTokenHeader($userToken);
-
         $lpaData = $this->apiClient->httpGet('/v1/lpas');
 
         $lpaData = ($this->parseLpaData)($lpaData);
@@ -43,7 +42,7 @@ class LpaService
         $this->logger->info(
             'Account with Id {id} retrieved {count} LPA(s)',
             [
-                'id'    => $userToken,
+                'id'    => $this->userContext->userId,
                 'count' => count($lpaData),
             ]
         );
@@ -51,22 +50,19 @@ class LpaService
         return $sortAndPopulate
             ? ($this->groupLpas)(
                 ($this->sortLpas)(
-                    ($this->populateLpaMetadata)($lpaData, $userToken)
+                    ($this->populateLpaMetadata)($lpaData)
                 )
             )
             : $lpaData;
     }
 
     /**
-     * @param string $userToken
      * @param string $actorLpaToken
      * @return ArrayObject|null
      * @throws Exception
      */
-    public function getLpaById(string $userToken, string $actorLpaToken): ?ArrayObject
+    public function getLpaById(string $actorLpaToken): ?ArrayObject
     {
-        $this->apiClient->setUserTokenHeader($userToken);
-
         $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken);
 
         $lpaData = ($this->parseLpaData)($lpaData);
@@ -76,7 +72,7 @@ class LpaService
             $this->logger->info(
                 'Account with Id {id} fetched LPA with Id {uId}',
                 [
-                    'id'  => $userToken,
+                    'id'  => $this->userContext->userId,
                     'uId' => $lpaData->lpa->getUId(),
                 ]
             );

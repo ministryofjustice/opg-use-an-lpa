@@ -31,7 +31,6 @@ use Common\Service\{
     Aws\KmsFactory,
     Aws\SdkFactory,
     Aws\SecretsManagerFactory,
-    Cache\RedisAdapterPluginManagerDelegatorFactory,
     Container\ModifiableContainerInterface,
     Container\PhpDiModifiableContainer,
     Csrf\SessionCsrfGuardFactory,
@@ -51,6 +50,8 @@ use Common\Service\{
     User\UserService,
     User\UserServiceFactory
 };
+use Common\Service\Cache\Symfony\{PoolFactory, SimpleCacheFactory, TagAwareFactory};
+use Common\Service\Cache\RedisFactory;
 use Common\Service\Lpa\{Factory\InstAndPrefImages, Factory\Sirius};
 use Common\Service\Session\{
     Encryption\EncryptInterface,
@@ -71,14 +72,16 @@ use Common\View\Twig\{
     LpaExtension,
     OrdinalNumberExtension,
     TranslationExtensionFactory,
-    TranslationSwitchExtension
+    TranslationSwitchExtension,
+    RequestGlobalsExtension
 };
 use Gettext\{Generator\GeneratorInterface, Generator\PoGenerator, Loader\LoaderInterface, Loader\PoLoader};
 use GuzzleHttp\Client as GuzzleClient;
-use Laminas\Cache\Storage\Adapter\Memory\AdapterPluginManagerDelegatorFactory;
-use Laminas\Cache\Storage\AdapterPluginManager;
 use Laminas\Stratigility\Middleware\ErrorHandler;
 use Mezzio\Authentication\UserInterface;
+use Psr\Cache\CacheItemPoolInterface;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
+use Symfony\Contracts\Cache\{CacheInterface, TagAwareCacheInterface};
 use Mezzio\Csrf\CsrfGuardFactoryInterface;
 use Mezzio\Session\{SessionMiddleware, SessionMiddlewareFactory, SessionPersistenceInterface};
 use Psr\Http\Client\ClientInterface;
@@ -115,6 +118,11 @@ class ConfigProvider
     {
         return [
             'aliases'    => [
+                // PSR6/16
+                CacheItemPoolInterface::class       => 'cache.request',
+                CacheInterface::class               => 'cache.request',
+                TagAwareCacheInterface::class       => 'cache.request.taggable',
+
                 ClientInterface::class              => GuzzleClient::class,
                 EncryptInterface::class             => EncryptionFallbackCookie::class,
                 SessionPersistenceInterface::class  => EncryptedCookiePersistence::class,
@@ -134,46 +142,56 @@ class ConfigProvider
                 LoaderInterface::class              => PoLoader::class,
                 GeneratorInterface::class           => PoGenerator::class,
             ],
+            'invokables' => [
+                RedisFactory::class => RedisFactory::class,
+            ],
             'factories'  => [
+                // Cache
+                SimpleCacheInterface::class            => SimpleCacheFactory::class,
+                'cache.request'                        => PoolFactory::class,
+                'cache.request.taggable'               => TagAwareFactory::class,
+                'cache.app'                            => PoolFactory::class,
+                'cache.app.taggable'                   => TagAwareFactory::class,
+                'cache.ratelimits.viewer_code_failure' => PoolFactory::class,
+                'cache.ratelimits.actor_code_failure'  => PoolFactory::class,
+                'cache.ratelimits.actor_login_failure' => PoolFactory::class,
+                'cache.ratelimits.download_lpa'        => PoolFactory::class,
+
                 // Services
-                Client::class                         => ClientFactory::class,
-                PdfService::class                     => PdfServiceFactory::class,
-                EncryptedCookiePersistence::class     => EncryptedCookiePersistenceFactory::class,
-                KmsManager::class                     => KmsManagerFactory::class,
-                UserService::class                    => UserServiceFactory::class,
-                FeatureEnabled::class                 => FeatureEnabledFactory::class,
-                EncryptionFallbackCookie::class       => EncryptionFallbackCookieFactory::class,
-                Sdk::class                            => SdkFactory::class,
-                KmsClient::class                      => KmsFactory::class,
-                SecretsManagerClient::class           => SecretsManagerFactory::class,
-                GuzzleClient::class                   => GuzzleClientFactory::class,
-                SystemMessageService::class           => SystemMessageServiceFactory::class,
+                Client::class                          => ClientFactory::class,
+                PdfService::class                      => PdfServiceFactory::class,
+                EncryptedCookiePersistence::class      => EncryptedCookiePersistenceFactory::class,
+                KmsManager::class                      => KmsManagerFactory::class,
+                UserService::class                     => UserServiceFactory::class,
+                FeatureEnabled::class                  => FeatureEnabledFactory::class,
+                EncryptionFallbackCookie::class        => EncryptionFallbackCookieFactory::class,
+                Sdk::class                             => SdkFactory::class,
+                KmsClient::class                       => KmsFactory::class,
+                SecretsManagerClient::class            => SecretsManagerFactory::class,
+                GuzzleClient::class                    => GuzzleClientFactory::class,
+                SystemMessageService::class            => SystemMessageServiceFactory::class,
 
                 // Middleware
-                SessionMiddleware::class              => SessionMiddlewareFactory::class,
-                SessionExpiryMiddleware::class        => SessionExpiryMiddlewareFactory::class,
-                SetLocaleMiddleware::class            => SetLocaleMiddlewareFactory::class,
-                CSPMiddleware::class                  => CSPMiddlewareFactory::class,
+                SessionMiddleware::class               => SessionMiddlewareFactory::class,
+                SessionExpiryMiddleware::class         => SessionExpiryMiddlewareFactory::class,
+                SetLocaleMiddleware::class             => SetLocaleMiddlewareFactory::class,
+                CSPMiddleware::class                   => CSPMiddlewareFactory::class,
 
                 // Auth
-                UserInterface::class                  => UserFactory::class,
-                OneLoginService::class                => OneLoginServiceFactory::class,
+                UserInterface::class                   => UserFactory::class,
+                OneLoginService::class                 => OneLoginServiceFactory::class,
 
                 // Handlers
-                CookiesPageHandler::class             => CookiesPageHandlerFactory::class,
-                HealthcheckHandler::class             => HealthcheckHandlerFactory::class,
-                TranslatorInterface::class            => TranslatorFactory::class,
-                TranslationExtension::class           => TranslationExtensionFactory::class,
-                JavascriptVariablesExtension::class   => JavascriptVariablesExtensionFactory::class,
-                GenericGlobalVariableExtension::class => GenericGlobalVariableExtensionFactory::class,
+                CookiesPageHandler::class              => CookiesPageHandlerFactory::class,
+                HealthcheckHandler::class              => HealthcheckHandlerFactory::class,
+                TranslatorInterface::class             => TranslatorFactory::class,
+                TranslationExtension::class            => TranslationExtensionFactory::class,
+                JavascriptVariablesExtension::class    => JavascriptVariablesExtensionFactory::class,
+                GenericGlobalVariableExtension::class  => GenericGlobalVariableExtensionFactory::class,
             ],
             'delegators' => [
-                ErrorHandler::class         => [
+                ErrorHandler::class => [
                     LogStderrListenerDelegatorFactory::class,
-                ],
-                AdapterPluginManager::class => [
-                    AdapterPluginManagerDelegatorFactory::class,
-                    RedisAdapterPluginManagerDelegatorFactory::class,
                 ],
             ],
         ];
@@ -207,6 +225,7 @@ class ConfigProvider
                 GenericGlobalVariableExtension::class,
                 TranslationSwitchExtension::class,
                 FeatureFlagExtension::class,
+                RequestGlobalsExtension::class,
             ],
             'runtime_loaders' => [
                 ContainerRuntimeLoader::class,

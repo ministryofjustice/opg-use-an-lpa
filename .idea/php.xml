@@ -2,7 +2,7 @@
 <project version="4">
   <component name="LaravelPint">
     <laravel_pint_settings>
-      <laravel_pint_by_interpreter asDefaultInterpreter="true" interpreter_id="c48851e9-4ba4-4089-bc4e-ff2b181d2433">
+      <laravel_pint_by_interpreter asDefaultInterpreter="true" interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31">
         <option name="timeout" value="30000" />
       </laravel_pint_by_interpreter>
     </laravel_pint_settings>
@@ -34,7 +34,7 @@
   </component>
   <component name="PhpCSFixer">
     <phpcsfixer_settings>
-      <phpcs_fixer_by_interpreter asDefaultInterpreter="true" interpreter_id="c48851e9-4ba4-4089-bc4e-ff2b181d2433" timeout="30000" />
+      <phpcs_fixer_by_interpreter asDefaultInterpreter="true" interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" timeout="30000" />
     </phpcsfixer_settings>
   </component>
   <component name="PhpCodeSniffer">
@@ -44,7 +44,7 @@
       <phpcs_by_interpreter interpreter_id="d0145a1b-f903-43c7-8428-a985293fe8b9" beautifier_path="/app/vendor/squizlabs/php_codesniffer/bin/phpcbf" standards="MySource;PEAR;PSR1;PSR12;PSR2;SlevomatCodingStandard;Squiz;WebimpressCodingStandard;Zend;coding-standard" tool_path="/app/vendor/squizlabs/php_codesniffer/bin/phpcs" timeout="30000" />
       <phpcs_by_interpreter interpreter_id="629f1e4d-0e9c-4595-aa54-e8d28c3ac0df" beautifier_path="/app/vendor/squizlabs/php_codesniffer/bin/phpcbf" standards="MySource;PEAR;PSR1;PSR12;PSR2;SlevomatCodingStandard;Squiz;WebimpressCodingStandard;Zend;coding-standard" tool_path="/app/vendor/squizlabs/php_codesniffer/bin/phpcs" timeout="30000" />
       <PhpCSConfiguration deletedFromTheList="true" beautifier_path="$PROJECT_DIR$/service-api/app/vendor/squizlabs/php_codesniffer/bin/phpcbf" standards="MySource;PEAR;PSR1;PSR12;PSR2;SlevomatCodingStandard;Squiz;WebimpressCodingStandard;Zend;coding-standard" tool_path="$PROJECT_DIR$/service-api/app/vendor/squizlabs/php_codesniffer/bin/phpcs" />
-      <phpcs_by_interpreter asDefaultInterpreter="true" deletedFromTheList="true" interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" beautifier_path="/app/vendor/squizlabs/php_codesniffer/bin/phpcbf" standards="PEAR;PSR1;PSR12;PSR2;SlevomatCodingStandard;Squiz;Zend" tool_path="/app/vendor/squizlabs/php_codesniffer/bin/phpcs" timeout="30000" />
+      <phpcs_by_interpreter asDefaultInterpreter="true" deletedFromTheList="true" interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" beautifier_path="/app/vendor/squizlabs/php_codesniffer/bin/phpcbf" standards="MySource;PEAR;PSR1;PSR12;PSR2;SlevomatCodingStandard;Squiz;WebimpressCodingStandard;Zend;coding-standard" tool_path="/app/vendor/squizlabs/php_codesniffer/bin/phpcs" timeout="30000" />
     </phpcs_settings>
   </component>
   <component name="PhpIncludePathManager">
@@ -963,7 +963,7 @@
   <component name="PhpStan">
     <PhpStan_settings>
       <PhpStanConfiguration tool_path="$PROJECT_DIR$/service-front/app/vendor/bin/phpstan" />
-      <phpstan_by_interpreter asDefaultInterpreter="true" interpreter_id="c48851e9-4ba4-4089-bc4e-ff2b181d2433" tool_path="$PROJECT_DIR$/service-front/app/vendor/bin/phpstan" timeout="60000" />
+      <phpstan_by_interpreter asDefaultInterpreter="true" interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" tool_path="/app/vendor/bin/phpstan" timeout="60000" />
     </PhpStan_settings>
   </component>
   <component name="PhpStanOptionsConfiguration">
@@ -981,8 +981,8 @@
       <psalm_fixer_by_interpreter interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" tool_path="/app/vendor/bin/psalm" timeout="60000" />
       <psalm_fixer_by_interpreter interpreter_id="d0145a1b-f903-43c7-8428-a985293fe8b9" tool_path="/app/vendor/bin/psalm" timeout="60000" />
       <psalm_fixer_by_interpreter interpreter_id="629f1e4d-0e9c-4595-aa54-e8d28c3ac0df" tool_path="/app/vendor/bin/psalm" timeout="60000" />
-      <psalm_fixer_by_interpreter asDefaultInterpreter="true" deletedFromTheList="true" interpreter_id="c48851e9-4ba4-4089-bc4e-ff2b181d2433" tool_path="$PROJECT_DIR$/service-api/app/vendor/bin/psalm" timeout="60000" />
       <PsalmConfiguration deletedFromTheList="true" tool_path="$PROJECT_DIR$/service-api/app/vendor/bin/psalm" />
+      <psalm_fixer_by_interpreter asDefaultInterpreter="true" deletedFromTheList="true" interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" tool_path="/app/vendor/bin/psalm" timeout="60000" />
     </Psalm_settings>
   </component>
   <component name="PsalmOptionsConfiguration">

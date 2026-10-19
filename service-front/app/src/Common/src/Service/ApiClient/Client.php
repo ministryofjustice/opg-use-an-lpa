@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\ApiClient;
 
 use Common\Exception\ApiException;
+use Common\Service\Context\UserContext;
 use Common\Service\Log\RequestTracing;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Exception\BadResponseException;
@@ -16,31 +17,20 @@ use Psr\Http\Message\ResponseInterface;
 
 class Client
 {
-    private string $token;
-
     /**
      * Client constructor
      *
      * @param ClientInterface $httpClient
      * @param string $apiBaseUri
      * @param ?string $traceId
+     * @param UserContext $userContext Shared context populated and cleared by UserContextMiddleware for each request.
      */
     public function __construct(
         private ClientInterface $httpClient,
         private string $apiBaseUri,
         private ?string $traceId,
+        private UserContext $userContext,
     ) {
-    }
-
-    /**
-     * Sets up the client object to attach authentication headers
-     * to outgoing requests.
-     *
-     * @param string $token
-     */
-    public function setUserTokenHeader(string $token): void
-    {
-        $this->token = $token;
     }
 
     /**
@@ -225,8 +215,9 @@ class Client
         }
 
         //  If the logged in user has an auth token already then set that in the header
-        if (isset($this->token)) {
-            $headerLines['User-Token'] = $this->token;
+        if ($this->userContext->userId !== null && $this->userContext->sessionId !== null) {
+            $headerLines['User-Token']   = $this->userContext->userId;
+            $headerLines['User-Session'] = $this->userContext->sessionId;
         }
 
         return $headerLines;
@@ -258,11 +249,15 @@ class Client
 
     /**
      * @param ResponseInterface|null $response
-     * @param $defaultMessage
+     * @param string $defaultMessage
      * @return mixed|string
      */
-    public function getResponseMessage(ResponseInterface $response, $defaultMessage): string
+    public function getResponseMessage(?ResponseInterface $response, string $defaultMessage): string
     {
+        if ($response === null) {
+            return $defaultMessage;
+        }
+
         $body = json_decode($response->getBody()->getContents(), true);
         return $body['details'] ?? $defaultMessage;
     }

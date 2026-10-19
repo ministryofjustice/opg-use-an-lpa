@@ -1,0 +1,9 @@
+--TEST--
+The user and flash functions expose null when no request state is bound
+--TEMPLATE--
+{{ user() is null ? "anonymous" : "signed in" }}:{{ flash() is null ? "no flash" : "flash" }}
+--DATA--
+$this->runtime->reset();
+return [];
+--EXPECT--
+anonymous:no flash

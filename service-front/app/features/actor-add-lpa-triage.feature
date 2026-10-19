@@ -28,12 +28,12 @@ Feature: Add an LPA triage page
   Scenario Outline: A user with an activation key is taken to the add an LPA page
     Given I am on the add an LPA triage page
     When I select <option> whether I have an activation key
-    Then I will be taken to the appropriate <page> to add an lpa
+    Then I will be taken to the appropriate <page heading> to add an lpa
 
     Examples:
-      | option | page                             |
-      | Yes    | What is your activation key?     |
-      | No     | Ask for an activation key        |
+      | option | page heading                                      |
+      | Yes    | What is your activation key?               |
+      | No     | activation-key-request.start.heading-page  |
 
   @ui
   Scenario: The user is shown an error message if they do not select either option
@@ -56,5 +56,5 @@ Feature: Add an LPA triage page
   @ui
   Scenario: The user is able to continue after reading information about requesting an activation key
     Given I am on the activation key information page
-    When I click the Continue link
+    When I click the Continue button on the page
     Then I am taken to request an activation key form

@@ -149,7 +149,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
         return new HtmlResponse($this->renderer->render(
             'actor::request-activation-key/check-details-and-consent',
             [
-                'user' => $this->user,
                 'form' => $this->form,
                 'data' => $this->data,
             ]
@@ -184,7 +183,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             );
 
             $result = $this->cleanseLPA->cleanse(
-                $this->user->getIdentity(),
                 $state->referenceNumber,
                 $additionalInfo,
                 $state->actorUid
@@ -330,7 +328,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             $this->renderer->render(
                 'actor::activation-key-request-received',
                 [
-                    'user' => $this->user,
                     'date' => $letterExpectedDate,
                 ]
             )

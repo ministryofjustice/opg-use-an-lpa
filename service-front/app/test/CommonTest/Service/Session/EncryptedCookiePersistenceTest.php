@@ -25,8 +25,10 @@ use Common\Service\Session\KeyManager\Key;
 use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\Session;
+use Mezzio\Session\SessionIdentifierAwareInterface;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -35,6 +37,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+#[CoversClass(EncryptedCookiePersistence::class)]
 class EncryptedCookiePersistenceTest extends TestCase
 {
     use ProphecyTrait;
@@ -166,11 +169,13 @@ class EncryptedCookiePersistenceTest extends TestCase
                 $this->assertArrayHasKey('string', $input);
                 $this->assertArrayHasKey('bool', $input);
                 $this->assertArrayHasKey('float', $input);
+                $this->assertArrayHasKey(EncryptedCookiePersistence::SESSION_ID_KEY, $input);
 
                 $this->assertEquals($testData['int'], $input['int']);
                 $this->assertEquals($testData['string'], $input['string']);
                 $this->assertEquals(123.9, $input['float']);
                 $this->assertEquals($testData['bool'], $input['bool']);
+                $this->assertNotEmpty($input[EncryptedCookiePersistence::SESSION_ID_KEY]);
 
                 return true;
             })
@@ -380,5 +385,38 @@ class EncryptedCookiePersistenceTest extends TestCase
 
         // We expect the response we put in to be returned
         $this->assertEquals($responseProphecy->reveal(), $response);
+    }
+
+    #[Test]
+    public function it_changes_the_session_id_when_the_session_is_marked_as_regenerated(): void
+    {
+        $cp = new EncryptedCookiePersistence(
+            $this->createStub(EncryptInterface::class),
+            self::COOKIE_NAME,
+            self::COOKIE_PATH,
+            'nocache',
+            self::SESSION_EXPIRES,
+            null,
+            self::COOKIE_EXPIRES,
+            null,
+            true,
+            true
+        );
+
+        $initialId = 'initial-session-id';
+        $session   = new Session([
+            'foo'                                      => 'bar',
+            EncryptedCookiePersistence::SESSION_ID_KEY => $initialId,
+        ], $initialId);
+
+        $session = $session->regenerate();
+
+        $actual = $cp->initializeId($session);
+
+        $this->assertInstanceOf(SessionIdentifierAwareInterface::class, $actual);
+        $this->assertNotEmpty($actual->getId());
+        $this->assertNotSame($initialId, $actual->getId());
+        $this->assertSame($actual->getId(), $actual->get(EncryptedCookiePersistence::SESSION_ID_KEY));
+        $this->assertFalse($actual->isRegenerated());
     }
 }

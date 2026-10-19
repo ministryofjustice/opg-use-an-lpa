@@ -1,4 +1,4 @@
-{% if application == "actor" and user is defined %}
+{% if application == "actor" and user() %}
   {% include('@partials/header/one-login-logged-in.html.twig') %}
 {% else %}
   <header class="govuk-header" data-module="govuk-header">

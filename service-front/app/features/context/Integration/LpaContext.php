@@ -10,6 +10,7 @@ use Behat\Step\When;
 use BehatTest\Context\ActorContextTrait;
 use BehatTest\Context\ContextUtilities;
 use Common\Entity\CaseActor;
+use Common\Service\Context\UserContext;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\AccessForAllApiResult;
 use Common\Service\Lpa\AddAccessForAllLpa;
@@ -101,7 +102,6 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $result = $addOlderLpa->validate(
-            $this->userIdentity,
             $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
@@ -163,7 +163,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $removeLpa = $this->container->get(RemoveLpa::class);
-        $result    = $removeLpa($this->userIdentity, $this->actorLpaToken);
+        $result    = $removeLpa($this->actorLpaToken);
 
         Assert::assertArrayHasKey('lpa', $result);
         Assert::assertEquals($this->lpa['donor']['uId'], $result['lpa']['donor']['uId']);
@@ -238,7 +238,6 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $result = $addOlderLpa->confirm(
-            $this->userIdentity,
             $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
@@ -261,10 +260,9 @@ class LpaContext extends BaseIntegrationContext
     #[Then('/^I am given a unique access code$/')]
     public function iAmGivenAUniqueAccessCode(): void
     {
-        $lpa = $this->container->get(LpaService::class)->getLpaById($this->userIdentity, $this->actorLpaToken);
+        $lpa = $this->container->get(LpaService::class)->getLpaById($this->actorLpaToken);
 
         $codeData = $this->container->get(ViewerCodeService::class)->createShareCode(
-            $this->userIdentity,
             $this->actorLpaToken,
             $this->organisation
         );
@@ -286,7 +284,6 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
         $result      = $addOlderLpa->validate(
-            $this->userIdentity,
             $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
@@ -333,7 +330,6 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $result = $addOlderLpa->validate(
-            $this->userIdentity,
             $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
@@ -415,13 +411,16 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $lpa = $this->container->get(LpaService::class)->getLpas($this->userIdentity);
+        $lpa = $this->container->get(LpaService::class)->getLpas();
 
         $lpaObject = $this->container->get(LpaFactory::class)->createLpaFromData($this->lpa);
 
         Assert::assertEquals($lpaObject, $lpa[$this->actorLpaToken]['lpa']);
 
-        $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes($this->userIdentity, $this->actorLpaToken, true);
+        $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes(
+            $this->actorLpaToken,
+            true
+        );
 
         Assert::assertEquals($shareCodes[0], $code1);
         Assert::assertEquals($shareCodes[1], $code2);
@@ -448,13 +447,16 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $lpa = $this->container->get(LpaService::class)->getLpas($this->userIdentity);
+        $lpa = $this->container->get(LpaService::class)->getLpas();
 
         $lpaObject = $this->container->get(LpaFactory::class)->createLpaFromData($this->lpa);
 
         Assert::assertEquals($lpaObject, $lpa[$this->actorLpaToken]['lpa']);
 
-        $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes($this->userIdentity, $this->actorLpaToken, true);
+        $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes(
+            $this->actorLpaToken,
+            true
+        );
 
         Assert::assertEquals($shareCodes['activeCodeCount'], 0);
     }
@@ -505,7 +507,10 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
+        $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes(
+            $this->actorLpaToken,
+            false
+        );
 
         Assert::assertEmpty($shareCodes);
     }
@@ -551,9 +556,12 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $lpa = $this->container->get(LpaService::class)->getLpaById($this->userIdentity, $this->actorLpaToken);
+        $lpa = $this->container->get(LpaService::class)->getLpaById($this->actorLpaToken);
 
-        $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
+        $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes(
+            $this->actorLpaToken,
+            false
+        );
 
 
         Assert::assertNotEmpty($lpa);
@@ -621,9 +629,12 @@ class LpaContext extends BaseIntegrationContext
                 self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
             )
         );
-        $lpa = $this->container->get(LpaService::class)->getLpaById($this->userIdentity, $this->actorLpaToken);
+        $lpa = $this->container->get(LpaService::class)->getLpaById($this->actorLpaToken);
 
-        $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
+        $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes(
+            $this->actorLpaToken,
+            false
+        );
 
         Assert::assertNotEmpty($lpa['lpa']);
         Assert::assertEquals($this->accessCode, $shareCodes[0]['ViewerCode']);
@@ -681,9 +692,12 @@ class LpaContext extends BaseIntegrationContext
         );
 
 
-        $lpa = $this->container->get(LpaService::class)->getLpaById($this->userIdentity, $this->actorLpaToken);
+        $lpa = $this->container->get(LpaService::class)->getLpaById($this->actorLpaToken);
 
-        $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
+        $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes(
+            $this->actorLpaToken,
+            false
+        );
 
         Assert::assertNotEmpty($lpa['lpa']);
         Assert::assertEquals($this->accessCode, $shareCodes[0]['ViewerCode']);
@@ -744,9 +758,12 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $lpa = $this->container->get(LpaService::class)->getLpaById($this->userIdentity, $this->actorLpaToken);
+        $lpa = $this->container->get(LpaService::class)->getLpaById($this->actorLpaToken);
 
-        $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes($this->userIdentity, $this->actorLpaToken, false);
+        $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes(
+            $this->actorLpaToken,
+            false
+        );
 
         Assert::assertNotEmpty($lpa);
         Assert::assertEquals($this->accessCode, $shareCodes[0]['ViewerCode']);
@@ -771,7 +788,6 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $this->container->get(ViewerCodeService::class)->cancelShareCode(
-            $this->userIdentity,
             $this->actorLpaToken,
             $this->accessCode
         );
@@ -792,7 +808,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $this->container->get(LpaService::class)->getLpaById($this->userIdentity, $this->actorLpaToken);
+        $this->container->get(LpaService::class)->getLpaById($this->actorLpaToken);
 
         // API call for getShareCodes in CheckAccessCodesHandler
         $this->apiFixtures->append(
@@ -818,7 +834,6 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes(
-            $this->userIdentity,
             $this->actorLpaToken,
             false
         );
@@ -902,7 +917,6 @@ class LpaContext extends BaseIntegrationContext
 
         $addLpa  = $this->container->get(AddLpa::class);
         $lpaData = $addLpa->validate(
-            $this->userIdentity,
             $storedCode,
             $this->referenceNo,
             $this->userDob
@@ -1158,7 +1172,6 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
         $result      = $addOlderLpa->validate(
-            $this->userIdentity,
             $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
@@ -1195,7 +1208,6 @@ class LpaContext extends BaseIntegrationContext
 
         $addLpa  = $this->container->get(AddLpa::class);
         $lpaData = $addLpa->validate(
-            $this->userIdentity,
             $storedCode,
             $this->referenceNo,
             $this->userDob
@@ -1343,7 +1355,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $lpa = $this->container->get(LpaService::class)->getLpaById($this->userIdentity, $this->actorLpaToken);
+        $lpa = $this->container->get(LpaService::class)->getLpaById($this->actorLpaToken);
 
         Assert::assertNotNull($lpa);
 
@@ -1370,7 +1382,6 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $shareCodes = $this->container->get(ViewerCodeService::class)->getShareCodes(
-            $this->userIdentity,
             $this->actorLpaToken,
             false
         );
@@ -1423,12 +1434,12 @@ class LpaContext extends BaseIntegrationContext
     #[Then('/^The full LPA is displayed with the correct (.*)$/')]
     public function theFullLPAIsDisplayedWithTheCorrect($message): void
     {
-        $lpa = $this->container->get(LpaService::class)->getLpaById($this->userIdentity, $this->actorLpaToken);
+        $lpa = $this->container->get(LpaService::class)->getLpaById($this->actorLpaToken);
 
         Assert::assertNotNull($lpa->lpa);
         Assert::assertNotNull($lpa->actor);
 
-        $this->container->get(InstAndPrefImagesService::class)->getImagesById($this->userIdentity, $this->actorLpaToken);
+        $this->container->get(InstAndPrefImagesService::class)->getImagesById($this->actorLpaToken);
     }
 
     #[Given('/^The LPA has not been added$/')]
@@ -1458,7 +1469,6 @@ class LpaContext extends BaseIntegrationContext
         $addLpa = $this->container->get(AddLpa::class);
 
         $response = $addLpa->validate(
-            $this->userIdentity,
             $this->activation_key,
             $this->referenceNo,
             $this->userDob
@@ -1484,7 +1494,6 @@ class LpaContext extends BaseIntegrationContext
 
         $addLpa   = $this->container->get(AddLpa::class);
         $response = $addLpa->confirm(
-            $this->userIdentity,
             $this->activation_key,
             $this->referenceNo,
             $this->userDob
@@ -1508,6 +1517,9 @@ class LpaContext extends BaseIntegrationContext
 
         // The user is signed in for all actions of this context
         $this->userIdentity = '123';
+        $context            = $this->container->get(UserContext::class);
+        $context->userId    = $this->userIdentity;
+        $context->sessionId = 'session-id';
     }
 
     #[Then('/^I receive an email confirming activation key request$/')]
@@ -1552,7 +1564,6 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $result = $addOlderLpa->validate(
-            $this->userIdentity,
             $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
@@ -1616,7 +1627,6 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $result = $addOlderLpa->validate(
-            $this->userIdentity,
             $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
@@ -1702,7 +1712,6 @@ class LpaContext extends BaseIntegrationContext
         $alreadyAddedDTO->setLpaActorToken($this->actorLpaToken);
 
         $response = $addLpa->validate(
-            $this->userIdentity,
             $this->activation_key,
             $this->referenceNo,
             $this->userDob
@@ -1749,7 +1758,6 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $result = $addOlderLpa->validate(
-            $this->userIdentity,
             $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
@@ -1847,7 +1855,6 @@ class LpaContext extends BaseIntegrationContext
             $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
             $result = $addOlderLpa->confirm(
-                $this->userIdentity,
                 $this->referenceNo,
                 $this->userFirstname,
                 $this->userSurname,
@@ -1871,7 +1878,6 @@ class LpaContext extends BaseIntegrationContext
             $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
             $result = $addOlderLpa->confirm(
-                $this->userIdentity,
                 $this->referenceNo,
                 $this->userFirstname,
                 $this->userSurname,
@@ -1899,7 +1905,6 @@ class LpaContext extends BaseIntegrationContext
         $cleanseLpa = $this->container->get(CleanseLpa::class);
 
         $result = $cleanseLpa->cleanse(
-            $this->userIdentity,
             $this->referenceNo,
             'Notes',
             null
