@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-16 11:15+0000\n"
-"Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
+"PO-Revision-Date: 2026-10-19 14:07+0000\n"
+"Last-Translator: Adam Cooper <adam.cooper@publicguardian.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
 "MIME-Version: 1.0\n"
@@ -1741,7 +1741,7 @@ msgstr "Er enghraifft, 31 03 1980"
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:18
 #: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:35
 msgid "What is the LPA reference number?"
-msgstr "Beth yw cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>?"
+msgstr "Beth yw cyfeirnod yr LPA?"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:23
 msgid "Where to find the reference number"
