@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-20 12:32+0000\n"
+"PO-Revision-Date: 2026-10-20 14:53+0000\n"
 "Last-Translator: Adam Cooper <adam.cooper@publicguardian.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -514,7 +514,7 @@ msgstr "A oes gennych chi god actifadu i ychwanegu LPA?"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:35
 msgid "Activation keys are 12 letters and numbers long and start with a C, for example: C-AB12 CD34 EF56."
-msgstr "Er enghraifft, C-AB12 CD34 EF56"
+msgstr "Mae codau actifadu yn gyfuniad o 12 llythyren a rhif ac yn dechrau gydag C. Er enghraifft, C-AB12 CD34 EF56."
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:49
 msgid "Yes, I have an activation key"
@@ -4799,6 +4799,7 @@ msgstr "Beth yw eich cod actifadu?"
 
 #. Contains GOV.UK HTML markup and the %link% placeholder for the request-a-new-key link.
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:25
+#, fuzzy
 msgctxt "html-link"
 msgid "add-lpa.activation-key.content.instructions"
 msgstr ""
