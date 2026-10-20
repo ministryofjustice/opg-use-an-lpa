@@ -558,7 +558,7 @@ class LpaContext implements Context
     #[Given('/^I can see a flash message for the added LPA$/')]
     public function iCanSeeAFlashMessageForTheAddedLPA(): void
     {
-        $this->ui->assertPageContainsText("You've added Ian Deputy's health and welfare LPA");
+        $this->ui->assertPageContainsText("You've added Donald Duck's health and welfare LPA");
     }
 
     #[Given('/^I can see a flash message for the new added LPA$/')]
@@ -2942,6 +2942,14 @@ class LpaContext implements Context
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode([]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
                 self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
             )
         );
@@ -3114,7 +3122,7 @@ class LpaContext implements Context
             'Dashboard page text: ' .
             $this->ui->getSession()->getPage()->getText()
         );
-        $this->ui->assertPageContainsText('Personal welfare');
+        $this->ui->assertPageContainsText('Health and welfare LPA');
     }
 
 //    #[Then('The new LPA is successfully added')]
