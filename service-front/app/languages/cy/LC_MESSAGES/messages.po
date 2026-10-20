@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-20 14:53+0000\n"
-"Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
+"PO-Revision-Date: 2026-10-20 15:02+0000\n"
+"Last-Translator: Adam Cooper <adam.cooper@publicguardian.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
 "MIME-Version: 1.0\n"
@@ -4837,6 +4837,7 @@ msgid "add-lpa.lpa-reference-number.title"
 msgstr "Beth yw cyfeirnod yr LPA?"
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:17
+#, fuzzy
 msgid "add-lpa.lpa-reference-number.heading-page"
 msgstr "Beth yw cyfeirnod yr LPA?"
 
