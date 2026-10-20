@@ -14,9 +14,7 @@ use Common\Handler\{AbstractHandler,
     SessionAware,
     Traits\CsrfGuard,
     Traits\Logger,
-    Traits\Session as SessionTrait,
-    Traits\User,
-    UserAware};
+    Traits\Session as SessionTrait};
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\AddAccessForAllLpa;
 use Common\Service\Lpa\LocalisedDate;
@@ -31,7 +29,6 @@ use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
 use DateTime;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
@@ -43,7 +40,6 @@ use Psr\Log\LoggerInterface;
  * @template-implements WorkflowStep<RequestActivationKey>
  */
 class CheckYourAnswersHandler extends AbstractHandler implements
-    UserAware,
     CsrfGuardAware,
     SessionAware,
     LoggerAware,
@@ -52,12 +48,9 @@ class CheckYourAnswersHandler extends AbstractHandler implements
     use CsrfGuard;
     use Logger;
     use SessionTrait;
-    /** @use State<RequestActivationKey> */
     use State;
-    use User;
 
     private CheckYourAnswers $form;
-    private ?UserInterface $user;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -78,7 +71,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new CheckYourAnswers($this->getCsrfGuard($request));
-        $this->user = $this->getUser($request);
 
         if ($this->isMissingPrerequisite($request)) {
             return $this->redirectToRoute('lpa.add-by-paper');
@@ -110,7 +102,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
         return new HtmlResponse($this->renderer->render(
             'actor::check-your-answers',
             [
-                'user' => $this->user,
                 'form' => $this->form,
                 'data' => $data,
                 'back' => $this->lastPage($this->state($request)),
@@ -131,7 +122,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
             $state = $this->state($request);
 
             $result = $this->addAccessForAllLpa->validate(
-                $this->user?->getIdentity(),
                 $state->referenceNumber,
                 $state->firstNames,
                 $state->lastName,
@@ -156,7 +146,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
                         $this->renderer->render(
                             'actor::lpa-already-added',
                             [
-                                'user'       => $this->user,
                                 'lpaUid'     => $state->referenceNumber,
                                 'donor'      => $lpaAddedData->getDonor(),
                                 'lpaType'    => $lpaAddedData->getCaseSubtype(),
@@ -167,8 +156,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements
 
                 case AccessForAllResult::NOT_ELIGIBLE:
                     return new HtmlResponse($this->renderer->render(
-                        'actor::cannot-send-activation-key',
-                        ['user' => $this->user]
+                        'actor::cannot-send-activation-key'
                     ));
 
                 case AccessForAllResult::HAS_ACTIVATION_KEY:
@@ -187,7 +175,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
                         $this->renderer->render(
                             'actor::already-have-activation-key',
                             [
-                                'user'    => $this->user,
                                 'dueDate' => $activationKeyDueDate,
                                 'form'    => $form,
                             ]
@@ -210,7 +197,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
                     return new HtmlResponse(
                         $requestedToday
                             ? $this->renderer->render('actor::already-requested-activation-key-today', [
-                                'user'           => $this->user,
                                 'dueDate'        => $activationKeyDueDate,
                                 'donorFirstname' => $data->getDonor()->getFirstname(),
                                 'donorSurname'   => $data->getDonor()->getSurname(),
@@ -218,7 +204,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
                                 'form'           => $form,
                             ])
                             : $this->renderer->render('actor::already-requested-activation-key', [
-                                'user'    => $this->user,
                                 'dueDate' => $activationKeyDueDate,
                                 'form'    => $form,
                             ])
@@ -243,7 +228,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
                             'actor::confirm-lpa-for-key-request',
                             [
                                 'form'      => $form,
-                                'user'      => $this->user,
                                 'actor'     => $actor,
                                 'actorRole' => $lpaData->getAttorney() === null ? 'Donor' : 'Attorney',
                                 'donor'     => $lpaData->getDonor(),
@@ -256,7 +240,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
                     return new HtmlResponse($this->renderer->render(
                         'actor::cannot-find-lpa',
                         [
-                            'user'                 => $this->user,
                             'lpa_reference_number' => $state->referenceNumber,
                             'first_name'           => $state->firstNames,
                             'last_name'            => $state->lastName,
@@ -272,7 +255,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements
         throw new InvalidRequestException('Invalid CSRF when submitting form');
     }
 
-    public function state(ServerRequestInterface $request): WorkflowState
+    public function state(ServerRequestInterface $request): RequestActivationKey
     {
         return $this->loadState($request, RequestActivationKey::class);
     }

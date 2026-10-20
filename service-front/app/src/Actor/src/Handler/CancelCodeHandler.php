@@ -50,16 +50,12 @@ class CancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardA
     {
         $form = new CancelCode($this->getCsrfGuard($request));
 
-        $user     = $this->getUser($request);
-        $identity = !is_null($user) ? $user->getIdentity() : null;
-
         $form->setData($request->getParsedBody());
 
         if ($form->isValid()) {
             $validated = $form->getData();
 
             $this->viewerCodeService->cancelShareCode(
-                $identity,
                 $validated['lpa_token'],
                 $validated['viewer_code']
             );

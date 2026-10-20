@@ -9,18 +9,13 @@ use Behat\Step\Then;
 use Behat\Step\When;
 use BehatTest\Context\ActorContextTrait;
 use BehatTest\Context\ContextUtilities;
-use Common\Exception\ApiException;
+use Common\Service\Context\UserContext;
 use Common\Service\Log\RequestTracing;
-use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\LpaService;
-use Common\Service\Lpa\ViewerCodeService;
-use Common\Service\Notify\NotifyService;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Handler\MockHandler;
-use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * A behat context that encapsulates user account steps
@@ -46,8 +41,9 @@ class AccountContext extends BaseIntegrationContext
     #[Given('/^I am currently signed in$/')]
     public function iAmCurrentlySignedIn(): void
     {
-        $this->userEmail    = 'test@test.com';
-        $this->userIdentity = '123';
+        $this->userEmail                                  = 'test@test.com';
+        $this->userIdentity                               = '123';
+        $this->container->get(UserContext::class)->userId = $this->userIdentity;
     }
 
     #[Given('/^I am logged out of the service and taken to the deleted account confirmation page$/')]
@@ -86,7 +82,7 @@ class AccountContext extends BaseIntegrationContext
             )
         );
 
-        $lpas = $this->container->get(LpaService::class)->getLpas($this->userIdentity);
+        $lpas = $this->container->get(LpaService::class)->getLpas();
 
         Assert::assertEmpty($lpas);
     }
@@ -109,7 +105,7 @@ class AccountContext extends BaseIntegrationContext
             )
         );
 
-        $lpas = $this->container->get(LpaService::class)->getLpas($this->userIdentity);
+        $lpas = $this->container->get(LpaService::class)->getLpas();
 
         Assert::assertEmpty($lpas);
     }

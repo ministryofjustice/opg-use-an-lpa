@@ -7,35 +7,35 @@ namespace App\DataAccess\ApiGateway;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response\LpaInterface;
 use Psr\Log\LoggerInterface;
+use Psr\SimpleCache\CacheInterface;
 
 /**
- * Decorator of SiriusLpas that holds an in-memory cache of fetched LPAs for the lifetime
- * of the instance.
+ * Decorator of SiriusLpas that caches fetched LPAs for the lifetime of the request.
  */
 final class CachedSiriusLpas implements LpasInterface
 {
-    /** @var array<string, LpaInterface> */
-    private array $cache = [];
-
     public function __construct(
         private readonly SiriusLpas $siriusLpas,
+        private readonly CacheInterface $cache,
         private readonly LoggerInterface $logger,
     ) {
     }
 
     public function get(string $uid): ?LpaInterface
     {
-        if (array_key_exists($uid, $this->cache)) {
+        $cacheKey  = $this->cacheKey($uid);
+        $cachedLpa = $this->cache->get($cacheKey);
+        if ($cachedLpa instanceof LpaInterface) {
             $this->logger->debug('Sirius LPA cache hit for {lpaUid}', ['lpaUid' => $uid]);
 
-            return $this->cache[$uid];
+            return $cachedLpa;
         }
 
         $this->logger->debug('Sirius LPA cache miss for {lpaUid}', ['lpaUid' => $uid]);
 
         $lpa = $this->siriusLpas->get($uid);
         if ($lpa !== null) {
-            $this->cache[$uid] = $lpa;
+            $this->cache->set($cacheKey, $lpa);
         }
 
         return $lpa;
@@ -45,9 +45,15 @@ final class CachedSiriusLpas implements LpasInterface
     {
         $uids = array_values(array_unique($uids));
 
-        $missing = array_values(
-            array_filter($uids, fn (string $uid): bool => !array_key_exists($uid, $this->cache))
-        );
+        $results = [];
+        foreach ($uids as $uid) {
+            $lpa = $this->cache->get($this->cacheKey($uid));
+            if ($lpa instanceof LpaInterface) {
+                $results[$uid] = $lpa;
+            }
+        }
+
+        $missing = array_values(array_diff($uids, array_keys($results)));
 
         $this->logger->debug(
             'Sirius LPA cache lookup of {count} LPAs had {hits} hits and {misses} misses',
@@ -61,17 +67,17 @@ final class CachedSiriusLpas implements LpasInterface
 
         if ($missing !== []) {
             foreach ($this->siriusLpas->lookup($missing) as $uid => $lpa) {
-                $this->cache[(string) $uid] = $lpa;
-            }
-        }
-
-        $results = [];
-        foreach ($uids as $uid) {
-            if (array_key_exists($uid, $this->cache)) {
-                $results[$uid] = $this->cache[$uid];
+                $uid           = (string) $uid;
+                $results[$uid] = $lpa;
+                $this->cache->set($this->cacheKey($uid), $lpa);
             }
         }
 
         return $results;
+    }
+
+    private function cacheKey(string $uid): string
+    {
+        return 'sirius-lpa-' . hash('sha256', $uid);
     }
 }

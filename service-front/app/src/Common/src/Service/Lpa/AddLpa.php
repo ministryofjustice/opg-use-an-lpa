@@ -6,6 +6,7 @@ namespace Common\Service\Lpa;
 
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\Context\UserContext;
 use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAdded;
 use Exception;
@@ -24,6 +25,7 @@ class AddLpa
         private LoggerInterface $logger,
         private ParseLpaData $parseLpaData,
         private ParseLpaAlreadyAdded $parseLpaAlreadyAddedResponse,
+        private UserContext $userContext,
     ) {
     }
 
@@ -31,7 +33,6 @@ class AddLpa
      * @throws Exception
      */
     public function validate(
-        string $userToken,
         string $activation_key,
         string $lpaUid,
         string $dob,
@@ -41,8 +42,6 @@ class AddLpa
             'uid'        => $lpaUid,
             'dob'        => $dob,
         ];
-
-        $this->apiClient->setUserTokenHeader($userToken);
 
         try {
             $lpaData = $this->apiClient->httpPost('/v1/add-lpa/validate', $data);
@@ -65,7 +64,7 @@ class AddLpa
             'User {id} has found their LPA with Id {uId} using their activation key',
             [
                 'event_code' => EventCodes::ADD_LPA_FOUND,
-                'id'         => $userToken,
+                'id'         => $this->userContext->userId,
                 'uId'        => $lpaUid,
             ]
         );
@@ -76,13 +75,10 @@ class AddLpa
     }
 
     public function confirm(
-        string $userToken,
         string $activation_key,
         string $lpaUid,
         string $dob,
     ): AddLpaApiResult {
-        $this->apiClient->setUserTokenHeader($userToken);
-
         $lpaData = $this->apiClient->httpPost('/v1/add-lpa/confirm', [
             'actor-code' => $activation_key,
             'uid'        => $lpaUid,
@@ -94,7 +90,7 @@ class AddLpa
                 'Account with Id {id} added LPA with Id {uId} to their account',
                 [
                     'event_code' => EventCodes::ADD_LPA_SUCCESS,
-                    'id'         => $userToken,
+                    'id'         => $this->userContext->userId,
                     'uId'        => $lpaUid,
                 ]
             );
@@ -106,7 +102,7 @@ class AddLpa
             'An error occured when account with Id {id} confirmed adding their LPA with Id {uId} to their account',
             [
                 'event_code' => EventCodes::ADD_LPA_FAILURE,
-                'id'         => $userToken,
+                'id'         => $this->userContext->userId,
                 'uId'        => $lpaUid,
             ]
         );

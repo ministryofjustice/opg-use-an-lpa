@@ -22,7 +22,7 @@ COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN set -xe \
   && apk add --update --no-cache fcgi=2.4.6-r0 \
-  && install-php-extensions apcu gmp opcache opentelemetry \
+  && install-php-extensions apcu redis-^6 gmp opcache opentelemetry \
   && rm /usr/bin/install-php-extensions
 
 COPY service-api/docker/app/app-php.ini /usr/local/etc/php/conf.d/

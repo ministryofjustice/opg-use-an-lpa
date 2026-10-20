@@ -41,7 +41,6 @@ class CreateActivationKeyHandler extends AbstractHandler implements
 {
     use CsrfGuard;
     use Session;
-    /** @use State<RequestActivationKey> */
     use State;
     use User;
 
@@ -78,7 +77,6 @@ class CreateActivationKeyHandler extends AbstractHandler implements
             $state = $this->state($request);
 
             $result = $this->addAccessForAllLpa->confirm(
-                $user->getIdentity(),
                 $state->referenceNumber,
                 $state->firstNames,
                 $state->lastName,
@@ -104,7 +102,6 @@ class CreateActivationKeyHandler extends AbstractHandler implements
                             'actor::send-activation-key-confirmation',
                             [
                                 'date' => $letterExpectedDate,
-                                'user' => $user,
                             ]
                         )
                     );
@@ -120,7 +117,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements
         throw new InvalidRequestException('Invalid form');
     }
 
-    public function state(ServerRequestInterface $request): WorkflowState
+    public function state(ServerRequestInterface $request): RequestActivationKey
     {
         return $this->loadState($request, RequestActivationKey::class);
     }

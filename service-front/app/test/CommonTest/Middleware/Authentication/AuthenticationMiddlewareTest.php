@@ -7,12 +7,14 @@ namespace CommonTest\Middleware\Authentication;
 use Common\Middleware\Authentication\AuthenticationMiddleware;
 use Common\Middleware\Session\SessionAttributeAllowlistMiddleware;
 use Common\Middleware\Session\SessionExpiryMiddleware;
+use Common\Service\Context\UserContext;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\Session\Exception\MissingSessionContainerException;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
@@ -21,6 +23,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+#[CoversClass(AuthenticationMiddleware::class)]
 class AuthenticationMiddlewareTest extends TestCase
 {
     private MockObject&RequestHandlerInterface $handler;
@@ -100,7 +103,8 @@ class AuthenticationMiddlewareTest extends TestCase
     #[Test]
     public function it_continues_to_the_handler_if_auth_is_successful(): void
     {
-        $session = $this->createMock(SessionInterface::class);
+        $userContext = new UserContext(sessionId: 'session-id');
+        $session     = $this->createMock(SessionInterface::class);
         $session
             ->method('get')
             ->with(UserInterface::class)
@@ -115,8 +119,18 @@ class AuthenticationMiddlewareTest extends TestCase
             );
 
         $this->request->method('getAttribute')
-            ->with(SessionMiddleware::SESSION_ATTRIBUTE)
-            ->willReturn($session);
+            ->willReturnMap([
+                [
+                    SessionMiddleware::SESSION_ATTRIBUTE,
+                    null,
+                    $session,
+                ],
+                [
+                    UserContext::class,
+                    null,
+                    $userContext,
+                ],
+            ]);
 
         $this->request->method('withAttribute')
             ->willReturnSelf();
@@ -127,12 +141,16 @@ class AuthenticationMiddlewareTest extends TestCase
 
         $sut = new AuthenticationMiddleware($this->helper);
         $sut->process($this->request, $this->handler);
+
+        self::assertSame('test', $userContext->userId);
+        self::assertSame('session-id', $userContext->sessionId);
     }
 
     #[Test]
     public function a_handler_can_request_a_logout(): void
     {
-        $session = $this->createMock(SessionInterface::class);
+        $userContext = new UserContext(sessionId: 'session-id');
+        $session     = $this->createMock(SessionInterface::class);
         $session->method('has')
             ->willReturn(false);
         $session
@@ -152,8 +170,18 @@ class AuthenticationMiddlewareTest extends TestCase
             ->with(SessionAttributeAllowlistMiddleware::SESSION_CLEAN_NEEDED, true);
 
         $this->request->method('getAttribute')
-            ->with(SessionMiddleware::SESSION_ATTRIBUTE)
-            ->willReturn($session);
+            ->willReturnMap([
+                [
+                    SessionMiddleware::SESSION_ATTRIBUTE,
+                    null,
+                    $session,
+                ],
+                [
+                    UserContext::class,
+                    null,
+                    $userContext,
+                ],
+            ]);
 
         $this->request->method('withAttribute')
             ->willReturnSelf();

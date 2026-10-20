@@ -9,13 +9,11 @@ use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Entity\Person;
 use Common\Exception\InvalidRequestException;
-use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
+use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session};
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\{LpaService, ViewerCodeService};
 use DateTime;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Flash\FlashMessageMiddleware;
-use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
@@ -24,11 +22,10 @@ use Psr\Log\LoggerInterface;
 /**
  * @codeCoverageIgnore
  */
-class CheckAccessCodesHandler extends AbstractHandler implements UserAware, CsrfGuardAware
+final class CheckAccessCodesHandler extends AbstractHandler implements CsrfGuardAware
 {
     use CsrfGuard;
     use Session;
-    use User;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -57,14 +54,9 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             throw new InvalidRequestException('No actor-lpa token specified');
         }
 
-        $user     = $this->getUser($request);
-        $identity = !is_null($user) ? $user->getIdentity() : null;
+        $lpaData = $this->lpaService->getLpaById($actorLpaToken);
 
-        $lpaData = $this->lpaService->getLpaById($identity, $actorLpaToken);
-
-
-        // TODO UML-1394 TO BE REMOVED IN FUTURE TO SHOW PAGE NOT FOUND WITH APPROPRIATE CONTENT
-        if (is_null($lpaData)) {
+        if ($lpaData === null) {
             return $this->redirectToRoute('lpa.dashboard');
         }
 
@@ -75,7 +67,6 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         $lpa = $lpaData->lpa;
 
         $shareCodes = $this->viewerCodeService->getShareCodes(
-            $identity,
             $actorLpaToken,
             false
         );
@@ -86,77 +77,10 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
                 && !array_key_exists('Cancelled', $code)
                 && $actorLpaToken === $code['UserLpaActor']
             ) {
-                $form = new CancelCode($this->getCsrfGuard($request));
-                $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-cancel-code'));
-
-                $form->setData([
-                    'lpa_token'    => $actorLpaToken,
-                    'viewer_code'  => $code['ViewerCode'],
-                    'organisation' => $code['Organisation'],
-                ]);
-
-                $shareCodes[$key]['form'] = $form;
+                $shareCodes[$key]['form'] = $this->createCancelCodeForm($request, $actorLpaToken, $code);
             }
 
-            if (!isset($code['ActorId'])) {
-                continue;
-            }
-
-            $this->logger->debug(
-                'Resolved actor id to {type}:{actor_id}',
-                [
-                    'actor_id' => $code['ActorId'],
-                    'type'     => gettype($code['ActorId']),
-                ]
-            );
-
-            $this->logger->debug(
-                'Donor Id is {type}:{donor_id}',
-                [
-                    'donor_id' => $lpa->getDonor()->getUId(),
-                    'type'     => gettype($lpa->getDonor()->getUId()),
-                ]
-            );
-
-            if ($this->idMatch($lpa->getDonor(), $code)) {
-                $shareCodes[$key]['CreatedBy'] =
-                    $lpa->getDonor()->getFirstname() . ' ' . $lpa->getDonor()->getSurname();
-            }
-
-            foreach ($lpa->getAttorneys() as $attorney) {
-                $this->logger->debug(
-                    'Attorney Id is {type}:{attorney_id}',
-                    [
-                        'attorney_id' => $attorney->getUId(),
-                        'type'        => gettype($attorney->getUId()),
-                    ]
-                );
-
-                if ($this->idMatch($attorney, $code)) {
-                    $shareCodes[$key]['CreatedBy'] = $attorney->getFirstname() . ' ' . $attorney->getSurname();
-                }
-            }
-
-            foreach ($lpa->getTrustCorporations() as $trustCorporation) {
-                $this->logger->debug(
-                    'Looking for attorney id {type}:{attorney_id} in Trust Corporations',
-                    [
-                        'attorney_id' => $trustCorporation->getUId(),
-                        'type'        => gettype($trustCorporation->getUId()),
-                    ]
-                );
-
-                if ($this->idMatch($trustCorporation, $code)) {
-                    $shareCodes[$key]['CreatedBy'] = $trustCorporation->getCompanyName();
-                }
-            }
-
-            $this->logger->debug(
-                'Created by resolved to {actor_name}',
-                [
-                    'actor_name' => $shareCodes[$key]['CreatedBy'] ?? 'NULL',
-                ]
-            );
+            $shareCodes[$key] = $this->resolveCodeCreator($lpa, $shareCodes[$key]);
         }
 
         $templateName = 'actor::check-access-codes';
@@ -164,16 +88,100 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             $templateName = 'actor::check-access-codes-combined-lpa';
         }
 
-        /** @var FlashMessagesInterface $flash */
-        $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
-
         return new HtmlResponse($this->renderer->render($templateName, [
             'actorToken' => $actorLpaToken,
-            'user'       => $user,
             'lpa'        => $lpa,
             'shareCodes' => $shareCodes,
-            'flash'      => $flash,
         ]));
+    }
+
+    private function createCancelCodeForm(
+        ServerRequestInterface $request,
+        string $actorLpaToken,
+        array $code,
+    ): CancelCode {
+        $csrfGuard = $this->getCsrfGuard($request);
+        if ($csrfGuard === null) {
+            throw new InvalidRequestException('CSRF guard is unavailable');
+        }
+
+        $form = new CancelCode($csrfGuard);
+        $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-cancel-code'));
+        $form->setData([
+            'lpa_token'    => $actorLpaToken,
+            'viewer_code'  => $code['ViewerCode'],
+            'organisation' => $code['Organisation'],
+        ]);
+
+        return $form;
+    }
+
+    private function resolveCodeCreator(Lpa $lpa, array $code): array
+    {
+        if (!isset($code['ActorId'])) {
+            return $code;
+        }
+
+        $this->logger->debug(
+            'Resolved actor id to {type}:{actor_id}',
+            [
+                'actor_id' => $code['ActorId'],
+                'type'     => gettype($code['ActorId']),
+            ]
+        );
+
+        $donor = $lpa->getDonor();
+
+        if ($donor !== null) {
+            $this->logger->debug(
+                'Donor Id is {type}:{donor_id}',
+                [
+                    'donor_id' => $donor->getUId(),
+                    'type'     => gettype($donor->getUId()),
+                ]
+            );
+
+            if ($this->idMatch($donor, $code)) {
+                $code['CreatedBy'] = ($donor->getFirstname() ?? '') . ' ' . ($donor->getSurname() ?? '');
+            }
+        }
+
+        foreach ($lpa->getAttorneys() as $attorney) {
+            $this->logger->debug(
+                'Attorney Id is {type}:{attorney_id}',
+                [
+                    'attorney_id' => $attorney->getUId(),
+                    'type'        => gettype($attorney->getUId()),
+                ]
+            );
+
+            if ($this->idMatch($attorney, $code)) {
+                $code['CreatedBy'] = ($attorney->getFirstname() ?? '') . ' ' . ($attorney->getSurname() ?? '');
+            }
+        }
+
+        foreach ($lpa->getTrustCorporations() as $trustCorporation) {
+            $this->logger->debug(
+                'Looking for attorney id {type}:{attorney_id} in Trust Corporations',
+                [
+                    'attorney_id' => $trustCorporation->getUId(),
+                    'type'        => gettype($trustCorporation->getUId()),
+                ]
+            );
+
+            if ($this->idMatch($trustCorporation, $code)) {
+                $code['CreatedBy'] = $trustCorporation->getCompanyName();
+            }
+        }
+
+        $this->logger->debug(
+            'Created by resolved to {actor_name}',
+            [
+                'actor_name' => $code['CreatedBy'] ?? 'NULL',
+            ]
+        );
+
+        return $code;
     }
 
     private function idMatch(CaseActor|Person $actor, array $code): bool

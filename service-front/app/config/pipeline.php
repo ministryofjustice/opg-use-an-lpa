@@ -6,6 +6,7 @@
 
 declare(strict_types=1);
 
+use Common\Middleware\Context\UserContextMiddleware;
 use Common\Middleware\I18n\SetLocaleMiddleware;
 use Common\Middleware\Logging\RequestTracingMiddleware;
 use Common\Middleware\Security\CSPMiddleware;
@@ -66,23 +67,20 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // This middleware registers the Mezzio\Router\RouteResult request attribute.
     $app->pipe(RouteMiddleware::class);
 
+    // Use the routing result to create a bespoke CSP for the response
+    $app->pipe(CSPMiddleware::class);
+
     // Load session from request and save it on the return
     $app->pipe(SessionMiddleware::class);
     $app->pipe(SessionExpiryMiddleware::class);
 
+    // Requiring a valid session and not stripped by allowlist
     $app->pipe(UserIdentificationMiddleware::class);
     $app->pipe(RateLimitMiddleware::class);
-
     $app->pipe(FlashMessageMiddleware::class);
 
     // Clean out the session if expired
     $app->pipe(SessionAttributeAllowlistMiddleware::class);
-
-    $app->pipe(CsrfMiddleware::class);
-
-    $app->pipe(CSPMiddleware::class);
-
-    $app->pipe(StatePersistenceMiddleware::class);
 
     // The following handle routing failures for common conditions:
     // - HEAD request but no routes answer that method
@@ -99,6 +97,10 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
 
     // Load up the twig environment with global things like the user details or flash messages
     $app->pipe(TwigRequestGlobalsMiddleware::class);
+
+    $app->pipe(CsrfMiddleware::class);
+    $app->pipe(UserContextMiddleware::class);
+    $app->pipe(StatePersistenceMiddleware::class);
 
     // Add more middleware here that needs to introspect the routing results; this
     // might include:

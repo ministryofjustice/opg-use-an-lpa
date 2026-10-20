@@ -14,10 +14,15 @@ class UserIdentificationMiddleware implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, DelegateInterface $handler): ResponseInterface
     {
-        $userId = $request->getHeader('User-Token');
+        $userId      = $request->getHeader('User-Token');
+        $userSession = $request->getHeader('User-Session');
 
-        if (isset($userId[0])) {
-            return $handler->handle($request->withAttribute('actor-id', $userId[0]));
+        if (isset($userId[0]) && isset($userSession[0])) {
+            return $handler->handle(
+                $request
+                    ->withAttribute('actor-id', $userId[0])
+                    ->withAttribute('actor-session', $userSession[0])
+            );
         }
 
         throw new UnauthorizedException('User-Token not specified or invalid');

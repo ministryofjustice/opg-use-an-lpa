@@ -16,7 +16,6 @@ use Common\Handler\{AbstractHandler,
 use Common\Handler\Traits\User;
 use Common\Workflow\State;
 use Common\Workflow\StateNotInitialisedException;
-use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
 use Mezzio\Authentication\UserInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
@@ -35,7 +34,6 @@ abstract class AbstractAddLpaHandler extends AbstractHandler implements
     use CsrfGuard;
     use Logger;
     use SessionTrait;
-    /** @use State<AddLpa> */
     use State;
     use User;
 
@@ -75,11 +73,9 @@ abstract class AbstractAddLpaHandler extends AbstractHandler implements
     abstract public function handlePost(ServerRequestInterface $request): ResponseInterface;
 
     /**
-     * @param ServerRequestInterface $request
-     * @return AddLpa
      * @throws StateNotInitialisedException
      */
-    public function state(ServerRequestInterface $request): WorkflowState
+    public function state(ServerRequestInterface $request): AddLpa
     {
         return $this->loadState($request, AddLpa::class);
     }

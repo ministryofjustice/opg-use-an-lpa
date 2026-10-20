@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-14 17:10+0000\n"
-"Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
+"PO-Revision-Date: 2026-10-19 14:07+0000\n"
+"Last-Translator: Adam Cooper <adam.cooper@publicguardian.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
@@ -108,7 +108,7 @@ msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preference
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:17
 msgid "You might need to show organisations the paper LPA."
-msgstr "You might need to show organisations the paper LPA."
+msgstr "You might need to show organisations the paper <abbr title=\"lasting power of attorney\">LPA</abbr>."
 
 #: src/Actor/templates/actor/partials/new-use-service.html.twig:5
 #: src/Viewer/templates/viewer/new-view-service.html.twig:5
@@ -211,7 +211,7 @@ msgstr "This service will be unavailable between 9pm on Friday 31st March 2023 a
 
 #: src/Actor/templates/actor/partials/warning-upcoming-service-downtime.html.twig:10
 msgid "If you need to use your lasting power of attorney during this time you can still use the paper LPA document."
-msgstr "If you need to use your lasting power of attorney during this time you can still use the paper LPA document."
+msgstr "If you need to use your lasting power of attorney during this time you can still use the paper <abbr title=\"lasting power of attorney\">LPA</abbr> document."
 
 #: src/Actor/templates/actor/partials/service-message.html.twig:16
 #: src/Viewer/templates/viewer/partials/service-message.html.twig:16
@@ -224,7 +224,7 @@ msgstr "One Login"
 
 #: src/Actor/templates/actor/one-login.html.twig:39
 msgid "To make an LPA online, or to continue to make an LPA you’ve started, go to the <a href=\"%link%\" class=\"govuk-link\">Make a lasting power of attorney service.</a>"
-msgstr "To make an LPA online, or to continue to make an LPA you’ve started, go to the <a href=\"%link%\" class=\"govuk-link\">Make a lasting power of attorney service.</a>"
+msgstr "To make an <abbr title=\"lasting power of attorney\">LPA</abbr> online, or to continue to make an <abbr title=\"lasting power of attorney\">LPA</abbr> you’ve started, go to the <a href=\"%link%\" class=\"govuk-link\">Make a lasting power of attorney service.</a>"
 
 #: src/Actor/templates/actor/one-login.html.twig:48
 msgid "Sign in to use your lasting power of attorney"
@@ -482,7 +482,7 @@ msgstr "LPA removed"
 
 #: src/Actor/templates/actor/lpa-removed.html.twig:17
 msgid "We've removed an LPA from your account"
-msgstr "We've removed an LPA from your account"
+msgstr "We've removed an <abbr title=\"lasting power of attorney\">LPA</abbr> from your account"
 
 #: src/Actor/templates/actor/lpa-removed.html.twig:19
 msgid "We've removed an <abbr title=\"lasting power of attorney\">LPA</abbr> from your account because either:"
@@ -573,17 +573,17 @@ msgstr "What to do next"
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:58
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:56
 msgid "Give %organisation% this access code. They should go to <a href=\"%link_en%\" class=\"govuk-link\">www.gov.uk/view-lpa</a> to enter the access code and see a summary of the <abbr title=\"lasting power of attorney\">LPA</abbr>. %organisation% may still ask to see the paper LPA."
-msgstr "Give %organisation% this access code. They should go to <a href=\"%link_en%\" class=\"govuk-link\">www.gov.uk/view-lpa</a> to enter the access code and see a summary of the <abbr title=\"lasting power of attorney\">LPA</abbr>. %organisation% may still ask to see the paper LPA."
+msgstr "Give %organisation% this access code. They should go to <a href=\"%link_en%\" class=\"govuk-link\">www.gov.uk/view-lpa</a> to enter the access code and see a summary of the <abbr title=\"lasting power of attorney\">LPA</abbr>. %organisation% may still ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr>."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:73
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:71
 msgid "Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
-msgstr "Scanned copies of the donor’s preferences and instructions will be shown in the <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
+msgstr "Scanned copies of the donor’s preferences and instructions will be shown in the <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You’ll need to show organisations the paper <abbr title=\"lasting power of attorney\">LPA</abbr> if any part of these cannot be read properly."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:77
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:75
 msgid "Scanned copies of the donor’s preferences will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
-msgstr "Scanned copies of the donor’s preferences will be shown in the <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
+msgstr "Scanned copies of the donor’s preferences will be shown in the <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You’ll need to show organisations the paper <abbr title=\"lasting power of attorney\">LPA</abbr> if any part of these cannot be read properly."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:81
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:79
@@ -899,7 +899,7 @@ msgstr "You might find it easier to manage your account by removing duplicate LP
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:82
 msgid "It doesn’t matter which LPA you remove but it would be more accurate to keep those that show as added by you, especially when creating access codes for organisations."
-msgstr "It doesn’t matter which LPA you remove but it would be more accurate to keep those that show as added by you, especially when creating access codes for organisations."
+msgstr "It doesn’t matter which <abbr title=\"lasting power of attorney\">LPA</abbr> you remove but it would be more accurate to keep those that show as added by you, especially when creating access codes for organisations."
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:83
 msgid "Removing duplicate LPAs is optional."
@@ -937,7 +937,7 @@ msgstr "Access codes for this LPA"
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:34
 #: src/Actor/templates/actor/check-access-codes.html.twig:31
 msgid "There are no access codes for this LPA."
-msgstr "There are no access codes for this LPA."
+msgstr "There are no access codes for this <abbr title=\"lasting power of attorney\">LPA</abbr>."
 
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:35
 #: src/Actor/templates/actor/check-access-codes.html.twig:32
@@ -952,7 +952,7 @@ msgstr "Active codes"
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:59
 #: src/Actor/templates/actor/check-access-codes.html.twig:56
 msgid "Give an organisation their access code so they can view this LPA. They should go to www.gov.uk/view-lpa to use the code."
-msgstr "Give an organisation their access code so they can view this LPA. They should go to www.gov.uk/view-lpa to use the code."
+msgstr "Give an organisation their access code so they can view this <abbr title=\"lasting power of attorney\">LPA</abbr>. They should go to www.gov.uk/view-lpa to use the code."
 
 #. Accordion label
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:79
@@ -1004,7 +1004,7 @@ msgstr "Let us know if a donor or attorney dies"
 
 #: src/Actor/templates/actor/death-notification.html.twig:25
 msgid "It's important that we hold up-to-date information about donors and attorneys. This is because an LPA will end when the donor dies, and they can end if an attorney dies."
-msgstr "It's important that we hold up-to-date information about donors and attorneys. This is because an LPA will end when the donor dies, and they can end if an attorney dies."
+msgstr "It's important that we hold up-to-date information about donors and attorneys. This is because an <abbr title=\"lasting power of attorney\">LPA</abbr> will end when the donor dies, and they can end if an attorney dies."
 
 #: src/Actor/templates/actor/change-details.html.twig:27
 #: src/Actor/templates/actor/change-lpa-details.html.twig:26
@@ -1026,7 +1026,7 @@ msgstr "a replacement attorney dies"
 
 #: src/Actor/templates/actor/death-notification.html.twig:35
 msgid "We'll update the online LPA summary and our records"
-msgstr "We'll update the online LPA summary and our records"
+msgstr "We'll update the online <abbr title=\"lasting power of attorney\">LPA</abbr> summary and our records"
 
 #: src/Actor/templates/actor/death-notification.html.twig:37
 msgid "If the donor dies"
@@ -1034,7 +1034,7 @@ msgstr "If the donor dies"
 
 #: src/Actor/templates/actor/death-notification.html.twig:39
 msgid "The LPA ends when the donor dies. The donor’s affairs will be looked after by their executors or personal representatives from that point, not their attorneys."
-msgstr "The LPA ends when the donor dies. The donor’s affairs will be looked after by their executors or personal representatives from that point, not their attorneys."
+msgstr "The <abbr title=\"lasting power of attorney\">LPA</abbr> ends when the donor dies. The donor’s affairs will be looked after by their executors or personal representatives from that point, not their attorneys."
 
 #: src/Actor/templates/actor/death-notification.html.twig:43
 msgid "If an attorney or replacement attorney dies"
@@ -1042,11 +1042,11 @@ msgstr "If an attorney or replacement attorney dies"
 
 #: src/Actor/templates/actor/death-notification.html.twig:44
 msgid "The LPA will end if your attorney dies and there is not a replacement attorney."
-msgstr "The LPA will end if your attorney dies and there is not a replacement attorney."
+msgstr "The <abbr title=\"lasting power of attorney\">LPA</abbr> will end if your attorney dies and there is not a replacement attorney."
 
 #: src/Actor/templates/actor/death-notification.html.twig:46
 msgid "The LPA can continue if:"
-msgstr "The LPA can continue if:"
+msgstr "The <abbr title=\"lasting power of attorney\">LPA</abbr> can continue if:"
 
 #: src/Actor/templates/actor/death-notification.html.twig:49
 msgid "there are other attorneys who can act 'jointly and severally' - but not if they are only allowed to act 'jointly'"
@@ -1480,7 +1480,7 @@ msgstr "This could be because:"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:18
 msgid "the LPA reference number you entered is incorrect"
-msgstr "the LPA reference number you entered is incorrect"
+msgstr "the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number you entered is incorrect"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:19
 msgid "some of the details you entered about yourself do not match our records"
@@ -1557,19 +1557,19 @@ msgstr "Cannot send an activation key"
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:11
 msgid "We cannot send an activation key for that LPA"
-msgstr "We cannot send an activation key for that LPA"
+msgstr "We cannot send an activation key for that <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:13
 msgid "You cannot add an LPA registered before September 2019."
-msgstr "You cannot add an LPA registered before September 2019."
+msgstr "You cannot add an <abbr title=\"lasting power of attorney\">LPA</abbr> registered before September 2019."
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:14
 msgid "If the LPA was registered before this date, you'll need to show the paper LPA to people and organisations instead of using this service."
-msgstr "If the LPA was registered before this date, you'll need to show the paper LPA to people and organisations instead of using this service."
+msgstr "If the <abbr title=\"lasting power of attorney\">LPA</abbr> was registered before this date, you'll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr> to people and organisations instead of using this service."
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:15
 msgid "If the paper LPA has been lost or destroyed, you can ask OPG for an office copy by calling 0300 456 0300 - office copies cost £35."
-msgstr "If the paper LPA has been lost or destroyed, you can ask OPG for an office copy by calling 0300 456 0300 - office copies cost £35."
+msgstr "If the paper <abbr title=\"lasting power of attorney\">LPA</abbr> has been lost or destroyed, you can ask OPG for an office copy by calling 0300 456 0300 - office copies cost £35."
 
 #: src/Actor/templates/actor/service-names.html.twig:1
 #: src/Common/src/View/Twig/GenericGlobalVariableExtension.php:23
@@ -1586,12 +1586,12 @@ msgstr "We're posting you an activation key"
 
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:18
 msgid "We'll send you a letter with your activation key for this LPA. We'll post it to the address we have for you. We send it by post because it's more secure."
-msgstr "We'll send you a letter with your activation key for this LPA. We'll post it to the address we have for you. We send it by post because it's more secure."
+msgstr "We'll send you a letter with your activation key for this <abbr title=\"lasting power of attorney\">LPA</abbr>. We'll post it to the address we have for you. We send it by post because it's more secure."
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:20
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:19
 msgid "Once you've got the activation key, you'll be able to use it to add the LPA to your account."
-msgstr "Once you've got the activation key, you'll be able to use it to add the LPA to your account."
+msgstr "Once you've got the activation key, you'll be able to use it to add the <abbr title=\"lasting power of attorney\">LPA</abbr> to your account."
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:21
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:20
@@ -1604,17 +1604,17 @@ msgstr "You should get the letter by %date%"
 
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:23
 msgid "If you do not get it by this date, please contact us. You'll need to give us the LPA reference number when you call."
-msgstr "If you do not get it by this date, please contact us. You'll need to give us the LPA reference number when you call."
+msgstr "If you do not get it by this date, please contact us. You'll need to give us the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number when you call."
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:27
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:27
 msgid "Have more than one LPA?"
-msgstr "Have more than one LPA?"
+msgstr "Have more than one <abbr title=\"lasting power of attorney\">LPA</abbr>?"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:28
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:28
 msgid "You'll need an activation key for each LPA that you'd like to add to your account."
-msgstr "You'll need an activation key for each LPA that you'd like to add to your account."
+msgstr "You'll need an activation key for each <abbr title=\"lasting power of attorney\">LPA</abbr> that you'd like to add to your account."
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:34
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:34
@@ -1641,7 +1641,7 @@ msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> is registered"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:26
 msgid "If you remove an LPA from your Use a lasting power of attorney account:"
-msgstr "If you remove an LPA from your Use a lasting power of attorney account:"
+msgstr "If you remove an <abbr title=\"lasting power of attorney\">LPA</abbr> from your Use a lasting power of attorney account:"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:29
 msgid "all access codes you’ve created for this LPA will be valid until they are cancelled or expire"
@@ -1691,7 +1691,7 @@ msgstr "Attorney details"
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:20
 msgid "Tell us the details of an attorney named on the LPA."
-msgstr "Tell us the details of an attorney named in the LPA."
+msgstr "Tell us the details of an attorney named in the <abbr title=\"lasting power of attorney\">LPA</abbr>."
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:25
 msgid "If you only have one attorney, enter their details here. If you have more than one attorney, enter the details of any one of them."
@@ -1727,7 +1727,7 @@ msgstr "For example, 31 03 1980"
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:18
 #: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:35
 msgid "What is the LPA reference number?"
-msgstr "What is the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number?"
+msgstr "What is the LPA reference number?"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:23
 msgid "Where to find the reference number"
@@ -1735,7 +1735,7 @@ msgstr "Where to find the reference number"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:29
 msgid "the reference number is on the first page of the LPA or any related letters from the Office of the Public Guardian"
-msgstr "the reference number is on the first page of the LPA or any related letters from the Office of the Public Guardian"
+msgstr "the reference number is on the first page of the <abbr title=\"lasting power of attorney\">LPA</abbr> or any related letters from the Office of the Public Guardian"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:30
 msgid "the reference may also be marked as ‘OPG reference number’, ‘Our ref’ or ‘Case number’"
@@ -1744,7 +1744,7 @@ msgstr "the reference may also be marked as ‘OPG reference number’, ‘Our r
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
 msgid "LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br>Some LPA reference numbers start with an M, for example M-1111-2222-3333."
-msgstr "LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br>Some LPA reference numbers start with an M, for example M-1111-2222-3333."
+msgstr "<abbr title=\"lasting power of attorney\">LPA</abbr> reference numbers are 12 numbers long, for example 7000-0000-0000.<br>Some <abbr title=\"lasting power of attorney\">LPA</abbr> reference numbers start with an M, for example M-1111-2222-3333."
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
 msgid "LPA reference numbers are 12 numbers long,<br>for example: 7000-0000-0000."
@@ -1761,11 +1761,11 @@ msgstr "You can only ask for an activation key if:"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:20
 msgid "your LPA was registered on or after 1 September 2019"
-msgstr "your LPA was registered on or after 1 September 2019"
+msgstr "your <abbr title=\"lasting power of attorney\">LPA</abbr> was registered on or after 1 September 2019"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:21
 msgid "you're a donor or an attorney on the LPA (not a replacement attorney)"
-msgstr "you're a donor or an attorney named in the LPA (not a replacement attorney)"
+msgstr "you’re a donor or an attorney named in the <abbr title=\"lasting power of attorney\">LPA</abbr> (not a replacement attorney)"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:27
 msgid "Where to find the LPA registration date"
