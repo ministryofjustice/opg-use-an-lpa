@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
 "PO-Revision-Date: 2026-10-20 14:53+0000\n"
-"Last-Translator: Adam Cooper <adam.cooper@publicguardian.gov.uk>\n"
+"Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
 "MIME-Version: 1.0\n"
@@ -4799,7 +4799,6 @@ msgstr "Beth yw eich cod actifadu?"
 
 #. Contains GOV.UK HTML markup and the %link% placeholder for the request-a-new-key link.
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:25
-#, fuzzy
 msgctxt "html-link"
 msgid "add-lpa.activation-key.content.instructions"
 msgstr ""
