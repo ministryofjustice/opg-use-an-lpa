@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
 "PO-Revision-Date: 2026-10-20 15:02+0000\n"
-"Last-Translator: Adam Cooper <adam.cooper@publicguardian.gov.uk>\n"
+"Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
@@ -4799,7 +4799,7 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:30
 msgctxt "html"
 msgid "add-lpa.activation-key.field-activation-key.hint"
-msgstr "Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56 <br/><br/> You do not need to enter the C-"
+msgstr "For example, C-AB12 CD34 EF56"
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:36
 msgid "add-lpa.activation-key.field-activation-key.label"
