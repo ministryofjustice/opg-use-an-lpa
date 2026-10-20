@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2026-09-29T14:30:19+00:00\n"
+"POT-Creation-Date: 2026-10-20T09:45:27+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -244,15 +244,11 @@ msgid "By continuing, you are agreeing to the <a href=\"%link%\" class=\"govuk-l
 msgstr ""
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:62
-#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:45
-#: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
-#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:35
 #: src/Actor/templates/actor/check-your-answers.html.twig:95
 #: src/Actor/templates/actor/contact-details.html.twig:40
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:75
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
 #: src/Actor/templates/actor/one-login.html.twig:87
-#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:60
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:81
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:54
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:30
@@ -288,9 +284,6 @@ msgid "Confirm this is the correct LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:9
-#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:8
-#: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:8
-#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:8
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:8
 #: src/Actor/templates/actor/change-details.html.twig:14
 #: src/Actor/templates/actor/change-lpa-details.html.twig:14
@@ -303,7 +296,6 @@ msgstr ""
 #: src/Actor/templates/actor/death-notification.html.twig:14
 #: src/Actor/templates/actor/lpa-already-added.html.twig:8
 #: src/Actor/templates/actor/lpa-removed.html.twig:9
-#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:9
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:9
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:10
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:8
@@ -446,12 +438,10 @@ msgid "Confirm"
 msgstr ""
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:66
-#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:40
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:99
 #: src/Actor/templates/actor/check-lpa.html.twig:104
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:43
-#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:65
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:47
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:54
@@ -828,68 +818,68 @@ msgstr ""
 msgid "This service was last tested on 22 April 2022. The test was carried out by Digital Accessibility Centre (DAC)."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:15
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:25
 msgid "Your lasting powers of attorney"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:21
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:31
 msgid "Any lasting power of attorney (LPA) you add to your account will appear on this page."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:24
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:34
 msgid "Find out about <a href=\"%link1%\" class=\"govuk-link\">managing LPAs</a> and how attorneys should support donors <a href=\"%link2%\" class=\"govuk-link\">to make decisions</a>."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:34
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:44
 msgid "What can I do with this service?"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:38
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:48
 msgid "Use this service to:"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:40
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:50
 msgid "give organisations access to an online summary of an <abbr title=\"lasting power of attorney\">LPA</abbr> by making a secure access code"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:41
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:51
 msgid "keep track of the organisations that have online access to an <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:42
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:52
 msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary, including a scanned image of any restrictions and conditions (can also be known as “preferences and instructions” depending on when the LPA was made)"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:43
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:53
 msgid "ask for an activation key if you have not been given one - or it has expired"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:50
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:60
 msgid "Add another LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:52
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:62
 msgid "Add your first LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:62
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:72
 msgid "You have %count% LPA in your account"
 msgid_plural "You have %count% LPAs in your account"
 msgstr[0] ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:78
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:88
 msgid "Your account contains duplicate LPAs"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:81
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:91
 msgid "You might find it easier to manage your account by removing duplicate LPAs."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:82
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:92
 msgid "It doesn’t matter which LPA you remove but it would be more accurate to keep those that show as added by you, especially when creating access codes for organisations."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:83
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:93
 msgid "Removing duplicate LPAs is optional."
 msgstr ""
 
@@ -1179,7 +1169,6 @@ msgid "your email address"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:65
-#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:36
 msgid "your name and date of birth"
 msgstr ""
 
@@ -1699,19 +1688,16 @@ msgstr ""
 msgid "For example, 08 04 2004"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:18
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:18
 msgid "What is your date of birth?"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:25
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:25
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:34
 #: src/Viewer/templates/viewer/paper-verification/date-of-birth.html.twig:21
 msgid "For example, 31 03 1980"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:17
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:18
 #: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:35
 msgid "What is the LPA reference number?"
@@ -1729,7 +1715,6 @@ msgstr ""
 msgid "the reference may also be marked as ‘OPG reference number’, ‘Our ref’ or ‘Case number’"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
 msgid "LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br>Some LPA reference numbers start with an M, for example M-1111-2222-3333."
 msgstr ""
@@ -1742,7 +1727,6 @@ msgstr ""
 msgid "Check if you can ask for an activation key"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:18
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:17
 msgid "You can only ask for an activation key if:"
 msgstr ""
@@ -2806,14 +2790,14 @@ msgid "Email"
 msgstr ""
 
 #. Add LPA
-#: src/Actor/src/Handler/CheckLpaHandler.php:263
+#: src/Actor/src/Handler/CheckLpaHandler.php:258
 #: src/Actor/templates/actor/flash-messages.html.twig:4
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr ""
 
 #. Cancelling viewer code
-#: src/Actor/src/Handler/CancelCodeHandler.php:74
+#: src/Actor/src/Handler/CancelCodeHandler.php:70
 #: src/Actor/templates/actor/flash-messages.html.twig:7
 msgctxt "flashMessage"
 msgid "You cancelled the access code for %organisation%: %code%"
@@ -4470,7 +4454,7 @@ msgctxt "flashMessage"
 msgid "property and finance"
 msgstr ""
 
-#: src/Actor/src/Handler/RemoveLpaHandler.php:129
+#: src/Actor/src/Handler/RemoveLpaHandler.php:120
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr ""
@@ -4704,14 +4688,93 @@ msgctxt "html-link"
 msgid "activation-key-request.start.reveal-content"
 msgstr ""
 
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:8
+#: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:8
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:8
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:9
 msgid "common.back-link"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:53
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:41
+#: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:45
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:54
 msgid "common.button-continue"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:58
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:50
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:59
 msgid "common.button-cancel"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:3
+msgid "add-lpa.activation-key.title"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:19
+msgid "add-lpa.activation-key.heading-page"
+msgstr ""
+
+#. Contains GOV.UK HTML markup and the %link% placeholder for the request-a-new-key link.
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:25
+msgctxt "html-link"
+msgid "add-lpa.activation-key.content.instructions"
+msgstr ""
+
+#. Contains HTML line breaks. Preserve the line breaks and markup when translating.
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:30
+msgctxt "html"
+msgid "add-lpa.activation-key.field-activation-key.hint"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:36
+msgid "add-lpa.activation-key.field-activation-key.label"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:3
+msgid "add-lpa.date-of-birth.title"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:18
+msgid "add-lpa.date-of-birth.heading-page"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:25
+msgid "add-lpa.date-of-birth.field-dob.hint"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:3
+msgid "add-lpa.lpa-reference-number.title"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:17
+msgid "add-lpa.lpa-reference-number.heading-page"
+msgstr ""
+
+#. Contains a GOV.UK paragraph. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:19
+msgctxt "html"
+msgid "add-lpa.lpa-reference-number.content.reference-number-location"
+msgstr ""
+
+#. Contains a line break. Preserve the HTML markup when translating.
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:25
+msgctxt "html"
+msgid "add-lpa.lpa-reference-number.field-reference-number.hint-with-paper-verification"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:31
+msgid "add-lpa.lpa-reference-number.field-reference-number.hint-without-paper-verification"
+msgstr ""
+
+#: src/Common/templates/partials/govuk_form.html.twig:166
+msgid "common.field-day.label"
+msgstr ""
+
+#: src/Common/templates/partials/govuk_form.html.twig:177
+msgid "common.field-month.label"
+msgstr ""
+
+#: src/Common/templates/partials/govuk_form.html.twig:188
+msgid "common.field-year.label"
 msgstr ""
