@@ -288,6 +288,11 @@ services:
     environment:
       BUCKET: unused-accounts-bucket
       REGION: eu-west-1
+      WORK_FILE_PREFIX: todo
+      PLAN_FILE_PREFIX: plan
+      MONTHS_INACTIVE: 6
+      # match the 900s timeout in terraform/environment/unused_account.tf (the emulator default is 300s)
+      AWS_LAMBDA_FUNCTION_TIMEOUT: 900
       AWS_ACCESS_KEY_ID: 'devkey'
       AWS_SECRET_ACCESS_KEY: 'secretdevkey'
       AWS_ENDPOINT_DYNAMODB:
