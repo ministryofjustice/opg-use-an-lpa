@@ -7,11 +7,13 @@ namespace BehatTest\Context\Integration;
 use Acpr\Behat\Psr\Context\Psr11AwareContext;
 use Aws\DynamoDb\Marshaler;
 use Behat\Behat\Context\Context;
+use Behat\Hook\BeforeScenario;
 use DI\Container;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
@@ -46,6 +48,12 @@ abstract class BaseIntegrationContext implements Context, Psr11AwareContext
         $this->apiFixtures = $mockHandler;
 
         $this->prepareContext();
+    }
+
+    #[BeforeScenario]
+    public function clearRequestCache(): void
+    {
+        $this->container->get(CacheItemPoolInterface::class)->clear();
     }
 
     public function printHistory(): void

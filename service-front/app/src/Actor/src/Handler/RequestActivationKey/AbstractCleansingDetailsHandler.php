@@ -18,7 +18,6 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Workflow\State;
 use Common\Workflow\StateNotInitialisedException;
-use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\SessionInterface;
@@ -39,7 +38,6 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
     use CsrfGuard;
     use Logger;
     use SessionTrait;
-    /** @use State<RequestActivationKey> */
     use State;
     use User;
 
@@ -77,7 +75,7 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
     /**
      * @throws StateNotInitialisedException
      */
-    public function state(ServerRequestInterface $request): WorkflowState
+    public function state(ServerRequestInterface $request): RequestActivationKey
     {
         return $this->loadState($request, RequestActivationKey::class);
     }

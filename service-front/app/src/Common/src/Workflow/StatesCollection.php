@@ -6,7 +6,7 @@ namespace Common\Workflow;
 
 use JsonSerializable;
 
-class StatesCollection implements JsonSerializable
+final class StatesCollection implements JsonSerializable
 {
     /**
      * @param array<class-string, WorkflowState> $states
@@ -25,8 +25,9 @@ class StatesCollection implements JsonSerializable
     }
 
     /**
-     * @param class-string $workflowStateClass
-     * @return WorkflowState
+     * @template T of WorkflowState
+     * @param class-string<T> $workflowStateClass
+     * @return T
      * @throws StateNotInitialisedException
      */
     public function get(string $workflowStateClass): WorkflowState
@@ -35,7 +36,13 @@ class StatesCollection implements JsonSerializable
             throw new StateNotInitialisedException('State not available in state collection');
         }
 
-        return $this->states[$workflowStateClass];
+        $state = $this->states[$workflowStateClass];
+
+        if (! $state instanceof $workflowStateClass) {
+            throw new StateNotInitialisedException('Stored workflow state does not match the requested class');
+        }
+
+        return $state;
     }
 
     /**

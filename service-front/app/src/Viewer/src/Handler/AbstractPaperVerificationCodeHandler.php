@@ -10,7 +10,6 @@ use Common\Handler\LoggerAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Logger;
 use Common\Workflow\State;
-use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -29,7 +28,6 @@ abstract class AbstractPaperVerificationCodeHandler extends AbstractHandler impl
 {
     use CsrfGuard;
     use Logger;
-    /** @use State<PaperVerificationCode> */
     use State;
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -50,10 +48,7 @@ abstract class AbstractPaperVerificationCodeHandler extends AbstractHandler impl
 
     abstract public function isMissingPrerequisite(ServerRequestInterface $request): bool;
 
-    /**
-     * @inheritDoc
-     */
-    public function state(ServerRequestInterface $request): WorkflowState
+    public function state(ServerRequestInterface $request): PaperVerificationCode
     {
         return $this->loadState($request, PaperVerificationCode::class);
     }
