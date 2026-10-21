@@ -343,6 +343,7 @@ class LpaContext extends BaseIntegrationContext
     }
 
     #[Given('/^I can see a flash message for the added LPA$/')]
+    #[Given('/^I can see a flash message for the newly added LPA$/')]
     public function iCanSeeAFlashMessageForTheAddedLPA(): void
     {
         // Not needed for this context
