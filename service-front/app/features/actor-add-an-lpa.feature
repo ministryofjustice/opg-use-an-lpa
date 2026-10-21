@@ -183,4 +183,4 @@ Feature: Add an LPA
     And I request to add a different modernised LPA using E9YRUTPM6RLK
     Then The correct newly added LPA is found and I can confirm to add it
     And The new LPA is successfully added
-    And I can see a flash message for the added LPA
+    And I can see a flash message for the newly added LPA

@@ -558,13 +558,13 @@ class LpaContext implements Context
     #[Given('/^I can see a flash message for the added LPA$/')]
     public function iCanSeeAFlashMessageForTheAddedLPA(): void
     {
-        $this->ui->assertPageContainsText("You've added Donald Duck's health and welfare LPA");
+        $this->ui->assertPageContainsText("You've added Ian Deputy's health and welfare LPA");
     }
 
-    #[Given('/^I can see a flash message for the new added LPA$/')]
+    #[Given('/^I can see a flash message for the newly added LPA$/')]
     public function iCanSeeAFlashMessageForTheNewAddedLPA(): void
     {
-        $this->ui->assertPageContainsText("You've added Feeg's personal welfare LPA");
+        $this->ui->assertPageContainsText("You've added Donald Duck's health and welfare LPA");
     }
 
     #[Then('/^I can see all of my access codes and their details$/')]
@@ -3117,11 +3117,6 @@ class LpaContext implements Context
     public function theNewLpaIsSuccessfullyAdded(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
-
-        error_log(
-            'Dashboard page text: ' .
-            $this->ui->getSession()->getPage()->getText()
-        );
         $this->ui->assertPageContainsText('Health and welfare LPA');
     }
 
