@@ -41,6 +41,9 @@ server {
     add_header 'Access-Control-Allow-Origin' '*' always;
     add_header 'Access-Control-Allow-Headers' 'User-Token' always;
 
+    // not likely as necessary as the frontend but belts and braces
+    if ($http_content_type ~* "multipart") { return 403; }
+
     location / {
         root    /web;
         try_files $uri /index.php$is_args$args;

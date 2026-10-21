@@ -82,6 +82,8 @@ server {
     # On a page with many forms such as Check Access Codes when we have 33+ access codes, the cookies exceed the 4k default
     proxy_buffer_size   8k;
 
+    if ($http_content_type ~* "multipart") { return 403; }
+
     location / {
         root    /web;
 
