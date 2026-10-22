@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-20 15:02+0000\n"
+"PO-Revision-Date: 2026-10-22 15:15+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -2414,7 +2414,7 @@ msgstr "Rhaid i’r dyddiad geni fod yn y gorffennol"
 #: src/Actor/templates/actor/form-error-messages.html.twig:31
 msgctxt "error"
 msgid "Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18"
-msgstr "Gwnewch yn siŵr bod eich dyddiad geni yn gywir – ni chewch fod yn atwrnai neu’n rhoddwr os ydych o dan 18 oed"
+msgstr "Gwnewch yn siŵr bod eich dyddiad geni yn gywir – ni chewch fod yn atwrnai nac yn rhoddwr os ydych o dan 18 oed"
 
 #. Triage page
 #: src/Actor/templates/actor/form-error-messages.html.twig:32
@@ -4453,7 +4453,7 @@ msgstr "Os ydynt bellach yn defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LP
 
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:16
 msgid "The LPA is ready to view"
-msgstr "Mae’r LPA yn barod i’w gweld"
+msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn barod i’w gweld"
 
 #: src/Common/src/View/Twig/LpaExtension.php:268
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:33
@@ -4466,7 +4466,7 @@ msgstr "Nid oeddem yn gallu dod o hyd i LPA gyda’r manylion yna"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:15
 msgid "Although we could not find this LPA, it does not mean it does not exist, or is not able to be viewed somewhere else."
-msgstr "Er na lwyddwyd i ddod o hyd i’r LPA hon, nid yw hynny’n golygu nad yw’n bodoli, neu na ellir ei gweld yn rhywle arall."
+msgstr "Er na lwyddwyd i ddod o hyd i’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon, nid yw hynny’n golygu nad yw’n bodoli, neu na all eraill ei gweld."
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:40
 msgid "Did you enter the donor’s name correctly?"
@@ -4474,15 +4474,15 @@ msgstr "Wnaethoch chi roi enw’r rhoddwr yn gywir?"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:42
 msgid "You may have entered the donor’s details incorrectly. The donor is the person the LPA was made for."
-msgstr "Efallai eich bod wedi nodi manylion y rhoddwr yn anghywir. Y rhoddwr yw’r person y gwnaed yr LPA ar ei gyfer."
+msgstr "Gwiriwch eich bod wedi defnyddio’r enw cywir ac wedi ei sillafu’n gywir. Y rhoddwr yw’r person y gwnaed yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar ei gyfer."
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:47
 msgid "Did you enter the LPA access code correctly?"
-msgstr "A wnaethoch chi nodi cod mynediad yr LPA yn gywir?"
+msgstr "A wnaethoch chi nodi cod mynediad yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn gywir?"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:49
 msgid "You may have entered the code incorrectly, or used another similar number instead. The access code will be given to you by an attorney or donor. It should start with a ‘V’ and be followed by 12 numbers and letters, for example, V-AB12-CD34-EF56."
-msgstr "Efallai eich bod wedi nodi’r cod yn anghywir, neu wedi defnyddio rhif tebyg arall yn lle hynny. Bydd y cod mynediad yn cael ei roi i chi gan atwrnai neu roddwr. Dylai ddechrau gyda ‘V’ a bydd 12 rhif a llythyren yn dilyn, er enghraifft, V-AB12-CD34-EF56."
+msgstr "Efallai eich bod wedi nodi’r cod yn anghywir, neu wedi defnyddio’r math anghywir o god. Byddwch wedi derbyn y cod mynediad gan atwrnai neu roddwr. Dylai ddechrau gyda ‘V’ a bydd 12 rhif a llythyren yn dilyn, er enghraifft, V-AB12-CD34-EF56."
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:54
 msgid "It should not be confused with:"
@@ -4502,7 +4502,7 @@ msgstr "Ydych chi’n defnyddio’r gwasanaeth cywir?"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:65
 msgid "This is the View a lasting power of attorney service. It is normally used by organisations such as care homes or banks to view a summary of an LPA. They do this by using an access code sent to them by attorneys or donors."
-msgstr "Dyma’r gwasanaeth Gweld atwrneiaeth arhosol. Fe’i defnyddir fel arfer gan sefydliadau fel cartrefi gofal neu fanciau i weld crynodeb o LPA. Maent yn gwneud hyn drwy ddefnyddio cod mynediad a anfonir atynt gan atwrneiod neu roddwyr."
+msgstr "Dyma’r gwasanaeth Gweld atwrneiaeth arhosol. Fe’i defnyddir fel arfer gan sefydliadau fel cartrefi gofal neu fanciau i weld crynodeb o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Maent yn gwneud hyn drwy ddefnyddio cod mynediad maent yn ei dderbyn gan atwrneiod neu roddwyr."
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:70
 msgid "Attorneys or donors who want to see a summary of an LPA, or give organisations access to a summary of an LPA, can do this through the <a class=\"govuk-link\" href=\"https://www.gov.uk/use-lasting-power-of-attorney\">Use a lasting power of attorney service</a>."
