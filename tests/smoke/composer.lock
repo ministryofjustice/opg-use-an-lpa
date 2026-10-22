@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b6dc50967521bf681a3fb4f9866c1f5f",
+    "content-hash": "c4e9b2c8f033c0689772b5f517365d37",
     "packages": [
         {
             "name": "behat/behat",
@@ -707,12 +707,13 @@
             "dist": {
                 "type": "path",
                 "url": "packages/behat-axe-extension",
-                "reference": "81a9dec5edd4cda3c2098382ead3c604190d014e"
+                "reference": "3f3801a850512a5d7fd0518b2b6e7b2d54f2243f"
             },
             "require": {
                 "behat/behat": "^3.6",
                 "dmore/chrome-mink-driver": "^2.7",
-                "php": "^8.4"
+                "php": "^8.4",
+                "symfony/dependency-injection": "^7.0"
             },
             "type": "library",
             "autoload": {
@@ -7294,7 +7295,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.4"
+        "php": "^8.4.27"
     },
     "platform-dev": {},
     "platform-overrides": {
