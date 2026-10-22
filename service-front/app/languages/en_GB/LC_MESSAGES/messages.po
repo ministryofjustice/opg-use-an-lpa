@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-20 15:02+0000\n"
+"PO-Revision-Date: 2026-10-22 15:15+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
@@ -2395,7 +2395,7 @@ msgstr "Date of birth must be in the past"
 #: src/Actor/templates/actor/form-error-messages.html.twig:31
 msgctxt "error"
 msgid "Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18"
-msgstr "Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18"
+msgstr "Check your date of birth is correct – you cannot be an attorney or a donor if you’re under 18"
 
 #. Triage page
 #: src/Actor/templates/actor/form-error-messages.html.twig:32
@@ -4066,7 +4066,7 @@ msgstr[1] "in %count% days, on %date%"
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:38
 #: src/Viewer/templates/viewer/check-code-found.html.twig:38
 msgid "If this is not the right LPA, ask the donor or attorney to check the access code."
-msgstr "If this is not the right LPA, ask the donor or attorney to check the access code."
+msgstr "If this is not the correct <abbr title=\"lasting power of attorney\">LPA</abbr>, ask the donor or attorney to check the access code."
 
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:45
 #: src/Viewer/templates/viewer/check-code-found.html.twig:45
@@ -4431,7 +4431,7 @@ msgstr "If they’re now using the <abbr title=\"lasting power of attorney\">LPA
 
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:16
 msgid "The LPA is ready to view"
-msgstr "The LPA is ready to view"
+msgstr "The <abbr title=\"lasting power of attorney\">LPA</abbr> is ready to view"
 
 #: src/Common/src/View/Twig/LpaExtension.php:268
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:33
@@ -4444,7 +4444,7 @@ msgstr "We could not find an LPA with those details"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:15
 msgid "Although we could not find this LPA, it does not mean it does not exist, or is not able to be viewed somewhere else."
-msgstr "Although we could not find this LPA, it does not mean it does not exist, or is not able to be viewed somewhere else."
+msgstr "Although we could not find this <abbr title=\"lasting power of attorney\">LPA</abbr>, it does not mean it does not exist, or that others cannot see it."
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:40
 msgid "Did you enter the donor’s name correctly?"
@@ -4452,15 +4452,15 @@ msgstr "Did you enter the donor’s name correctly?"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:42
 msgid "You may have entered the donor’s details incorrectly. The donor is the person the LPA was made for."
-msgstr "You may have entered the donor’s details incorrectly. The donor is the person the LPA was made for."
+msgstr "Check you’ve entered the correct name and its spelling. The donor is the is the person the <abbr title=\"lasting power of attorney\">LPA</abbr> was made for."
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:47
 msgid "Did you enter the LPA access code correctly?"
-msgstr "Did you enter the LPA access code correctly?"
+msgstr "Did you enter the <abbr title=\"lasting power of attorney\">LPA</abbr> access code correctly?"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:49
 msgid "You may have entered the code incorrectly, or used another similar number instead. The access code will be given to you by an attorney or donor. It should start with a ‘V’ and be followed by 12 numbers and letters, for example, V-AB12-CD34-EF56."
-msgstr "You may have entered the code incorrectly, or used another similar number instead. The access code will be given to you by an attorney or donor. It should start with a ‘V’ and be followed by 12 numbers and letters, for example, V-AB12-CD34-EF56."
+msgstr "You may have entered the code incorrectly, or entered the incorrect kind of code. The access code will have been given to you by an attorney or donor. It should start with a V and be followed by 12 numbers and letters, for example, V-AB12-CD34-EF56."
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:54
 msgid "It should not be confused with:"
@@ -4476,11 +4476,11 @@ msgstr "the LPA reference number - a unique number we give to each LPA"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:63
 msgid "Are you using the right service?"
-msgstr "Are you using the right service?"
+msgstr "Are you using the correct service?"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:65
 msgid "This is the View a lasting power of attorney service. It is normally used by organisations such as care homes or banks to view a summary of an LPA. They do this by using an access code sent to them by attorneys or donors."
-msgstr "This is the View a lasting power of attorney service. It is normally used by organisations such as care homes or banks to view a summary of an LPA. They do this by using an access code sent to them by attorneys or donors."
+msgstr "This is the View a lasting power of attorney service. It is normally used by organisations such as care homes or banks to view a summary of an <abbr title=\"lasting power of attorney\">LPA</abbr>. They do this by using an access code given to them by attorneys or donors."
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:70
 msgid "Attorneys or donors who want to see a summary of an LPA, or give organisations access to a summary of an LPA, can do this through the <a class=\"govuk-link\" href=\"https://www.gov.uk/use-lasting-power-of-attorney\">Use a lasting power of attorney service</a>."
