@@ -1,11 +1,11 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}What is the LPA reference number?{% endtrans %} - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}add-lpa.lpa-reference-number.title{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
     <div role="navigation" aria-labelledby="back-link-navigation">
-        <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}common.back-link{% endtrans %}</a>
     </div>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -14,30 +14,40 @@
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <h1 class="govuk-heading-xl" id="ref_number_heading">{% trans %}What is the LPA reference number?{% endtrans %}</h1>
+                <h1 class="govuk-heading-xl" id="ref_number_heading">{% trans %}add-lpa.lpa-reference-number.heading-page{% endtrans %}</h1>
 
-                <p class="govuk-body">
-                    {% trans %}
-                        The reference number is in the same letter that has your activation key.
-                    {% endtrans %}
-                </p>
+                {% trans %}
+                    add-lpa.lpa-reference-number.content.reference-number-location
+                {% context %}html{% notes %}Contains a GOV.UK paragraph. Preserve the HTML structure and classes when translating.{% endtrans %}
+
+                {% if feature_enabled('paper_verification') %}
+                    {% set referenceNumberHint %}
+                        {% trans %}
+                            add-lpa.lpa-reference-number.field-reference-number.hint-with-paper-verification
+                        {% context %}html{% notes %}Contains a line break. Preserve the HTML markup when translating.{% endtrans %}
+                    {% endset %}
+                {% else %}
+                    {% set referenceNumberHint %}
+                        {% trans %}add-lpa.lpa-reference-number.field-reference-number.hint-without-paper-verification{% endtrans %}
+                    {% endset %}
+                {% endif %}
 
                 {{ govuk_form_open(form) }}
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
                     {{ govuk_form_element(form.get('reference_number'), {
-                        'hint': feature_enabled('paper_verification') ? 'LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br>Some LPA reference numbers start with an M, for example M-1111-2222-3333.' | trans : 'LPA reference numbers are 12 numbers long, for example 7000-0000-0000.' | trans,
+                        'hint': referenceNumberHint,
                         'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-label--m'},
                         'aria_labelledby': 'ref_number_heading'
                     }) }}
 
-                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}common.button-continue{% endtrans %}</button>
 
                     <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
                        class="govuk-button moj-button-menu__item govuk-button--secondary "
                        data-module="govuk-button">
-                        {% trans %}Cancel{% endtrans %}
+                        {% trans %}common.button-cancel{% endtrans %}
                     </a>
                 {{ govuk_form_close() }}
 

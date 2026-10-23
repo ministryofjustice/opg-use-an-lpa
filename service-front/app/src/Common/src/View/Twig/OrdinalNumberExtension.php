@@ -44,7 +44,7 @@ class OrdinalNumberExtension extends AbstractExtension
      */
     protected function getFormatter(string $locale): NumberFormatter
     {
-        if ($locale === 'cy') {
+        if ($locale === 'cy_GB') {
             $pattern   = <<<EOT
 %digits-ordinal:
 1: =#,##0=af;

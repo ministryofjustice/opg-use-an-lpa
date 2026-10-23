@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use Common\View\Twig\OrdinalNumberExtension;
 use InvalidArgumentException;
 use Locale;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use Twig\TwigFilter;
@@ -82,84 +82,396 @@ class OrdinalNumberExtensionTest extends TestCase
     public static function ordinalDataProvider()
     {
         return [
-            ['en', 1, '1st'],
-            ['en', 2, '2nd'],
-            ['en', 3, '3rd'],
-            ['en', 4, '4th'],
-            ['en', 5, '5th'],
-            ['en', 6, '6th'],
-            ['en', 7, '7th'],
-            ['en', 8, '8th'],
-            ['en', 9, '9th'],
-            ['en', 10, '10th'],
-            ['en', 11, '11th'],
-            ['en', 12, '12th'],
-            ['en', 13, '13th'],
-            ['en', 14, '14th'],
-            ['en', 15, '15th'],
-            ['en', 16, '16th'],
-            ['en', 17, '17th'],
-            ['en', 18, '18th'],
-            ['en', 19, '19th'],
-            ['en', 20, '20th'],
-            ['en', 21, '21st'],
-            ['en', 22, '22nd'],
-            ['en', 23, '23rd'],
-            ['en', 24, '24th'],
-            ['en', 25, '25th'],
-            ['en', 26, '26th'],
-            ['en', 27, '27th'],
-            ['en', 28, '28th'],
-            ['en', 29, '29th'],
-            ['en', 30, '30th'],
-            ['en', 31, '31st'],
-            ['en', 32, '32nd'],
-            ['en', 33, '33rd'],
-            ['en', 34, '34th'],
-            ['en', 35, '35th'],
-            ['en', 36, '36th'],
-            ['en', 37, '37th'],
-            ['en', 38, '38th'],
-            ['en', 39, '39th'],
-            ['cy', 1, '1af'],
-            ['cy', 2, '2il'],
-            ['cy', 3, '3ydd'],
-            ['cy', 4, '4ydd'],
-            ['cy', 5, '5ed'],
-            ['cy', 6, '6ed'],
-            ['cy', 7, '7fed'],
-            ['cy', 8, '8fed'],
-            ['cy', 9, '9fed'],
-            ['cy', 10, '10fed'],
-            ['cy', 11, '11eg'],
-            ['cy', 12, '12fed'],
-            ['cy', 13, '13eg'],
-            ['cy', 14, '14eg'],
-            ['cy', 15, '15fed'],
-            ['cy', 16, '16eg'],
-            ['cy', 17, '17eg'],
-            ['cy', 18, '18fed'],
-            ['cy', 19, '19eg'],
-            ['cy', 20, '20fed'],
-            ['cy', 21, '21ain'],
-            ['cy', 22, '22ain'],
-            ['cy', 23, '23ain'],
-            ['cy', 24, '24ain'],
-            ['cy', 25, '25ain'],
-            ['cy', 26, '26ain'],
-            ['cy', 27, '27ain'],
-            ['cy', 28, '28ain'],
-            ['cy', 29, '29ain'],
-            ['cy', 30, '30ain'],
-            ['cy', 31, '31ain'],
-            ['cy', 32, '32ain'],
-            ['cy', 33, '33ain'],
-            ['cy', 34, '34ain'],
-            ['cy', 35, '35ain'],
-            ['cy', 36, '36ain'],
-            ['cy', 37, '37ain'],
-            ['cy', 38, '38ain'],
-            ['cy', 39, '39ain'],
+            [
+                'en_GB',
+                1,
+                '1st',
+            ],
+            [
+                'en_GB',
+                2,
+                '2nd',
+            ],
+            [
+                'en_GB',
+                3,
+                '3rd',
+            ],
+            [
+                'en_GB',
+                4,
+                '4th',
+            ],
+            [
+                'en_GB',
+                5,
+                '5th',
+            ],
+            [
+                'en_GB',
+                6,
+                '6th',
+            ],
+            [
+                'en_GB',
+                7,
+                '7th',
+            ],
+            [
+                'en_GB',
+                8,
+                '8th',
+            ],
+            [
+                'en_GB',
+                9,
+                '9th',
+            ],
+            [
+                'en_GB',
+                10,
+                '10th',
+            ],
+            [
+                'en_GB',
+                11,
+                '11th',
+            ],
+            [
+                'en_GB',
+                12,
+                '12th',
+            ],
+            [
+                'en_GB',
+                13,
+                '13th',
+            ],
+            [
+                'en_GB',
+                14,
+                '14th',
+            ],
+            [
+                'en_GB',
+                15,
+                '15th',
+            ],
+            [
+                'en_GB',
+                16,
+                '16th',
+            ],
+            [
+                'en_GB',
+                17,
+                '17th',
+            ],
+            [
+                'en_GB',
+                18,
+                '18th',
+            ],
+            [
+                'en_GB',
+                19,
+                '19th',
+            ],
+            [
+                'en_GB',
+                20,
+                '20th',
+            ],
+            [
+                'en_GB',
+                21,
+                '21st',
+            ],
+            [
+                'en_GB',
+                22,
+                '22nd',
+            ],
+            [
+                'en_GB',
+                23,
+                '23rd',
+            ],
+            [
+                'en_GB',
+                24,
+                '24th',
+            ],
+            [
+                'en_GB',
+                25,
+                '25th',
+            ],
+            [
+                'en_GB',
+                26,
+                '26th',
+            ],
+            [
+                'en_GB',
+                27,
+                '27th',
+            ],
+            [
+                'en_GB',
+                28,
+                '28th',
+            ],
+            [
+                'en_GB',
+                29,
+                '29th',
+            ],
+            [
+                'en_GB',
+                30,
+                '30th',
+            ],
+            [
+                'en_GB',
+                31,
+                '31st',
+            ],
+            [
+                'en_GB',
+                32,
+                '32nd',
+            ],
+            [
+                'en_GB',
+                33,
+                '33rd',
+            ],
+            [
+                'en_GB',
+                34,
+                '34th',
+            ],
+            [
+                'en_GB',
+                35,
+                '35th',
+            ],
+            [
+                'en_GB',
+                36,
+                '36th',
+            ],
+            [
+                'en_GB',
+                37,
+                '37th',
+            ],
+            [
+                'en_GB',
+                38,
+                '38th',
+            ],
+            [
+                'en_GB',
+                39,
+                '39th',
+            ],
+            [
+                'cy_GB',
+                1,
+                '1af',
+            ],
+            [
+                'cy_GB',
+                2,
+                '2il',
+            ],
+            [
+                'cy_GB',
+                3,
+                '3ydd',
+            ],
+            [
+                'cy_GB',
+                4,
+                '4ydd',
+            ],
+            [
+                'cy_GB',
+                5,
+                '5ed',
+            ],
+            [
+                'cy_GB',
+                6,
+                '6ed',
+            ],
+            [
+                'cy_GB',
+                7,
+                '7fed',
+            ],
+            [
+                'cy_GB',
+                8,
+                '8fed',
+            ],
+            [
+                'cy_GB',
+                9,
+                '9fed',
+            ],
+            [
+                'cy_GB',
+                10,
+                '10fed',
+            ],
+            [
+                'cy_GB',
+                11,
+                '11eg',
+            ],
+            [
+                'cy_GB',
+                12,
+                '12fed',
+            ],
+            [
+                'cy_GB',
+                13,
+                '13eg',
+            ],
+            [
+                'cy_GB',
+                14,
+                '14eg',
+            ],
+            [
+                'cy_GB',
+                15,
+                '15fed',
+            ],
+            [
+                'cy_GB',
+                16,
+                '16eg',
+            ],
+            [
+                'cy_GB',
+                17,
+                '17eg',
+            ],
+            [
+                'cy_GB',
+                18,
+                '18fed',
+            ],
+            [
+                'cy_GB',
+                19,
+                '19eg',
+            ],
+            [
+                'cy_GB',
+                20,
+                '20fed',
+            ],
+            [
+                'cy_GB',
+                21,
+                '21ain',
+            ],
+            [
+                'cy_GB',
+                22,
+                '22ain',
+            ],
+            [
+                'cy_GB',
+                23,
+                '23ain',
+            ],
+            [
+                'cy_GB',
+                24,
+                '24ain',
+            ],
+            [
+                'cy_GB',
+                25,
+                '25ain',
+            ],
+            [
+                'cy_GB',
+                26,
+                '26ain',
+            ],
+            [
+                'cy_GB',
+                27,
+                '27ain',
+            ],
+            [
+                'cy_GB',
+                28,
+                '28ain',
+            ],
+            [
+                'cy_GB',
+                29,
+                '29ain',
+            ],
+            [
+                'cy_GB',
+                30,
+                '30ain',
+            ],
+            [
+                'cy_GB',
+                31,
+                '31ain',
+            ],
+            [
+                'cy_GB',
+                32,
+                '32ain',
+            ],
+            [
+                'cy_GB',
+                33,
+                '33ain',
+            ],
+            [
+                'cy_GB',
+                34,
+                '34ain',
+            ],
+            [
+                'cy_GB',
+                35,
+                '35ain',
+            ],
+            [
+                'cy_GB',
+                36,
+                '36ain',
+            ],
+            [
+                'cy_GB',
+                37,
+                '37ain',
+            ],
+            [
+                'cy_GB',
+                38,
+                '38ain',
+            ],
+            [
+                'cy_GB',
+                39,
+                '39ain',
+            ],
         ];
     }
 }

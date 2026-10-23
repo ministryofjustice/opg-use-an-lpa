@@ -1,11 +1,11 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Your activation key{% endtrans %} - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}add-lpa.activation-key.title{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
     <div role="navigation" aria-labelledby="back-link-navigation">
-        <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}common.back-link{% endtrans %}</a>
     </div>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -16,33 +16,29 @@
 
                 {{ govuk_error_summary(form) }}
 
-                <h1 class="govuk-heading-xl">{% trans %}What is your activation key?{% endtrans %}</h1>
+                <h1 class="govuk-heading-xl">{% trans %}add-lpa.activation-key.heading-page{% endtrans %}</h1>
 
                 {{ govuk_form_open(form) }}
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
-                    <p class="govuk-body">{% trans %}Make sure this is the activation key in the letter we sent you. We will not be able to find the LPA if you enter an activation key we sent to someone else - even if it’s for the same LPA.{% endtrans %}</p>
+                    {% trans with {'%link%': path('lpa.add-by-paper-information')} %}
+                        add-lpa.activation-key.content.instructions
+                    {% context %}html-link{% notes %}Contains GOV.UK HTML markup and the %link% placeholder for the request-a-new-key link.{% endtrans %}
 
-                    <p class="govuk-body">{% trans %}Your activation key:{% endtrans %}</p>
-
-                    <ul class="govuk-list govuk-list--bullet">
-                        <li>
-                            {% trans %} can only be used once {% endtrans %}
-                        </li>
-                        <li>
-                            {% trans with {'%link%': path('lpa.add-by-paper-information')} %}
-                            expired one year after the date on the letter you can <a href="%link%" class="govuk-link">request a new key</a>{% endtrans %}
-                        </li>
-                    </ul>
+                    {% set activationKeyHint %}
+                        {% trans %}
+                            add-lpa.activation-key.field-activation-key.hint
+                        {% context %}html{% notes %}Contains HTML line breaks. Preserve the line breaks and markup when translating.{% endtrans %}
+                    {% endset %}
 
                     {{ govuk_form_element(form.get('activation_key'), {
-                        'label': 'Your activation key'| trans,
+                        'label': 'add-lpa.activation-key.field-activation-key.label'| trans,
                         'input_prefix' : 'C -',
-                        'hint': 'Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56 <br/><br/> You do not need to enter the C-'| trans,
+                        'hint': activationKeyHint,
                         'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-label--m'} }) }}
 
-                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}common.button-continue{% endtrans %}</button>
 
                 {{ govuk_form_close() }}
 
