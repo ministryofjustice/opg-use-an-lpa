@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-20 15:02+0000\n"
+"PO-Revision-Date: 2026-10-22 15:36+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
@@ -39,7 +39,7 @@ msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preference
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:10
 msgid "LPA reference number:"
-msgstr "LPA reference number:"
+msgstr "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number:"
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:16
 msgid "Added by:"
@@ -84,7 +84,7 @@ msgstr "Check access codes"
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:63
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:19
 msgid "View LPA summary"
-msgstr "View LPA summary"
+msgstr "View <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:69
 msgid "Remove LPA"
@@ -248,7 +248,7 @@ msgstr "What if I’ve used this service before?"
 
 #: src/Actor/templates/actor/one-login.html.twig:67
 msgid "If you have a Use a lasting power of attorney account from before 13 August 2024, and you use the same email address for GOV.UK One Login, any LPAs you’ve previously added will automatically appear."
-msgstr "If you have a Use a lasting power of attorney account from before 13 August 2024, and you use the same email address for GOV.UK One Login, any LPAs you’ve previously added will automatically appear."
+msgstr "If you have a Use a lasting power of attorney account from before 13 August 2024, and you use the same email address for GOV.UK One Login, any <abbr title=\"lasting powers of attorney\">LPA</abbr> you’ve previously added will automatically appear."
 
 #: src/Actor/templates/actor/one-login.html.twig:73
 msgid "By continuing, you are agreeing to the <a href=\"%link%\" class=\"govuk-link\">terms of the Use a lasting power of attorney service.</a>"
@@ -296,7 +296,7 @@ msgstr "If you have any problems signing in to this service, you can <a href=\"h
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:14
 #: src/Actor/templates/actor/check-lpa.html.twig:14
 msgid "Confirm this is the correct LPA"
-msgstr "Confirm this is the correct LPA"
+msgstr "Confirm this is the correct <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:9
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:8
@@ -502,7 +502,7 @@ msgstr "the donor has removed you as an attorney"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:23
 msgid "Do you have an activation key to add an LPA?"
-msgstr "Do you have an activation key to add an LPA?"
+msgstr "Do you have an activation key to add an <abbr title=\"lasting power of attorney\">LPA</abbr>?"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:35
 msgid "Activation keys are 12 letters and numbers long and start with a C, for example: C-AB12 CD34 EF56."
@@ -1825,7 +1825,7 @@ msgstr "What is your current address?"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:20
 msgid "We need a few extra details to make sure we have the right LPA for your activation key request."
-msgstr "We need a few extra details to make sure we have the right LPA for your activation key request."
+msgstr "We need a few extra details to make sure we have the correct <abbr title=\"lasting power of attorney\">LPA</abbr> for your activation key request."
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:24
 #: src/Common/templates/partials/contact-details/address.html.twig:1
@@ -1927,7 +1927,7 @@ msgstr "Request an activation key"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:22
 msgid "the LPA was made for use in England and Wales"
-msgstr "the LPA was made for use in England and Wales"
+msgstr "the <abbr title=\"lasting power of attorney\">LPA</abbr> was made for use in England and Wales"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:25
 msgid "You cannot ask for a key for:"
@@ -1943,7 +1943,7 @@ msgstr "Where to find the <abbr title=\"lasting power of attorney\">LPA</abbr> r
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:52
 msgid "If you do not have the paper LPA or any letters from OPG, check with other people named on the LPA."
-msgstr "If you do not have the paper LPA or any letters from OPG, check with other people named on the LPA."
+msgstr "If you do not have the paper <abbr title=\"lasting power of attorney\">LPA</abbr> or any letters from <abbr title=\"Office of the Public Guardian\">OPG</abbr>, check with other people named on the <abbr title=\"lasting power of attorney\">LPA</abbr>."
 
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:18
 msgid "What is your address on the paper LPA?"
@@ -1983,7 +1983,7 @@ msgstr "I am the donor"
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:35
 msgid "The donor is the person the LPA is made for. They appoint attorneys to make decisions on their behalf."
-msgstr "The donor is the person the LPA is made for. They appoint attorneys to make decisions on their behalf."
+msgstr "The donor is the person the <abbr title=\"lasting power of attorney\">LPA</abbr> is made for. They appoint attorneys to make decisions on their behalf."
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:39
 msgid "I am an 'attorney'"
@@ -2213,7 +2213,7 @@ msgstr "If you are the donor, please also provide the name and address for one o
 
 #: src/Actor/templates/actor/change-details.html.twig:67
 msgid "It's important that we hold up-to-date information about donors and attorneys. This is because an LPA will end when the donor dies, and can end if an attorney dies."
-msgstr "It's important that we hold up-to-date information about donors and attorneys. This is because an LPA will end when the donor dies, and can end if an attorney dies."
+msgstr "It's important that we hold up-to-date information about donors and attorneys. This is because an <abbr title=\"lasting power of attorney\">LPA</abbr> will end when the donor dies, and can end if an attorney dies."
 
 #: src/Actor/templates/actor/change-details.html.twig:74
 msgid "Find out more about what to do if <a class=\"govuk-link\" href=\"%link%\"> the donor or an attorney dies</a>"
@@ -2237,7 +2237,7 @@ msgstr "What is your activation key?"
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:25
 msgid "Make sure this is the activation key in the letter we sent you. We will not be able to find the LPA if you enter an activation key we sent to someone else - even if it’s for the same LPA."
-msgstr "Make sure this is the activation key in the letter we sent you. We will not be able to find the LPA if you enter an activation key we sent to someone else – even if it’s for the same LPA."
+msgstr "Make sure this is the activation key in the letter we sent you. We will not be able to find the <abbr title=\"lasting power of attorney\">LPA</abbr> if you enter an activation key we sent to someone else – even if it’s for the same <abbr title=\"lasting power of attorney\">LPA</abbr>."
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:27
 msgid "Your activation key:"
@@ -2395,7 +2395,7 @@ msgstr "Date of birth must be in the past"
 #: src/Actor/templates/actor/form-error-messages.html.twig:31
 msgctxt "error"
 msgid "Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18"
-msgstr "Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18"
+msgstr "Check your date of birth is correct – you cannot be an attorney or a donor if you’re under 18"
 
 #. Triage page
 #: src/Actor/templates/actor/form-error-messages.html.twig:32
@@ -2786,7 +2786,7 @@ msgstr "You cannot use a download or printout of this page instead of giving som
 #: src/Actor/templates/actor/lpa-not-found.html.twig:3
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:3
 msgid "We could not find an LPA"
-msgstr "We could not find an LPA"
+msgstr "<abbr title=\"lasting power of attorney\">LPA</abbr> not found"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:13
 msgid "This could be because the:"
@@ -3511,7 +3511,7 @@ msgstr "This property and finance LPA has been cancelled"
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:10
 #: src/Common/templates/partials/full-lpa-display.html.twig:10
 msgid "This health and welfare LPA has been cancelled"
-msgstr "This health and welfare LPA has been cancelled"
+msgstr "This health and welfare <abbr title=\"lasting power of attorney\">LPA</abbr> has been cancelled"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:15
 #: src/Common/templates/partials/full-lpa-display.html.twig:15
@@ -3521,17 +3521,17 @@ msgstr "Cancelled on %cancellationDate%"
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:20
 #: src/Common/templates/partials/full-lpa-display.html.twig:20
 msgid "This property and finance LPA is valid and can be used now"
-msgstr "This property and finance LPA is valid and can be used now"
+msgstr "This property and finance <abbr title=\"lasting power of attorney\">LPA</abbr> is valid and can be used now"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:23
 #: src/Common/templates/partials/full-lpa-display.html.twig:23
 msgid "This property and finance LPA is valid"
-msgstr "This property and finance LPA is valid"
+msgstr "This property and finance <abbr title=\"lasting power of attorney\">LPA</abbr> is valid"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:25
 #: src/Common/templates/partials/full-lpa-display.html.twig:25
 msgid "This health and welfare LPA is valid"
-msgstr "This health and welfare LPA is valid"
+msgstr "This health and welfare <abbr title=\"lasting power of attorney\">LPA</abbr> is valid"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:35
 #: src/Common/templates/partials/full-lpa-display.html.twig:35
@@ -3557,7 +3557,7 @@ msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has instructio
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:75
 #: src/Common/templates/partials/full-lpa-display.html.twig:75
 msgid "You should download and save this LPA summary. You can use it as evidence that you viewed the LPA summary before acting on it."
-msgstr "You should download and save this <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You can use it as evidence that you viewed the LPA summary before acting on it."
+msgstr "You should download and save this <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You can use it as evidence that you viewed the <abbr title=\"lasting power of attorney\">LPA</abbr> summary before acting on it."
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:143
 #: src/Common/templates/partials/full-lpa-display.html.twig:143
@@ -3765,7 +3765,7 @@ msgstr "The donor or attorney may have given you the wrong code."
 
 #: src/Viewer/templates/viewer/enter-code.html.twig:57
 msgid "Ask them to go to www.gov.uk/use-lpa to create an LPA access code for your organisation."
-msgstr "Ask them to go to www.gov.uk/use-lpa to create an LPA access code for your organisation."
+msgstr "Ask them to go to www.gov.uk/use-lpa to create an <abbr title=\"lasting power of attorney\">LPA</abbr> access code for your organisation."
 
 #: src/Viewer/templates/viewer/enter-code.html.twig:62
 msgid "This service cannot be used for enduring powers of attorney."
@@ -4066,7 +4066,7 @@ msgstr[1] "in %count% days, on %date%"
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:38
 #: src/Viewer/templates/viewer/check-code-found.html.twig:38
 msgid "If this is not the right LPA, ask the donor or attorney to check the access code."
-msgstr "If this is not the right LPA, ask the donor or attorney to check the access code."
+msgstr "If this is not the correct <abbr title=\"lasting power of attorney\">LPA</abbr>, ask the donor or attorney to check the access code."
 
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:45
 #: src/Viewer/templates/viewer/check-code-found.html.twig:45
@@ -4126,7 +4126,7 @@ msgstr "Do you want to continue? You have not used this service for 30 minutes. 
 #: src/Viewer/templates/viewer/form-error-messages.html.twig:7
 msgctxt "error"
 msgid "Enter your LPA access code"
-msgstr "Enter your LPA access code"
+msgstr "Enter your <abbr title=\"lasting power of attorney\">LPA</abbr> access code"
 
 #. ShareCode
 #: src/Viewer/templates/viewer/form-error-messages.html.twig:8
@@ -4241,11 +4241,11 @@ msgstr "Enter %name%’s date of birth"
 
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:19
 msgid "Enter the LPA access or paper verification code"
-msgstr "Enter the LPA access or paper verification code"
+msgstr "Enter the <abbr title=\"lasting power of attorney\">LPA</abbr> access or paper verification code"
 
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:26
 msgid "What are LPA access and paper verification codes?"
-msgstr "What are LPA access and paper verification codes?"
+msgstr "What are <abbr title=\"lasting power of attorney\">LPA</abbr> access and paper verification codes?"
 
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:31
 msgid "These are codes given to you by the donor or an attorney named on a lasting power of attorney."
@@ -4265,7 +4265,7 @@ msgstr "Paper verification codes"
 
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:39
 msgid "These codes are posted to donors and attorneys who do not want to use an LPA online. Each code is unique to the person who received it When you are given a paper verification code to view the LPA, you should also be given the:"
-msgstr "These codes are posted to donors and attorneys who do not want to use an LPA online. Each code is unique to the person who received it When you are given a paper verification code to view the LPA, you should also be given the:"
+msgstr "These codes are posted to donors and attorneys who do not want to use an <abbr title=\"lasting power of attorney\">LPA</abbr> online. Each code is unique to the person who received it. When you are given a paper verification code to view the <abbr title=\"lasting power of attorney\">LPA</abbr>, you should also be given the:"
 
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:43
 msgid "LPA reference number this will be on any letters we’ve sent to the donor or attorneys"
@@ -4315,7 +4315,7 @@ msgstr "the donor’s name you entered does not match our records"
 
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:21
 msgid "the LPA paper verification code you entered is incorrect"
-msgstr "the LPA paper verification code you entered is incorrect"
+msgstr "the <abbr title=\"lasting power of attorney\">LPA</abbr> paper verification code you entered is incorrect"
 
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:36
 msgid "LPA paper verification code"
@@ -4331,7 +4331,7 @@ msgstr "This service is for organisations such as care homes or banks to view a 
 
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:57
 msgid "If you’re a donor or an attorney who wants to see an LPA summary, go to the <a class=\"govuk-link\" href=%link%>Use a lasting power of attorney service</a>. You’ll also be able to give organisations access to LPA summaries."
-msgstr "If you’re a donor or an attorney who wants to see an LPA summary, go to the <a class=\"govuk-link\" href=%link%>Use a lasting power of attorney service</a>. You’ll also be able to give organisations access to LPA summaries."
+msgstr "If you’re a donor or an attorney who wants to see an <abbr title=\"lasting power of attorney\">LPA</abbr> summary, go to the <a class=\"govuk-link\" href=%link%>Use a lasting power of attorney service</a>. You’ll also be able to give organisations access to <abbr title=\"lasting power of attorney\">LPA</abbr> summaries."
 
 #: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:3
 msgid "We need some more details"
@@ -4431,7 +4431,7 @@ msgstr "If they’re now using the <abbr title=\"lasting power of attorney\">LPA
 
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:16
 msgid "The LPA is ready to view"
-msgstr "The LPA is ready to view"
+msgstr "The <abbr title=\"lasting power of attorney\">LPA</abbr> is ready to view"
 
 #: src/Common/src/View/Twig/LpaExtension.php:268
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:33
@@ -4440,11 +4440,11 @@ msgstr "Property and affairs"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:12
 msgid "We could not find an LPA with those details"
-msgstr "We could not find an LPA with those details"
+msgstr "We could not find an <abbr title=\"lasting power of attorney\">LPA</abbr> with those details"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:15
 msgid "Although we could not find this LPA, it does not mean it does not exist, or is not able to be viewed somewhere else."
-msgstr "Although we could not find this LPA, it does not mean it does not exist, or is not able to be viewed somewhere else."
+msgstr "Although we could not find this <abbr title=\"lasting power of attorney\">LPA</abbr>, it does not mean it does not exist, or that others cannot see it."
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:40
 msgid "Did you enter the donor’s name correctly?"
@@ -4452,15 +4452,15 @@ msgstr "Did you enter the donor’s name correctly?"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:42
 msgid "You may have entered the donor’s details incorrectly. The donor is the person the LPA was made for."
-msgstr "You may have entered the donor’s details incorrectly. The donor is the person the LPA was made for."
+msgstr "Check you’ve entered the correct name and its spelling. The donor is the is the person the <abbr title=\"lasting power of attorney\">LPA</abbr> was made for."
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:47
 msgid "Did you enter the LPA access code correctly?"
-msgstr "Did you enter the LPA access code correctly?"
+msgstr "Did you enter the <abbr title=\"lasting power of attorney\">LPA</abbr> access code correctly?"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:49
 msgid "You may have entered the code incorrectly, or used another similar number instead. The access code will be given to you by an attorney or donor. It should start with a ‘V’ and be followed by 12 numbers and letters, for example, V-AB12-CD34-EF56."
-msgstr "You may have entered the code incorrectly, or used another similar number instead. The access code will be given to you by an attorney or donor. It should start with a ‘V’ and be followed by 12 numbers and letters, for example, V-AB12-CD34-EF56."
+msgstr "You may have entered the code incorrectly, or entered the incorrect kind of code. The access code will have been given to you by an attorney or donor. It should start with a V and be followed by 12 numbers and letters, for example, V-AB12-CD34-EF56."
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:54
 msgid "It should not be confused with:"
@@ -4468,19 +4468,19 @@ msgstr "It should not be confused with:"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:59
 msgid "an LPA activation key - normally sent to donors and attorneys when the LPA is registered"
-msgstr "an LPA activation key - normally sent to donors and attorneys when the LPA is registered"
+msgstr "an <abbr title=\"lasting power of attorney\">LPA</abbr> activation key - normally sent to donors and attorneys when the <abbr title=\"lasting power of attorney\">LPA</abbr> is registered"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:60
 msgid "the LPA reference number - a unique number we give to each LPA"
-msgstr "the LPA reference number - a unique number we give to each LPA"
+msgstr "the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number – a unique number we give to each <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:63
 msgid "Are you using the right service?"
-msgstr "Are you using the right service?"
+msgstr "Are you using the correct service?"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:65
 msgid "This is the View a lasting power of attorney service. It is normally used by organisations such as care homes or banks to view a summary of an LPA. They do this by using an access code sent to them by attorneys or donors."
-msgstr "This is the View a lasting power of attorney service. It is normally used by organisations such as care homes or banks to view a summary of an LPA. They do this by using an access code sent to them by attorneys or donors."
+msgstr "This is the View a lasting power of attorney service. It is normally used by organisations such as care homes or banks to view a summary of an <abbr title=\"lasting power of attorney\">LPA</abbr>. They do this by using an access code given to them by attorneys or donors."
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:70
 msgid "Attorneys or donors who want to see a summary of an LPA, or give organisations access to a summary of an LPA, can do this through the <a class=\"govuk-link\" href=\"https://www.gov.uk/use-lasting-power-of-attorney\">Use a lasting power of attorney service</a>."
@@ -4488,7 +4488,7 @@ msgstr "Attorneys or donors who want to see a summary of an LPA, or give organis
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:75
 msgid "To do this you will need your own unique LPA activation key. This is normally found on the letter that told you the LPA had been registered."
-msgstr "To do this you will need your own unique LPA activation key. This is normally found on the letter that told you the LPA had been registered."
+msgstr "To do this you will need your own unique LPA<abbr title=\"lasting power of attorney\">LPA</abbr>activation key. This is normally found on the letter that told you the <abbr title=\"lasting power of attorney\">LPA</abbr> had been registered."
 
 #: src/Actor/src/Handler/RemoveLpaHandler.php:119
 msgctxt "flashMessage"
@@ -4573,7 +4573,7 @@ msgstr "As you have not used this service for over 20 minutes, the page has time
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:28
 msgid "You need your own unique activation key to add an LPA to your account. These are sent to you when the LPA is registered and expire after 12 months."
-msgstr "You need your own unique activation key to add an LPA to your account. An activation key will be sent to you when the LPA is registered. The key will expire after 12 months."
+msgstr "You need your own unique activation key to add an <abbr title=\"lasting power of attorney\">LPA</abbr> to your account. An activation key will be sent to you when the <abbr title=\"lasting power of attorney\">LPA</abbr> is registered. The key will expire after 12 months."
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:41
 msgid "If you’ve lost your activation key, it’s expired, or you’ve not had one before, you can request a new one."
@@ -4615,12 +4615,12 @@ msgstr "Yes, the donor entered words in this part of the <abbr title=\"lasting p
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:267
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:137
 msgid "We are unable to show the words entered in this part of this LPA. You’ll need to show the paper LPA to anyone who needs to see them."
-msgstr "We are unable to show the words entered in this part of this LPA. You’ll need to show the paper LPA to anyone who needs to see them."
+msgstr "We are unable to show the words entered in this part of this <abbr title=\"lasting power of attorney\">LPA</abbr>. You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr> to anyone who needs to see them."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:271
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:140
 msgid "No, the donor did not enter any words in this part of the LPA form."
-msgstr "No, the donor did not enter any words in this part of the LPA form."
+msgstr "No, the donor did not enter any words in this part of the <abbr title=\"lasting power of attorney\">LPA</abbr> form."
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:79
 msgid ""
@@ -4658,7 +4658,7 @@ msgstr "The code I’ve been given does not begin with a V"
 
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:15
 msgid "Is this the LPA you need an activation key for?"
-msgstr "Is this the LPA you need an activation key for?"
+msgstr "Is this the <abbr title=\"lasting power of attorney\">LPA</abbr> you need an activation key for?"
 
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:71
 msgid "Yes, continue"
@@ -4670,7 +4670,7 @@ msgstr "No, try again"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:21
 msgid "you’re a donor or an attorney on the LPA (not a replacement attorney)"
-msgstr "you’re a donor or an attorney named in the LPA (not a replacement attorney)"
+msgstr "you’re a donor or an attorney named in the <abbr title=\"lasting power of attorney\">LPA</abbr> (not a replacement attorney)"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:33
 msgid "Details you’ll need to give us"
@@ -4682,7 +4682,7 @@ msgstr "where you currently live – activation keys are sent by post. If you’
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
 msgid "the LPA reference number - you’ll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG)"
-msgstr "the LPA reference number – you’ll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG)"
+msgstr "the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number – you’ll find this on the paper <abbr title=\"lasting power of attorney\">LPA</abbr> and on letters from the Office of the Public Guardian (OPG)"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:53
 msgid "If a professional helped you make the LPA, such as a solicitor, they should be able to give you the reference number."
@@ -4690,7 +4690,7 @@ msgstr "If a professional helped you make the LPA, such as a solicitor, they sho
 
 #: src/Viewer/templates/viewer/enter-code.html.twig:58
 msgid "If you’re the donor or an attorney, you can view the LPA by signing into the <a href=\"https://www.gov.uk/manage-lasting-power-attorney/use-lasting-power-of-attorney\" class=\"govuk-link\">Use a lasting power of attorney service</a>."
-msgstr "If you’re the donor or an attorney, you can view the LPA by signing into the <a href=\"https://www.gov.uk/manage-lasting-power-attorney/use-lasting-power-of-attorney\" class=\"govuk-link\">Use a lasting power of attorney service</a>."
+msgstr "If you’re the donor or an attorney, you can view the <abbr title=\"lasting power of attorney\">LPA</abbr> by signing into the <a href=\"https://www.gov.uk/manage-lasting-power-attorney/use-lasting-power-of-attorney\" class=\"govuk-link\">Use a lasting power of attorney service</a>."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:20
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:15
@@ -4787,7 +4787,7 @@ msgstr "What is your activation key?"
 msgctxt "html-link"
 msgid "add-lpa.activation-key.content.instructions"
 msgstr ""
-"<p class=\"govuk-body\">Make sure this is the activation key in the letter we sent you. We will not be able to find the LPA if you enter an activation key we sent to someone else – even if it’s for the same LPA.</p>\n"
+"<p class=\"govuk-body\">Make sure this is the activation key in the letter we sent you. We will not be able to find the <abbr title=\"lasting power of attorney\">LPA</abbr> if you enter an activation key we sent to someone else – even if it’s for the same <abbr title=\"lasting power of attorney\">LPA</abbr>.</p>\n"
 "<p class=\"govuk-body\">Activation keys:</p>\n"
 "<ul class=\"govuk-list govuk-list--bullet\">\n"
 "    <li>contain 13 characters and start with a C</li>\n"
@@ -4819,7 +4819,7 @@ msgstr "For example, 31 03 1980"
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:3
 msgid "add-lpa.lpa-reference-number.title"
-msgstr "What is the LPA reference number?"
+msgstr "What is the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number?"
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:17
 msgid "add-lpa.lpa-reference-number.heading-page"
