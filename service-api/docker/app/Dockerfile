@@ -5,7 +5,7 @@ FROM docker.io/composer/composer:2.10-bin@sha256:536116acd18cd2d99d0351c1dfded22
 
 FROM docker.io/mlocati/php-extension-installer:2.12@sha256:1afade3e29cfc97362cf5885e5ac333bf2faab1146cb28ebbb59b17e68f87e88 AS php-extension-installer
 
-FROM docker.io/php:8.4-fpm-alpine3.22@sha256:e0f1ffe8bd43a137facdccdcac41cabdfc23e8d0fdd0665916a062f16e2f4058 AS php-base
+FROM docker.io/php:8.4-fpm-alpine@sha256:c70e50a06d85d73d5790848c4e6c9e32b470052e1c86d67a1fb784a97d247d60 AS php-base
 
 ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 
@@ -62,7 +62,7 @@ COPY service-api/docker/app/app-php.development.ini /usr/local/etc/php/conf.d/ap
 
 # All this neccessary for PACT FFI to work (apart from xdebug extension)
 RUN set -xe \
-  && apk add --no-cache libgcc=14.2.0-r6 \
+  && apk add --no-cache libgcc=15.2.0-r5 \
   && install-php-extensions xdebug-stable ffi \
   && echo "ffi.enable=true" >> /usr/local/etc/php/conf.d/docker-php-ext-ffi.ini
 
