@@ -189,6 +189,7 @@ jobs:
         uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7  # v10.2.0
         with:
           working-directory: lambda-functions/upload-statistics/app
+          version: "0.13.5"
         if: matrix.svc_prefix == 'stats_upload'
 
       - name: docker unit tests
