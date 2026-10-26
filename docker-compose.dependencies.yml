@@ -84,7 +84,7 @@ services:
       - 9004:80
 
   mock-s3-iap:
-    image: docker.io/nginx:stable-alpine@sha256:94da95f06ada2ac33a9016770c45ad4c3037805ed54ec8dbf2d9d2f83f3f462f
+    image: docker.io/nginx:stable-alpine@sha256:47928bf67eb62a1863cb08d9ecb52d3e704304ba614eaee17884204677702951
     depends_on:
       - mock-image-request-handler
     ports:
