@@ -611,7 +611,6 @@
           <dockerComposeConfigurationPaths>
             <item value="$PROJECT_DIR$/docker-compose.yml" />
             <item value="$PROJECT_DIR$/docker-compose.dependencies.yml" />
-            <item value="$PROJECT_DIR$/docker-compose.testing.yml" />
             <item value="$PROJECT_DIR$/docker-compose.override.yml" />
           </dockerComposeConfigurationPaths>
           <envs />

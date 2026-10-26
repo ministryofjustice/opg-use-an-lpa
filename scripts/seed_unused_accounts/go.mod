@@ -1,6 +1,6 @@
 module seed_unused_accounts
 
-go 1.26.0
+go 1.26.10
 
 require (
 	github.com/aws/aws-sdk-go-v2/config v1.33.7
