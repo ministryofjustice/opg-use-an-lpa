@@ -290,3 +290,140 @@ resource "aws_cloudwatch_metric_alarm" "pdf_high_task_memory" {
   insufficient_data_actions = []
   provider                  = aws.region
 }
+
+resource "aws_cloudwatch_metric_alarm" "high_task_cpu" {
+  for_each            = local.ecs_services
+  alarm_name          = "${var.environment_name}-${each.key}-high-task-cpu"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 3
+  threshold           = 90
+  alarm_description   = "${each.key} service task has very high CPU utilisation"
+
+  metric_query {
+    id          = "max_cpu"
+    return_data = true
+    metric {
+      metric_name = "CPUUtilization"
+      namespace   = "AWS/ECS"
+      period      = 60
+      stat        = "Maximum"
+      dimensions = {
+        ServiceName = each.value
+        ClusterName = aws_ecs_cluster.use_an_lpa.name
+      }
+    }
+  }
+
+  alarm_actions = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  provider      = aws.region
+}
+
+resource "aws_cloudwatch_metric_alarm" "high_task_memory" {
+  for_each            = local.ecs_services
+  alarm_name          = "${var.environment_name}-${each.key}-high-task-memory"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 3
+  threshold           = 90
+  alarm_description   = "${each.key} service task has very high memory utilisation"
+
+  metric_query {
+    id          = "max_mem"
+    return_data = true
+    metric {
+      metric_name = "MemoryUtilization"
+      namespace   = "AWS/ECS"
+      period      = 60
+      stat        = "Maximum"
+      dimensions = {
+        ServiceName = each.value
+        ClusterName = aws_ecs_cluster.use_an_lpa.name
+      }
+    }
+  }
+
+  alarm_actions = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  provider      = aws.region
+}
+
+resource "aws_cloudwatch_metric_alarm" "cpu_usage_anomaly" {
+  for_each            = local.ecs_services
+  actions_enabled     = false
+  alarm_name          = "${var.environment_name}-${each.key}-cpu-usage-anomaly"
+  alarm_description   = "Anomaly detection for CPU utilisation of the ${each.key} service in ${var.environment_name}"
+  comparison_operator = "GreaterThanUpperThreshold"
+  evaluation_periods  = 3
+  datapoints_to_alarm = 3
+  threshold_metric_id = "ad1"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  ok_actions          = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+
+  metric_query {
+    id          = "ad1"
+    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
+    label       = "CPU utilisation anomaly detection band"
+    return_data = true
+  }
+  metric_query {
+    id          = "m1"
+    return_data = true
+    metric {
+      metric_name = "CPUUtilization"
+      namespace   = "AWS/ECS"
+      period      = 60
+      stat        = "Average"
+      dimensions = {
+        ServiceName = each.value
+        ClusterName = aws_ecs_cluster.use_an_lpa.name
+      }
+    }
+  }
+
+  provider = aws.region
+}
+
+resource "aws_cloudwatch_metric_alarm" "memory_usage_anomaly" {
+  for_each            = local.ecs_services
+  actions_enabled     = false
+  alarm_name          = "${var.environment_name}-${each.key}-memory-usage-anomaly"
+  alarm_description   = "Anomaly detection for memory utilisation of the ${each.key} service in ${var.environment_name}"
+  comparison_operator = "GreaterThanUpperThreshold"
+  evaluation_periods  = 3
+  datapoints_to_alarm = 3
+  threshold_metric_id = "ad1"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  ok_actions          = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+
+  metric_query {
+    id          = "ad1"
+    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
+    label       = "Memory utilisation anomaly detection band"
+    return_data = true
+  }
+  metric_query {
+    id          = "m1"
+    return_data = true
+    metric {
+      metric_name = "MemoryUtilization"
+      namespace   = "AWS/ECS"
+      period      = 60
+      stat        = "Average"
+      dimensions = {
+        ServiceName = each.value
+        ClusterName = aws_ecs_cluster.use_an_lpa.name
+      }
+    }
+  }
+
+  provider = aws.region
+}
+
+locals {
+  ecs_services = {
+    actor  = aws_ecs_service.use.name
+    viewer = aws_ecs_service.viewer.name
+    admin  = aws_ecs_service.admin.name
+    api    = aws_ecs_service.api.name
+  }
+}
