@@ -1,6 +1,6 @@
 module get_backdated_statistics
 
-go 1.24.2
+go 1.26.10
 
 require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.20.7
