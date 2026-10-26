@@ -11,7 +11,7 @@ endif
 CMD ?= docker-compose
 
 COMPOSE = $(CMD) -f docker-compose.yml -f docker-compose.dependencies.yml
-TEST_COMPOSE = $(CMD) -f docker-compose.yml -f docker-compose.dependencies.yml -f docker-compose.testing.yml
+TEST_COMPOSE = $(CMD) -f docker-compose.yml -f docker-compose.dependencies.yml
 OVERRIDE := $(shell find . -name "docker-compose.override.yml")
 ifdef OVERRIDE
 COMPOSE := $(COMPOSE) -f docker-compose.override.yml
