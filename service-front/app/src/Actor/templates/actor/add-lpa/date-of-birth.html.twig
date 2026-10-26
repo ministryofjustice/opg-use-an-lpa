@@ -1,11 +1,11 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}What is your date of birth?{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}add-lpa.date-of-birth.title{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}common.back-link{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -15,14 +15,14 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl" id="dob_heading">{% trans %}What is your date of birth?{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl" id="dob_heading">{% trans %}add-lpa.date-of-birth.heading-page{% endtrans %}</h1>
 
                     {{ govuk_form_open(form) }}
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
                     {{ govuk_form_fieldset(form.get('dob'), {
-                        'hint': 'For example, 31 03 1980'| trans,
+                        'hint': 'add-lpa.date-of-birth.field-dob.hint'| trans,
                         'attr': {
                             'class': 'xyz',
                             'label_class': 'govuk-!-font-weight-bold'
@@ -30,7 +30,7 @@
                         'aria_labelledby': 'dob_heading'
                     }) }}
 
-                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}common.button-continue{% endtrans %}</button>
 
                     {{ govuk_form_close() }}
                 </div>
