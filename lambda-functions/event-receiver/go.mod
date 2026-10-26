@@ -1,6 +1,6 @@
 module github.com/ministryofjustice/opg-use-an-lpa/lambda-functions/event-receiver
 
-go 1.26
+go 1.26.10
 
 require (
 	github.com/aws/aws-lambda-go v1.55.1
