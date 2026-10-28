@@ -3,6 +3,46 @@ locals {
   brute_force_cache_replication_group_members = [for i in range(0, aws_elasticache_replication_group.brute_force_cache_replication_group.num_cache_clusters) : "${aws_elasticache_replication_group.brute_force_cache_replication_group.replication_group_id}-00${i + 1}"]
 }
 
+resource "aws_cloudwatch_metric_alarm" "waf_blocked_rule_alarm" {
+  alarm_name                = "WAF Blocked Rule Anomaly detection"
+  alarm_description         = "Anomaly detected, waf blocked rules above threshold"
+  actions_enabled           = false
+  comparison_operator       = "GreaterThanUpperThreshold"
+  evaluation_periods        = 3
+  datapoints_to_alarm       = 2
+  threshold_metric_id       = "ad1"
+  insufficient_data_actions = []
+  treat_missing_data        = "notBreaching"
+  alarm_actions             = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  ok_actions                = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+
+  metric_query {
+    id          = "m1"
+    return_data = true
+
+    metric {
+      dimensions = {
+        Region = var.region_name
+        Rule   = "ALL"
+        WebACL = aws_wafv2_web_acl.main.name
+      }
+      metric_name = "BlockedRequests"
+      namespace   = "AWS/WAFV2"
+      period      = 300
+      stat        = "Sum"
+    }
+  }
+
+  metric_query {
+    id          = "ad1"
+    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
+    label       = "BlockedRequests (expected)"
+    return_data = true
+  }
+
+  provider = aws.region
+}
+
 resource "aws_cloudwatch_metric_alarm" "elasticache_high_cpu_utilization" {
   for_each                  = toset(local.brute_force_cache_replication_group_members)
   actions_enabled           = true
