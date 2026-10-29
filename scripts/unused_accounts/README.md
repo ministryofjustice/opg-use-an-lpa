@@ -1,54 +1,56 @@
-# Merge duplicate accounts
-This script identifies duplicate OneLogin identities from the `ActorUsers` Athena table and exports the duplicate account dataset to S3 in JSON format.
+# Delete unused accounts
+This script identifies unused accounts from the `ActorUsers` Athena table and exports the accounts dataset to S3 in JSON format.
 
-The exported dataset is intended to act as the source input for downstream duplicate account merge planning workflows.
+The exported dataset is intended to act as the source input for downstream delete account planning workflows.
 
-This script forms Layer 1 of the duplicate account merge process.
+This script forms Layer 1 of the delete unused accounts process.
 
 ## Objective
-Find duplicate OneLogin identities from the ActorUsers table and export them as a JSON dataset to S3.
+Find unused accounts from the ActorUsers table and export them as a JSON dataset to S3.
 
 ## High Level Flow
 
-These two scripts performs the following steps:
+The two scripts and the unused-accounts Lambda perform the following steps:
 
 1. Populate and fill the Athena database `ual` with up-to-date data from DynamoDB
 2. Execute an Athena query against the `ActorUsers` dataset
-3. Identify duplicate OneLogin identities
-4. Group associated account IDs by identity
-5. Generate a JSON dataset
-6. Upload the dataset to S3
-7. Process work file dataset into merge plans using `merge_duplicate_identities.py`
-8. Run merge plans using `merge_duplicate_identities --execute`
+3. Identify unused accounts
+4. Generate a JSON dataset
+5. Upload the dataset to S3
+6. Invoke the unused-accounts Lambda with `{}` to generate deletion plans from current DynamoDB data
+7. Review the plans, then invoke the Lambda with `{"Execute": true}` to recheck and apply them
 
 ## Athena Query
 ```
-WITH duplicate_identities AS (
-    SELECT "Item"."identity"
-    FROM "ual"."actor_users"
-    WHERE "Item"."identity" IS NOT NULL
-    GROUP BY "Item"."identity"
-    HAVING COUNT(*) > 1
-)
-
 SELECT
-    a."Item"."identity",
-    a."Item"."id"
-FROM "ual"."actor_users" a
-JOIN duplicate_identities d
-ON a."Item"."identity" = d."identity"
-ORDER BY a."Item"."identity"
+    a.item.id.s        AS user_id,
+    a.item.identity.s  AS "identity",
+    a.item.email.s     AS email,
+    a.item.lastlogin.s AS last_login
+FROM actor_users a
+LEFT JOIN (
+    SELECT DISTINCT m.item.userid.s AS user_id
+    FROM user_lpa_actor_map m
+    WHERE m.item.userid.s IS NOT NULL
+) lpas
+  ON lpas.user_id = a.item.id.s
+WHERE a.item.id.s IS NOT NULL
+  -- exclude the API's IDENTITY#<identity> pinning rows: they are not accounts (no LastLogin, no LPAs)
+  AND a.item.id.s NOT LIKE 'IDENTITY#%'
+  AND lpas.user_id IS NULL
+  AND (
+        a.item.lastlogin.s IS NULL
+     OR a.item.lastlogin.s = ''
+     OR substr(a.item.lastlogin.s, 1, 10) <= CAST(date_add('month', -{months_inactive}, current_date) AS varchar)
+  )
+ORDER BY a.item.id.s
 ```
 
 The query should give rows like:
 
 ```
-identity-1,user-a
-identity-1,user-b
-identity-2,user-c
+TBD
 ```
-
-THe Python script should transform csv result into JSON format
 
 
 ## Configuration
@@ -56,7 +58,7 @@ THe Python script should transform csv result into JSON format
 Configuration of the scripts are done via command line flags.
 
 ```shell
-$ python dynamodb_export.py --help
+$ uv run dynamodb_export.py -h
 usage: dynamodb_export.py [-h] [--environment ENVIRONMENT] [--check_exports]
 
 Exports DynamoDB tables to S3.
@@ -65,43 +67,28 @@ options:
   -h, --help            show this help message and exit
   --environment ENVIRONMENT
                         The environment to export DynamoDB data for
-  --check_exports       Output json data instead of plaintext to terminal
+  --check_exports       Wait for the latest existing export of each table without starting new exports
 
-$ python discover_duplicates.py --help
-usage: discover_duplicates.py [-h] [-d D] [-b B] [-p P]
+$ uv run discover_unused_accounts.py -h
+usage: discover_unused_accounts.py [-h] [-d D] -b B [-p P] [--months-inactive MONTHS_INACTIVE] [--engine {athena,trino}] [--trino-url TRINO_URL] [--trino-catalog TRINO_CATALOG] [--s3-endpoint S3_ENDPOINT]
 
-Retrieve duplicated accounts from Athena and write out work files for deduplication
-
-options:
-  -h, --help  show this help message and exit
-  -d D        The athena database to query against.
-  -b B        The bucket to which to write the work files.
-  -p P        Bucket prefix for work files.
-
-$ python ./merge_duplicate_identities.py --help
-usage: merge_duplicate_identities.py [-h] [--limit LIMIT] [--offset OFFSET]
-                                     [--table-prefix TABLE_PREFIX] [--bucket BUCKET]
-                                     [--work-prefix WORK_PREFIX]
-                                     [--plan-prefix PLAN_PREFIX]
-                                     [--plan-file PLAN_FILE]
-                                     [--execute]
-
-Merge duplicate OPG identities
+Find unused accounts with Athena and write out work files for the unused-accounts lambda
 
 options:
   -h, --help            show this help message and exit
-  --limit LIMIT         Limit number of duplicate identities processed
-  --offset OFFSET       Skip this many duplicate identities before processing
-  --table-prefix TABLE_PREFIX
-                        The DynamoDB table prefix to use when querying. default: demo
-  --bucket BUCKET       The bucket containing merge plans and work files
-  --work-prefix WORK_PREFIX
-                        Bucket prefix for work files. default: todo
-  --plan-prefix PLAN_PREFIX
-                        Bucket prefix for merge plan files. default: plan
-  --plan-file PLAN_FILE
-                        Specify a specific merge plan file to run
-  --execute             Apply a reviewed merge plan
+  -d D                  The Athena database (or Trino schema) to query against. default: ual
+  -b B                  The bucket to which to write the work files.
+  -p P                  Bucket prefix for work files. default: todo
+  --months-inactive MONTHS_INACTIVE
+                        Accounts not logged into for this many months are unused. default: 6
+  --engine {athena,trino}
+                        Query engine. Use 'trino' for local testing. default: athena
+  --trino-url TRINO_URL
+                        Trino URL when --engine trino. default: http://localhost:8085
+  --trino-catalog TRINO_CATALOG
+                        Trino catalog when --engine trino. default: hive
+  --s3-endpoint S3_ENDPOINT
+                        Override the S3 endpoint (e.g. LocalStack). Defaults to $AWS_ENDPOINT_S3 if set.
 ```
 
 For production you would likely use `-d ual -b use-a-lpa-dynamodb-exports-production`
@@ -109,75 +96,66 @@ For production you would likely use `-d ual -b use-a-lpa-dynamodb-exports-produc
 # Running the scripts
 
 ## Python dependencies
-The scripts need boto3 installed and available. On Cloudshell this is as simple as installing it before use.
+Use uv to install the Python version and dependencies declared in `pyproject.toml`.
+Both scripts use the AWS credentials already available in their execution environment;
+they do not assume roles. Locally, run them through `aws-vault exec <PROFILE> --`.
 
 ```shell
 $ git clone https://github.com/ministryofjustice/opg-use-an-lpa.git
-$ cd opg-use-an-lpa/scripts/duplicate-accounts
-$ pip install boto3
-$ python dynamodb_export.py --environment <ENVIRONMENT>
-$ python export_duplicate_identities.py -d <DATABASE> -b use-a-lpa-dynamodb-exports-<ENVIRONMENT>
+$ cd opg-use-an-lpa/scripts/unused_accounts
+$ uv sync
+$ uv run dynamodb_export.py --environment <ENVIRONMENT>
+$ uv run discover_unused_accounts.py -d ual -b use-a-lpa-dynamodb-exports-<ENVIRONMENT>
 ```
-The script must be run from a CloudShell.
+The exporter waits for the exact exports it starts before rebuilding Athena's `ual`
+database. `--check_exports` instead waits for each table's most recently started
+existing export and does not rebuild Athena. Failed or missing exports stop the script.
+
+Discovery stops if any previous work file cannot be deleted, rather than reporting
+success with stale files still present.
+
+## Generating and applying deletion plans
+
+The deployed Lambda is configured with `BUCKET`, `ENVIRONMENT_NAME` (the table prefix),
+`WORK_FILE_PREFIX` (default `todo`), `PLAN_FILE_PREFIX` (default `plan`), and
+`MONTHS_INACTIVE` (default `6`). Match these to the discovery configuration.
+
+```shell
+aws lambda invoke --function-name <UNUSED_ACCOUNTS_FUNCTION> \
+  --cli-binary-format raw-in-base64-out --payload '{}' plans-response.json
+```
+
+Inspect the response and review the generated plans under `s3://<bucket>/<plan-prefix>/`
+before explicitly executing them:
+
+```shell
+aws lambda invoke --function-name <UNUSED_ACCOUNTS_FUNCTION> \
+  --cli-binary-format raw-in-base64-out --payload '{"Execute": true}' execution-response.json
+```
+
+The Lambda rechecks current account data before deletion and moves plans to `done/`
+or `skipped/`. Inspect the response summary for failed operations.
 
 ### Athena output files
 
 Athena writes temporary query result files to:
 ```
-s3://<bucket>/athena-results/
+s3://<bucket>/athena-output/
 ```
 These files are intermediary Athena artifacts and are separate from the final exported JSON dataset.
 
-## Discover duplicates Script output
+## Discovery script output
 
 The final work plan JSON dataset is uploaded to:
 ```
-s3://<bucket>/<prefix>/duplicate-identities-1.json
-s3://<bucket>/<prefix>/duplicate-identities-2.json
-s3://<bucket>/<prefix>/duplicate-identities-3.json
-s3://<bucket>/<prefix>/duplicate-identities-n.json
+s3://<bucket>/<prefix>/unused-accounts-<n>.json
 ```
 
 ### Contents of work plan JSON should look like
 
 ```json
 [
-  {
-    "identity": "urn:fdc:mock-one-login:2023:YiB/vNlBsGVnQfvyrA3hMjOKnI1dlJBBECre/cxUf1A=",
-    "user_ids": [
-      "4dc2230e-e669-28c4-cfe3-82c9b3480d3b",
-      "55dc3ed8-5d37-1714-f89b-b4d40d56656a"
-    ]
-  },
-  {
-    "identity": "urn:fdc:mock-one-login:2023:anotherIdentity",
-    "user_ids": [
-      "user-c",
-      "user-d",
-      "user-e"
-    ]
-  }
+  {"user_id": "...", "identity": "...", "email": "...", "last_login": "2025-11-14T08:37:47Z"},
   ...
 ]
-```
-
-## Processing work files into merge plans
-Using the `merge_duplicate_identities.py` script you can process the work files into merge plans.
-
-The bucket and table prefix must be provided using the `--bucket` and `--table-prefix` flags respectively.
-Table prefix can vary depending on the environment - see DynamoDB to ensure you have the correct one for your environment.
-
-```shell
-$ python merge_duplicate_identities.py --bucket use-a-lpa-dynamodb-exports-<ENVIRONMENT> --table-prefix <TABLE_PREFIX>
-
-# using --limit and --offset flags to limit the number of work files processed
-# starting at the 10th work file entry process an additional 10 entries.
-$ python merge_duplicate_identities.py --bucket use-a-lpa-dynamodb-exports-<ENVIRONMENT> --table-prefix <TABLE_PREFIX> --limit 10 --offset 10
-```
-
-## Applying merge plans
-The same script can be used to apply merge plans using the `--execute` flag.
-
-```shell
-$ python merge_duplicate_identities.py --bucket use-a-lpa-dynamodb-exports-<ENVIRONMENT> --execute
 ```
