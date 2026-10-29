@@ -65,11 +65,11 @@ reset:
 .PHONY: reset
 
 down:
-	$(COMPOSE) down --remove-orphans $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) --profile "*" down --remove-orphans $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: down
 
 destroy:
-	$(COMPOSE) down -v --rmi all --remove-orphans
+	$(COMPOSE) --profile "*" down -v --rmi all --remove-orphans
 .PHONY: destroy
 
 ps:

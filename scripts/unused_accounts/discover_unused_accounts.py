@@ -15,9 +15,6 @@ Work files are written to s3://<bucket>/<prefix>/unused-accounts-<n>.json, each 
 
 The lambda (lambda-functions/unused-accounts) reads these files, re-checks every account against
 DynamoDB, and produces deletion plans for review before anything is deleted.
-
-The query is written in Trino SQL, which is what Athena (engine v3) runs. For local testing the same
-query can be run against a local Trino container with `--engine trino` (see test_unused_accounts.sh in this directory).
 """
 
 import argparse
@@ -231,6 +228,8 @@ def main():
                         help="Trino catalog when --engine trino. default: hive")
     parser.add_argument("--s3-endpoint", default=None,
                         help="Override the S3 endpoint (e.g. LocalStack). Defaults to $AWS_ENDPOINT_S3 if set.")
+    parser.add_argument("--verify", action="store_true",
+                        help="Check that no unused accounts remain, without changing work files. Exit nonzero if any remain.")
     args = parser.parse_args()
 
     if args.engine == "trino":
@@ -242,6 +241,12 @@ def main():
     rows = engine.run(build_unused_accounts_query(args.months_inactive))
     records = rows_to_records(rows)
     print(f"Found {len(records)} unused account(s)")
+
+    if args.verify:
+        if records:
+            parser.exit(1, f"Verification failed: {len(records)} unused account(s) remain.\n")
+        print("Verification passed: no unused accounts remain.")
+        return
 
     write_work_files(s3_client(args.s3_endpoint), args.b, args.p, records)
     print("Complete")
