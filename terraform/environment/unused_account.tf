@@ -7,6 +7,7 @@ module "unused_accounts" {
     ENVIRONMENT_NAME = local.environment_name
     WORK_FILE_PREFIX = "todo"
     PLAN_FILE_PREFIX = "plan"
+    MONTHS_INACTIVE  = "6"
   }
   image_uri        = "${data.aws_ecr_repository.unused_accounts.repository_url}@${data.aws_ecr_image.unused_accounts.image_digest}"
   ecr_arn          = data.aws_ecr_repository.unused_accounts.arn
@@ -39,6 +40,7 @@ data "aws_iam_policy_document" "unused_accounts_bucket_policy" {
       "${data.aws_s3_bucket.ual_athena_query_results[0].arn}/plan/*",
       "${data.aws_s3_bucket.ual_athena_query_results[0].arn}/todo/*",
       "${data.aws_s3_bucket.ual_athena_query_results[0].arn}/done/*",
+      "${data.aws_s3_bucket.ual_athena_query_results[0].arn}/skipped/*",
     ]
     actions = [
       "s3:ListBucket",
@@ -48,21 +50,19 @@ data "aws_iam_policy_document" "unused_accounts_bucket_policy" {
     ]
   }
 
+  # Accounts are re-checked (GetItem + UserIndex/IdentityIndex queries) and deleted individually,
+  # together with their IDENTITY# pinning row - no table scans
   statement {
     sid    = "DynamoTable"
     effect = "Allow"
     resources = [
-      aws_dynamodb_table.user_lpa_actor_map.arn,
       "${aws_dynamodb_table.user_lpa_actor_map.arn}/index/UserIndex",
-      aws_dynamodb_table.viewer_codes_table.arn,
-      "${aws_dynamodb_table.viewer_codes_table.arn}/index/SiriusUidIndex",
       aws_dynamodb_table.use_users_table.arn,
+      "${aws_dynamodb_table.use_users_table.arn}/index/IdentityIndex",
     ]
     actions = [
       "dynamodb:GetItem",
       "dynamodb:Query",
-      "dynamodb:UpdateItem",
-      "dynamodb:PutItem",
       "dynamodb:DeleteItem",
       "dynamodb:TransactWriteItems",
     ]

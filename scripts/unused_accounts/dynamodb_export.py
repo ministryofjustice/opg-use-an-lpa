@@ -13,20 +13,13 @@ class DynamoDBExporterAndQuerier:
 
     def __init__(self, environment):
         self.tables = {
-            "Stats": None,
-            "ActorCodes": None,
             "ActorUsers": None,
-            "ViewerCodes": None,
-            "ViewerActivity": None,
             "UserLpaActorMap": None,
         }
+        self.export_arns = {}
 
         self.table_ddl_files = {
-            "tables/stats.ddl": "Stats",
-            "tables/actor_codes.ddl": "ActorCodes",
             "tables/actor_users.ddl": "ActorUsers",
-            "tables/viewer_codes.ddl": "ViewerCodes",
-            "tables/viewer_activity.ddl": "ViewerActivity",
             "tables/user_lpa_actor_map.ddl": "UserLpaActorMap",
         }
 
@@ -49,7 +42,7 @@ class DynamoDBExporterAndQuerier:
     def get_aws_client(client_type, region="eu-west-1"):
         client = boto3.client(
             client_type,
-            region_name=region
+            region_name=region,
         )
         return client
 
@@ -85,7 +78,7 @@ class DynamoDBExporterAndQuerier:
     def check_dynamo_export_status(self):
         overallCompleted = False
         print(
-            "Waiting for DynamoDb export to be complete ( if run with Athena only option, this is just checking the previous export is complete )"
+            "Waiting for DynamoDB exports to complete"
         )
         while not overallCompleted:
             print(".", end="", flush=True)
@@ -96,7 +89,8 @@ class DynamoDBExporterAndQuerier:
                     # we encountered an inconmplete table so they are not all complete
                     tablesCompleted = False
             overallCompleted = tablesCompleted
-            sleep(10)
+            if not overallCompleted:
+                sleep(10)
         print("\n")
         print("DynamoDB export is complete")
 
@@ -107,7 +101,9 @@ class DynamoDBExporterAndQuerier:
             )
             s3_prefix = "{}-{}".format(self.environment_details["name"], table)
 
-            self.export_dynamo_table(table_arn, self.export_bucket_name, s3_prefix)
+            self.export_arns[table] = self.export_dynamo_table(
+                table_arn, self.export_bucket_name, s3_prefix
+            )
 
     def export_dynamo_table(self, table_arn, bucket_name, s3_prefix):
         print(f"exporting {table_arn} dynamoDb table")
@@ -120,28 +116,45 @@ class DynamoDBExporterAndQuerier:
             S3SseKmsKeyId=self.kms_key_id,
             ExportFormat="DYNAMODB_JSON",
         )
+        return response["ExportDescription"]["ExportArn"]
+
+    def select_existing_exports(self):
+        for table in self.tables:
+            table_arn = self.get_table_arn(
+                f"{self.environment_details['name']}-{table}"
+            )
+            latest = None
+            paginator = self.aws_dynamodb_client.get_paginator("list_exports")
+            for page in paginator.paginate(TableArn=table_arn):
+                for summary in page["ExportSummaries"]:
+                    export = self.aws_dynamodb_client.describe_export(
+                        ExportArn=summary["ExportArn"]
+                    )["ExportDescription"]
+                    if latest is None or export["StartTime"] > latest["StartTime"]:
+                        latest = export
+            if latest is None:
+                raise RuntimeError(f"No DynamoDB exports found for {table_arn}")
+            self.export_arns[table] = latest["ExportArn"]
 
     def get_dynamo_export_status(self, table):
-        table_arn = self.get_table_arn(
-            "{}-{}".format(self.environment_details["name"], table)
-        )
-        s3_prefix = "{}-{}".format(self.environment_details["name"], table)
-
-        response = self.aws_dynamodb_client.list_exports(
-            TableArn=table_arn, MaxResults=1
-        )
-        completed = True
-        for export in response["ExportSummaries"]:
-            export_arn_hash = export["ExportArn"].rsplit("/", 1)[-1]
-            s3_path = "s3://{}/{}/AWSDynamoDB/{}/data/".format(
-                self.export_bucket_name, s3_prefix, export_arn_hash
+        export_arn = self.export_arns[table]
+        export = self.aws_dynamodb_client.describe_export(
+            ExportArn=export_arn
+        )["ExportDescription"]
+        status = export["ExportStatus"]
+        if status == "IN_PROGRESS":
+            return False
+        if status != "COMPLETED":
+            raise RuntimeError(
+                f"DynamoDB export {export_arn} has status {status}: "
+                f"{export.get('FailureCode', '')} {export.get('FailureMessage', '')}"
             )
-            if export["ExportStatus"] != "COMPLETED":
-                completed = False
 
-        self.tables[table] = s3_path
-
-        return completed
+        export_id = export_arn.rsplit("/", 1)[-1]
+        prefix = export.get("S3Prefix", "").strip("/")
+        key = f"{prefix}/AWSDynamoDB/{export_id}/data/" if prefix else f"AWSDynamoDB/{export_id}/data/"
+        self.tables[table] = f"s3://{export['S3Bucket']}/{key}"
+        return True
 
     def get_table_arn(self, table_name):
         response = self.aws_dynamodb_client.describe_table(TableName=table_name)
@@ -223,13 +236,15 @@ def main():
         action="store_const",
         const=True,
         default=False,
-        help="Output json data instead of plaintext to terminal",
+        help="Wait for the latest existing export of each table without starting new exports",
     )
 
     args = parser.parse_args()
+
     work = DynamoDBExporterAndQuerier(args.environment)
 
     if args.check_only:
+        work.select_existing_exports()
         work.check_dynamo_export_status()
         return
 

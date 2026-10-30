@@ -288,24 +288,22 @@ services:
     environment:
       BUCKET: unused-accounts-bucket
       REGION: eu-west-1
+      WORK_FILE_PREFIX: todo
+      PLAN_FILE_PREFIX: plan
+      MONTHS_INACTIVE: 6
+      # match the 900s timeout in terraform/environment/unused_account.tf (the emulator default is 300s)
+      AWS_LAMBDA_FUNCTION_TIMEOUT: 900
       AWS_ACCESS_KEY_ID: 'devkey'
       AWS_SECRET_ACCESS_KEY: 'secretdevkey'
       AWS_ENDPOINT_DYNAMODB:
       AWS_ENDPOINT_S3:
     volumes:
+      - ./lambda-functions/unused-accounts/delete_unused_accounts.py:/app/delete_unused_accounts.py
       - ./lambda-functions/.aws-lambda-rie:/aws-lambda
     ports:
       - 9008:8080
-    entrypoint: >
-      /aws-lambda/aws-lambda-rie
-      python -m awslambdaric
-      lambda.lambda_handler
-#    entrypoint: >
-#      /bin/sh -c "\
-#      . .venv/bin/activate && \
-#      /aws-lambda/aws-lambda-rie python -m awslambdaric lambda.lambda_handler \
-#      "
-    command: []
+    entrypoint: [ "/aws-lambda/aws-lambda-rie", "python", "-m", "awslambdaric" ]
+    command: [ "lambda.lambda_handler" ]
 
   proxy:
     image: traefik:v3.7.16@sha256:c8a121e4bb1347e8fd52657fab12f2cb70b68f8a018895e2068f92c9e519b9c2
