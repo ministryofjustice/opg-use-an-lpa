@@ -127,9 +127,9 @@ and you will need to have the correct AWS role or credentials for it to succeed.
 ```shell
 $ git clone https://github.com/ministryofjustice/opg-use-an-lpa.git
 $ cd opg-use-an-lpa/scripts/unused_accounts
-$ pip install boto3
-$ python dynamodb_export.py --environment <ENVIRONMENT>
-$ python discover_unused_accounts.py -d ual -b use-a-lpa-dynamodb-exports-<ENVIRONMENT>
+$ pip install uv
+$ uv run dynamodb_export.py --environment <ENVIRONMENT>
+$ uv run discover_unused_accounts.py -d ual -b use-a-lpa-dynamodb-exports-<ENVIRONMENT>
 ```
 Replace `<ENVIRONMENT>` with `development`, `preproduction` or `production`. The exporter waits
 for the exact DynamoDB exports it starts before rebuilding Athena's `ual` database. `--check_exports`
