@@ -26,7 +26,12 @@ export GOPATH=/go
 
 ```shell
 cd scripts/seed_unused_accounts
+
+# build
 go build -o seed_unused_accounts main.go
+
+# or just run
+go run main.go -p <table-prefix> -e <endpoint-url>
 ```
 
 The binary is git-ignored.
