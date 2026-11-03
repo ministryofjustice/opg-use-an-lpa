@@ -146,8 +146,8 @@ The deployed Lambda is configured with `BUCKET`, `ENVIRONMENT_NAME` (the table p
 `MONTHS_INACTIVE` (default `6`). Match these to the discovery configuration.
 
 ```shell
-aws lambda invoke --function-name <UNUSED_ACCOUNTS_FUNCTION> \
-  --cli-binary-format raw-in-base64-out --payload '{}' plans-response.json
+AWS_MAX_ATTEMPTS=1 aws lambda invoke --function-name <UNUSED_ACCOUNTS_FUNCTION> \
+  --cli-read-timeout 960 --cli-binary-format raw-in-base64-out --payload '{}' plans-response.json
 ```
 
 The response summary reports `stopped_reason` (`complete` or `time`) and `files_remaining`.
@@ -158,8 +158,8 @@ Inspect the response and review the generated plans under `s3://<bucket>/<plan-p
 before explicitly executing them:
 
 ```shell
-aws lambda invoke --function-name <UNUSED_ACCOUNTS_FUNCTION> \
-  --cli-binary-format raw-in-base64-out --payload '{"Execute": true}' execution-response.json
+AWS_MAX_ATTEMPTS=1 aws lambda invoke --function-name <UNUSED_ACCOUNTS_FUNCTION> \
+  --cli-read-timeout 960 --cli-binary-format raw-in-base64-out --payload '{"Execute": true}' execution-response.json
 ```
 
 The Lambda rechecks current account data before deletion and moves plans to `done/`
