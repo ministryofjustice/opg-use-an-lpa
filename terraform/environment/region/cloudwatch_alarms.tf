@@ -420,7 +420,7 @@ resource "aws_cloudwatch_metric_alarm" "memory_usage_anomaly" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "nat_gateway_egress_anomaly" {
-  count = var.environment_name == "production" ? 1 : 0
+  count = contains(["production", "preproduction"], var.environment_name) ? 1 : 0
 
   alarm_name          = "${var.environment_name} NAT Gateway egress anomaly"
   alarm_description   = "Detect unusual egress patterns across all NAT Gateways (potential data exfiltration)"
@@ -434,7 +434,7 @@ resource "aws_cloudwatch_metric_alarm" "nat_gateway_egress_anomaly" {
 
   metric_query {
     id          = "ad1"
-    expression  = "ANOMALY_DETECTOR_BAND(m1, 2)"
+    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
     label       = "BytesOutToDestination (Expected)"
     return_data = true
   }
