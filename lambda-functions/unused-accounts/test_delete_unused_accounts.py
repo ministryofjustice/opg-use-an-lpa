@@ -1,8 +1,10 @@
 import json
+import threading
 from datetime import date
 
 import boto3
 import pytest
+from botocore.client import BaseClient
 from moto import mock_aws
 
 import delete_unused_accounts as dua
@@ -154,7 +156,149 @@ def test_plan_reads_all_work_files(aws):
         add_actor(ddb, f"user-{i}", "2020-01-01T00:00:00Z")
         write_work_file(s3, [f"user-{i}"], number=i + 1)
 
-    assert dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6)["plans_saved"] == 3
+    summary = dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6)
+
+    assert summary["plans_saved"] == 3
+    assert summary["files_processed"] == 3
+    assert summary["files_remaining"] == 0
+    assert summary["stopped_reason"] == "complete"
+    assert keys(s3, "todo/") == []
+    assert all(k.startswith("done/todo/unused-accounts-") for k in keys(s3, "done/todo/"))
+
+
+class FakeContext:
+    def __init__(self, remaining_ms):
+        self.remaining_ms = list(remaining_ms)
+
+    def get_remaining_time_in_millis(self):
+        return self.remaining_ms.pop(0)
+
+
+def test_plan_rerun_skips_done_work_files_and_keeps_earlier_done_files(aws):
+    ddb, s3 = aws
+    add_actor(ddb, "user-1", "2020-01-01T00:00:00Z")
+    write_work_file(s3, ["user-1"], number=1)
+    dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6)
+
+    assert dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6)["work_files"] == 0
+
+    # a later discovery run reuses the same file number
+    write_work_file(s3, ["user-1"], number=1)
+    dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6)
+
+    assert keys(s3, "todo/") == []
+    assert len(keys(s3, "done/todo/")) == 2
+
+
+def test_plan_stops_before_the_lambda_times_out(aws):
+    ddb, s3 = aws
+    for i in range(1, 4):
+        add_actor(ddb, f"user-{i}", "2020-01-01T00:00:00Z")
+        write_work_file(s3, [f"user-{i}"], number=i)
+
+    context = FakeContext([dua.PLAN_TIME_RESERVE_MS + 1, dua.PLAN_TIME_RESERVE_MS - 1])
+    summary = dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6, context=context)
+
+    assert summary["files_processed"] == 1
+    assert summary["files_remaining"] == 2
+    assert summary["stopped_reason"] == "time"
+    assert sorted(keys(s3, "todo/")) == ["todo/unused-accounts-2.json", "todo/unused-accounts-3.json"]
+
+    # a rerun picks up where the last one stopped
+    summary = dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6)
+
+    assert summary["work_files"] == 2
+    assert summary["files_processed"] == 2
+    assert summary["stopped_reason"] == "complete"
+    assert len(keys(s3, "plan/")) == 3
+
+
+def test_plan_leaves_a_failed_work_file_to_be_retried(aws):
+    ddb, s3 = aws
+    add_actor(ddb, "user-2", "2020-01-01T00:00:00Z")
+    s3.put_object(Bucket=BUCKET, Key="todo/unused-accounts-1.json", Body="not json")
+    write_work_file(s3, ["user-2"], number=2)
+
+    summary = dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6)
+
+    assert summary["files_processed"] == 1
+    assert summary["files_failed"] == 1
+    assert summary["plans_saved"] == 1
+    assert keys(s3, "todo/") == ["todo/unused-accounts-1.json"]
+
+
+def test_plan_leaves_a_work_file_to_be_retried_when_an_account_check_fails(aws, monkeypatch):
+    ddb, s3 = aws
+    users = [f"user-{i}" for i in range(20)]
+    for user_id in users:
+        add_actor(ddb, user_id, "2020-01-01T00:00:00Z")
+    write_work_file(s3, users)
+
+    make_api_call = BaseClient._make_api_call
+
+    def failing_dynamodb_request(client, operation_name, api_params):
+        if (
+            operation_name == "GetItem"
+            and api_params["TableName"] == f"{PREFIX}-ActorUsers"
+            and api_params["Key"]["Id"] == "user-7"
+        ):
+            raise dua.ClientError({"Error": {"Code": "ProvisionedThroughputExceededException"}}, "GetItem")
+        return make_api_call(client, operation_name, api_params)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(BaseClient, "_make_api_call", failing_dynamodb_request)
+        summary = dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6)
+
+    assert summary["files_processed"] == 0
+    assert summary["files_failed"] == 1
+    assert keys(s3, "todo/") == ["todo/unused-accounts-1.json"]
+
+    summary = dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6)
+
+    assert summary["files_processed"] == 1
+    assert summary["plans_saved"] == 20
+    assert len(keys(s3, "plan/")) == 20
+
+
+def test_execute_stops_before_the_lambda_times_out(aws):
+    ddb, s3 = aws
+    for user_id in ("a", "b", "c"):
+        add_actor(ddb, user_id, "2020-01-01T00:00:00Z")
+    write_work_file(s3, ["a", "b", "c"])
+    dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6)
+
+    context = FakeContext([dua.EXECUTE_TIME_RESERVE_MS + 1, dua.EXECUTE_TIME_RESERVE_MS - 1])
+    summary = dua.execute_all_deletion_plans(BUCKET, "plan", PREFIX, 6, context=context)
+
+    assert summary["deleted"] == 1
+    assert summary["plans_remaining"] == 2
+    assert summary["stopped_reason"] == "time"
+    assert len(keys(s3, "plan/")) == 2
+
+
+def test_execute_processes_plans_concurrently(aws, monkeypatch):
+    ddb, s3 = aws
+    for user_id in ("a", "b"):
+        add_actor(ddb, user_id, "2020-01-01T00:00:00Z")
+    write_work_file(s3, ["a", "b"])
+    dua.build_deletion_plans(PREFIX, BUCKET, "todo", "plan", 6)
+
+    both_plans_started = threading.Barrier(2)
+    transact_write_items = dua.dynamodb_client.transact_write_items
+
+    def concurrent_transact_write_items(**kwargs):
+        both_plans_started.wait(timeout=5)
+        return transact_write_items(**kwargs)
+
+    monkeypatch.setattr(dua.dynamodb_client, "transact_write_items", concurrent_transact_write_items)
+
+    summary = dua.execute_all_deletion_plans(BUCKET, "plan", PREFIX, 6)
+
+    assert summary["deleted"] == 2
+    assert not actor_exists(ddb, "a")
+    assert not actor_exists(ddb, "b")
+    assert keys(s3, "plan/") == []
+    assert len(keys(s3, "done/plan/")) == 2
 
 
 def test_execute_deletes_unchanged_accounts_and_skips_changed_ones(aws):

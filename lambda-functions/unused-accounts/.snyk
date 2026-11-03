@@ -31,4 +31,24 @@ ignore:
         reason: Base image vuln in zlib/zlib1g - very new CVE with no available fix, acceptable risk for Lambda function
         expires: 2026-11-04T23:59:59.000Z
         created: 2026-09-04T00:00:00.000Z
+  SNYK-DEBIAN13-SQLITE3-22119065:
+    - '*':
+        reason: Base image vuln in sqlite3/libsqlite3-0 - new CVE with no available fix, acceptable risk for Lambda function
+        expires: 2026-12-02T23:59:59.000Z
+        created: 2026-11-02T00:00:00.000Z
+  SNYK-DEBIAN13-SQLITE3-22119091:
+    - '*':
+        reason: Base image vuln in sqlite3/libsqlite3-0 - new CVE with no available fix, acceptable risk for Lambda function
+        expires: 2026-12-02T23:59:59.000Z
+        created: 2026-11-02T00:00:00.000Z
+  SNYK-DEBIAN13-SQLITE3-22119092:
+    - '*':
+        reason: Base image vuln in sqlite3/libsqlite3-0 - new CVE with no available fix, acceptable risk for Lambda function
+        expires: 2026-12-02T23:59:59.000Z
+        created: 2026-11-02T00:00:00.000Z
+  SNYK-DEBIAN13-SQLITE3-22119098:
+    - '*':
+        reason: Base image vuln in sqlite3/libsqlite3-0 - new CVE with no available fix, acceptable risk for Lambda function
+        expires: 2026-12-02T23:59:59.000Z
+        created: 2026-11-02T00:00:00.000Z
 patch: {}

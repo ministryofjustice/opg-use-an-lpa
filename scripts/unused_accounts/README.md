@@ -127,9 +127,9 @@ and you will need to have the correct AWS role or credentials for it to succeed.
 ```shell
 $ git clone https://github.com/ministryofjustice/opg-use-an-lpa.git
 $ cd opg-use-an-lpa/scripts/unused_accounts
-$ pip install boto3
-$ python dynamodb_export.py --environment <ENVIRONMENT>
-$ python discover_unused_accounts.py -d ual -b use-a-lpa-dynamodb-exports-<ENVIRONMENT>
+$ pip install uv
+$ uv run dynamodb_export.py --environment <ENVIRONMENT>
+$ uv run discover_unused_accounts.py -d ual -b use-a-lpa-dynamodb-exports-<ENVIRONMENT>
 ```
 Replace `<ENVIRONMENT>` with `development`, `preproduction` or `production`. The exporter waits
 for the exact DynamoDB exports it starts before rebuilding Athena's `ual` database. `--check_exports`
@@ -146,20 +146,26 @@ The deployed Lambda is configured with `BUCKET`, `ENVIRONMENT_NAME` (the table p
 `MONTHS_INACTIVE` (default `6`). Match these to the discovery configuration.
 
 ```shell
-aws lambda invoke --function-name <UNUSED_ACCOUNTS_FUNCTION> \
-  --cli-binary-format raw-in-base64-out --payload '{}' plans-response.json
+AWS_MAX_ATTEMPTS=1 aws lambda invoke --function-name <UNUSED_ACCOUNTS_FUNCTION> \
+  --cli-read-timeout 960 --cli-binary-format raw-in-base64-out --payload '{}' plans-response.json
 ```
+
+The response summary reports `stopped_reason` (`complete` or `time`) and `files_remaining`.
+If any files remain, invoke it again with `{}` - it carries on where the last run stopped -
+until no work files remain.
 
 Inspect the response and review the generated plans under `s3://<bucket>/<plan-prefix>/`
 before explicitly executing them:
 
 ```shell
-aws lambda invoke --function-name <UNUSED_ACCOUNTS_FUNCTION> \
-  --cli-binary-format raw-in-base64-out --payload '{"Execute": true}' execution-response.json
+AWS_MAX_ATTEMPTS=1 aws lambda invoke --function-name <UNUSED_ACCOUNTS_FUNCTION> \
+  --cli-read-timeout 960 --cli-binary-format raw-in-base64-out --payload '{"Execute": true}' execution-response.json
 ```
 
 The Lambda rechecks current account data before deletion and moves plans to `done/`
-or `skipped/`. Inspect the response summary for failed operations.
+or `skipped/`. It stops starting new plans when less than 15 seconds remain before its timeout;
+if `stopped_reason` is `time`, invoke it again to process the `plans_remaining`. Inspect the
+response summary for failed operations.
 
 ### Athena output files
 
