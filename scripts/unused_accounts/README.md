@@ -150,6 +150,10 @@ aws lambda invoke --function-name <UNUSED_ACCOUNTS_FUNCTION> \
   --cli-binary-format raw-in-base64-out --payload '{}' plans-response.json
 ```
 
+The response summary reports `stopped_reason` (`complete` or `time`) and `files_remaining`.
+If any files remain, invoke it again with `{}` - it carries on where the last run stopped -
+until no work files remain.
+
 Inspect the response and review the generated plans under `s3://<bucket>/<plan-prefix>/`
 before explicitly executing them:
 
@@ -159,7 +163,9 @@ aws lambda invoke --function-name <UNUSED_ACCOUNTS_FUNCTION> \
 ```
 
 The Lambda rechecks current account data before deletion and moves plans to `done/`
-or `skipped/`. Inspect the response summary for failed operations.
+or `skipped/`. It stops starting new plans when less than 15 seconds remain before its timeout;
+if `stopped_reason` is `time`, invoke it again to process the `plans_remaining`. Inspect the
+response summary for failed operations.
 
 ### Athena output files
 
