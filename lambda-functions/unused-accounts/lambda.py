@@ -30,6 +30,7 @@ def lambda_handler(event, context):
                 plan_prefix=plan_file_prefix,
                 table_prefix=environment_name,
                 months_inactive=months_inactive,
+                context=context,
             )
 
             return {
@@ -44,6 +45,7 @@ def lambda_handler(event, context):
             work_prefix=work_file_prefix,
             plan_prefix=plan_file_prefix,
             months_inactive=months_inactive,
+            context=context,
         )
 
         return {
