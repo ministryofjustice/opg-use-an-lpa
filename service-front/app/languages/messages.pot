@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2026-11-03T16:21:37+00:00\n"
+"POT-Creation-Date: 2026-11-03T15:43:28+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -258,6 +258,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:60
 #: src/Actor/templates/actor/request-activation-key/new_reference-number.html.twig:49
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:42
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:49
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:39
 #: src/Viewer/templates/viewer/enter-code.html.twig:65
 #: src/Viewer/templates/viewer/paper-verification/attorney-details.html.twig:59
@@ -445,6 +446,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
 #: src/Actor/templates/actor/request-activation-key/new_reference-number.html.twig:54
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:47
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:54
 #: src/Viewer/templates/viewer/paper-verification/attorney-details.html.twig:63
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:99
 #: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:44
@@ -1720,10 +1722,12 @@ msgid "the reference may also be marked as ‘OPG reference number’, ‘Our re
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/new_reference-number.html.twig:41
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
 msgid "LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br>Some LPA reference numbers start with an M, for example M-1111-2222-3333."
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/new_reference-number.html.twig:41
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
 msgid "LPA reference numbers are 12 numbers long,<br>for example: 7000-0000-0000."
 msgstr ""
 
@@ -4704,13 +4708,11 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:45
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:54
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:49
 msgid "common.button-continue"
 msgstr ""
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:50
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:59
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:54
 msgid "common.button-cancel"
 msgstr ""
 
