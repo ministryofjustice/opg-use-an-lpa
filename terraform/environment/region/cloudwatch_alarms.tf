@@ -434,19 +434,32 @@ resource "aws_cloudwatch_metric_alarm" "nat_gateway_egress_anomaly" {
 
   metric_query {
     id          = "ad1"
-    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
+    expression  = "ANOMALY_DETECTION_BAND(total, 2)"
     label       = "BytesOutToDestination (Expected)"
     return_data = true
   }
 
   metric_query {
-    id          = "m1"
+    id          = "total"
+    expression  = join(" + ", [for idx, id in data.aws_nat_gateways.main.ids : "ngw${idx}"])
+    label       = "BytesOutToDestination (All NAT Gateways)"
     return_data = true
-    metric {
-      metric_name = "BytesOutToDestination"
-      namespace   = "AWS/NatGateway"
-      period      = 300
-      stat        = "Sum"
+  }
+
+  dynamic "metric_query" {
+    for_each = data.aws_nat_gateways.main.ids
+    content {
+      id          = "ngw${metric_query.key}"
+      return_data = false
+      metric {
+        metric_name = "BytesOutToDestination"
+        namespace   = "AWS/NATGateway"
+        period      = 300
+        stat        = "Sum"
+        dimensions = {
+          "NatGatewayId" = metric_query.value
+        }
+      }
     }
   }
 
