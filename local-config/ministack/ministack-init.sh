@@ -76,13 +76,13 @@ deploy_function() {
         aws lambda create-function \
             --function-name "$function_name" \
             --package-type Image --code "ImageUri=${image_uri}" \
-            --architectures "$LAMBDA_ARCHITECTURE" \
+            --architectures arm64 \
             --role "$role_arn" --timeout 900 --memory-size "$memory" \
             --environment "$environment"
     else
         aws lambda update-function-code \
             --function-name "$function_name" --image-uri "$image_uri" \
-            --architectures "$LAMBDA_ARCHITECTURE"
+            --architectures arm64
         aws lambda wait function-updated-v2 --function-name "$function_name"
         aws lambda update-function-configuration \
             --function-name "$function_name" \
@@ -95,11 +95,6 @@ deploy_function() {
 
 setup_lambdas() {
     : "${LAMBDA_IMAGE_PREFIX:?Set LAMBDA_IMAGE_PREFIX}"
-    case "${LAMBDA_ARCHITECTURE:-}" in
-        arm64|x86_64) ;;
-        *) echo "Unsupported Lambda architecture: ${LAMBDA_ARCHITECTURE:-unset}" >&2; return 1 ;;
-    esac
-
     local account role_arn queue_arn failed_targets mapping_count
     account=$(aws sts get-caller-identity --query Account --output text)
     role_arn="arn:aws:iam::${account}:role/lambda-role"

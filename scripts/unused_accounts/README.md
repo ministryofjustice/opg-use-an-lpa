@@ -199,13 +199,11 @@ s3://<bucket>/<prefix>/unused-accounts-<n>.json
 
 ## Development
 
-The Makefile targets run the local workflow against LocalStack and Trino. Start the
+The Makefile targets run the local workflow against MiniStack and Trino. Start the
 repository's Docker dependencies first, then run targets from the repository root
 (you can omit the '-C' argument if you are in the unused_accounts folder):
 
-For MiniStack, follow the root README and export `AWS_EMULATOR=ministack` before
-running these same targets. `invoke` and `execute` then use MiniStack's Lambda API
-instead of the standalone container. Review plans before `execute` in either mode.
+`invoke` and `execute` use MiniStack's Lambda API. Review plans before `execute`.
 
 ```shell
 make -C scripts/unused_accounts seed
@@ -214,11 +212,11 @@ make -C scripts/unused_accounts discover
 make -C scripts/unused_accounts invoke
 ```
 
-`seed` adds test accounts to LocalStack. `export` starts Trino and exports the local
+`seed` adds test accounts to MiniStack. `export` starts Trino and exports the local
 DynamoDB tables to S3 in a format Trino can query. `discover` writes work files, and
 `invoke` calls the local Lambda to create deletion plans. Review those plans before
 running `make -C scripts/unused_accounts execute`, which deletes still-eligible
-accounts from LocalStack.
+accounts from MiniStack.
 
 **Other targets:**
 
@@ -229,7 +227,7 @@ accounts remain; it exits with an error if any are found.
 `seed`, `export`, `discover`, `invoke`, `execute` and `verify` in order, so it
 checking a full run of the process.
 
-The defaults use LocalStack at `http://localhost:4566`, Trino at
+The defaults use MiniStack at `http://localhost:4566`, Trino at
 `http://localhost:8085`, an empty DynamoDB table prefix, and the `unused-accounts-bucket`
 S3 bucket. Override them when needed, for example:
 

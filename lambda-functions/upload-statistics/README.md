@@ -4,43 +4,36 @@ The stats table is uploaded with historical stats from csv by a one time run scr
 
 This uploads to the stats table,  the Cloudwatch Metric Statistics about the use of the Use a Lasting Power of Attorney service.
 
-With `AWS_EMULATOR=ministack`, use `make lambda_invoke function=upload-statistics` instead
-of the standalone HTTP endpoint, `make lambda_logs function=upload-statistics` for logs,
-and `make lambda_build && make lambda_deploy` after code changes. Local mock metrics are
-unchanged. See the root README for setup; the instructions below describe default LocalStack mode.
-
 ### Manually testing the lambda image locally
 
-As the lambda is built from an image, you can manually spin this up locally and test the statistic uploads against dev environment.
+MiniStack manages the local Lambda image. Run these commands from the repository root.
 
 By default the script uses a mock JSON response object instead of pulling from actual metrics in stats table/cloudwatch.
 
-Bring up the lambda locally
+Build and start the local environment:
 
 ```
 make build
+make up
 ```
 
 # To test lambda
-The curl follows a set command to invoke lambda functions as below
-
 ```
-curl -XPOST "http://localhost:9007/2015-03-31/functions/function/invocations" -d '{}'
+make lambda_invoke function=upload-statistics
 ```
 
 # Restart lambda on code changes
 
-Run following to restart the lambda when making code changes as lambda runs in runtime environment and needs
-bringing up again for changes to take effect.
+Rebuild and redeploy after code changes:
 
 ```
-make up upload-stats-lambda
+make lambda_build && make lambda_deploy
 ```
 
 # To view logs
 
 ```
-make logs upload-stats-lambda
+make lambda_logs function=upload-statistics
 ```
 
 # To test lambda in AWS environment

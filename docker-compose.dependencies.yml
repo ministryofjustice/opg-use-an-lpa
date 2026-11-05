@@ -15,6 +15,8 @@ services:
         condition: service_started
       localstack:
         condition: service_healthy
+      aws-bootstrap:
+        condition: service_completed_successfully
 
   actor-app:
     environment:
@@ -27,6 +29,8 @@ services:
         condition: service_started
       localstack:
         condition: service_healthy
+      aws-bootstrap:
+        condition: service_completed_successfully
 
   api-app:
     depends_on:
@@ -40,6 +44,8 @@ services:
         condition: service_started
       localstack:
         condition: service_healthy
+      aws-bootstrap:
+        condition: service_completed_successfully
     environment:
       SIRIUS_API_ENDPOINT: http://mock-data-lpa:4011
       LPA_CODES_API_ENDPOINT: http://mock-lpa-codes:4015
@@ -55,21 +61,10 @@ services:
     depends_on:
       localstack:
         condition: service_healthy
+      aws-bootstrap:
+        condition: service_completed_successfully
     environment:
       AWS_ENDPOINT_DYNAMODB: http://localstack:4566
-
-  upload-stats-lambda:
-    depends_on:
-      localstack:
-        condition: service_healthy
-
-  unused-accounts-lambda:
-    depends_on:
-      localstack:
-        condition: service_healthy
-    environment:
-      AWS_ENDPOINT_DYNAMODB: http://localstack:4566
-      AWS_ENDPOINT_S3: http://localstack:4566
 
   # ---------------------------
   # Cache service
@@ -152,17 +147,53 @@ services:
       CLIENT_ID: client-id
       TEMPLATE_SUB: 1
 
+  # Retain the hostname so existing SDKs and local tools work unchanged.
   localstack:
-    build:
-      context: .
-      dockerfile: localstack/Dockerfile
+    image: docker.io/ministackorg/ministack:1.5.37@sha256:cdfa6ba04f4c7febd9e14a34a21e31b9f0fb5279ee6af545784c05219f5a59a4
     ports:
       - "4566:4566"
     environment:
-      - DEBUG=1
-      - DOCKER_HOST=unix:///var/run/docker.sock
-      - DYNAMODB_SHARE_DB=1 # needed for NoSQLWorkbench to function when connecting locally
+      MINISTACK_REGION: eu-west-1
+      MINISTACK_ACCOUNT_ID: "000000000000"
+      AWS_DEFAULT_REGION: eu-west-1
+      AWS_ENDPOINT_URL: http://localstack:4566
+      LAMBDA_EXECUTOR: docker
+      LAMBDA_STRICT: "1"
+      DOCKER_NETWORK: ${COMPOSE_PROJECT_NAME:-opg-use-an-lpa}_default
     volumes:
-      - ./mock-integrations/secrets-manager/private_key.pem:/private_key.pem
-      - ./mock-integrations/secrets-manager/public_key.pem:/public_key.pem
       - "/var/run/docker.sock:/var/run/docker.sock"
+
+  aws-bootstrap:
+    image: docker.io/ministackorg/ministack:1.5.37@sha256:cdfa6ba04f4c7febd9e14a34a21e31b9f0fb5279ee6af545784c05219f5a59a4
+    entrypoint: [bash, /opt/local/ministack-init.sh]
+    command: [resources]
+    environment: &local-aws
+      AWS_ACCESS_KEY_ID: devkey
+      AWS_SECRET_ACCESS_KEY: secretdevkey #pragma: allowlist secret
+      AWS_DEFAULT_REGION: eu-west-1
+      AWS_ENDPOINT_URL: http://localstack:4566
+    volumes:
+      - ./local-config/ministack:/opt/local:ro
+      - ./mock-integrations/secrets-manager:/opt/secrets:ro #pragma: allowlist secret
+    depends_on:
+      localstack:
+        condition: service_healthy
+
+  lambda-deploy:
+    image: docker.io/ministackorg/ministack:1.5.37@sha256:cdfa6ba04f4c7febd9e14a34a21e31b9f0fb5279ee6af545784c05219f5a59a4
+    entrypoint: [bash, /opt/local/ministack-init.sh]
+    command: [lambdas]
+    environment:
+      <<: *local-aws
+      LAMBDA_IMAGE_PREFIX: ${COMPOSE_PROJECT_NAME:-opg-use-an-lpa}
+    volumes:
+      - ./local-config/ministack:/opt/local:ro
+    depends_on:
+      aws-bootstrap:
+        condition: service_completed_successfully
+      api-seeding:
+        condition: service_completed_successfully
+
+networks:
+  default:
+    name: ${COMPOSE_PROJECT_NAME:-opg-use-an-lpa}_default

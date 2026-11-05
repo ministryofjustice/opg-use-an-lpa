@@ -15,8 +15,7 @@ RUN go build -tags lambda.norpc -ldflags="-s -w" -o /go/bin/main ./
 FROM public.ecr.aws/lambda/provided:al2023@sha256:ca6c7b9e8d09041cf1d48d8caacdcad27215ca3266e4fde8ce7f5f2ccb5c2113 AS rie
 
 FROM base AS local-build
-ARG TARGETARCH
-RUN GOARCH=${TARGETARCH} go build -tags lambda.norpc -ldflags="-s -w" -o /go/bin/local-main ./
+RUN GOARCH=arm64 go build -tags lambda.norpc -ldflags="-s -w" -o /go/bin/local-main ./
 
 FROM gcr.io/distroless/static:nonroot@sha256:18f4cc26c9ffa7f20a359298be7deadac5c607c8e03a02b8119f1a5fc2f82c99 AS local
 WORKDIR /var/task

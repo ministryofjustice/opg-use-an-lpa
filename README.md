@@ -151,33 +151,30 @@ make run_front_composer_install
 make run_front_composer_update
 ```
 
-### MiniStack (opt-in)
+### MiniStack
 
-LocalStack remains the default. To try MiniStack with all three Lambdas managed by its
-Docker executor, stop the existing stack first, then build and start with:
+Local development uses MiniStack with all three Lambdas managed by its Docker executor.
+When upgrading from LocalStack, stop the existing stack first, then build and start with:
 
 ```shell
 make down
-export AWS_EMULATOR=ministack
 make build
 make up
 ```
 
-Keep `AWS_EMULATOR=ministack` set for subsequent `make` commands, including `make down`.
-Use Docker Compose 2.24.4 or newer (the overlay uses `!override` and `!reset`).
 The `localstack` service name and port 4566 are deliberately retained for existing SDKs,
 NoSQL Workbench and Trino. MiniStack uses fresh, ephemeral state; LocalStack state and
 encrypted sessions are not migrated. Clear local session cookies and cached session keys
-when switching emulators.
+after upgrading from LocalStack.
 Configure local AWS tools with region `eu-west-1` and credentials `devkey`/`secretdevkey`;
 MiniStack scopes state by region and account instead of using `DYNAMODB_SHARE_DB`.
 
-Lambda images are built for the Docker engine's architecture; production image targets
+Local Lambda images use arm64 for developers' Apple Silicon Macs; production image targets
 are unchanged. `make up` builds the local Lambda images, provisions AWS resources, seeds
 the database, then registers the functions and event-source mapping. No Lambda containers
-need to be started manually, and ports 9007/9008 are not used in this mode.
+need to be started manually, and ports 9007/9008 are no longer used.
 Resource provisioning and Lambda deployment use AWS CLI commands in
-`local-config/ministack/ministack-init.sh`, following the existing LocalStack setup pattern.
+`local-config/ministack/ministack-init.sh`.
 Compose runs its `resources` phase before seeding and its `lambdas` phase afterwards.
 
 ```shell
