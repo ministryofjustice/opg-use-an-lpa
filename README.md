@@ -184,15 +184,16 @@ runtime containers.
 make lambda_invoke function=upload-statistics
 make lambda_invoke function=unused-accounts                 # generate plans only
 make lambda_invoke function=unused-accounts payload='{"Execute": true}'
-make emit_event eventType=lpa-access-granted-event payload=4UX3.json
+make emit_event eventType=lpa-access-granted payload=4UX3.json
 make lambda_logs function=event-receiver
 make lambda_build && make lambda_deploy                     # apply code changes
 ```
 
 Invocations display the response and log tail and fail on Lambda or application errors.
-Account deletion remains explicitly manual; no schedules or S3 triggers are installed.
-Statistics retain their existing local mock metrics. `make lambda_logs` reads CloudWatch
-logs; `make logs localstack` shows emulator diagnostics.
+`make emit_event` sends a JSON fixture from `mock-integrations/events/<eventType>/<payload>`
+to the default EventBridge bus, using its `source`, `detail-type`, and `detail` fields.
+Matching rules route it through SQS to Lambda asynchronously. Use
+`make lambda_logs function=event-receiver` to check processing.
 
 ## Troubleshooting
 

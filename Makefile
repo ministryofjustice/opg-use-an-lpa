@@ -183,12 +183,12 @@ run_smoke_composer_update:
 run_update: run_front_composer_update run_front_npm_update run_api_composer_update run_smoke_composer_update
 .PHONY: run_update
 
-emit_event: # invoke event-receiver e.g. emit_event eventType=lpa-access-granteds payload=4UX3
+emit_event: # publish an EventBridge event e.g. emit_event eventType=lpa-access-granted payload=4UX3.json
 	@[ "${eventType}" ] || ( echo "Please set eventType to the fixture folder name"; exit 1 )
 	@[ "${payload}" ] || ( echo "Please set payload"; exit 1 )
 
 	@payload=$$(cat "mock-integrations/events/$(eventType)/$(payload)") && \
-		$(COMPOSE) run --rm --no-deps --entrypoint python lambda-deploy /opt/local/lambda_tools.py invoke event-receiver "$$payload"
+		$(COMPOSE) run --rm --no-deps --entrypoint python lambda-deploy /opt/local/emit_event.py "$$payload"
 .PHONY: emit_event
 
 clear_config_cache:
