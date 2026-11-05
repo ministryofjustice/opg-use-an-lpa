@@ -41,7 +41,10 @@ class OneLoginAuthenticationLogoutHandler implements RequestHandlerInterface
 
         return new JsonResponse(
             [
-                'redirect_uri' => $this->logoutHandlingService->createLogoutUrl($requestData['user']['IdToken']),
+                'redirect_uri' => $this->logoutHandlingService->createLogoutUrl(
+                    $requestData['user']['IdToken'],
+                    $requestData['ui_locale'] ?? 'en',
+                ),
             ],
         );
     }

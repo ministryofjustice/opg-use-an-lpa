@@ -9,7 +9,13 @@ Feature: A user of the system is able to logout
     And I have been given access to use an LPA via credentials
 
   @acceptance
-  Scenario: A user can logout
+  Scenario: A user can logout in English
     Given I am currently signed in
-    When I logout of the application
-    Then I am taken to complete a satisfaction survey
+    When I logout of the application using locale "en"
+    Then I am taken to complete a satisfaction survey in English
+
+  @acceptance
+  Scenario: A user can logout in Welsh
+    Given I am currently signed in
+    When I logout of the application using locale "cy"
+    Then I am taken to complete a satisfaction survey in Welsh

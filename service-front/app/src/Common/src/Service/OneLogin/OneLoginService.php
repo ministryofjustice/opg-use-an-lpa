@@ -10,6 +10,7 @@ use Common\Service\Authentication\LogoutStrategy;
 use Facile\OpenIDClient\Session\AuthSessionInterface;
 use Mezzio\Authentication\UserInterface;
 use Psr\Log\LoggerInterface;
+use Locale;
 
 class OneLoginService implements LogoutStrategy
 {
@@ -109,7 +110,8 @@ class OneLoginService implements LogoutStrategy
         $logoutData = $this->apiClient->httpPut(
             '/v1/auth/logout',
             [
-                'user' => $user,
+                'user'      => $user,
+                'ui_locale' => Locale::getPrimaryLanguage(Locale::getDefault()),
             ]
         );
 
