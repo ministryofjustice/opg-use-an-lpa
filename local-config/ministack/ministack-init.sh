@@ -55,8 +55,6 @@ setup_resources() {
     # Event queue and local work buckets
     aws sqs create-queue --queue-name event-bus-queue --attributes VisibilityTimeout=5400
     create_resource BucketAlreadyOwnedByYou s3api create-bucket \
-        --bucket duplicate-accounts-bucket --create-bucket-configuration LocationConstraint=eu-west-1
-    create_resource BucketAlreadyOwnedByYou s3api create-bucket \
         --bucket unused-accounts-bucket --create-bucket-configuration LocationConstraint=eu-west-1
 
     create_resource EntityAlreadyExists iam create-role \
