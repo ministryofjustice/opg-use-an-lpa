@@ -2,6 +2,11 @@
 
 This Lambda function will process events from the new Event Receiver EventBus which processes events from MLPAB.
 
+With `AWS_EMULATOR=ministack`, the function is deployed as a local image and invoked through
+EventBridge and SQS. Use `make lambda_build && make lambda_deploy` after changes and
+`make lambda_logs function=event-receiver` for its logs. See the root README for setup.
+The LocalStack instructions below remain the default.
+
 ### Testing the lambda image locally
 
 As the lambda is built from an image, this can be spun up to test in dev environment.
@@ -12,7 +17,7 @@ Bring up the lambda locally.
 make build
 ```
 
-Start the containers 
+Start the containers
 ```
 make up
 ```
@@ -38,11 +43,11 @@ A successful response (will not include any error logging) should give output re
 
 ```
 START RequestId: 837f31b2-cdcf-4e11-b810-33b402263df0 Version: $LATEST
-localstack  | 2025-03-06T10:44:23.229102137Z 2025-03-06T10:44:23.228 DEBUG --- [et.reactor-2] l.s.l.i.version_manager    : [event-receiver-lambda-837f31b2-cdcf-4e11-b810-33b402263df0] 
+localstack  | 2025-03-06T10:44:23.229102137Z 2025-03-06T10:44:23.228 DEBUG --- [et.reactor-2] l.s.l.i.version_manager    : [event-receiver-lambda-837f31b2-cdcf-4e11-b810-33b402263df0]
 END RequestId: 837f31b2-cdcf-4e11-b810-33b402263df0
-localstack  | 2025-03-06T10:44:23.229119262Z 2025-03-06T10:44:23.229 DEBUG --- [et.reactor-2] l.s.l.i.version_manager    : [event-receiver-lambda-837f31b2-cdcf-4e11-b810-33b402263df0] 
-REPORT RequestId: 837f31b2-cdcf-4e11-b810-33b402263df0     
-Duration: 70.81 ms      Billed Duration: 71 ms  Memory Size: 128 MB 
+localstack  | 2025-03-06T10:44:23.229119262Z 2025-03-06T10:44:23.229 DEBUG --- [et.reactor-2] l.s.l.i.version_manager    : [event-receiver-lambda-837f31b2-cdcf-4e11-b810-33b402263df0]
+REPORT RequestId: 837f31b2-cdcf-4e11-b810-33b402263df0
+Duration: 70.81 ms      Billed Duration: 71 ms  Memory Size: 128 MB
 ```
 
 # Making changes to the lambda

@@ -83,7 +83,7 @@ class StatisticsCollector:
         else:
             dynamodb_session = self.aws_dynamodb_client = aws_iam_session.client(
                 "dynamodb",
-                endpoint_url="http://localstack:4566",
+                endpoint_url=os.getenv("AWS_ENDPOINT_DYNAMODB", "http://localstack:4566"),
                 region_name=self.region,
             )
         return dynamodb_session

@@ -4,6 +4,11 @@ The stats table is uploaded with historical stats from csv by a one time run scr
 
 This uploads to the stats table,  the Cloudwatch Metric Statistics about the use of the Use a Lasting Power of Attorney service.
 
+With `AWS_EMULATOR=ministack`, use `make lambda_invoke function=upload-statistics` instead
+of the standalone HTTP endpoint, `make lambda_logs function=upload-statistics` for logs,
+and `make lambda_build && make lambda_deploy` after code changes. Local mock metrics are
+unchanged. See the root README for setup; the instructions below describe default LocalStack mode.
+
 ### Manually testing the lambda image locally
 
 As the lambda is built from an image, you can manually spin this up locally and test the statistic uploads against dev environment.

@@ -3,6 +3,10 @@ REPO_ROOT := $(abspath $(UNUSED_ACCOUNTS_DIR)/../..)
 COMPOSE = docker compose --project-directory $(REPO_ROOT) \
 	-f $(REPO_ROOT)/docker-compose.yml \
 	-f $(REPO_ROOT)/docker-compose.dependencies.yml
+AWS_EMULATOR ?= localstack
+ifeq ($(AWS_EMULATOR),ministack)
+COMPOSE += -f $(REPO_ROOT)/docker-compose.ministack.yml
+endif
 LOCAL_OVERRIDE := $(wildcard $(REPO_ROOT)/docker-compose.override.yml)
 ifneq ($(LOCAL_OVERRIDE),)
 COMPOSE += -f $(LOCAL_OVERRIDE)
@@ -48,13 +52,21 @@ discover:
 .PHONY: discover
 
 invoke:
+ifeq ($(AWS_EMULATOR),ministack)
+	$(MAKE) -C $(REPO_ROOT) lambda_invoke function=unused-accounts payload='{}'
+else
 	curl --fail-with-body --silent --show-error -X POST "$(LAMBDA_URL)" \
 		-d '{}' | jq -e 'if has("errorMessage") then error(.errorMessage) else . end'
+endif
 .PHONY: invoke
 
 execute:
+ifeq ($(AWS_EMULATOR),ministack)
+	$(MAKE) -C $(REPO_ROOT) lambda_invoke function=unused-accounts payload='{"Execute": true}'
+else
 	curl --fail-with-body --silent --show-error -X POST "$(LAMBDA_URL)" \
 		-d '{"Execute": true}' | jq -e 'if has("errorMessage") then error(.errorMessage) else . end'
+endif
 .PHONY: execute
 
 verify:

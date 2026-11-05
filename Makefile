@@ -12,6 +12,14 @@ CMD ?= docker-compose
 
 COMPOSE = $(CMD) -f docker-compose.yml -f docker-compose.dependencies.yml
 TEST_COMPOSE = $(CMD) -f docker-compose.yml -f docker-compose.dependencies.yml
+AWS_EMULATOR ?= localstack
+LAMBDA_ARCHITECTURE ?= $(shell docker info --format '{{if eq .Architecture "aarch64"}}arm64{{else if eq .Architecture "arm64"}}arm64{{else}}x86_64{{end}}')
+ifeq ($(AWS_EMULATOR),ministack)
+COMPOSE += -f docker-compose.ministack.yml
+TEST_COMPOSE += -f docker-compose.ministack.yml
+export LAMBDA_ARCHITECTURE
+up build: lambda_build
+endif
 OVERRIDE := $(shell find . -name "docker-compose.override.yml")
 ifdef OVERRIDE
 COMPOSE := $(COMPOSE) -f docker-compose.override.yml
@@ -24,6 +32,28 @@ up: $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem $(MO_FILES)
 	@echo "Getting Notify API Key..."
 	$(NOTIFY) && $(COMPOSE) up -d --remove-orphans $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: up
+
+lambda_build:
+	@test "$(AWS_EMULATOR)" = ministack || (echo "Use AWS_EMULATOR=ministack"; exit 1)
+	$(COMPOSE) build upload-stats-lambda unused-accounts-lambda event-receiver-image
+.PHONY: lambda_build
+
+lambda_deploy:
+	@test "$(AWS_EMULATOR)" = ministack || (echo "Use AWS_EMULATOR=ministack"; exit 1)
+	$(COMPOSE) run --rm --no-deps lambda-deploy
+.PHONY: lambda_deploy
+
+lambda_invoke:
+	@test "$(AWS_EMULATOR)" = ministack || (echo "Use AWS_EMULATOR=ministack"; exit 1)
+	@test -n "$(function)" || (echo "Set function=upload-statistics, unused-accounts or event-receiver"; exit 1)
+	$(COMPOSE) run --rm --no-deps --entrypoint python lambda-deploy /opt/local/lambda_tools.py invoke "$(function)" '$(or $(payload),{})'
+.PHONY: lambda_invoke
+
+lambda_logs:
+	@test "$(AWS_EMULATOR)" = ministack || (echo "Use AWS_EMULATOR=ministack"; exit 1)
+	@test -n "$(function)" || (echo "Set function=upload-statistics, unused-accounts or event-receiver"; exit 1)
+	$(COMPOSE) run --rm --no-deps --entrypoint python lambda-deploy /opt/local/lambda_tools.py logs "$(function)"
+.PHONY: lambda_logs
 
 stop:
 	$(COMPOSE) stop $(filter-out $@,$(MAKECMDGOALS))

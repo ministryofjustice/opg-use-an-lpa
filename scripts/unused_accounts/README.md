@@ -203,6 +203,10 @@ The Makefile targets run the local workflow against LocalStack and Trino. Start 
 repository's Docker dependencies first, then run targets from the repository root
 (you can omit the '-C' argument if you are in the unused_accounts folder):
 
+For MiniStack, follow the root README and export `AWS_EMULATOR=ministack` before
+running these same targets. `invoke` and `execute` then use MiniStack's Lambda API
+instead of the standalone container. Review plans before `execute` in either mode.
+
 ```shell
 make -C scripts/unused_accounts seed
 make -C scripts/unused_accounts export

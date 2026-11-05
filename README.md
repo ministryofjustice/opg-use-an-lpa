@@ -52,6 +52,7 @@ To start the service and its dependencies
 ```shell
 make up # start ual and all dependencies then run seeding of local data
 ```
+
 Note that the very first time you do make up, it may be necessary to first do : mkdir -p mock-integrations/secrets-manager otherwise it will try to write to that dir and be unable to
 
 To stop the service and its dependencies (ordering is important so that the networks are removed last)
@@ -149,6 +150,49 @@ make run_api_composer_update
 make run_front_composer_install
 make run_front_composer_update
 ```
+
+### MiniStack (opt-in)
+
+LocalStack remains the default. To try MiniStack with all three Lambdas managed by its
+Docker executor, stop the existing stack first, then build and start with:
+
+```shell
+make down
+export AWS_EMULATOR=ministack
+make build
+make up
+```
+
+Keep `AWS_EMULATOR=ministack` set for subsequent `make` commands, including `make down`.
+Use Docker Compose 2.24.4 or newer (the overlay uses `!override` and `!reset`).
+The `localstack` service name and port 4566 are deliberately retained for existing SDKs,
+NoSQL Workbench and Trino. MiniStack uses fresh, ephemeral state; LocalStack state and
+encrypted sessions are not migrated. Clear local session cookies and cached session keys
+when switching emulators.
+Configure local AWS tools with region `eu-west-1` and credentials `devkey`/`secretdevkey`;
+MiniStack scopes state by region and account instead of using `DYNAMODB_SHARE_DB`.
+
+Lambda images are built for the Docker engine's architecture; production image targets
+are unchanged. `make up` builds the local Lambda images, provisions AWS resources, seeds
+the database, then registers the functions and event-source mapping. No Lambda containers
+need to be started manually, and ports 9007/9008 are not used in this mode.
+Resource provisioning and Lambda deployment use AWS CLI commands in
+`local-config/ministack/ministack-init.sh`, following the existing LocalStack setup pattern.
+Compose runs its `resources` phase before seeding and its `lambdas` phase afterwards.
+
+```shell
+make lambda_invoke function=upload-statistics
+make lambda_invoke function=unused-accounts                 # generate plans only
+make lambda_invoke function=unused-accounts payload='{"Execute": true}'
+make emit_lpa_access_granted_event lpaId=4UX3
+make lambda_logs function=event-receiver
+make lambda_build && make lambda_deploy                     # apply code changes
+```
+
+Invocations display the response and log tail and fail on Lambda or application errors.
+Account deletion remains explicitly manual; no schedules or S3 triggers are installed.
+Statistics retain their existing local mock metrics. `make lambda_logs` reads CloudWatch
+logs; `make logs localstack` shows emulator diagnostics.
 
 ## Troubleshooting
 
