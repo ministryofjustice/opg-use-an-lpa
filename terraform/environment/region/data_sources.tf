@@ -211,3 +211,14 @@ data "aws_kms_alias" "dynamodb_cmk" {
   provider = aws.region
   name     = "alias/dynamodb-encryption-key-${var.account_name}"
 }
+
+data "aws_nat_gateways" "main" {
+  vpc_id = data.aws_vpc.main.id
+
+  filter {
+    name   = "state"
+    values = ["available"]
+  }
+
+  provider = aws.region
+}
