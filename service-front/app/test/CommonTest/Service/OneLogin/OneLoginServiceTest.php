@@ -135,7 +135,7 @@ class OneLoginServiceTest extends TestCase
     {
         $redirect = 'FAKE_REDIRECT';
 
-        //set the locale to welsh
+        // Set the locale to Welsh
         Locale::setDefault('cy_GB');
 
         $userProphecy = $this->prophesize(User::class);
@@ -147,7 +147,8 @@ class OneLoginServiceTest extends TestCase
             ->httpPut(
                 '/v1/auth/logout',
                 [
-                    'user' => $userProphecy->reveal(),
+                    'user'      => $userProphecy->reveal(),
+                    'ui_locale' => 'cy',
                 ]
             )->willReturn(['redirect_uri' => $redirect]);
 
@@ -158,9 +159,10 @@ class OneLoginServiceTest extends TestCase
         );
 
         $response = $oneLoginService->logout($userProphecy->reveal());
+
         $this->assertEquals($redirect, $response);
 
-        //Restrore the default locale
+        // Restore the default locale
         Locale::setDefault('en_GB');
     }
 }
