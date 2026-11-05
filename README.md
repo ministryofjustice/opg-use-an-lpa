@@ -184,7 +184,7 @@ runtime containers.
 make lambda_invoke function=upload-statistics
 make lambda_invoke function=unused-accounts                 # generate plans only
 make lambda_invoke function=unused-accounts payload='{"Execute": true}'
-make emit_lpa_access_granted_event lpaId=4UX3
+make emit_event eventType=lpa-access-granted-event payload=4UX3.json
 make lambda_logs function=event-receiver
 make lambda_build && make lambda_deploy                     # apply code changes
 ```

@@ -32,9 +32,11 @@ make lambda_logs function=event-receiver
 
 The lambda can be run with :
 ```
-make emit_lpa_access_granted_event lpaId=4UX3
+make emit_event eventType=lpa-access-granted-event payload=4UX3.json
 ```
-`4UX3` selects `mock-integrations/makeregister/lpa-access-granted-events/4UX3.json`.
+`eventType` is the fixture folder name under `mock-integrations/events`;
+`payload` selects the JSON file within it. This example selects
+`mock-integrations/events/lpa-access-granted-event/4UX3.json`.
 The fixture includes the SQS event wrapper. The target invokes the Lambda directly using
 the shared invocation helper, displaying its response and log tail. It bypasses
 EventBridge and SQS delivery.
