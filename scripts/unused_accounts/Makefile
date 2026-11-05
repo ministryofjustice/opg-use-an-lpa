@@ -1,5 +1,6 @@
 UNUSED_ACCOUNTS_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 REPO_ROOT := $(abspath $(UNUSED_ACCOUNTS_DIR)/../..)
+export PWD := $(REPO_ROOT)
 COMPOSE = docker compose --project-directory $(REPO_ROOT) \
 	-f $(REPO_ROOT)/docker-compose.yml \
 	-f $(REPO_ROOT)/docker-compose.dependencies.yml

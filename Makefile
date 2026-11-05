@@ -183,11 +183,11 @@ run_smoke_composer_update:
 run_update: run_front_composer_update run_front_npm_update run_api_composer_update run_smoke_composer_update
 .PHONY: run_update
 
-emit_lpa_access_granted_event: # fire an lpa-access-granted event into the event bus with the specified lpaId e.g. emit_lpa_access_granted_event lpaId=4UX3
+emit_lpa_access_granted_event: # invoke event-receiver with the specified lpaId e.g. emit_lpa_access_granted_event lpaId=4UX3
 	@[ "${lpaId}" ] || ( echo "Please set lpaId"; exit 1 )
 
-	$(eval lpaJson:=$(shell cat mock-integrations/makeregister/lpa-access-granted-events/$(lpaId).json | jq -c))
-	$(COMPOSE) exec localstack awslocal events put-events --region "eu-west-1" --entries '${lpaJson}'
+	@payload=$$(cat "mock-integrations/makeregister/lpa-access-granted-events/$(lpaId).json") && \
+		$(COMPOSE) run --rm --no-deps --entrypoint python lambda-deploy /opt/local/lambda_tools.py invoke event-receiver "$$payload"
 .PHONY: emit_lpa_access_granted_event
 
 clear_config_cache:

@@ -65,7 +65,7 @@ setup_resources() {
 }
 
 deploy_function() {
-    local name="$1" memory="$2" environment="$3"
+    local name="$1" memory="$2" environment="$3" image_config="$4"
     local function_name="${name}-lambda"
     local image_uri="${LAMBDA_IMAGE_PREFIX}-${name}:local"
     local existing
@@ -78,7 +78,7 @@ deploy_function() {
             --package-type Image --code "ImageUri=${image_uri}" \
             --architectures arm64 \
             --role "$role_arn" --timeout 900 --memory-size "$memory" \
-            --environment "$environment"
+            --environment "$environment" --image-config "$image_config"
     else
         aws lambda update-function-code \
             --function-name "$function_name" --image-uri "$image_uri" \
@@ -87,7 +87,7 @@ deploy_function() {
         aws lambda update-function-configuration \
             --function-name "$function_name" \
             --role "$role_arn" --timeout 900 --memory-size "$memory" \
-            --environment "$environment"
+            --environment "$environment" --image-config "$image_config"
         aws lambda wait function-updated-v2 --function-name "$function_name"
     fi
     aws lambda wait function-active-v2 --function-name "$function_name"
@@ -101,11 +101,14 @@ setup_lambdas() {
     queue_arn="arn:aws:sqs:eu-west-1:${account}:event-bus-queue"
 
     deploy_function event-receiver 128 \
-        "Variables={AWS_ENDPOINT_DYNAMODB=${AWS_ENDPOINT_URL}}"
+        "Variables={AWS_ENDPOINT_DYNAMODB=${AWS_ENDPOINT_URL}}" \
+        '{"EntryPoint":["/opt/local-runtime/aws-lambda-rie","./main"]}'
     deploy_function upload-statistics 1024 \
-        "Variables={ENVIRONMENT=local,REGION=eu-west-1,AWS_ENDPOINT_DYNAMODB=${AWS_ENDPOINT_URL}}"
+        "Variables={ENVIRONMENT=local,REGION=eu-west-1,AWS_ENDPOINT_DYNAMODB=${AWS_ENDPOINT_URL}}" \
+        '{"EntryPoint":["/opt/local-runtime/aws-lambda-rie","python","-m","awslambdaric"],"Command":["upload_statistics.lambda_handler"]}'
     deploy_function unused-accounts 1024 \
-        "Variables={BUCKET=unused-accounts-bucket,WORK_FILE_PREFIX=todo,PLAN_FILE_PREFIX=plan,MONTHS_INACTIVE=6,AWS_ENDPOINT_DYNAMODB=${AWS_ENDPOINT_URL},AWS_ENDPOINT_S3=${AWS_ENDPOINT_URL}}"
+        "Variables={BUCKET=unused-accounts-bucket,WORK_FILE_PREFIX=todo,PLAN_FILE_PREFIX=plan,MONTHS_INACTIVE=6,AWS_ENDPOINT_DYNAMODB=${AWS_ENDPOINT_URL},AWS_ENDPOINT_S3=${AWS_ENDPOINT_URL}}" \
+        '{"EntryPoint":["/opt/local-runtime/aws-lambda-rie","python","-m","awslambdaric"],"Command":["lambda.lambda_handler"]}'
 
     # Enable delivery only after the database and all functions are ready.
     aws events put-rule \

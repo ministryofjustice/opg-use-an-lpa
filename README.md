@@ -176,6 +176,9 @@ need to be started manually, and ports 9007/9008 are no longer used.
 Resource provisioning and Lambda deployment use AWS CLI commands in
 `local-config/ministack/ministack-init.sh`.
 Compose runs its `resources` phase before seeding and its `lambdas` phase afterwards.
+The `lambda-runtime` service extracts a pinned arm64 RIE binary into the ignored
+`local-config/ministack/runtime/` directory. MiniStack mounts it read-only into its
+runtime containers.
 
 ```shell
 make lambda_invoke function=upload-statistics

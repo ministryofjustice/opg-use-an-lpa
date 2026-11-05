@@ -20,8 +20,6 @@ RUN --mount=from=uv,source=/uv,target=/bin/uv \
     uv pip install -r requirements.txt --target "/app"
 
 
-FROM public.ecr.aws/lambda/provided:al2023@sha256:ca6c7b9e8d09041cf1d48d8caacdcad27215ca3266e4fde8ce7f5f2ccb5c2113 AS rie
-
 FROM python:3.14.9-slim@sha256:35caba83af2fe6da9a5d922f9b0156f21d1246a48278c58a08bd253303ba42e8 AS runtime
 
 WORKDIR /app
@@ -42,11 +40,6 @@ COPY --from=builder /app/ .
 COPY app/upload_statistics.py ./
 
 ENTRYPOINT ["python", "-m", "awslambdaric"]
-CMD ["upload_statistics.lambda_handler"]
-
-FROM runtime AS local
-COPY --from=rie /usr/local/bin/aws-lambda-rie /aws-lambda-rie
-ENTRYPOINT ["/aws-lambda-rie", "python", "-m", "awslambdaric"]
 CMD ["upload_statistics.lambda_handler"]
 
 FROM runtime AS production

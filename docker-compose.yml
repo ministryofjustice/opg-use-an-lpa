@@ -270,7 +270,6 @@ services:
     build:
       context: ./lambda-functions/upload-statistics
       dockerfile: Dockerfile
-      target: local
 
   unused-accounts-lambda:
     profiles: [lambda-images]
@@ -278,7 +277,6 @@ services:
     build:
       context: ./lambda-functions/unused-accounts
       dockerfile: Dockerfile
-      target: local
 
   event-receiver-image:
     profiles: [lambda-images]

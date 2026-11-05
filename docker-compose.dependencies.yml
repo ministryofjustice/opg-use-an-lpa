@@ -147,6 +147,13 @@ services:
       CLIENT_ID: client-id
       TEMPLATE_SUB: 1
 
+  lambda-runtime:
+    image: public.ecr.aws/lambda/provided:al2023@sha256:ca6c7b9e8d09041cf1d48d8caacdcad27215ca3266e4fde8ce7f5f2ccb5c2113
+    entrypoint: /bin/sh
+    command: ["-c", "cp /usr/local/bin/aws-lambda-rie /runtime/aws-lambda-rie && chmod 755 /runtime/aws-lambda-rie"]
+    volumes:
+      - ./local-config/ministack/runtime:/runtime
+
   # Retain the hostname so existing SDKs and local tools work unchanged.
   localstack:
     image: docker.io/ministackorg/ministack:1.5.37@sha256:cdfa6ba04f4c7febd9e14a34a21e31b9f0fb5279ee6af545784c05219f5a59a4
@@ -159,9 +166,14 @@ services:
       AWS_ENDPOINT_URL: http://localstack:4566
       LAMBDA_EXECUTOR: docker
       LAMBDA_STRICT: "1"
+      # MiniStack creates sibling containers, so the source must be a Docker-host path.
+      LAMBDA_DOCKER_FLAGS: '-v "${PWD}/local-config/ministack/runtime:/opt/local-runtime:ro"'
       DOCKER_NETWORK: ${COMPOSE_PROJECT_NAME:-opg-use-an-lpa}_default
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
+    depends_on:
+      lambda-runtime:
+        condition: service_completed_successfully
 
   aws-bootstrap:
     image: docker.io/ministackorg/ministack:1.5.37@sha256:cdfa6ba04f4c7febd9e14a34a21e31b9f0fb5279ee6af545784c05219f5a59a4
