@@ -13,7 +13,9 @@ func LogoutHandler(cognitoLogoutURL *url.URL) http.HandlerFunc {
 
 		cookie := &http.Cookie{
 			Name:   "AWSELBAuthSessionCookie-0",
+			Value:  "",
 			MaxAge: -1,
+			HttpOnly: true,
 		}
 
 		http.SetCookie(w, cookie)
