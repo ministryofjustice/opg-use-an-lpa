@@ -97,7 +97,7 @@ class OneLoginService implements LogoutStrategy
         );
     }
 
-    public function logout(UserInterface $user): ?string
+    public function logout(UserInterface $user, string $locale): ?string
     {
         /**
          * To complete OneLogin logout process, would like something like:
@@ -111,7 +111,7 @@ class OneLoginService implements LogoutStrategy
             '/v1/auth/logout',
             [
                 'user'      => $user,
-                'ui_locale' => Locale::getPrimaryLanguage(Locale::getDefault()),
+                'ui_locale' => Locale::getPrimaryLanguage($locale),
             ]
         );
 

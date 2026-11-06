@@ -21,9 +21,9 @@ use function openssl_digest;
  */
 class OneLoginService
 {
-    public const CORE_IDENTITY_JWT      = 'https://vocab.account.gov.uk/v1/coreIdentityJWT';
-    public const LOGOUT_REDIRECT_URL    = 'https://www.gov.uk/done/use-lasting-power-of-attorney';
-    public const LOGOUT_REDIRECT_URL_CY = 'https://www.gov.uk/done/defnyddio-atwrneiaeth-arhosol';
+    public const string CORE_IDENTITY_JWT      = 'https://vocab.account.gov.uk/v1/coreIdentityJWT';
+    public const string LOGOUT_REDIRECT_URL    = 'https://www.gov.uk/done/use-lasting-power-of-attorney';
+    public const string LOGOUT_REDIRECT_URL_CY = 'https://www.gov.uk/done/defnyddio-atwrneiaeth-arhosol';
 
     public function __construct(
         private AuthorisationServiceBuilder $authorisationServiceBuilder,

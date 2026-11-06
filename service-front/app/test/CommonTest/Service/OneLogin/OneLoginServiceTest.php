@@ -16,7 +16,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use Locale;
 
 class OneLoginServiceTest extends TestCase
 {
@@ -135,9 +134,6 @@ class OneLoginServiceTest extends TestCase
     {
         $redirect = 'FAKE_REDIRECT';
 
-        // Set the locale to Welsh
-        Locale::setDefault('cy_GB');
-
         $userProphecy = $this->prophesize(User::class);
         $userProphecy->jsonSerialize()
             ->willReturn([]);
@@ -158,11 +154,8 @@ class OneLoginServiceTest extends TestCase
             $this->logger->reveal()
         );
 
-        $response = $oneLoginService->logout($userProphecy->reveal());
+        $response = $oneLoginService->logout($userProphecy->reveal(), 'cy_GB');
 
         $this->assertEquals($redirect, $response);
-
-        // Restore the default locale
-        Locale::setDefault('en_GB');
     }
 }
