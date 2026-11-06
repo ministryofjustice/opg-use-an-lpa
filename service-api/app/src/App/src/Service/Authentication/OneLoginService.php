@@ -21,8 +21,9 @@ use function openssl_digest;
  */
 class OneLoginService
 {
-    public const CORE_IDENTITY_JWT   = 'https://vocab.account.gov.uk/v1/coreIdentityJWT';
-    public const LOGOUT_REDIRECT_URL = 'https://www.gov.uk/done/use-lasting-power-of-attorney';
+    public const string CORE_IDENTITY_JWT      = 'https://vocab.account.gov.uk/v1/coreIdentityJWT';
+    public const string LOGOUT_REDIRECT_URL    = 'https://www.gov.uk/done/use-lasting-power-of-attorney';
+    public const string LOGOUT_REDIRECT_URL_CY = 'https://www.gov.uk/done/defnyddio-atwrneiaeth-arhosol';
 
     public function __construct(
         private AuthorisationServiceBuilder $authorisationServiceBuilder,
@@ -105,14 +106,18 @@ class OneLoginService
      * @return string A URL with populated parameters
      * @throws AuthorisationServiceException
      */
-    public function createLogoutUrl(string $idToken): string
+    public function createLogoutUrl(string $idToken, string $uiLocale = 'en'): string
     {
         $authorisationService = $this->authorisationServiceBuilder->build();
         $logoutUri            = $authorisationService->getLogoutUri();
 
+        $redirectUrl = $uiLocale === 'cy'
+            ? self::LOGOUT_REDIRECT_URL_CY
+            : self::LOGOUT_REDIRECT_URL;
+
         $params = [
             'id_token_hint'            => $idToken,
-            'post_logout_redirect_uri' => self::LOGOUT_REDIRECT_URL,
+            'post_logout_redirect_uri' => $redirectUrl,
         ];
 
         return $logoutUri . '?' . http_build_query($params);

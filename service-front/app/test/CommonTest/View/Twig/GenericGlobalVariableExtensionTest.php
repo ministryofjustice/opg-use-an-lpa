@@ -8,12 +8,15 @@ use PHPUnit\Framework\Attributes\Test;
 use Acpr\I18n\TranslatorInterface;
 use Common\View\Twig\GenericGlobalVariableExtension;
 use PHPUnit\Framework\TestCase;
+use Locale;
 
 class GenericGlobalVariableExtensionTest extends TestCase
 {
     #[Test]
     public function sets_some_global_variables(): void
     {
+        Locale::setDefault('cy_GB');
+
         $application = 'actor';
 
         $translatorInterface = $this->createMock(TranslatorInterface::class);
@@ -48,5 +51,12 @@ class GenericGlobalVariableExtensionTest extends TestCase
         $genericConfig = $extension->getGlobals();
 
         $this->assertEquals('View a lasting power of attorney', $genericConfig['serviceName']);
+    }
+
+    protected function tearDown(): void
+    {
+        Locale::setDefault('en_GB');
+
+        parent::tearDown();
     }
 }
