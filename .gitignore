@@ -16,6 +16,7 @@ scripts/getStatsResultDemo.json
 .phpunit.result.cache
 .phpcs-cache
 scripts/analysis_scripts/*.csv
+scripts/unused_accounts/results/*.csv
 
 query/s3_objects/**
 query/results/*.csv
@@ -26,3 +27,6 @@ tests/vendor
 
 auth.json
 docker-compose.override.yml
+
+# Compiled local seeding binary (built by scripts/unused_accounts/test_unused_accounts.sh)
+scripts/seed_unused_accounts/seed_unused_accounts

@@ -30,27 +30,20 @@ var (
 type account struct {
 	Id        string
 	Email     string
-	Identity  string
+	Identity  string `dynamodbav:"Identity,omitempty"`
+	Password  string `dynamodbav:"Password,omitempty"`
 	LastLogin string
 	Lpas      []lpa `dynamodbav:"-"`
 	Comment   string
 }
 
 type lpa struct {
-	Id          string
-	UserId      string
-	ActorId     string
-	LpaUid      string
-	SiriusUid   string
-	ViewerCodes []viewercode `dynamodbav:"-"`
-	Comment     string
-}
-
-type viewercode struct {
-	ViewerCode   string
-	SiriusUid    string
-	UserLpaActor string
-	Comment      string
+	Id        string
+	UserId    string
+	ActorId   string
+	LpaUid    string
+	SiriusUid string
+	Comment   string
 }
 
 type cfg struct {
@@ -68,7 +61,7 @@ func main() {
 }
 
 func run(args []string, ctx context.Context) int {
-	fs := flag.NewFlagSet("seed_duplicate_accounts", flag.ContinueOnError)
+	fs := flag.NewFlagSet("seed_unused_accounts", flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 
 	fs.Usage = func() {
@@ -104,42 +97,62 @@ func run(args []string, ctx context.Context) int {
 
 	dynamoClient = dynamodb.NewFromConfig(awsCfg)
 
-	// Generate initial accounts
+	var accountsWithLpas, accountsWithOldLogin, identityAccounts int
 	var accounts []account
 	for i := 0; i < 10000; i++ {
 		email := faker.Email(options.WithCustomDomain("example.org"))
-		h := sha256.New()
-		h.Write([]byte(email))
-		encodedEmail := base64.StdEncoding.EncodeToString(h.Sum(nil))
 
 		account := account{
-			Id:        uuid.NewString(),
-			Email:     email,
-			Identity:  "urn:fdc:mock-one-login:2023:" + encodedEmail,
-			LastLogin: LastLogin(),
-			Lpas:      []lpa{},
-			Comment:   "Seeded Account: Duplicate user bulk seeding",
+			Id:      uuid.NewString(),
+			Email:   email,
+			Lpas:    []lpa{},
+			Comment: "Seeded Account: Unused accounts bulk seeding",
+		}
+
+		if randomChanceOne(4) {
+			account.LastLogin = LastLoginUnused()
+			accountsWithOldLogin++
+		} else {
+			account.LastLogin = LastLoginRecent()
+		}
+
+		if randomChanceOne(4) {
+			account.Password = uuid.NewString()
+		} else {
+			h := sha256.New()
+			h.Write([]byte(email))
+			encodedEmail := base64.StdEncoding.EncodeToString(h.Sum(nil))
+			account.Identity = "urn:fdc:mock-one-login:2023:" + encodedEmail
+			identityAccounts++
+		}
+
+		if randomChanceOne(2) {
+			actorId := rand.Intn(99999999)
+			siriusUid := rand.Intn(99999999)
+			account.Lpas = append(account.Lpas, lpa{
+				Id:        uuid.NewString(),
+				UserId:    account.Id,
+				ActorId:   fmt.Sprintf("7000%08d", actorId),
+				LpaUid:    "",
+				SiriusUid: fmt.Sprintf("7000%08d", siriusUid),
+				Comment:   "Seeded LPA: Unused accounts bulk seeding",
+			})
+			accountsWithLpas++
 		}
 
 		accounts = append(accounts, account)
 	}
 
-	// add 1 - 3 lpas to 33% of those accounts
-	accounts, lpasGenerated, addedToAccounts, viewerCodes := generateLpas(accounts)
-
-	// duplicate 10% of the accounts
-	accounts, duplicatedAccounts := duplicateAccounts(accounts)
-
 	writeData(cfg.tablePrefix, accounts)
 
 	logger.Info(
 		fmt.Sprintf(
-			"Generated %d total accounts with %d LPAs added to %d of them, %d viewercodes and %d duplicated accounts",
+			"Generated %d accounts (%d with one LPA, %d with last login over 6 months ago, %d with identity pinning, %d with a password)",
 			len(accounts),
-			lpasGenerated,
-			addedToAccounts,
-			viewerCodes,
-			duplicatedAccounts,
+			accountsWithLpas,
+			accountsWithOldLogin,
+			identityAccounts,
+			len(accounts)-identityAccounts,
 		),
 	)
 
@@ -166,6 +179,19 @@ func writeData(tablePrefix string, accounts []account) {
 			},
 		})
 
+		// identity pinning row, as written by the API when an account is created (service-api ActorUsers::add)
+		if acc.Identity != "" {
+			items = append(items, types.TransactWriteItem{
+				Put: &types.Put{
+					Item: map[string]types.AttributeValue{
+						"Id": &types.AttributeValueMemberS{Value: "IDENTITY#" + acc.Identity},
+					},
+					TableName:           &tableName,
+					ConditionExpression: &notExists,
+				},
+			})
+		}
+
 		for _, lpa := range acc.Lpas {
 			item, err := attributevalue.MarshalMap(lpa)
 			if err != nil {
@@ -180,23 +206,6 @@ func writeData(tablePrefix string, accounts []account) {
 					ConditionExpression: &notExists,
 				},
 			})
-
-			for _, viewerCode := range lpa.ViewerCodes {
-				item, err := attributevalue.MarshalMap(viewerCode)
-				if err != nil {
-					panic(err)
-				}
-
-				tableName := fmt.Sprintf("%sViewerCodes", tablePrefix)
-				vcNotExists := "attribute_not_exists(ViewerCode)"
-				items = append(items, types.TransactWriteItem{
-					Put: &types.Put{
-						Item:                item,
-						TableName:           &tableName,
-						ConditionExpression: &vcNotExists,
-					},
-				})
-			}
 		}
 
 		transactionItems := &dynamodb.TransactWriteItemsInput{
@@ -215,119 +224,27 @@ func writeData(tablePrefix string, accounts []account) {
 	}
 }
 
-func LastLogin() string {
-	location, _ := time.LoadLocation("Europe/London")
+func LastLoginUnused() string {
+	now := time.Now()
+	sixMonthsAgo := now.AddDate(0, -6, 0)
+	oneYearAgo := now.AddDate(-1, 0, 0)
 
-	startdate := time.Date(2019, 07, 1, 0, 0, 0, 0, location).Unix()
-	now := time.Now().Unix()
-	randomTime := rand.Int63n(now-startdate) + startdate
-
-	return time.Unix(randomTime, 0).In(time.UTC).Format(time.RFC3339)
+	return randomTimeBetween(oneYearAgo, sixMonthsAgo)
 }
 
-func generateLpas(accounts []account) ([]account, int, int, int) {
-	var data []account
-	lpasGenerated := 0
-	addedToAccounts := 0
-	viewerCodes := 0
+func LastLoginRecent() string {
+	now := time.Now()
+	sixMonthsAgo := now.AddDate(0, -6, 0)
 
-	for _, acc := range accounts {
-		acc.Lpas = []lpa{}
-
-		if randomChanceOne(3) {
-			for i := 0; i < (rand.Intn(3) + 1); i++ {
-				actorId := rand.Intn(99999999)
-				siriusUid := rand.Intn(99999999)
-
-				lpa := lpa{
-					Id:        uuid.NewString(),
-					UserId:    acc.Id,
-					ActorId:   fmt.Sprintf("7000%08d", actorId),
-					LpaUid:    "",
-					SiriusUid: fmt.Sprintf("7000%08d", siriusUid),
-					Comment:   "Seeded LPA: Duplicate user bulk seeding",
-				}
-
-				// LPA has viewercodes. It's probably lower than 1 in 10 tbh.
-				if randomChanceOne(10) {
-					lpa.ViewerCodes = generateViewerCodes(lpa.Id, lpa.SiriusUid)
-					viewerCodes = viewerCodes + len(lpa.ViewerCodes)
-				}
-
-				acc.Lpas = append(acc.Lpas, lpa)
-				lpasGenerated++
-			}
-
-			addedToAccounts++
-		}
-
-		data = append(data, acc)
-	}
-
-	return data, lpasGenerated, addedToAccounts, viewerCodes
+	return randomTimeBetween(sixMonthsAgo, now)
 }
 
-func generateViewerCodes(id string, siriusUid string) []viewercode {
-	var codes []viewercode
+func randomTimeBetween(start, end time.Time) string {
+	randomTime := rand.Int63n(end.Unix()-start.Unix()) + start.Unix()
 
-	for i := 0; i < (rand.Intn(15) + 1); i++ {
-		code := viewercode{
-			ViewerCode:   fmt.Sprintf("%012d", rand.Intn(99999999)),
-			SiriusUid:    siriusUid,
-			UserLpaActor: id,
-			Comment:      "Seeded Viewercode: Duplicate user bulk seeding",
-		}
-
-		codes = append(codes, code)
-	}
-
-	return codes
+	return time.Unix(randomTime, 0).UTC().Format(time.RFC3339)
 }
 
 func randomChanceOne(in int) bool {
-	result := rand.Intn(in) + 1
-	return result == in
-}
-
-func duplicateAccounts(accounts []account) ([]account, int) {
-	var duplicated []account
-	duplicatedAccounts := 0
-
-	for _, acc := range accounts {
-		duplicated = append(duplicated, acc)
-
-		if randomChanceOne(10) {
-			duplicate := acc
-			duplicate.Id = uuid.NewString()
-			duplicate.LastLogin = LastLogin()
-			duplicate.Lpas = []lpa{}
-
-			// the duplicate account also has a lpa in it.
-			if len(acc.Lpas) > 0 && randomChanceOne(3) {
-				duplicateLpa := acc.Lpas[0]
-				duplicateLpa.Id = uuid.NewString()
-				duplicateLpa.UserId = duplicate.Id
-				duplicateLpa.ViewerCodes = []viewercode{}
-				duplicate.Lpas = []lpa{duplicateLpa} // just one will do
-			}
-
-			duplicated = append(duplicated, duplicate)
-			duplicatedAccounts++
-
-			// some duplicate accounts have more than one duplicate
-			if !randomChanceOne(4) {
-				continue
-			}
-
-			secondDuplicate := duplicate
-			secondDuplicate.Id = uuid.NewString()
-			secondDuplicate.LastLogin = LastLogin()
-			secondDuplicate.Lpas = []lpa{}
-			duplicated = append(duplicated, secondDuplicate)
-			duplicatedAccounts++
-		}
-
-	}
-
-	return duplicated, duplicatedAccounts
+	return rand.Intn(in) == 0
 }

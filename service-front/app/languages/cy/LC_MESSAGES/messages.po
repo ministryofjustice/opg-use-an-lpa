@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-22 15:36+0000\n"
+"PO-Revision-Date: 2026-10-26 13:07+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -1016,7 +1016,7 @@ msgstr "Rhowch wybod i ni os bydd rhoddwr neu atwrnai yn marw"
 
 #: src/Actor/templates/actor/death-notification.html.twig:25
 msgid "It's important that we hold up-to-date information about donors and attorneys. This is because an LPA will end when the donor dies, and they can end if an attorney dies."
-msgstr "Mae’n bwysig ein bod yn cadw gwybodaeth gyfredol am roddwyr ac atwrneiod. Y rheswm dros hyn yw y bydd yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn dod i ben pan fydd y rhoddwr yn marw, a gall ddod i ben os bydd atwrnai’n marw."
+msgstr "Mae’n bwysig ein bod yn cadw gwybodaeth gyfredol am roddwyr ac atwrneiod. Mae hyn oherwydd bydd yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn dod i ben pan fydd y rhoddwr yn marw, a gall ddod i ben os bydd atwrnai’n marw."
 
 #: src/Actor/templates/actor/change-details.html.twig:27
 #: src/Actor/templates/actor/change-lpa-details.html.twig:26
@@ -2232,7 +2232,7 @@ msgstr "Os mai chi yw’r rhoddwr, bydd angen i chi hefyd ddarparu enw a chyfeir
 
 #: src/Actor/templates/actor/change-details.html.twig:67
 msgid "It's important that we hold up-to-date information about donors and attorneys. This is because an LPA will end when the donor dies, and can end if an attorney dies."
-msgstr "Mae’n bwysig ein bod yn cadw gwybodaeth gyfredol am roddwyr ac atwrneiod. Y rheswm dros hyn yw y bydd yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn dod i ben pan fydd y rhoddwr yn marw, a gall ddod i ben os bydd atwrnai’n marw."
+msgstr "Mae’n bwysig ein bod yn cadw gwybodaeth gyfredol am roddwyr ac atwrneiod. Mae hyn oherwydd bydd yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn dod i ben pan fydd y rhoddwr yn marw, a gall ddod i ben os bydd atwrnai’n marw."
 
 #: src/Actor/templates/actor/change-details.html.twig:74
 msgid "Find out more about what to do if <a class=\"govuk-link\" href=\"%link%\"> the donor or an attorney dies</a>"
@@ -4607,7 +4607,7 @@ msgstr "Mae eich gwybodaeth yn ddiogel ac mae unrhyw LPA a ychwanegwyd gennych i
 
 #: src/Common/templates/error/409.html.twig:15
 msgid "This is a rare problem and you’ll need to call our contact centre so our technical team can resolve it for you. Please call 0300 456 0300 and quote the incident number %incidentNumber%."
-msgstr "Mae hon yn broblem brin a byddwch angen cysylltu gyda’n canolfan gyswllt er mwyn i’n tîm technegol ei datrys ichi. A fyddech cystal â ffonio 0300 456 0300 a dyfynnu’r rhif digwyddiad %incidentNumber%."
+msgstr "Mae hon yn broblem brin a byddwch angen cysylltu gyda’n canolfan gyswllt er mwyn i’n tîm technegol ei datrys i chi. A fyddech cystal â ffonio 0300 456 0300 a dyfynnu’r rhif digwyddiad %incidentNumber%."
 
 #: src/Common/templates/error/409.html.twig:10
 msgid "There’s a problem with your sign-in"

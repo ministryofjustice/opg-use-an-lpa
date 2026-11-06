@@ -1,6 +1,6 @@
-FROM ghcr.io/astral-sh/uv@sha256:b46b03ddfcfbf8f547af7e9eaefdf8a39c8cebcba7c98858d3162bd28cf536f6 AS uv
+FROM ghcr.io/astral-sh/uv:0.13.5@sha256:32a7bb39b496babbd997b0a39a4d66c126bdaf5661b302bf6f06abda8deca6ff AS uv
 
-FROM python:3.14.7-slim@sha256:cad9a2c871761c413caa6fdd6441c783451e740a48aaeba60ae62a8b53525ef6 AS builder
+FROM python:3.14.9-slim@sha256:35caba83af2fe6da9a5d922f9b0156f21d1246a48278c58a08bd253303ba42e8 AS builder
 
 ENV UV_MALWARE_CHECK=1
 ENV UV_COMPILE_BYTECODE=1
@@ -20,16 +20,15 @@ RUN --mount=from=uv,source=/uv,target=/bin/uv \
     uv pip install -r requirements.txt --target "/app"
 
 
-FROM python:3.14.7-slim@sha256:cad9a2c871761c413caa6fdd6441c783451e740a48aaeba60ae62a8b53525ef6
+FROM python:3.14.9-slim@sha256:35caba83af2fe6da9a5d922f9b0156f21d1246a48278c58a08bd253303ba42e8
 
 WORKDIR /app
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        libpcre2-8-0=10.46-1~deb13u2 \
-        libcap2=1:2.75-10+deb13u1+b1 \
+        libpcre2-8-0=10.46-1~deb13u3 \
+        libcap2=1:2.75-10+deb13u1+b3 \
         libsqlite3-0=3.46.1-7+deb13u2 \
-        libpcre2-8-0=10.46-1~deb13u2 \
         perl-base=5.40.1-6+deb13u1 \
         gzip=1.13-1+deb13u1 \
     && rm -rf /var/lib/apt/lists/*

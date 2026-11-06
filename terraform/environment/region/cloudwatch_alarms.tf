@@ -419,6 +419,53 @@ resource "aws_cloudwatch_metric_alarm" "memory_usage_anomaly" {
   provider = aws.region
 }
 
+resource "aws_cloudwatch_metric_alarm" "nat_gateway_egress_anomaly" {
+  count = contains(["production", "preproduction"], var.environment_name) ? 1 : 0
+
+  alarm_name          = "${var.environment_name} NAT Gateway egress anomaly"
+  alarm_description   = "Detect unusual egress patterns across all NAT Gateways (potential data exfiltration)"
+  comparison_operator = "GreaterThanUpperThreshold"
+  evaluation_periods  = 2
+  threshold_metric_id = "ad1"
+  actions_enabled     = false
+  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  ok_actions          = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  treat_missing_data  = "notBreaching"
+
+  metric_query {
+    id          = "ad1"
+    expression  = "ANOMALY_DETECTION_BAND(total, 2)"
+    label       = "BytesOutToDestination (Expected)"
+    return_data = true
+  }
+
+  metric_query {
+    id          = "total"
+    expression  = join(" + ", [for idx, id in data.aws_nat_gateways.main.ids : "ngw${idx}"])
+    label       = "BytesOutToDestination (All NAT Gateways)"
+    return_data = true
+  }
+
+  dynamic "metric_query" {
+    for_each = data.aws_nat_gateways.main.ids
+    content {
+      id          = "ngw${metric_query.key}"
+      return_data = false
+      metric {
+        metric_name = "BytesOutToDestination"
+        namespace   = "AWS/NATGateway"
+        period      = 300
+        stat        = "Sum"
+        dimensions = {
+          "NatGatewayId" = metric_query.value
+        }
+      }
+    }
+  }
+
+  provider = aws.region
+}
+
 locals {
   ecs_services = {
     actor  = aws_ecs_service.use.name

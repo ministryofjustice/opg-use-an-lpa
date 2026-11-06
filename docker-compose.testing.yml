@@ -1,7 +1,0 @@
-services:
-
-  zap:
-    profiles:
-      - tools
-    build:
-      context: zap

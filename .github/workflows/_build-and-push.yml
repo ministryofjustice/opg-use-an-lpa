@@ -189,6 +189,7 @@ jobs:
         uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7  # v10.2.0
         with:
           working-directory: lambda-functions/upload-statistics/app
+          version: "0.13.5"
         if: matrix.svc_prefix == 'stats_upload'
 
       - name: docker unit tests
@@ -313,7 +314,7 @@ jobs:
 
       - name: Snyk Scan
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
-        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@722a5f955424aaba01e9ca43d68390cd4048d6e1 # v4.10.2
+        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@12bdbe54f92af873347bc0cd6f4e7769265c1a90 # v4.10.5
         with:
           SNYK_TEST_IMAGE: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
           SNYK_TOKEN: ${{ secrets.SNYK_OPG_ORG_TOKEN }}
