@@ -29,7 +29,7 @@ ignore:
   SNYK-DEBIAN13-ZLIB-19520500:
     - '*':
         reason: Base image vuln in zlib/zlib1g - very new CVE with no available fix, acceptable risk for Lambda function
-        expires: 2026-12-04T23:59:59.000Z
+        expires: 2026-12-06T23:59:59.000Z
         created: 2026-09-04T00:00:00.000Z
   SNYK-DEBIAN13-SQLITE3-22119065:
     - '*':
@@ -54,6 +54,6 @@ ignore:
   SNYK-DEBIAN13-ZLIB-22249554:
     - '*':
         reason: Base image vuln in zlib1g - no fix currently available, acceptable risk for Lambda function
-        expires: 2027-12-06T23:59:59.000Z
+        expires: 2026-12-06T23:59:59.000Z
         created: 2026-11-06T00:00:00.000Z
 patch: {}
