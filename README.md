@@ -52,6 +52,7 @@ To start the service and its dependencies
 ```shell
 make up # start ual and all dependencies then run seeding of local data
 ```
+
 Note that the very first time you do make up, it may be necessary to first do : mkdir -p mock-integrations/secrets-manager otherwise it will try to write to that dir and be unable to
 
 To stop the service and its dependencies (ordering is important so that the networks are removed last)
@@ -149,6 +150,50 @@ make run_api_composer_update
 make run_front_composer_install
 make run_front_composer_update
 ```
+
+### MiniStack
+
+Local development uses MiniStack with all three Lambdas managed by its Docker executor.
+When upgrading from LocalStack, stop the existing stack first, then build and start with:
+
+```shell
+make down
+make build
+make up
+```
+
+The `localstack` service name and port 4566 are deliberately retained for existing SDKs,
+NoSQL Workbench and Trino. MiniStack uses fresh, ephemeral state; LocalStack state and
+encrypted sessions are not migrated. Clear local session cookies and cached session keys
+after upgrading from LocalStack.
+Configure local AWS tools with region `eu-west-1` and credentials `devkey`/`secretdevkey`;
+MiniStack scopes state by region and account instead of using `DYNAMODB_SHARE_DB`.
+
+Local Lambda images use arm64 for developers' Apple Silicon Macs; production image targets
+are unchanged. `make up` builds the local Lambda images, provisions AWS resources, seeds
+the database, then registers the functions and event-source mapping. No Lambda containers
+need to be started manually, and ports 9007/9008 are no longer used.
+Resource provisioning and Lambda deployment use AWS CLI commands in
+`local-config/ministack/ministack-init.sh`.
+Compose runs its `resources` phase before seeding and its `lambdas` phase afterwards.
+The `lambda-runtime` service extracts a pinned arm64 RIE binary into the ignored
+`local-config/ministack/runtime/` directory. MiniStack mounts it read-only into its
+runtime containers.
+
+```shell
+make lambda_invoke function=upload-statistics
+make lambda_invoke function=unused-accounts                 # generate plans only
+make lambda_invoke function=unused-accounts payload='{"Execute": true}'
+make emit_event eventType=lpa-access-granted payload=4UX3.json
+make lambda_logs function=event-receiver
+make lambda_build && make lambda_deploy                     # apply code changes
+```
+
+Invocations display the response and log tail and fail on Lambda or application errors.
+`make emit_event` sends a JSON fixture from `mock-integrations/events/<eventType>/<payload>`
+to the default EventBridge bus, using its `source`, `detail-type`, and `detail` fields.
+Matching rules route it through SQS to Lambda asynchronously. Use
+`make lambda_logs function=event-receiver` to check processing.
 
 ## Troubleshooting
 

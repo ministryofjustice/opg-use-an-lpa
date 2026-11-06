@@ -1,5 +1,6 @@
 UNUSED_ACCOUNTS_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 REPO_ROOT := $(abspath $(UNUSED_ACCOUNTS_DIR)/../..)
+export PWD := $(REPO_ROOT)
 COMPOSE = docker compose --project-directory $(REPO_ROOT) \
 	-f $(REPO_ROOT)/docker-compose.yml \
 	-f $(REPO_ROOT)/docker-compose.dependencies.yml
@@ -17,7 +18,6 @@ BUCKET ?= unused-accounts-bucket
 LOCALSTACK_ENDPOINT ?= http://localhost:4566
 TRINO_URL ?= http://localhost:8085
 TABLE_PREFIX ?=
-LAMBDA_URL ?= http://localhost:9008/2015-03-31/functions/function/invocations
 
 seed:
 	cd $(REPO_ROOT)/scripts/seed_unused_accounts && \
@@ -48,13 +48,11 @@ discover:
 .PHONY: discover
 
 invoke:
-	curl --fail-with-body --silent --show-error -X POST "$(LAMBDA_URL)" \
-		-d '{}' | jq -e 'if has("errorMessage") then error(.errorMessage) else . end'
+	$(MAKE) -C $(REPO_ROOT) lambda_invoke function=unused-accounts payload='{}'
 .PHONY: invoke
 
 execute:
-	curl --fail-with-body --silent --show-error -X POST "$(LAMBDA_URL)" \
-		-d '{"Execute": true}' | jq -e 'if has("errorMessage") then error(.errorMessage) else . end'
+	$(MAKE) -C $(REPO_ROOT) lambda_invoke function=unused-accounts payload='{"Execute": true}'
 .PHONY: execute
 
 verify:
