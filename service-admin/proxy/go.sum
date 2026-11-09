@@ -1,7 +1,7 @@
 github.com/golang-jwt/jwt/v4 v4.5.2 h1:YtQM7lnr8iZ+j5q71MGKkNw9Mn7AjHM68uc9g5fXeUI=
 github.com/golang-jwt/jwt/v4 v4.5.2/go.mod h1:m21LjoU+eqJr34lmDMbreY2eSTRJ1cv77w39/MY0Ch0=
-github.com/ministryofjustice/opg-go-common v1.165.29 h1:fQAUth4tlhluQXGTrr1zrYwsK9LM8CMfoujloKeO4rE=
-github.com/ministryofjustice/opg-go-common v1.165.29/go.mod h1:vYYKH137YEh7EL8TaCUROCN2AAEo+aErZcI1EeBFP7k=
+github.com/ministryofjustice/opg-go-common v1.166.0 h1:gkyXLBXGJ+HRHx/6vc1VJAoCcC7fkcEwCs1Ep/+0uSQ=
+github.com/ministryofjustice/opg-go-common v1.166.0/go.mod h1:rsNS8i2yNH6xud+KTYDjELbwPSh0glElCRgXpc7n0UM=
 github.com/stretchr/testify v1.12.1 h1:EuwCh5fleGS7H32xRwO3wRGT7DxrDhLAT6FF8MpWDWE=
 github.com/stretchr/testify v1.12.1/go.mod h1:MDEgiDPPsNp5cuIrHPPCyornHKgEVbtFUmoNlxoYthg=
 go.yaml.in/yaml/v3 v3.0.5 h1:N6y/pJk8buWs9NY5ERU2HSMfm+IuD/OtfdAnq6kESPw=
