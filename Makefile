@@ -12,6 +12,7 @@ CMD ?= docker-compose
 
 COMPOSE = $(CMD) -f docker-compose.yml -f docker-compose.dependencies.yml
 TEST_COMPOSE = $(CMD) -f docker-compose.yml -f docker-compose.dependencies.yml
+up build: lambda_build
 OVERRIDE := $(shell find . -name "docker-compose.override.yml")
 ifdef OVERRIDE
 COMPOSE := $(COMPOSE) -f docker-compose.override.yml
@@ -24,6 +25,24 @@ up: $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem $(MO_FILES)
 	@echo "Getting Notify API Key..."
 	$(NOTIFY) && $(COMPOSE) up -d --remove-orphans $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: up
+
+lambda_build:
+	$(COMPOSE) build upload-stats-lambda unused-accounts-lambda event-receiver-image
+.PHONY: lambda_build
+
+lambda_deploy:
+	$(COMPOSE) run --rm --no-deps lambda-deploy
+.PHONY: lambda_deploy
+
+lambda_invoke:
+	@test -n "$(function)" || (echo "Set function=upload-statistics, unused-accounts or event-receiver"; exit 1)
+	$(COMPOSE) run --rm --no-deps --entrypoint python lambda-deploy /opt/local/lambda_tools.py invoke "$(function)" '$(or $(payload),{})'
+.PHONY: lambda_invoke
+
+lambda_logs:
+	@test -n "$(function)" || (echo "Set function=upload-statistics, unused-accounts or event-receiver"; exit 1)
+	$(COMPOSE) run --rm --no-deps --entrypoint python lambda-deploy /opt/local/lambda_tools.py logs "$(function)"
+.PHONY: lambda_logs
 
 stop:
 	$(COMPOSE) stop $(filter-out $@,$(MAKECMDGOALS))
@@ -164,12 +183,13 @@ run_smoke_composer_update:
 run_update: run_front_composer_update run_front_npm_update run_api_composer_update run_smoke_composer_update
 .PHONY: run_update
 
-emit_lpa_access_granted_event: # fire an lpa-access-granted event into the event bus with the specified lpaId e.g. emit_lpa_access_granted_event lpaId=4UX3
-	@[ "${lpaId}" ] || ( echo "Please set lpaId"; exit 1 )
+emit_event: # publish an EventBridge event e.g. emit_event eventType=lpa-access-granted payload=4UX3.json
+	@[ "${eventType}" ] || ( echo "Please set eventType to the fixture folder name"; exit 1 )
+	@[ "${payload}" ] || ( echo "Please set payload"; exit 1 )
 
-	$(eval lpaJson:=$(shell cat mock-integrations/makeregister/lpa-access-granted-events/$(lpaId).json | jq -c))
-	$(COMPOSE) exec localstack awslocal events put-events --region "eu-west-1" --entries '${lpaJson}'
-.PHONY: emit_lpa_access_granted_event
+	@payload=$$(cat "mock-integrations/events/$(eventType)/$(payload)") && \
+		$(COMPOSE) run --rm --no-deps --entrypoint python lambda-deploy /opt/local/emit_event.py "$$payload"
+.PHONY: emit_event
 
 clear_config_cache:
 	$(COMPOSE) exec viewer-app rm -f /tmp/config-cache.php

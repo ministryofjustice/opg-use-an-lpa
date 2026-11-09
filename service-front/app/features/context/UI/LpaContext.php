@@ -51,6 +51,8 @@ class LpaContext implements Context
     private int $userId;
     private string $userSurname;
     private string $companyName;
+    private string $existingUserLpaActorToken;
+    private mixed $existingLpaData;
 
     #[Given('/^A trust corporation has created an access code$/')]
     public function zaTrustCorporationHasCreatedAndAccessCode(): void
@@ -557,6 +559,12 @@ class LpaContext implements Context
     public function iCanSeeAFlashMessageForTheAddedLPA(): void
     {
         $this->ui->assertPageContainsText("You've added Ian Deputy's health and welfare LPA");
+    }
+
+    #[Given('/^I can see a flash message for the newly added LPA$/')]
+    public function iCanSeeAFlashMessageForTheNewAddedLPA(): void
+    {
+        $this->ui->assertPageContainsText("You've added Donald Duck's health and welfare LPA");
     }
 
     #[Then('/^I can see all of my access codes and their details$/')]
@@ -2846,6 +2854,112 @@ class LpaContext implements Context
         $this->ui->pressButton('Confirm');
     }
 
+    #[Then('/^The correct newly added LPA is found and I can confirm to add it$/')]
+    public function theCorrectNewlyAddedLPAIsFoundAndICanConfirmToAddIt(): void
+    {
+        $newLpa = json_decode(
+            file_get_contents(__DIR__ . '../../../../test/fixtures/full_example_2.json')
+        );
+
+        Assert::assertIsObject($newLpa);
+
+        $newLpa->uId          = '700000000088';
+        $newUserLpaActorToken = '123456322';
+
+        $attorney = $newLpa->attorneys[0];
+        $address  = $attorney->addresses[0];
+
+        $newLpaData = [
+            'user-lpa-actor-token'       => $newUserLpaActorToken,
+            'date'                       => 'today',
+            'caseSubType'                => 'hw',
+            'actor'                      => [
+                'type'    => 'primary-attorney',
+                'details' => [
+                    'addresses'    => [
+                        [
+                            'addressLine1' => $address->addressLine1,
+                            'addressLine2' => $address->addressLine2,
+                            'addressLine3' => $address->addressLine3,
+                            'country'      => $address->country,
+                            'county'       => $address->county,
+                            'id'           => 0,
+                            'postcode'     => $address->postcode,
+                            'town'         => $address->town,
+                            'type'         => 'Primary',
+                        ],
+                    ],
+                    'companyName'  => $attorney->companyName,
+                    'dob'          => $attorney->dob,
+                    'email'        => '',
+                    'firstname'    => $attorney->firstname,
+                    'id'           => 0,
+                    'middlenames'  => $attorney->middlenames,
+                    'salutation'   => $attorney->salutation,
+                    'surname'      => $attorney->surname,
+                    'systemStatus' => true,
+                    'uId'          => $attorney->uId,
+                ],
+            ],
+            'applicationHasRestrictions' => false,
+            'applicationHasGuidance'     => false,
+            'lpa'                        => $newLpa,
+            'added'                      => '2024-01-12 12:00:00',
+        ];
+
+        // API call for adding the new LPA
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_CREATED,
+                json_encode([
+                    'user-lpa-actor-token' => $newUserLpaActorToken,
+                ]),
+                self::ADD_LPA_CONFIRM
+            ),
+        );
+
+        // Return BOTH the existing LPA and the newly added LPA.
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([
+                    $this->existingUserLpaActorToken => $this->existingLpaData,
+                    $newUserLpaActorToken            => $newLpaData,
+                ]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
+        $this->ui->assertPageAddress('/lpa/check');
+        $this->ui->assertPageContainsText('Confirm this is the correct LPA');
+        $this->ui->assertPageContainsText('Ian Deputy');
+        $this->ui->pressButton('Confirm');
+    }
+
     #[Given('/^Has correct name "([^"]*)""([^"]*)" and role "([^"]*)"$/')]
     public function theNameMatchesExpected(string $firstName, string $lastName, string $role): void
     {
@@ -2998,6 +3112,21 @@ class LpaContext implements Context
         $this->ui->assertPageContainsText('Health and welfare');
         $this->ui->assertPageContainsText('Health and welfare');
     }
+
+    #[Then('The new LPA is successfully added')]
+    public function theNewLpaIsSuccessfullyAdded(): void
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageContainsText('Health and welfare LPA');
+    }
+
+//    #[Then('The new LPA is successfully added')]
+//    public function theDifferentLpaIsSuccessfullyAdded(): void
+//    {
+//        $this->ui->assertPageAddress('/lpa/dashboard');
+//        $this->ui->assertPageContainsText('Ian Deputy');
+//        $this->ui->assertPageContainsText('Personal welfare');
+//    }
 
     #[Given('/^I am on the dashboard page to see the LPA details/')]
     public function iAmOnTheDashboardPageToSeeTheLPADetails(): void
@@ -3511,5 +3640,114 @@ class LpaContext implements Context
     public function iShouldSeeWhoCreatedIt(): void
     {
         $this->ui->assertPageContainsText('If you want this code to be cancelled please contact Simon Matthews.');
+    }
+
+    #[Given('I have an existing LPA in my account')]
+    public function iHaveAnExistingLpaInMyAccount(): void
+    {
+        $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
+
+        $this->existingUserLpaActorToken = $this->userLpaActorToken;
+        $this->existingLpaData           = $this->lpaData;
+
+        $this->dashboardLPAs = [
+            $this->existingUserLpaActorToken => $this->existingLpaData,
+        ];
+    }
+
+    #[When('/^I request to add a different modernised LPA using (.*)$/')]
+    public function iRequestToAddADifferentModernisedLpaUsing(string $code): void
+    {
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
+
+        $newLpa = json_decode(
+            file_get_contents(__DIR__ . '../../../../test/fixtures/full_example_2.json')
+        );
+
+        $newLpa->uId = '700000000088';
+
+        $newUserLpaActorToken = '123456322';
+        $attorney             = $newLpa->attorneys[0];
+        $address              = $attorney->addresses[0];
+
+        $newLpaData = [
+            'user-lpa-actor-token'       => $newUserLpaActorToken,
+            'date'                       => 'today',
+            'caseSubType'                => 'hw',
+            'actor'                      => [
+                'type'    => 'primary-attorney',
+                'details' => [
+                    'addresses'    => [
+                        [
+                            'addressLine1' => $address->addressLine1,
+                            'addressLine2' => $address->addressLine2,
+                            'addressLine3' => $address->addressLine3,
+                            'country'      => $address->country,
+                            'county'       => $address->county,
+                            'id'           => 0,
+                            'postcode'     => $address->postcode,
+                            'town'         => $address->town,
+                            'type'         => 'Primary',
+                        ],
+                    ],
+                    'companyName'  => $attorney->companyName,
+                    'dob'          => $attorney->dob,
+                    'email'        => '',
+                    'firstname'    => $attorney->firstname,
+                    'id'           => 0,
+                    'middlenames'  => $attorney->middlenames,
+                    'salutation'   => $attorney->salutation,
+                    'surname'      => $attorney->surname,
+                    'systemStatus' => true,
+                    'uId'          => $attorney->uId,
+                ],
+            ],
+            'applicationHasRestrictions' => false,
+            'applicationHasGuidance'     => false,
+            'lpa'                        => $newLpa,
+            'added'                      => '2024-01-12 12:00:00',
+        ];
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($newLpaData),
+                self::ADD_LPA_VALIDATE
+            )
+        );
+
+        $this->ui->visit('/lpa/add-by-key/activation-key');
+
+        $this->fillAddLpaPages(
+            $code,
+            '24',
+            '07',
+            '1982',
+            '700000000088',
+        );
+
+        $history = $this->base->mockClientHistoryContainer;
+
+        $validationRequests = array_values(array_filter(
+            $history,
+            static fn (array $transaction): bool => $transaction['request']->getMethod() === 'POST'
+                    && str_contains(
+                        (string) $transaction['request']->getUri(),
+                        '/v1/add-lpa/validate'
+                    )
+        ));
+
+        $transaction = end($validationRequests);
+        $request     = $transaction['request'];
+        $body        = (string) $request->getBody();
+        $params      = json_decode($body, true);
+
+        Assert::assertIsArray(
+            $params,
+            'The outgoing validation request body must contain valid JSON.'
+        );
+
+        Assert::assertArrayHasKey('actor-code', $params);
+        Assert::assertEquals($code, $params['actor-code']);
     }
 }

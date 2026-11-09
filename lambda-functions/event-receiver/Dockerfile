@@ -12,6 +12,14 @@ COPY internal/ ./internal
 
 RUN go build -tags lambda.norpc -ldflags="-s -w" -o /go/bin/main ./
 
+FROM base AS local-build
+RUN GOARCH=arm64 go build -tags lambda.norpc -ldflags="-s -w" -o /go/bin/local-main ./
+
+FROM gcr.io/distroless/static:nonroot@sha256:18f4cc26c9ffa7f20a359298be7deadac5c607c8e03a02b8119f1a5fc2f82c99 AS local
+WORKDIR /var/task
+COPY --from=local-build /go/bin/local-main ./main
+ENTRYPOINT ["./main"]
+
 FROM gcr.io/distroless/static:nonroot@sha256:18f4cc26c9ffa7f20a359298be7deadac5c607c8e03a02b8119f1a5fc2f82c99 AS production
 
 WORKDIR /var/task
