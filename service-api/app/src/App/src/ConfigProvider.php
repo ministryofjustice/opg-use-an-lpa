@@ -46,7 +46,7 @@ final class ConfigProvider
                 Psr\Cache\CacheItemPoolInterface::class                                => 'cache.request',
                 CacheInterface::class                                                  => 'cache.request',
                 TagAwareCacheInterface::class                                          => 'cache.request.taggable',
-                Service\Lpa\SessionLpaCacheInterface::class                            => Service\Lpa\SessionLpaCache::class,
+                DataAccess\Cache\SessionLpaCacheInterface::class                       => DataAccess\Cache\SessionLpaCache::class,
 
                 // PSR20
                 Psr\Clock\ClockInterface::class                                        => Service\InternalClock::class,
@@ -154,10 +154,10 @@ final class ConfigProvider
                     Service\SystemMessage\CachedSystemMessageDelegatorFactory::class,
                 ],
                 DataAccess\ApiGateway\SiriusLpas::class               => [
-                    DataAccess\ApiGateway\CachedSiriusLpasDelegatorFactory::class,
+                    DataAccess\Cache\CachedSiriusLpasDelegatorFactory::class,
                 ],
                 DataAccess\ApiGateway\DataStoreLpas::class            => [
-                    DataAccess\ApiGateway\CachedDataStoreLpasDelegatorFactory::class,
+                    DataAccess\Cache\CachedDataStoreLpasDelegatorFactory::class,
                 ],
             ],
         ];

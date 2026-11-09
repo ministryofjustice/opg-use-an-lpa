@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Lpa;
+namespace App\DataAccess\Cache;
 
 use App\DataAccess\Repository\Response\Lpa;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Entity\Lpa as LpaData;
 use App\Service\Cache\CacheFactory;
+use App\Service\Lpa\SiriusLpa;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\TagAwareAdapterInterface;
 use RuntimeException;

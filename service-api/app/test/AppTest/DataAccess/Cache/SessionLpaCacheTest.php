@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Service\Lpa;
+namespace AppTest\DataAccess\Cache;
 
+use App\DataAccess\Cache\SessionLpaCache;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response\Lpa;
 use App\Service\Cache\CacheFactory;
 use App\Service\Lpa\LpaDataFormatter;
-use App\Service\Lpa\SessionLpaCache;
 use App\Service\Lpa\SiriusLpa;
 use DateTimeImmutable;
 use Monolog\Logger;

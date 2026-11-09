@@ -6,7 +6,7 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Service\Authentication\OneLoginService;
-use App\Service\Lpa\SessionLpaCache;
+use App\DataAccess\Cache\SessionLpaCache;
 use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;

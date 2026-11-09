@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Acceptance;
 
+use App\DataAccess\Cache\SessionLpaCache;
 use App\DataAccess\DynamoDb\ActorUsers;
 use App\DataAccess\Repository\Response\Lpa;
 use App\Service\Lpa\LpaDataFormatter;
-use App\Service\Lpa\SessionLpaCache;
 use App\Service\User\ResolveOAuthUser;
 use AppTest\OidcUtilities;
 use Aws\Command;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
+use App\DataAccess\Cache\SessionLpaCacheInterface;
 use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     Response\InstructionsAndPreferencesImages,
     Response\Lpa,
@@ -22,7 +23,6 @@ use App\Service\Lpa\{Combined\FilterActiveActors,
     IsValidLpa,
     LpaDataFormatter,
     ResolveActor};
-use App\Service\Lpa\SessionLpaCacheInterface;
 use App\Value\LpaUid;
 use DateInterval;
 use DateTimeImmutable;

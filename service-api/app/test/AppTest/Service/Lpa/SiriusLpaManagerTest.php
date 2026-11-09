@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
+use App\DataAccess\Cache\SessionLpaCacheInterface;
 use App\DataAccess\Repository\InstructionsAndPreferencesImagesInterface;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
@@ -22,7 +23,6 @@ use App\Service\Lpa\IsValidLpa;
 use App\Service\Lpa\ResolveActor;
 use App\Service\Lpa\ResolveActor\ActorType;
 use App\Service\Lpa\ResolveActor\LpaActor;
-use App\Service\Lpa\SessionLpaCacheInterface;
 use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusLpaManager;
 use App\Service\Lpa\SiriusPerson;

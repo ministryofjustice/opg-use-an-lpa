@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Lpa;
+namespace App\DataAccess\Cache;
 
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Entity\Lpa as LpaData;
+use App\Service\Lpa\SiriusLpa;
 
 interface SessionLpaCacheInterface
 {

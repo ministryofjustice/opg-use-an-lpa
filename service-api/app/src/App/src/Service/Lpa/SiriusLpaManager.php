@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\DataAccess\Cache\SessionLpaCacheInterface;
 use App\Enum\LpaSource;
 use App\Exception\ApiException;
 use App\Exception\MissingCodeExpiryException;

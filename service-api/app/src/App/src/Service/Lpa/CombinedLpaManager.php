@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\DataAccess\Cache\SessionLpaCacheInterface;
 use DateTimeImmutable;
 use App\DataAccess\Repository\{AuditableLpasInterface,
     InstructionsAndPreferencesImagesInterface,
