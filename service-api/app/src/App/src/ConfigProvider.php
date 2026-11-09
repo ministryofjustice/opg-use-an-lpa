@@ -96,6 +96,7 @@ final class ConfigProvider
                 'cache.one-login'                                             => Service\Cache\Symfony\PoolFactory::class,
                 'cache.system-message'                                        => Service\Cache\Symfony\PoolFactory::class,
                 'cache.lpa-data-store'                                        => Service\Cache\Symfony\PoolFactory::class,
+                'cache.lpa-in-session'                                        => Service\Cache\Symfony\PoolFactory::class,
 
                 // PSR18
                 Psr\Http\Client\ClientInterface::class                        => Service\ApiClient\ClientFactory::class,
