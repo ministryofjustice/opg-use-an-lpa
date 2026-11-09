@@ -22,7 +22,7 @@
                         {{ govuk_form_element(form.get('__csrf')) }}
 
                         {{ govuk_form_element(form.get('opg_reference_number'), {
-                            'label': 'LPA reference number' | trans,
+                            'label': 'request-activation-key.reference-number.opg_reference_number' | trans,
                             'hint': feature_enabled("paper_verification") ? 'request-activation-key.reference-number.field-lpa-reference-number.hint-with-paper-verification' | trans : 'request-activation-key.reference-number.field-lpa-reference-number.hint-without-paper-verification' | trans,
                             'attr' : {
                                 'class': 'govuk-input--width-20',
