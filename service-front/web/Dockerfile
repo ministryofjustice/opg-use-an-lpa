@@ -1,7 +1,7 @@
 FROM docker.io/node:24.22.1-alpine3.23@sha256:0468540aa58203ff9e40c2aab3907c52644ab818af6176b1c70a026137dc92a2 AS node
 
 # Alpine 3.23's python3 package is older than the supported security baseline.
-FROM python:3.14.9-alpine3.23@sha256:a3d4eff2e4a3de12d9709b3e80cee788109d7292955972a83f5fff81b06c2e95
+FROM python:3.15.1-alpine3.23@sha256:cb295b554dbbea09b2c0e6e6d9ce55f051347c902fbb611e618c071addfb30a3
 
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
 COPY --from=node /usr/local/bin/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
