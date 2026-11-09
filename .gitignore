@@ -27,6 +27,7 @@ tests/vendor
 
 auth.json
 docker-compose.override.yml
+local-config/ministack/runtime/
 
 # Compiled local seeding binary (built by scripts/unused_accounts/test_unused_accounts.sh)
 scripts/seed_unused_accounts/seed_unused_accounts
