@@ -111,7 +111,7 @@ class OneLoginService implements LogoutStrategy
             '/v1/auth/logout',
             [
                 'user'      => $user,
-                'ui_locale' => Locale::getPrimaryLanguage($locale),
+                'ui_locale' => Locale::getPrimaryLanguage($locale), // strips '_GB' from full locale
             ]
         );
 
