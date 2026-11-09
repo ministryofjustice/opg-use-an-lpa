@@ -265,45 +265,25 @@ services:
   # Lambda to upload stats
 
   upload-stats-lambda:
+    profiles: [lambda-images]
+    image: ${COMPOSE_PROJECT_NAME:-opg-use-an-lpa}-upload-statistics:local
     build:
       context: ./lambda-functions/upload-statistics
       dockerfile: Dockerfile
-    environment:
-      ENVIRONMENT: local
-      REGION: eu-west-1
-      AWS_ACCESS_KEY_ID: 'devkey'
-      AWS_SECRET_ACCESS_KEY: 'secretdevkey'
-    volumes:
-      - ./lambda-functions/upload-statistics/app/upload_statistics.py:/app/upload_statistics.py
-      - ./lambda-functions/.aws-lambda-rie:/aws-lambda
-    ports:
-      - 9007:8080
-    entrypoint: [ "/aws-lambda/aws-lambda-rie", "python", "-m", "awslambdaric" ]
-    command: [ "upload_statistics.lambda_handler" ]
 
   unused-accounts-lambda:
+    profiles: [lambda-images]
+    image: ${COMPOSE_PROJECT_NAME:-opg-use-an-lpa}-unused-accounts:local
     build:
       context: ./lambda-functions/unused-accounts
       dockerfile: Dockerfile
-    environment:
-      BUCKET: unused-accounts-bucket
-      REGION: eu-west-1
-      WORK_FILE_PREFIX: todo
-      PLAN_FILE_PREFIX: plan
-      MONTHS_INACTIVE: 6
-      # match the 900s timeout in terraform/environment/unused_account.tf (the emulator default is 300s)
-      AWS_LAMBDA_FUNCTION_TIMEOUT: 900
-      AWS_ACCESS_KEY_ID: 'devkey'
-      AWS_SECRET_ACCESS_KEY: 'secretdevkey'
-      AWS_ENDPOINT_DYNAMODB:
-      AWS_ENDPOINT_S3:
-    volumes:
-      - ./lambda-functions/unused-accounts/delete_unused_accounts.py:/app/delete_unused_accounts.py
-      - ./lambda-functions/.aws-lambda-rie:/aws-lambda
-    ports:
-      - 9008:8080
-    entrypoint: [ "/aws-lambda/aws-lambda-rie", "python", "-m", "awslambdaric" ]
-    command: [ "lambda.lambda_handler" ]
+
+  event-receiver-image:
+    profiles: [lambda-images]
+    image: ${COMPOSE_PROJECT_NAME:-opg-use-an-lpa}-event-receiver:local
+    build:
+      context: ./lambda-functions/event-receiver
+      target: local
 
   proxy:
     image: traefik:v3.7.16@sha256:c8a121e4bb1347e8fd52657fab12f2cb70b68f8a018895e2068f92c9e519b9c2
