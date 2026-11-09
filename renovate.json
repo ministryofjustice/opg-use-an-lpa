@@ -278,6 +278,17 @@
         "psalm/plugin-phpunit"
       ],
       "allowedVersions": "< 0.20.0"
+    },
+    {
+      "description": "Python: disable minor & patch version updates (pyproject requires-python and Docker images), these are done by hand",
+      "matchDepNames": [
+        "python"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "enabled": false
     }
   ],
   "major": {
