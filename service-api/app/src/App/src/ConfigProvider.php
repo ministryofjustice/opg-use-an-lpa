@@ -46,6 +46,7 @@ final class ConfigProvider
                 Psr\Cache\CacheItemPoolInterface::class                                => 'cache.request',
                 CacheInterface::class                                                  => 'cache.request',
                 TagAwareCacheInterface::class                                          => 'cache.request.taggable',
+                Service\Lpa\SessionLpaCacheInterface::class                            => Service\Lpa\SessionLpaCache::class,
 
                 // PSR20
                 Psr\Clock\ClockInterface::class                                        => Service\InternalClock::class,

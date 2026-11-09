@@ -22,15 +22,19 @@ use App\Service\Lpa\{Combined\FilterActiveActors,
     IsValidLpa,
     LpaDataFormatter,
     ResolveActor};
+use App\Service\Lpa\SessionLpaCacheInterface;
 use App\Value\LpaUid;
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
+#[CoversClass(CombinedLpaManager::class)]
 class CombinedLpaManagerTest extends TestCase
 {
     private AuditableLpasInterface&MockObject $dataStoreLpasMock;
@@ -45,6 +49,7 @@ class CombinedLpaManagerTest extends TestCase
     private UserLpaActorMapInterface&MockObject $userLpaActorMapInterfaceMock;
     private ViewerCodeActivityInterface&MockObject $viewerCodesActivityMock;
     private ViewerCodesInterface&MockObject $viewerCodesMock;
+    private SessionLpaCacheInterface&MockObject $sessionLpaCacheMock;
 
     public function setUp(): void
     {
@@ -61,6 +66,12 @@ class CombinedLpaManagerTest extends TestCase
         $this->filterActiveActorsMock = $this->createMock(FilterActiveActors::class);
         $this->rejectInvalidLpaMock   = $this->createMock(RejectInvalidLpa::class);
         $this->loggerMock             = $this->createMock(LoggerInterface::class);
+        $this->sessionLpaCacheMock    = $this->createMock(SessionLpaCacheInterface::class);
+        $this->sessionLpaCacheMock->method('lookup')->willReturnCallback(
+            static function (array $uids, ?string $sessionId, callable $lookup): array {
+                return $uids === [] ? [] : $lookup(array_values($uids));
+            },
+        );
     }
 
     #[Test]
@@ -1069,6 +1080,140 @@ class CombinedLpaManagerTest extends TestCase
         $this->assertArrayHasKey('lpa', $result);
     }
 
+    public static function sessionCacheLookups(): array
+    {
+        return [
+            'cached dashboard'   => [
+                'getAllActiveForUser',
+                'session-one',
+                true,
+            ],
+            'uncached dashboard' => [
+                'getAllActiveForUser',
+                'session-one',
+                false,
+            ],
+            'no session'         => [
+                'getAllActiveForUser',
+                null,
+                false,
+            ],
+            'all LPAs'           => [
+                'getAllForUser',
+                null,
+                false,
+            ],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('sessionCacheLookups')]
+    public function it_should_delegate_lookups_to_the_session_cache_and_keep_account_mappings_live(
+        string $method,
+        ?string $sessionId,
+        bool $cached,
+    ): void {
+        $sirius    = new Lpa($this->loadTestSiriusLpaFixture(), new DateTimeImmutable());
+        $store     = new Lpa($this->loadTestLpaStoreLpaFixture(), new DateTimeImmutable());
+        $siriusUid = $sirius->getData()->getUid();
+        $storeUid  = $store->getData()->getUid();
+        $maps      = [
+            [
+                'Id'        => 'sirius-token',
+                'SiriusUid' => $siriusUid,
+                'ActorId'   => 'actor-one',
+                'Added'     => new DateTimeImmutable(),
+            ],
+            [
+                'Id'      => 'store-token',
+                'LpaUid'  => $storeUid,
+                'ActorId' => 'actor-two',
+                'Added'   => new DateTimeImmutable(),
+            ],
+        ];
+
+        $this->userLpaActorMapInterfaceMock->expects(self::exactly(2))
+            ->method('getByUserId')
+            ->with('user')
+            ->willReturnOnConsecutiveCalls($maps, []);
+        $this->resolveLpaTypesMock->expects(self::exactly(2))
+            ->method('__invoke')
+            ->willReturnCallback(
+                static fn (array $items): array => $items === []
+                    ? [
+                        [],
+                        [],
+                    ]
+                    : [
+                        [$siriusUid],
+                        [$storeUid],
+                    ],
+            );
+        $this->isValidLpaMock->method('__invoke')->willReturn(true);
+
+        $this->siriusLpasMock->expects($cached ? self::never() : self::once())
+            ->method('lookup')
+            ->with([$siriusUid])
+            ->willReturn([$siriusUid => $sirius]);
+        $this->dataStoreLpasMock->expects($cached ? self::never() : self::once())
+            ->method('setOriginatorId')
+            ->with('user')
+            ->willReturnSelf();
+        $this->dataStoreLpasMock->expects($cached ? self::never() : self::once())
+            ->method('lookup')
+            ->with([$storeUid])
+            ->willReturn([$store]);
+
+        $this->sessionLpaCacheMock = $this->createMock(SessionLpaCacheInterface::class);
+        $this->sessionLpaCacheMock->expects(self::exactly(4))
+            ->method('lookup')
+            ->with(
+                self::callback(static fn (array $uids): bool => in_array(
+                    $uids,
+                    [
+                        [],
+                        [$siriusUid],
+                        [$storeUid],
+                    ],
+                    true,
+                )),
+                $sessionId,
+                self::callback('is_callable'),
+            )
+            ->willReturnCallback(
+                static function (
+                    array $uids,
+                    ?string $session,
+                    callable $lookup,
+                ) use (
+                    $cached,
+                    $siriusUid,
+                    $sirius,
+                    $store,
+                ): array {
+                    if ($uids === []) {
+                        return [];
+                    }
+
+                    return $cached
+                        ? ($uids === [$siriusUid] ? [$siriusUid => $sirius] : [$store])
+                        : $lookup($uids);
+                },
+            );
+
+        $service = $this->getLpaService();
+        $result  = $method === 'getAllForUser'
+            ? $service->getAllForUser('user')
+            : $service->getAllActiveForUser('user', $sessionId);
+
+        self::assertSame($sirius->getData(), $result['sirius-token']['lpa']);
+        self::assertSame($store->getData(), $result['store-token']['lpa']);
+        self::assertCount(2, $result);
+        self::assertSame([], $method === 'getAllForUser'
+            ? $service->getAllForUser('user')
+            : $service->getAllActiveForUser('user', $sessionId));
+    }
+
     private function getLpaService(): CombinedLpaManager
     {
         return new CombinedLpaManager(
@@ -1084,6 +1229,7 @@ class CombinedLpaManagerTest extends TestCase
             $this->filterActiveActorsMock,
             $this->rejectInvalidLpaMock,
             $this->loggerMock,
+            $this->sessionLpaCacheMock,
         );
     }
 

@@ -6,29 +6,31 @@ namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\InstructionsAndPreferencesImagesInterface;
 use App\DataAccess\Repository\LpasInterface;
+use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
+use App\DataAccess\Repository\Response\Lpa;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\ViewerCodeActivityInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
-use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
-use App\DataAccess\Repository\Response\Lpa;
 use App\Enum\InstructionsAndPreferencesImagesResult;
 use App\Exception\ApiException;
 use App\Exception\MissingCodeExpiryException;
 use App\Exception\NotFoundException;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\Combined\FilterActiveActors;
+use App\Service\Lpa\Combined\RejectInvalidLpa;
 use App\Service\Lpa\IsValidLpa;
 use App\Service\Lpa\ResolveActor;
 use App\Service\Lpa\ResolveActor\ActorType;
 use App\Service\Lpa\ResolveActor\LpaActor;
+use App\Service\Lpa\SessionLpaCacheInterface;
 use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusLpaManager;
 use App\Service\Lpa\SiriusPerson;
-use App\Service\Lpa\Combined\RejectInvalidLpa;
 use App\Value\LpaUid;
 use DateInterval;
 use DateTime;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -52,6 +54,7 @@ class SiriusLpaManagerTest extends TestCase
     private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
     private RejectInvalidLpa|ObjectProphecy $rejectInvalidLpaProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private SessionLpaCacheInterface&Stub $sessionLpaCache;
 
     public function setUp(): void
     {
@@ -67,6 +70,10 @@ class SiriusLpaManagerTest extends TestCase
         $this->featureEnabledProphecy              = $this->prophesize(FeatureEnabled::class);
         $this->rejectInvalidLpaProphecy            = $this->prophesize(RejectInvalidLpa::class);
         $this->loggerProphecy                      = $this->prophesize(LoggerInterface::class);
+        $this->sessionLpaCache                     = $this->createStub(SessionLpaCacheInterface::class);
+        $this->sessionLpaCache->method('lookup')->willReturnCallback(
+            static fn (array $uids, ?string $sessionId, callable $lookup): array => $lookup(array_values($uids)),
+        );
     }
 
     private function getLpaService(): SiriusLpaManager
@@ -82,6 +89,7 @@ class SiriusLpaManagerTest extends TestCase
             $this->filterActiveActorsProphecy->reveal(),
             $this->rejectInvalidLpaProphecy->reveal(),
             $this->loggerProphecy->reveal(),
+            $this->sessionLpaCache,
         );
     }
 
