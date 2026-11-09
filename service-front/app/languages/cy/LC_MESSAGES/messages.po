@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-26 13:07+0000\n"
+"PO-Revision-Date: 2026-11-09 15:53+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=(n==0) ? 0 : (n==1) ? 1 : (n==2) ? 2 : (n==3) ? 3 :(n==6) ? 4 : 5;\n"
-"X-Generator: Weblate 2026.10.1\n"
+"X-Generator: Weblate 2026.11.1\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
 msgid "This LPA has restrictions and conditions.<br>"
@@ -4871,3 +4871,29 @@ msgstr "Mis"
 #: src/Common/templates/partials/govuk_form.html.twig:188
 msgid "common.field-year.label"
 msgstr "Blwyddyn"
+
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:3
+msgid "request-activation-key.reference-number.title"
+msgstr "Beth yw cyfeirnod yr LPA?"
+
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:18
+msgid "request-activation-key.reference-number.heading-page"
+msgstr "Beth yw cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>?"
+
+#. Contains a line break. Preserve the HTML markup when translating.
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:26
+msgctxt "html"
+msgid ""
+"request-activation-key.reference-number.field-lpa-reference-number.hint-with-"
+"paper-verification"
+msgstr "Mae cyfeirnodau <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn cynnwys 12 rhif, er enghraifft 7000-0000-0000.<br>Mae rhai cyfeirnodau <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn dechrau gyda M, er enghraifft M-1111-2222-3333."
+
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:26
+msgid ""
+"request-activation-key.reference-number.field-lpa-reference-number.hint-"
+"without-paper-verification"
+msgstr "Mae cyfeirnodau <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn cynnwys 12 rhif, er enghraifft 7000-0000-0000."
+
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:25
+msgid "request-activation-key.reference-number.opg_reference_number"
+msgstr "Beth yw cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>?"
