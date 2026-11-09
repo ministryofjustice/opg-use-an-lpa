@@ -17,21 +17,6 @@
 
                     <h1 class="govuk-heading-xl" id="ref_number_heading">{% trans %}request-activation-key.reference-number.heading-page{% endtrans %}</h1>
 
-                    <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaCategory="Details" data-gaAction="Reference Number" data-gaLabel="My reference number is not 12 numbers long">
-                        <summary class="govuk-details__summary">
-                                    <span class="govuk-details__summary-text">
-                                        {% trans %}Where to find the reference number{% endtrans %}
-                                    </span>
-                        </summary>
-
-                        <div class="govuk-details__text">
-                            <ul class="govuk-list govuk-list--bullet">
-                                <li>{% trans %}the reference number is on the first page of the LPA or any related letters from the Office of the Public Guardian{% endtrans %}</li>
-                                <li>{% trans %}the reference may also be marked as ‘OPG reference number’, ‘Our ref’ or ‘Case number’{% endtrans %}</li>
-                            </ul>
-                        </div>
-                    </details>
-
                     {{ govuk_form_open(form) }}
 
                         {{ govuk_form_element(form.get('__csrf')) }}
