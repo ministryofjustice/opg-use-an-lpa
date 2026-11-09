@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Service\Log\RequestTracingLogProcessorFactory;
 use Aws\Sdk;
 use BehatTest\Common\Service\Aws\SdkFactory;
+use BehatTest\Common\Service\Cache\TagAwareArrayPoolFactory;
 use BehatTest\GuzzleHttp\TestClientFactory;
 use Elie\PHPDI\Config\ConfigInterface;
 use Laminas\ConfigAggregator\ConfigAggregator;
@@ -18,6 +19,7 @@ return [
         'factories' => [
             ClientInterface::class => TestClientFactory::class,
             Sdk::class             => SdkFactory::class,
+            'cache.lpa-in-session' => TagAwareArrayPoolFactory::class,
         ],
     ],
     'aws'                                    => [
