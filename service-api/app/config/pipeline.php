@@ -2,27 +2,22 @@
 
 declare(strict_types=1);
 
+use App\Middleware\Logging\RequestTracingMiddleware;
+use App\Middleware\ProblemDetailsMiddleware;
+use App\Middleware\UserIdentificationMiddleware;
 use Laminas\Stratigility\Middleware\ErrorHandler;
 use Mezzio\Application;
 use Mezzio\Handler\NotFoundHandler;
 use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 use Mezzio\Helper\ServerUrlMiddleware;
 use Mezzio\Helper\UrlHelperMiddleware;
-use Mezzio\MiddlewareFactory;
 use Mezzio\Router\Middleware\DispatchMiddleware;
 use Mezzio\Router\Middleware\ImplicitHeadMiddleware;
 use Mezzio\Router\Middleware\ImplicitOptionsMiddleware;
 use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
-use Psr\Container\ContainerInterface;
-use App\Middleware\Logging\RequestTracingMiddleware;
-use App\Middleware\ProblemDetailsMiddleware;
-use App\Middleware\UserIdentificationMiddleware;
 
-/**
- * @psalm-suppress UnusedClosureParam
- */
-return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
+return function (Application $app): void {
     // The error handler should be the first (most outer) middleware to catch
     // all Exceptions.
     $app->pipe(ErrorHandler::class);
@@ -78,6 +73,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->pipe('/v1/actor-codes', UserIdentificationMiddleware::class);
     $app->pipe('/v1/lpas', UserIdentificationMiddleware::class);
     $app->pipe('/v1/older-lpa', UserIdentificationMiddleware::class);
+    $app->pipe('/v1/auth/logout', UserIdentificationMiddleware::class);
 
     // Register the dispatch middleware in the middleware pipeline
     $app->pipe(DispatchMiddleware::class);
