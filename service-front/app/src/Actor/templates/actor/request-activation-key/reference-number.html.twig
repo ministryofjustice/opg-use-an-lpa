@@ -15,19 +15,20 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
+                    <h1 class="govuk-heading-xl" id="ref_number_heading">{% trans %}request-activation-key.reference-number.heading-page{% endtrans %}</h1>
+
                     {{ govuk_form_open(form) }}
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 
                         {{ govuk_form_element(form.get('opg_reference_number'), {
                             'label': 'request-activation-key.reference-number.opg_reference_number' | trans,
-                            'label_is_page_heading': true,
                             'hint': feature_enabled("paper_verification") ? 'request-activation-key.reference-number.field-lpa-reference-number.hint-with-paper-verification' | trans : 'request-activation-key.reference-number.field-lpa-reference-number.hint-without-paper-verification' | trans,
                             'attr' : {
-                                'class': 'govuk-input--width-20 govuk-input--extra-letter-spacing',
-                                'label_class': 'govuk-label--xl'
+                                'class': 'govuk-input--width-20',
+                                'label_class': 'govuk-label--s'
                             },
-                            'spellcheck': 'false'
+                            'aria_labelledby': 'ref_number_heading'
                         }) }}
 
                         <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}common.button-continue{% endtrans %}</button>
