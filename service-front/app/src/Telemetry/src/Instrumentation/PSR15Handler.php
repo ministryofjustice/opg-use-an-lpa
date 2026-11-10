@@ -57,7 +57,9 @@ final class PSR15Handler
             'https://opentelemetry.io/schemas/1.38.0',
         );
 
-        // The SDK autoloader's builder does not expose an ID generator setter.
+        // The SDK autoloader's builder does not expose an ID generator setter so
+        // monkeypatch itself and inject a custom root ID generator.
+        // This might be brittle but it's the only way to inject a custom ID generator.
         hook(
             TracerProvider::class,
             '__construct',
