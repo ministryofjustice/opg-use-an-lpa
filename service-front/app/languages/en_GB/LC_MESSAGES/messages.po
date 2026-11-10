@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-09 15:26+0000\n"
-"Last-Translator: Nick Davis <nicholas.davis@publicguardian.gov.uk>\n"
+"PO-Revision-Date: 2026-11-10 15:06+0000\n"
+"Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
@@ -1850,11 +1850,11 @@ msgstr "Address line 2 (optional)"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:40
 msgid "Town or city"
-msgstr "Town or city"
+msgstr "Address line 3"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:45
 msgid "County (optional)"
-msgstr "County (optional)"
+msgstr "Address line 4 (optional)"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:60
 msgid "Is this the same address as your address on the paper LPA?"
