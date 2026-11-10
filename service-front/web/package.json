@@ -12,7 +12,7 @@
     "install-and-build": "npm ci --ignore-scripts && npm run build",
     "build": " npm run build-scss && node build.js",
     "accessibility-check": "node ./pa11y.js",
-    "build-scss": "npm rebuild sass --verbose && sass --load-path=./ --verbose src/main.scss:dist/stylesheets/main.css src/gds.scss:dist/stylesheets/gds.css src/pdf.scss:dist/pdf.css --style compressed"
+    "build-scss": "npm rebuild sass --verbose && sass --load-path=./ --load-path=node_modules --verbose src/main.scss:dist/stylesheets/main.css src/gds.scss:dist/stylesheets/gds.css src/pdf.scss:dist/pdf.css --style compressed"
   },
   "author": "John Nolan <john.nolan@digital.justice.gov.uk>",
   "license": "MIT",
