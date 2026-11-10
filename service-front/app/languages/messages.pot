@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2026-11-09T09:23:50+00:00\n"
+"POT-Creation-Date: 2026-11-10T10:32:35+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -243,7 +243,6 @@ msgstr ""
 msgid "By continuing, you are agreeing to the <a href=\"%link%\" class=\"govuk-link\">terms of the Use a lasting power of attorney service.</a>"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:62
 #: src/Actor/templates/actor/check-your-answers.html.twig:95
 #: src/Actor/templates/actor/contact-details.html.twig:40
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:75
@@ -283,7 +282,6 @@ msgstr ""
 msgid "Confirm this is the correct LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:9
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:8
 #: src/Actor/templates/actor/change-details.html.twig:14
 #: src/Actor/templates/actor/change-lpa-details.html.twig:14
@@ -437,7 +435,6 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:66
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:99
 #: src/Actor/templates/actor/check-lpa.html.twig:104
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
@@ -477,22 +474,6 @@ msgstr ""
 
 #: src/Actor/templates/actor/lpa-removed.html.twig:24
 msgid "the donor has removed you as an attorney"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:23
-msgid "Do you have an activation key to add an LPA?"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:35
-msgid "Activation keys are 12 letters and numbers long and start with a C, for example: C-AB12 CD34 EF56."
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:49
-msgid "Yes, I have an activation key"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:53
-msgid "No, I need to request an activation key"
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:3
@@ -4525,14 +4506,6 @@ msgctxt "error"
 msgid "As you have not used this service for over 20 minutes, the page has timed out"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:28
-msgid "You need your own unique activation key to add an LPA to your account. These are sent to you when the LPA is registered and expire after 12 months."
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:41
-msgid "If you’ve lost your activation key, it’s expired, or you’ve not had one before, you can request a new one."
-msgstr ""
-
 #: src/Common/templates/error/409.html.twig:12
 msgid "Your information is safe and any LPAs you’ve already added to this account are still there."
 msgstr ""
@@ -4688,6 +4661,7 @@ msgctxt "html-link"
 msgid "activation-key-request.start.reveal-content"
 msgstr ""
 
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:9
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:8
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:8
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:8
@@ -4696,6 +4670,7 @@ msgstr ""
 msgid "common.back-link"
 msgstr ""
 
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:47
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:41
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:45
@@ -4704,6 +4679,7 @@ msgstr ""
 msgid "common.button-continue"
 msgstr ""
 
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:51
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:50
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:59
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:39
@@ -4800,4 +4776,26 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:25
 msgid "request-activation-key.reference-number.opg_reference_number"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:3
+msgid "add-lpa.triage.title"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:23
+msgid "add-lpa.triage.heading-page"
+msgstr ""
+
+#. Contains GOV.UK paragraph elements and classes. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:27
+msgctxt "html"
+msgid "add-lpa.triage.content.activation-key-information"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:34
+msgid "add-lpa.triage.field-activation-key-triage.label-yes"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:38
+msgid "add-lpa.triage.field-activation-key-triage.label-no"
 msgstr ""
