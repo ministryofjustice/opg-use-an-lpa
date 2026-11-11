@@ -25,7 +25,9 @@ final class OpgJsonFormatterTest extends TestCase
             'exception'  => new RuntimeException('Failed'),
         ];
         $record['extra']   = [
-            RequestTracing::TRACE_PARAMETER_NAME => 'Root=1-581cf771-a006649127e371903a2de979',
+            RequestTracing::TRACE_PARAMETER_NAME =>
+                'Root=1-581cf771-a006649127e371903a2de979;Parent=53995c3f42cd8ad8;Sampled=1',
+            'alb_trace_id'                       => 'Root=1-67891233-abcdef012345678912345678',
             'file'                               => '/app/example.php',
             'line'                               => 42,
         ];
@@ -37,7 +39,12 @@ final class OpgJsonFormatterTest extends TestCase
         self::assertSame('INFO', $output['level']);
         self::assertSame("A \"quoted\" message\nwith a newline", $output['msg']);
         self::assertSame('front-app', $output['service_name']);
-        self::assertSame('Root=1-581cf771-a006649127e371903a2de979', $output['trace_id']);
+        self::assertSame(
+            'Root=1-581cf771-a006649127e371903a2de979;Parent=53995c3f42cd8ad8;Sampled=1',
+            $output['trace_id'],
+        );
+        self::assertArrayNotHasKey('span_id', $output);
+        self::assertSame('Root=1-67891233-abcdef012345678912345678', $output['alb_trace_id']);
         self::assertSame('ACCOUNT_CREATED', $output['context']['event_code']);
         self::assertSame('Failed', $output['context']['exception']['message']);
         self::assertSame('default', $output['channel']);
@@ -52,6 +59,7 @@ final class OpgJsonFormatterTest extends TestCase
                 'context',
                 'extra',
                 'trace_id',
+                'alb_trace_id',
             ],
             array_keys($output),
         );
@@ -67,6 +75,8 @@ final class OpgJsonFormatterTest extends TestCase
         $output = json_decode((new OpgJsonFormatter('front-app'))->format($record), true, flags: JSON_THROW_ON_ERROR);
 
         self::assertArrayNotHasKey('trace_id', $output);
+        self::assertArrayNotHasKey('span_id', $output);
+        self::assertArrayNotHasKey('alb_trace_id', $output);
         self::assertSame($record['extra'], $output['extra']);
     }
 
