@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace Common\Service\Pdf;
 
-use Common\Service\Log\RequestTracing;
-use DI\Factory\RequestedEntry;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-class PdfServiceFactory
+final class PdfServiceFactory
 {
-    public function __invoke(ContainerInterface $container, RequestedEntry $entityClass)
+    public function __invoke(ContainerInterface $container): PdfService
     {
         $config = $container->get('config');
 
@@ -32,7 +30,6 @@ class PdfServiceFactory
             $container->get(StylesService::class),
             $container->get(LoggerInterface::class),
             $config['pdf']['uri'],
-            $container->get(RequestTracing::TRACE_PARAMETER_NAME)
         );
     }
 }
