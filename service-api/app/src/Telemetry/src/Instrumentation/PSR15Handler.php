@@ -13,8 +13,6 @@ use OpenTelemetry\API\Trace\SpanKind;
 use OpenTelemetry\API\Trace\StatusCode;
 use OpenTelemetry\Context\Context;
 use OpenTelemetry\SDK\Sdk;
-use OpenTelemetry\SDK\Trace\RandomIdGenerator;
-use OpenTelemetry\SDK\Trace\TracerProvider;
 use OpenTelemetry\SemConv\Attributes\CodeAttributes;
 use OpenTelemetry\SemConv\Attributes\HttpAttributes;
 use OpenTelemetry\SemConv\Attributes\NetworkAttributes;
@@ -26,7 +24,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Telemetry\AlbRootIdGenerator;
 use Throwable;
 
 use function OpenTelemetry\Instrumentation\hook;
@@ -34,7 +31,6 @@ use function OpenTelemetry\Instrumentation\hook;
 /**
  * Creates the root server span for an incoming request (continuing any propagated X-Ray/W3C trace) along
  * with internal spans for each application middleware and request handler executed.
- * Root-only ALB headers seed the server trace ID without supplying a remote parent or sampling decision.
  */
 final class PSR15Handler
 {
@@ -55,17 +51,6 @@ final class PSR15Handler
             'uk.gov.opg.use-an-lpa.psr15',
             null,
             'https://opentelemetry.io/schemas/1.38.0',
-        );
-
-        // The SDK autoloader's builder does not expose an ID generator setter so
-        // monkeypatch itself and inject a custom root ID generator.
-        // This might be brittle but it's the only way to inject a custom ID generator.
-        hook(
-            TracerProvider::class,
-            '__construct',
-            pre: static fn (TracerProvider $provider, array $params): array => [
-                4 => new AlbRootIdGenerator($params[4] ?? new RandomIdGenerator()),
-            ],
         );
 
         hook(MiddlewareInterface::class, 'process', pre: self::middlewarePre(...), post: self::middlewarePost(...));
@@ -137,15 +122,7 @@ final class PSR15Handler
         $parent = Context::getCurrent();
         if ($isRoot) {
             $parent = Globals::propagator()->extract($request->getHeaders());
-            $scope  = $parent
-                ->with(AlbRootIdGenerator::key(), $request->getHeaderLine('x-amzn-trace-id'))
-                ->activate();
-
-            try {
-                $span = self::withServerAttributes($builder->setParent($parent), $request)->startSpan();
-            } finally {
-                $scope->detach();
-            }
+            $span   = self::withServerAttributes($builder->setParent($parent), $request)->startSpan();
 
             $request = $request->withAttribute(SpanInterface::class, $span);
         } else {
