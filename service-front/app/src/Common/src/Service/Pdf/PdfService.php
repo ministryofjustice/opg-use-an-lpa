@@ -10,7 +10,6 @@ use Common\Entity\Lpa;
 use Common\Entity\Sirius\SiriusLpa;
 use Common\Exception\ApiException;
 use Common\Service\Log\EventCodes;
-use Common\Service\Log\RequestTracing;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
@@ -29,7 +28,6 @@ class PdfService
         private StylesService $styles,
         private LoggerInterface $logger,
         private string $apiBaseUri,
-        private string $traceId,
     ) {
     }
 
@@ -115,17 +113,12 @@ class PdfService
      */
     private function generateHeaders(): array
     {
-        $headers = [
+        return [
             'Content-Type'       => 'text/html',
             'Strip-Anchor-Tags'  => 'true',
             'Print-Background'   => 'true',
             'Emulate-Media-Type' => 'screen',
         ];
 
-        if (!empty($this->traceId)) {
-            $headers[RequestTracing::TRACE_HEADER_NAME] = $this->traceId;
-        }
-
-        return $headers;
     }
 }

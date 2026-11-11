@@ -7,6 +7,8 @@ use Elie\PHPDI\Config\ContainerFactory;
 use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\ConfigAggregator\PhpFileProvider;
 
+require_once __DIR__ . '/telemetry.php';
+
 $aggregator = new ConfigAggregator(
     [
         new PhpFileProvider(realpath(__DIR__) . '/../../config/config.php'),

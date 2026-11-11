@@ -7,76 +7,57 @@ namespace AppTest\DataAccess\ApiGateway;
 use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\ApiGateway\ActorCodesFactory;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
-use App\Service\Log\RequestTracing;
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-class ActorCodesFactoryTest extends TestCase
+#[CoversClass(ActorCodesFactory::class)]
+final class ActorCodesFactoryTest extends TestCase
 {
-    use ProphecyTrait;
-
     #[Test]
     public function it_creates_an_instance(): void
     {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
-        $containerProphecy
-            ->get('config')
-            ->willReturn(
-                [
-                    'codes_api' => [
-                        'endpoint' => 'test',
-                    ],
-                ]
-            );
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects(self::exactly(5))->method('get')->willReturnMap([
+            [
+                'config',
+                ['codes_api' => ['endpoint' => 'test']],
+            ],
+            [
+                ClientInterface::class,
+                $this->createStub(ClientInterface::class),
+            ],
+            [
+                RequestFactoryInterface::class,
+                $this->createStub(RequestFactoryInterface::class),
+            ],
+            [
+                StreamFactoryInterface::class,
+                $this->createStub(StreamFactoryInterface::class),
+            ],
+            [
+                RequestSignerFactory::class,
+                $this->createStub(RequestSignerFactory::class),
+            ],
+        ]);
 
-        $containerProphecy
-            ->get(ClientInterface::class)
-            ->willReturn($this->prophesize(ClientInterface::class)->reveal());
-
-        $containerProphecy
-            ->get(RequestFactoryInterface::class)
-            ->willReturn($this->prophesize(RequestFactoryInterface::class)->reveal());
-
-        $containerProphecy
-            ->get(StreamFactoryInterface::class)
-            ->willReturn($this->prophesize(StreamFactoryInterface::class)->reveal());
-
-        $containerProphecy
-            ->get(RequestSignerFactory::class)
-            ->willReturn($this->prophesize(RequestSignerFactory::class)->reveal());
-
-        $containerProphecy
-            ->get(RequestTracing::TRACE_PARAMETER_NAME)
-            ->willReturn('test-trace-id');
-
-        $factory = new ActorCodesFactory();
-
-        $actorCodes = $factory($containerProphecy->reveal());
-
-        $this->assertInstanceOf(ActorCodes::class, $actorCodes);
+        self::assertInstanceOf(ActorCodes::class, (new ActorCodesFactory())($container));
     }
 
     #[Test]
     public function it_fails_with_exception_when_config_missing(): void
     {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
-        $containerProphecy
-            ->get('config')
-            ->willReturn(
-                [
-                    'codes_api' => [],
-                ]
-            );
-
-        $factory = new ActorCodesFactory();
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects(self::once())->method('get')->with('config')->willReturn(['codes_api' => []]);
 
         $this->expectException(Exception::class);
-        $actorCodes = $factory($containerProphecy->reveal());
+        $this->expectExceptionMessage('Actor codes API Gateway endpoint is not set');
+
+        (new ActorCodesFactory())($container);
     }
 }

@@ -92,7 +92,6 @@ class PdfServiceTest extends TestCase
             $stylesProphecy->reveal(),
             $loggerProphecy->reveal(),
             'http://pdf-service:8080',
-            'Root=1-1-11'
         );
 
         $pdfStream = $service->getLpaAsPdf($lpa);
@@ -131,7 +130,6 @@ class PdfServiceTest extends TestCase
             $stylesProphecy->reveal(),
             $loggerProphecy->reveal(),
             'http://pdf-service:8080',
-            'Root=1-1-11'
         );
 
         $pdfStream = $service->getLpaAsPdf($lpa, $images);
@@ -168,7 +166,6 @@ class PdfServiceTest extends TestCase
             $stylesProphecy->reveal(),
             $loggerProphecy->reveal(),
             'http://pdf-service:8080',
-            'Root=1-1-11'
         );
 
         $this->expectException(ApiException::class);
@@ -205,7 +202,6 @@ class PdfServiceTest extends TestCase
             $stylesProphecy->reveal(),
             $loggerProphecy->reveal(),
             'http://pdf-service:8080',
-            'Root=1-1-11'
         );
 
         $this->expectException(ApiException::class);
@@ -214,7 +210,7 @@ class PdfServiceTest extends TestCase
     }
 
     #[Test]
-    public function it_correctly_attaches_a_tracing_header(): void
+    public function it_leaves_tracing_header_attachment_to_instrumentation(): void
     {
         $lpa = new Lpa();
 
@@ -229,8 +225,7 @@ class PdfServiceTest extends TestCase
 
         $clientProphecy = $this->prophesize(ClientInterface::class);
         $clientProphecy->sendRequest(Argument::that(function (RequestInterface $request) {
-            $this->assertCount(1, $request->getHeader('x-amzn-trace-id'));
-            $this->assertEquals('Root=1-1-11', $request->getHeader('x-amzn-trace-id')[0]);
+            $this->assertFalse($request->hasHeader('x-amzn-trace-id'));
 
             return true;
         }))
@@ -247,7 +242,6 @@ class PdfServiceTest extends TestCase
             $stylesProphecy->reveal(),
             $loggerProphecy->reveal(),
             'http://pdf-service:8080',
-            'Root=1-1-11'
         );
 
         $pdfStream = $service->getLpaAsPdf($lpa);

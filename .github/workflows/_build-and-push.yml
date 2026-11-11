@@ -219,7 +219,8 @@ jobs:
 
             docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
             docker exec tests docker-php-ext-enable xdebug
-            docker exec tests /usr/local/bin/php -dapc.enable_cli=1 -dxdebug.mode=coverage /app/vendor/bin/phpunit
+            docker exec tests sh -c 'echo "apc.enable_cli=1" > /usr/local/etc/php/conf.d/apcu-cli.ini'
+            docker exec tests /usr/local/bin/php -dxdebug.mode=coverage /app/vendor/bin/phpunit
 
             mkdir -p build/service-${SVC_PREFIX}
             docker cp tests:/app/build/pacts build/service-${SVC_PREFIX}/pacts

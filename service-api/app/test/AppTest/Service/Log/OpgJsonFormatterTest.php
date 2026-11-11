@@ -6,7 +6,6 @@ namespace AppTest\Service\Log;
 
 use App\Service\Log\OpgJsonFormatter;
 use App\Service\Log\OpgJsonFormatterFactory;
-use App\Service\Log\RequestTracing;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use Monolog\Logger;
@@ -25,9 +24,9 @@ final class OpgJsonFormatterTest extends TestCase
             'exception'  => new RuntimeException('Failed'),
         ];
         $record['extra']   = [
-            RequestTracing::TRACE_PARAMETER_NAME => 'Root=1-581cf771-a006649127e371903a2de979',
-            'file'                               => '/app/example.php',
-            'line'                               => 42,
+            'trace_id' => 'Root=1-581cf771-a006649127e371903a2de979',
+            'file'     => '/app/example.php',
+            'line'     => 42,
         ];
 
         $formatted = (new OpgJsonFormatter('api-app'))->format($record);
@@ -52,7 +51,7 @@ final class OpgJsonFormatterTest extends TestCase
     public function it_omits_trace_id_when_none_is_available(): void
     {
         $record = $this->record();
-        unset($record['extra'][RequestTracing::TRACE_PARAMETER_NAME]);
+        unset($record['extra']['trace_id']);
 
         $output = json_decode((new OpgJsonFormatter('api-app'))->format($record), true, flags: JSON_THROW_ON_ERROR);
 

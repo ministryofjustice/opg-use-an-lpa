@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace CommonTest\Service\Pdf;
 
 use PHPUnit\Framework\Attributes\Test;
-use Common\Service\Log\RequestTracing;
 use Common\Service\Pdf\PdfService;
 use Common\Service\Pdf\PdfServiceFactory;
 use Common\Service\Pdf\StylesService;
@@ -45,9 +44,6 @@ class PdfServiceFactoryTest extends TestCase
 
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
         $containerProphecy->get(LoggerInterface::class)->willReturn($loggerProphecy->reveal());
-
-        $containerProphecy->get(RequestTracing::TRACE_PARAMETER_NAME)->willReturn('Root=1-1-11');
-
 
         $factory    = new PdfServiceFactory();
         $pdfService = $factory(

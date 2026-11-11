@@ -502,7 +502,6 @@
     <UnusedProperty>
       <code><![CDATA[$renderer]]></code>
       <code><![CDATA[$styles]]></code>
-      <code><![CDATA[$traceId]]></code>
     </UnusedProperty>
   </file>
   <file src="src/Common/src/Service/Pdf/PdfServiceFactory.php">

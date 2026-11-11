@@ -49,7 +49,6 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
         RequestSignerFactory $requestSignerFactory,
         string $apiBaseUri,
         private readonly string $eventBusName,
-        string $traceId,
         private readonly DataSanitiserStrategy $sanitiser,
         private readonly LoggerInterface $logger,
         private FeatureEnabled $featureEnabled,
@@ -62,7 +61,6 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
             $streamFactory,
             $requestSignerFactory,
             $apiBaseUri,
-            $traceId,
         );
     }
 
@@ -144,10 +142,6 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
                 'Detail'       => json_encode(['uid' => $caseId->getLpaUid(), 'actor' => $actorId]),
                 'EventBusName' => $this->eventBusName,
             ];
-
-            if (!empty($this->traceId)) {
-                $entry['TraceHeader'] = $this->traceId;
-            }
 
             $result = $this->eventBridgeClient->putEvents([
                 'Entries' => [$entry],

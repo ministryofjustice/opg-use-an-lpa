@@ -7,7 +7,6 @@ namespace CommonTest\Service\ApiClient;
 use Common\Service\ApiClient\Client;
 use Common\Service\ApiClient\ClientFactory;
 use Common\Service\Context\UserContext;
-use Common\Service\Log\RequestTracing;
 use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -22,7 +21,7 @@ use RuntimeException;
 #[CoversClass(ClientFactory::class)]
 #[UsesClass(Client::class)]
 #[UsesClass(UserContext::class)]
-class ClientFactoryTest extends TestCase
+final class ClientFactoryTest extends TestCase
 {
     #[Test]
     public function it_creates_an_apiclient(): void
@@ -36,7 +35,7 @@ class ClientFactoryTest extends TestCase
 
         $context   = new UserContext('current-user', 'current-session');
         $container = $this->createMock(ContainerInterface::class);
-        $container->expects(self::exactly(4))->method('get')->willReturnMap([
+        $container->expects(self::exactly(3))->method('get')->willReturnMap([
             [
                 'config',
                 ['api' => ['uri' => 'http://localhost']],
@@ -44,10 +43,6 @@ class ClientFactoryTest extends TestCase
             [
                 ClientInterface::class,
                 $httpClient,
-            ],
-            [
-                RequestTracing::TRACE_PARAMETER_NAME,
-                'a-trace-id',
             ],
             [
                 UserContext::class,
