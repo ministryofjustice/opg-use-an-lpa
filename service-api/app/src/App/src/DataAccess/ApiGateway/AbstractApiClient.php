@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\DataAccess\ApiGateway;
 
-use App\Service\Log\RequestTracing;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
@@ -38,10 +37,6 @@ class AbstractApiClient
             'Accept'       => 'application/vnd.opg-data.v1+json,application/json',
             'Content-Type' => 'application/json',
         ];
-
-        if (!empty($this->traceId)) {
-            $headerLines[RequestTracing::TRACE_HEADER_NAME] = $this->traceId;
-        }
 
         foreach ($headerLines as $header => $value) {
             $request = $request->withHeader($header, $value);

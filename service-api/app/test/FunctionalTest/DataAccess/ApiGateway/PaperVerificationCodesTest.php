@@ -14,15 +14,18 @@ use App\Value\LpaUid;
 use App\Value\PaperVerificationCode;
 use DateInterval;
 use DateTimeImmutable;
-use FunctionalTest\AbstractFunctionalTestCase;
 use PhpPact\Consumer\InteractionBuilder;
 use PhpPact\Consumer\Matcher\Matcher;
 use PhpPact\Consumer\Model\ConsumerRequest;
 use PhpPact\Consumer\Model\ProviderResponse;
 use PhpPact\Standalone\MockService\MockServerConfig;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\Test;
 
-class PaperVerificationCodesTest extends AbstractFunctionalTestCase
+#[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
+class PaperVerificationCodesTest extends TracedApiClientTestCase
 {
     private InteractionBuilder $builder;
 

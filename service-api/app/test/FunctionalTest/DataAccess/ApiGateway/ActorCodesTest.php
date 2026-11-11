@@ -8,15 +8,18 @@ use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\Repository\Response\ActorCodeIsValid;
 use App\Service\Log\RequestTracing;
 use App\Value\LpaUid;
-use FunctionalTest\AbstractFunctionalTestCase;
 use PhpPact\Consumer\InteractionBuilder;
 use PhpPact\Consumer\Matcher\Matcher;
 use PhpPact\Consumer\Model\ConsumerRequest;
 use PhpPact\Consumer\Model\ProviderResponse;
 use PhpPact\Standalone\MockService\MockServerConfig;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\Test;
 
-class ActorCodesTest extends AbstractFunctionalTestCase
+#[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
+class ActorCodesTest extends TracedApiClientTestCase
 {
     private InteractionBuilder $builder;
 
