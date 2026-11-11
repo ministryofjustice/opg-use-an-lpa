@@ -6,17 +6,14 @@ namespace Common\Service\Log;
 
 use DI\NotFoundException;
 use Monolog\Processor\ProcessorInterface;
+use OpenTelemetry\Contrib\Aws\Xray\Propagator;
 use Psr\Container\ContainerInterface;
 
-class RequestTracingLogProcessor implements ProcessorInterface
+final class RequestTracingLogProcessor implements ProcessorInterface
 {
     /**
-     * This log process needs access to the latest trace-id that has been discovered. Because this
-     * process happens in a middleware and because this processor may be instantiated before that
-     * middleware we need to be able to query that traceId at runtime - and so for that we need
-     * to be given the container.
-     *
-     * @param ContainerInterface $container
+     * The container supplies the original incoming header for access-log correlation only.
+     * The full X-Ray tracing header is generated from the active OTEL context for each record.
      */
     public function __construct(private ContainerInterface $container)
     {
@@ -27,14 +24,25 @@ class RequestTracingLogProcessor implements ProcessorInterface
      */
     public function __invoke(array $record): array
     {
-        try {
-            $traceId = $this->container->get(RequestTracing::TRACE_PARAMETER_NAME);
-        } catch (NotFoundException) {
-            // we tried our best
-            $traceId = 'NO-TRACE-ID-DISCOVERED';
+        $headers = [];
+
+        (new Propagator())->inject($headers);
+
+        if (isset($headers[RequestTracing::TRACE_HEADER_NAME])) {
+            $record['extra']['trace_id'] = $headers[RequestTracing::TRACE_HEADER_NAME];
         }
 
-        $record['extra'][RequestTracing::TRACE_PARAMETER_NAME] = $traceId;
+        try {
+            $header = $this->container->get(RequestTracing::TRACE_PARAMETER_NAME);
+        } catch (NotFoundException) {
+            // Logs emitted before request middleware runs have no incoming header.
+            $header = null;
+        }
+
+        if (is_string($header) && $header !== '') {
+            $record['extra']['alb_trace_id'] = $header;
+        }
+
         return $record;
     }
 }
