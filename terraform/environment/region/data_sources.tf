@@ -95,6 +95,17 @@ data "aws_ecr_image" "pdf_service" {
   provider        = aws.management
 }
 
+data "aws_ecr_repository" "gotenberg" {
+  name     = "shared/opg-gotenberg"
+  provider = aws.management
+}
+
+data "aws_ecr_image" "gotenberg" {
+  repository_name = data.aws_ecr_repository.gotenberg.name
+  image_tag       = var.gotenberg_tag
+  provider        = aws.management
+}
+
 data "aws_ecr_repository" "use_an_lpa_admin_app" {
   provider = aws.management
   name     = "use_an_lpa/admin_app"

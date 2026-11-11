@@ -9,6 +9,7 @@ locals {
   # Desired count of the ECS services. Only an active region will have a desired count greater than 0.
   use_desired_count           = local.is_active_region ? var.autoscaling.use.minimum : 0
   pdf_desired_count           = local.is_active_region ? var.autoscaling.pdf.minimum : 0
+  gotenberg_desired_count     = local.is_active_region ? var.autoscaling.gotenberg.minimum : 0
   view_desired_count          = local.is_active_region ? var.autoscaling.view.minimum : 0
   api_desired_count           = local.is_active_region ? var.autoscaling.api.minimum : 0
   admin_desired_count         = local.is_active_region ? var.autoscaling.admin.minimum : 0

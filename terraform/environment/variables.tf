@@ -47,6 +47,10 @@ variable "environments" {
           minimum = number
           maximum = number
         })
+        gotenberg = object({
+          minimum = number
+          maximum = number
+        })
       })
       cookie_expires_use                               = number
       cookie_expires_view                              = number
