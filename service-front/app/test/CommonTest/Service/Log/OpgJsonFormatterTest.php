@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace CommonTest\Service\Log;
 
 use Common\Service\Log\OpgJsonFormatter;
-use Common\Service\Log\RequestTracing;
 use DateTimeImmutable;
 use Monolog\Logger;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -25,11 +24,11 @@ final class OpgJsonFormatterTest extends TestCase
             'exception'  => new RuntimeException('Failed'),
         ];
         $record['extra']   = [
-            RequestTracing::TRACE_PARAMETER_NAME =>
+            'trace_id'     =>
                 'Root=1-581cf771-a006649127e371903a2de979;Parent=53995c3f42cd8ad8;Sampled=1',
-            'alb_trace_id'                       => 'Root=1-67891233-abcdef012345678912345678',
-            'file'                               => '/app/example.php',
-            'line'                               => 42,
+            'alb_trace_id' => 'Root=1-67891233-abcdef012345678912345678',
+            'file'         => '/app/example.php',
+            'line'         => 42,
         ];
 
         $formatted = (new OpgJsonFormatter('front-app'))->format($record);
@@ -83,8 +82,8 @@ final class OpgJsonFormatterTest extends TestCase
     #[Test]
     public function it_should_preserve_an_empty_trace_id(): void
     {
-        $record                                                = $this->record();
-        $record['extra'][RequestTracing::TRACE_PARAMETER_NAME] = '';
+        $record                      = $this->record();
+        $record['extra']['trace_id'] = '';
 
         $output = json_decode((new OpgJsonFormatter('front-app'))->format($record), true, flags: JSON_THROW_ON_ERROR);
 

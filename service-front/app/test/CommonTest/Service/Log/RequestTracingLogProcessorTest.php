@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Log;
 
-use Common\Service\Log\RequestTracing;
 use Common\Service\Log\RequestTracingLogProcessor;
-use DI\NotFoundException;
 use OpenTelemetry\API\Trace\Span;
 use OpenTelemetry\API\Trace\SpanContext;
 use OpenTelemetry\API\Trace\TraceFlags;
@@ -15,9 +13,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
+use Telemetry\IncomingTraceHeader;
 
 #[CoversClass(RequestTracingLogProcessor::class)]
+#[CoversClass(IncomingTraceHeader::class)]
 final class RequestTracingLogProcessorTest extends TestCase
 {
     /**
@@ -30,17 +29,16 @@ final class RequestTracingLogProcessorTest extends TestCase
     {
         $header = 'Root=1-67891233-abcdef012345678912345678';
 
-        $container = $this->createMock(ContainerInterface::class);
-        $container->method('get')->with(RequestTracing::TRACE_PARAMETER_NAME)->willReturn($header);
-
-        $processor = new RequestTracingLogProcessor($container);
+        $processor = new RequestTracingLogProcessor();
         $record    = [
             'message' => 'example',
             'extra'   => ['file' => 'example.php'],
         ];
 
         foreach (['53995c3f42cd8ad8', '63995c3f42cd8ad8'] as $spanId) { #pragma: allowlist secret
-            $scope = Span::wrap(SpanContext::create(str_repeat('a', 32), $spanId, $flags))->activate();
+            $context = Context::getRoot()->with(IncomingTraceHeader::key(), $header);
+            $scope   = Span::wrap(SpanContext::create(str_repeat('a', 32), $spanId, $flags))
+                ->storeInContext($context)->activate();
             try {
                 $result = $processor($record);
                 self::assertSame(
@@ -61,10 +59,7 @@ final class RequestTracingLogProcessorTest extends TestCase
             self::assertSame(
                 [
                     'message' => 'example',
-                    'extra'   => [
-                        'file'         => 'example.php',
-                        'alb_trace_id' => $header,
-                    ],
+                    'extra'   => ['file' => 'example.php'],
                 ],
                 $processor($record),
             );
@@ -84,12 +79,10 @@ final class RequestTracingLogProcessorTest extends TestCase
     #[Test]
     public function it_should_omit_identifiers_when_no_context_or_header_is_available(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-        $container->expects(self::once())->method('get')->willThrowException(new NotFoundException('No request yet'));
         $scope = Context::getRoot()->activate();
 
         try {
-            self::assertSame([], (new RequestTracingLogProcessor($container))([]));
+            self::assertSame([], (new RequestTracingLogProcessor())([]));
         } finally {
             $scope->detach();
         }
@@ -98,12 +91,10 @@ final class RequestTracingLogProcessorTest extends TestCase
     #[Test]
     public function it_should_omit_an_empty_incoming_header(): void
     {
-        $container = $this->createMock(ContainerInterface::class);
-        $container->expects(self::once())->method('get')->willReturn('');
-        $scope = Context::getRoot()->activate();
+        $scope = Context::getRoot()->with(IncomingTraceHeader::key(), '')->activate();
 
         try {
-            self::assertSame([], (new RequestTracingLogProcessor($container))([]));
+            self::assertSame([], (new RequestTracingLogProcessor())([]));
         } finally {
             $scope->detach();
         }

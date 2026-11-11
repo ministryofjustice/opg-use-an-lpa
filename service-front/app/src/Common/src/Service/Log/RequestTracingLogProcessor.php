@@ -4,21 +4,13 @@ declare(strict_types=1);
 
 namespace Common\Service\Log;
 
-use DI\NotFoundException;
 use Monolog\Processor\ProcessorInterface;
 use OpenTelemetry\Contrib\Aws\Xray\Propagator;
-use Psr\Container\ContainerInterface;
+use OpenTelemetry\Context\Context;
+use Telemetry\IncomingTraceHeader;
 
 final class RequestTracingLogProcessor implements ProcessorInterface
 {
-    /**
-     * The container supplies the original incoming header for access-log correlation only.
-     * The full X-Ray tracing header is generated from the active OTEL context for each record.
-     */
-    public function __construct(private ContainerInterface $container)
-    {
-    }
-
     /**
      * @inheritDoc
      */
@@ -32,12 +24,7 @@ final class RequestTracingLogProcessor implements ProcessorInterface
             $record['extra']['trace_id'] = $headers[RequestTracing::TRACE_HEADER_NAME];
         }
 
-        try {
-            $header = $this->container->get(RequestTracing::TRACE_PARAMETER_NAME);
-        } catch (NotFoundException) {
-            // Logs emitted before request middleware runs have no incoming header.
-            $header = null;
-        }
+        $header = Context::getCurrent()->get(IncomingTraceHeader::key());
 
         if (is_string($header) && $header !== '') {
             $record['extra']['alb_trace_id'] = $header;

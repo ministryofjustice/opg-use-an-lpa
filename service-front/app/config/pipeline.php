@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 use Common\Middleware\Context\UserContextMiddleware;
 use Common\Middleware\I18n\SetLocaleMiddleware;
-use Common\Middleware\Logging\RequestTracingMiddleware;
 use Common\Middleware\Security\CSPMiddleware;
 use Common\Middleware\Security\RateLimitMiddleware;
 use Common\Middleware\Security\UserIdentificationMiddleware;
@@ -57,8 +56,6 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // - $app->pipe('/api', $apiMiddleware);
     // - $app->pipe('/docs', $apiDocMiddleware);
     // - $app->pipe('/files', $filesMiddleware);
-
-    $app->pipe(RequestTracingMiddleware::class);
 
     // Discern the intended locale
     $app->pipe(SetLocaleMiddleware::class);
