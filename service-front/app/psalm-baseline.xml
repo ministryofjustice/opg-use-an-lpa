@@ -579,9 +579,6 @@
     </UndefinedPropertyFetch>
   </file>
   <file src="src/Viewer/src/Handler/DownloadLpaHandler.php">
-    <UndefinedClass>
-      <code><![CDATA[$lpa->lpa]]></code>
-    </UndefinedClass>
     <UndefinedPropertyFetch>
       <code><![CDATA[$lpa->iap]]></code>
       <code><![CDATA[$lpa->lpa]]></code>
