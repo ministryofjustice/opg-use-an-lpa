@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\DataAccess\ApiGateway;
 
 use App\DataAccess\Repository\InstructionsAndPreferencesImagesInterface;
-use App\Service\Log\RequestTracing;
 use Psr\Container\ContainerInterface;
 use Exception;
 use Psr\Http\Client\ClientInterface;
@@ -28,7 +27,6 @@ class InstructionsAndPreferencesImagesFactory
             $container->get(StreamFactoryInterface::class),
             $container->get(RequestSignerFactory::class),
             $config['iap_images_api']['endpoint'],
-            $container->get(RequestTracing::TRACE_PARAMETER_NAME)
         );
     }
 }

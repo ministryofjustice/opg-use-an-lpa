@@ -6,7 +6,6 @@ namespace BehatTest\Context\Integration;
 
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
 use App\Exception\GoneException;
-use App\Service\Log\RequestTracing;
 use App\Service\Lpa\SiriusLpaManager;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
@@ -244,9 +243,6 @@ class ViewerContext extends BaseIntegrationContext
 
     protected function prepareContext(): void
     {
-        // This is populated into the container using a Middleware which these integration
-        // tests wouldn't normally touch but the container expects
-        $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
         $this->awsFixtures = $this->container->get(AwsMockHandler::class);
 
         $this->lpaService = $this->container->get(SiriusLpaManager::class);

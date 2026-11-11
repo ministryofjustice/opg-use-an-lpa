@@ -36,7 +36,6 @@ class PaperVerificationCodesTest extends TracedApiClientTestCase
         $config                          = $this->container->get('config');
         $config['codes_api']['endpoint'] = 'http://localhost:9090';
 
-        $this->containerModifier->setValue(RequestTracing::TRACE_PARAMETER_NAME, 'trace-id');
         $this->containerModifier->setValue('config', $config);
 
         $mockServer = new MockServerConfig();

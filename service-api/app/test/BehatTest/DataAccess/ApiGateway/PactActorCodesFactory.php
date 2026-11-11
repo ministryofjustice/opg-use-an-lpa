@@ -6,7 +6,6 @@ namespace BehatTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
-use App\Service\Log\RequestTracing;
 use DI\NotFoundException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -35,7 +34,6 @@ class PactActorCodesFactory
             $container->get(StreamFactoryInterface::class),
             $container->get(RequestSignerFactory::class),
             parse_url($config['codes_api']['endpoint'], PHP_URL_HOST),
-            $container->get(RequestTracing::TRACE_PARAMETER_NAME)
         );
     }
 }

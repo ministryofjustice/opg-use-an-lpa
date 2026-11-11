@@ -2,27 +2,21 @@
 
 declare(strict_types=1);
 
+use App\Middleware\ProblemDetailsMiddleware;
+use App\Middleware\UserIdentificationMiddleware;
 use Laminas\Stratigility\Middleware\ErrorHandler;
 use Mezzio\Application;
 use Mezzio\Handler\NotFoundHandler;
 use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 use Mezzio\Helper\ServerUrlMiddleware;
 use Mezzio\Helper\UrlHelperMiddleware;
-use Mezzio\MiddlewareFactory;
 use Mezzio\Router\Middleware\DispatchMiddleware;
 use Mezzio\Router\Middleware\ImplicitHeadMiddleware;
 use Mezzio\Router\Middleware\ImplicitOptionsMiddleware;
 use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
-use Psr\Container\ContainerInterface;
-use App\Middleware\Logging\RequestTracingMiddleware;
-use App\Middleware\ProblemDetailsMiddleware;
-use App\Middleware\UserIdentificationMiddleware;
 
-/**
- * @psalm-suppress UnusedClosureParam
- */
-return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
+return function (Application $app): void {
     // The error handler should be the first (most outer) middleware to catch
     // all Exceptions.
     $app->pipe(ErrorHandler::class);
@@ -45,8 +39,6 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // - $app->pipe('/api', $apiMiddleware);
     // - $app->pipe('/docs', $apiDocMiddleware);
     // - $app->pipe('/files', $filesMiddleware);
-
-    $app->pipe(RequestTracingMiddleware::class);
 
     // Register the routing middleware in the middleware pipeline.
     // This middleware registers the Mezzio\Router\RouteResult request attribute.
