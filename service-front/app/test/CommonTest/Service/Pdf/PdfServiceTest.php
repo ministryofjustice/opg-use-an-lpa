@@ -4,99 +4,91 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Pdf;
 
-use PHPUnit\Framework\Attributes\Test;
+use Common\Entity\CombinedLpa;
 use Common\Entity\InstructionsAndPreferences\Images;
 use Common\Entity\InstructionsAndPreferences\ImagesStatus;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
+use Common\Service\Log\EventCodes;
 use Common\Service\Pdf\PdfService;
 use Common\Service\Pdf\StylesService;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Mezzio\Template\TemplateRendererInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
 
-class PdfServiceTest extends TestCase
+#[CoversClass(PdfService::class)]
+#[UsesClass(ApiException::class)]
+final class PdfServiceTest extends TestCase
 {
-    use ProphecyTrait;
+    private TemplateRendererInterface&MockObject $renderer;
+    private ClientInterface&MockObject $client;
+    private LoggerInterface&MockObject $logger;
+    private PdfService $service;
 
-    /**
-     * Create a {@link ResponseInterface} prophecy that returns a defined response body and code.
-     *
-     * @param string $body
-     * @param int $code
-     * @return ObjectProphecy
-     */
-    protected function setupResponse(string $body, int $code): ObjectProphecy
+    protected function setUp(): void
     {
-        $streamProphecy = $this->prophesize(StreamInterface::class);
-        $streamProphecy->getContents()
-            ->willReturn($body);
+        $this->renderer = $this->createMock(TemplateRendererInterface::class);
+        $this->client   = $this->createMock(ClientInterface::class);
+        $this->logger   = $this->createMock(LoggerInterface::class);
+        $styles         = $this->createStub(StylesService::class);
+        $styles->method('__invoke')->willReturn('pdf styles');
 
-        $responseProphecy = $this->prophesize(ResponseInterface::class);
-        $responseProphecy->getStatusCode()
-            ->willReturn($code);
-        $responseProphecy->getBody()
-            ->willReturn($streamProphecy->reveal());
-
-        return $responseProphecy;
+        $this->service = new PdfService(
+            $this->renderer,
+            $this->client,
+            $styles,
+            $this->logger,
+            'http://pdf-service:8080',
+        );
     }
 
     #[Test]
     public function it_returns_a_stream_when_given_an_lpa_without_images(): void
     {
         $lpa = new Lpa();
-
-        $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render(
+        $this->renderer->expects(self::once())->method('render')->with(
             'viewer::download-lpa',
             [
                 'lpa'       => $lpa,
-                'pdfStyles' => '',
-            ]
+                'pdfStyles' => 'pdf styles',
+            ],
         )->willReturn('<html></html>');
+        $response = new Response(200, [], 'PDF content');
+        $this->client->expects(self::once())->method('sendRequest')->with(self::callback(
+            static function (RequestInterface $request): bool {
+                self::assertSame('POST', $request->getMethod());
+                self::assertSame('http://pdf-service:8080/generate-pdf', (string) $request->getUri());
+                self::assertSame('<html></html>', (string) $request->getBody());
+                self::assertSame([
+                    'Host'               => ['pdf-service:8080'],
+                    'Content-Type'       => ['text/html'],
+                    'Strip-Anchor-Tags'  => ['true'],
+                    'Print-Background'   => ['true'],
+                    'Emulate-Media-Type' => ['screen'],
+                ], $request->getHeaders());
 
-        $clientProphecy = $this->prophesize(ClientInterface::class);
-        $clientProphecy->sendRequest(Argument::that(function (RequestInterface $request) {
-            $this->assertCount(1, $request->getHeader('Content-Type'));
-            $this->assertEquals('text/html', $request->getHeader('Content-Type')[0]);
-
-            $this->assertCount(1, $request->getHeader('Strip-Anchor-Tags'));
-            $this->assertEquals('true', $request->getHeader('Strip-Anchor-Tags')[0]);
-
-            $this->assertCount(1, $request->getHeader('Print-Background'));
-            $this->assertEquals('true', $request->getHeader('Print-Background')[0]);
-
-            $this->assertCount(1, $request->getHeader('Emulate-Media-Type'));
-            $this->assertEquals('screen', $request->getHeader('Emulate-Media-Type')[0]);
-
-            return true;
-        }))
-            ->willReturn($this->setupResponse('', 200));
-
-        $stylesProphecy = $this->prophesize(StylesService::class);
-        $stylesProphecy->__invoke()->willReturn('');
-
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
-        $service = new PdfService(
-            $rendererProphecy->reveal(),
-            $clientProphecy->reveal(),
-            $stylesProphecy->reveal(),
-            $loggerProphecy->reveal(),
-            'http://pdf-service:8080',
+                return true;
+            },
+        ))->willReturn($response);
+        $this->logger->expects(self::once())->method('notice')->with(
+            'Successfully generated PDF and presented for download {code}',
+            [
+                'event_code' => EventCodes::DOWNLOAD_SUMMARY,
+                'code'       => 200,
+            ],
         );
 
-        $pdfStream = $service->getLpaAsPdf($lpa);
-
-        $this->assertInstanceOf(StreamInterface::class, $pdfStream);
+        self::assertSame($response->getBody(), $this->service->getLpaAsPdf($lpa));
     }
 
     #[Test]
@@ -104,148 +96,88 @@ class PdfServiceTest extends TestCase
     {
         $lpa    = new Lpa();
         $images = new Images(700000000001, ImagesStatus::COLLECTION_COMPLETE, []);
-
-        $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render(
+        $this->renderer->expects(self::once())->method('render')->with(
             'viewer::download-lpa',
             [
                 'lpa'        => $lpa,
                 'iap_images' => $images,
-                'pdfStyles'  => '',
-            ]
+                'pdfStyles'  => 'pdf styles',
+            ],
         )->willReturn('<html></html>');
+        $response = new Response(200, [], 'PDF content');
+        $this->client->expects(self::once())->method('sendRequest')->willReturn($response);
+        $this->logger->expects(self::once())->method('notice');
 
-        $clientProphecy = $this->prophesize(ClientInterface::class);
-        $clientProphecy->sendRequest(Argument::any())
-            ->willReturn($this->setupResponse('', 200));
+        self::assertSame($response->getBody(), $this->service->getLpaAsPdf($lpa, $images));
+    }
 
-        $stylesProphecy = $this->prophesize(StylesService::class);
-        $stylesProphecy->__invoke()->willReturn('');
+    #[Test]
+    public function it_renders_datastore_lpas_with_the_combined_template(): void
+    {
+        $lpa = $this->createStub(CombinedLpa::class);
+        $this->renderer->expects(self::once())->method('render')->with(
+            'viewer::download-lpa-combined-lpa',
+            [
+                'lpa'       => $lpa,
+                'pdfStyles' => 'pdf styles',
+            ],
+        )->willReturn('<html></html>');
+        $response = new Response(200);
+        $this->client->expects(self::once())->method('sendRequest')->willReturn($response);
+        $this->logger->expects(self::once())->method('notice');
 
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
-        $service = new PdfService(
-            $rendererProphecy->reveal(),
-            $clientProphecy->reveal(),
-            $stylesProphecy->reveal(),
-            $loggerProphecy->reveal(),
-            'http://pdf-service:8080',
-        );
-
-        $pdfStream = $service->getLpaAsPdf($lpa, $images);
-
-        $this->assertInstanceOf(StreamInterface::class, $pdfStream);
+        self::assertSame($response->getBody(), $this->service->getLpaAsPdf($lpa));
     }
 
     #[Test]
     public function it_throws_an_exception_when_response_not_ok(): void
     {
-        $lpa = new Lpa();
-
-        $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render(
-            'viewer::download-lpa',
-            [
-                'lpa'       => $lpa,
-                'pdfStyles' => '',
-            ]
-        )->willReturn('<html></html>');
-
-        $clientProphecy = $this->prophesize(ClientInterface::class);
-        $clientProphecy->sendRequest(Argument::type(RequestInterface::class))
-            ->willReturn($this->setupResponse('', 500));
-
-        $stylesProphecy = $this->prophesize(StylesService::class);
-        $stylesProphecy->__invoke()->willReturn('');
-
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
-        $service = new PdfService(
-            $rendererProphecy->reveal(),
-            $clientProphecy->reveal(),
-            $stylesProphecy->reveal(),
-            $loggerProphecy->reveal(),
-            'http://pdf-service:8080',
-        );
+        $this->renderer->expects(self::once())->method('render')->willReturn('<html></html>');
+        $this->client->expects(self::once())->method('sendRequest')->willReturn(new Response(500));
+        $this->logger->expects(self::never())->method('notice');
+        $this->logger->expects(self::never())->method('error');
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(500);
-        $pdfStream = $service->getLpaAsPdf($lpa);
+        $this->service->getLpaAsPdf(new Lpa());
     }
 
     #[Test]
     public function it_handles_a_client_exception_by_throwing_an_api_exception(): void
     {
-        $lpa = new Lpa();
-
-        $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render(
-            'viewer::download-lpa',
+        $this->renderer->expects(self::once())->method('render')->willReturn('<html></html>');
+        $exception = new ConnectException('Connection failed', new Request('POST', 'http://pdf-service:8080'));
+        $this->client->expects(self::once())->method('sendRequest')->willThrowException($exception);
+        $this->logger->expects(self::once())->method('error')->with(
+            'Failed to generate PDF from service {code} {response}',
             [
-                'lpa'       => $lpa,
-                'pdfStyles' => '',
-            ]
-        )->willReturn('<html></html>');
-
-        $clientProphecy = $this->prophesize(ClientInterface::class);
-        $clientProphecy->sendRequest(Argument::type(RequestInterface::class))
-            ->willThrow($this->prophesize(ClientExceptionInterface::class)->reveal());
-
-        $stylesProphecy = $this->prophesize(StylesService::class);
-        $stylesProphecy->__invoke()->willReturn('');
-
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
-        $service = new PdfService(
-            $rendererProphecy->reveal(),
-            $clientProphecy->reveal(),
-            $stylesProphecy->reveal(),
-            $loggerProphecy->reveal(),
-            'http://pdf-service:8080',
+                'code'     => 0,
+                'response' => null,
+            ],
         );
 
         $this->expectException(ApiException::class);
-        $this->expectExceptionCode(500);
-        $pdfStream = $service->getLpaAsPdf($lpa);
+        $this->expectExceptionMessage('Error whilst making http POST request to PDF Service');
+        $this->service->getLpaAsPdf(new Lpa());
     }
 
     #[Test]
-    public function it_leaves_tracing_header_attachment_to_instrumentation(): void
+    public function it_preserves_the_response_from_an_http_client_exception(): void
     {
-        $lpa = new Lpa();
-
-        $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $rendererProphecy->render(
-            'viewer::download-lpa',
+        $this->renderer->expects(self::once())->method('render')->willReturn('<html></html>');
+        $response  = new Response(503);
+        $exception = new ServerException('Service unavailable', new Request('POST', 'http://pdf-service'), $response);
+        $this->client->expects(self::once())->method('sendRequest')->willThrowException($exception);
+        $this->logger->expects(self::once())->method('error')->with(
+            'Failed to generate PDF from service {code} {response}',
             [
-                'lpa'       => $lpa,
-                'pdfStyles' => '',
-            ]
-        )->willReturn('<html></html>');
-
-        $clientProphecy = $this->prophesize(ClientInterface::class);
-        $clientProphecy->sendRequest(Argument::that(function (RequestInterface $request) {
-            $this->assertFalse($request->hasHeader('x-amzn-trace-id'));
-
-            return true;
-        }))
-            ->willReturn($this->setupResponse('', 200));
-
-        $stylesProphecy = $this->prophesize(StylesService::class);
-        $stylesProphecy->__invoke()->willReturn('');
-
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
-        $service = new PdfService(
-            $rendererProphecy->reveal(),
-            $clientProphecy->reveal(),
-            $stylesProphecy->reveal(),
-            $loggerProphecy->reveal(),
-            'http://pdf-service:8080',
+                'code'     => 503,
+                'response' => $response,
+            ],
         );
 
-        $pdfStream = $service->getLpaAsPdf($lpa);
-
-        $this->assertInstanceOf(StreamInterface::class, $pdfStream);
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(503);
+        $this->service->getLpaAsPdf(new Lpa());
     }
 }

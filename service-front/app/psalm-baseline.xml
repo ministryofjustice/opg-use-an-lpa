@@ -479,36 +479,6 @@
       <code><![CDATA[bool]]></code>
     </PossiblyUnusedReturnValue>
   </file>
-  <file src="src/Common/src/Service/Pdf/PdfService.php">
-    <InvalidArgument>
-      <code><![CDATA[$this->generateHeaders()]]></code>
-    </InvalidArgument>
-    <MismatchingDocblockReturnType>
-      <code><![CDATA[string]]></code>
-    </MismatchingDocblockReturnType>
-    <PossiblyUnusedParam>
-      <code><![CDATA[$images]]></code>
-      <code><![CDATA[$lpa]]></code>
-    </PossiblyUnusedParam>
-    <UndefinedClass>
-      <code><![CDATA[HttpException]]></code>
-      <code><![CDATA[Lpa|SiriusLpa|CombinedLpa $lpa]]></code>
-      <code><![CDATA[Lpa|SiriusLpa|CombinedLpa $lpa]]></code>
-    </UndefinedClass>
-    <UnusedMethod>
-      <code><![CDATA[renderLpaAsHtml]]></code>
-      <code><![CDATA[requestPdfFromService]]></code>
-    </UnusedMethod>
-    <UnusedProperty>
-      <code><![CDATA[$renderer]]></code>
-      <code><![CDATA[$styles]]></code>
-    </UnusedProperty>
-  </file>
-  <file src="src/Common/src/Service/Pdf/PdfServiceFactory.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$entityClass]]></code>
-    </PossiblyUnusedParam>
-  </file>
   <file src="src/Common/src/Service/Security/RateLimitService.php">
     <PossiblyUnusedProperty>
       <code><![CDATA[$logger]]></code>
