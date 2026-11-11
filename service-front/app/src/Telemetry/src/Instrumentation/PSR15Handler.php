@@ -24,6 +24,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Telemetry\IncomingTraceHeader;
 use Throwable;
 
 use function OpenTelemetry\Instrumentation\hook;
@@ -121,8 +122,10 @@ final class PSR15Handler
 
         $parent = Context::getCurrent();
         if ($isRoot) {
-            $parent  = Globals::propagator()->extract($request->getHeaders());
-            $span    = self::withServerAttributes($builder->setParent($parent), $request)->startSpan();
+            $parent = Globals::propagator()->extract($request->getHeaders())
+                ->with(IncomingTraceHeader::key(), $request->getHeaderLine('x-amzn-trace-id'));
+            $span   = self::withServerAttributes($builder->setParent($parent), $request)->startSpan();
+
             $request = $request->withAttribute(SpanInterface::class, $span);
         } else {
             $span = $builder->setSpanKind(SpanKind::KIND_INTERNAL)->startSpan();
