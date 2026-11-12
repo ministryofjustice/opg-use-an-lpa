@@ -67,9 +67,15 @@ and rule properties.
   Use blank lines to separate out different logical areas. The final return of a method should be separated from
   previous lines.
 - **Readability:**
-  - Unless method chaining fits on a single line all methods calls after the first must be on a new line.
-  - Unless ternary statements fit on a single line all statements after the first must be on a new line - with
+  - Method chaining: Evaluate the entire method chain, including callbacks and multiline arguments. If any part spans
+    multiple lines, put every chained call after the first on a separate line. This applies equally to PHPUnit
+    expectations and production code. Do not mix multiple calls on one line with subsequent calls on separate lines.
+  - Ternary statements: Unless fitting on a single line all statements after the first must be on a new line - with
     the '?' and ':' characters starting the new lines
+
+After formatting, manually review all added or modified chains and the separation of logical areas, including
+fixtures, each mock's setup, construction of the subject under test, and execution/assertions. Passing PHPCS/PHPCBF
+does not establish compliance with readability rules that the configured sniffs do not enforce.
 
 Default scans cover `config`, `src`, and `test` in front/API, excluding `config/config.php` and `config/routes.php`.
 Smoke scans cover `src` and `context`. Hooks and PHP CI supply explicit changed-file paths rather than relying
