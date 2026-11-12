@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+// Shared Redis connection defaults.
+$applicationCacheRedis = [
+    'host'          => get_defaulted_env('APPLICATION_CACHE_URL', 'redis'),
+    'port'          => intval(get_defaulted_env('APPLICATION_CACHE_PORT', 6379)),
+    'timeout'       => intval(get_defaulted_env('APPLICATION_CACHE_TIMEOUT', 60)),
+    'persistent_id' => 'application-cache',
+    'serializer'    => Redis::SERIALIZER_PHP,
+];
+
 return [
     'version'              => get_defaulted_env('CONTAINER_VERSION', 'dev'),
     'environment_name'     => get_defaulted_env('ENVIRONMENT_NAME', ''),
@@ -82,6 +91,17 @@ return [
             'cache.lpa-data-store' => [
                 'adapter'          => 'apcu',
                 'default_lifetime' => 3600,
+            ],
+            'cache.lpa-in-session' => [
+                'adapter'          => 'redis-taggable',
+                'default_lifetime' => 3600,
+                'options'          => [
+                    // Symfony marshals values; Redis tag-set members must remain unserialised.
+                    'connection' => array_replace($applicationCacheRedis, [
+                        'persistent_id' => 'application-cache-taggable',
+                        'serializer'    => Redis::SERIALIZER_NONE,
+                    ]),
+                ],
             ],
         ],
     ],

@@ -20,6 +20,7 @@ use stdClass;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
+use Symfony\Component\Cache\Adapter\RedisTagAwareAdapter;
 use Symfony\Component\Cache\Exception\CacheException;
 use Throwable;
 use UnexpectedValueException;
@@ -120,7 +121,7 @@ final class PoolFactoryTest extends TestCase
         }
 
         $connection = $this->createMock(Redis::class);
-        $connection->expects(self::once())->method('connect')
+        $connection->expects(self::once())->method('pconnect')
             ->with('redis.test', 6379, 5, 'factory-test')->willReturn(true);
         $connection->expects(self::once())->method('setOption')
             ->with(Redis::OPT_SERIALIZER, $serializer ?? Redis::SERIALIZER_PHP)->willReturn(true);
@@ -144,11 +145,38 @@ final class PoolFactoryTest extends TestCase
     }
 
     #[Test]
+    public function it_should_create_a_redis_tag_aware_pool(): void
+    {
+        $config = $this->redisConfig();
+        $config['symfony_cache']['pools']['cache.test']['adapter']                             = 'redis-taggable';
+        $config['symfony_cache']['pools']['cache.test']['options']['connection']['serializer'] =
+            Redis::SERIALIZER_NONE;
+
+        $connection = $this->createMock(Redis::class);
+        $connection->expects(self::once())
+            ->method('pconnect')
+            ->with('redis.test', 6379, 5, 'factory-test')
+            ->willReturn(true);
+        $connection->expects(self::once())
+            ->method('setOption')
+            ->with(Redis::OPT_SERIALIZER, Redis::SERIALIZER_NONE)
+            ->willReturn(true);
+        $connection->method('getOption')->willReturn(Redis::COMPRESSION_NONE);
+
+        $factory = $this->createMock(FactoryInterface::class);
+        $factory->expects(self::once())->method('__invoke')->willReturn($connection);
+
+        $pool = (new PoolFactory())($this->container($config, redisFactory: $factory), 'cache.test');
+
+        self::assertInstanceOf(RedisTagAwareAdapter::class, $pool);
+    }
+
+    #[Test]
     #[DataProvider('redisFailures')]
     public function it_should_wrap_redis_setup_failures(bool $connected, bool $configured, string $message): void
     {
         $connection = $this->createMock(Redis::class);
-        $connection->expects(self::once())->method('connect')->willReturn($connected);
+        $connection->expects(self::once())->method('pconnect')->willReturn($connected);
         $connection->expects($connected ? self::once() : self::never())
             ->method('setOption')->willReturn($configured);
 
