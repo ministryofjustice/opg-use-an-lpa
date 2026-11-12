@@ -1,12 +1,12 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Do you have an activation key to add an LPA?{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}add-lpa.triage.title{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
             <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link"
-               id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+               id="back-link-navigation">{% trans %}common.back-link{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -19,38 +19,23 @@
 
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
-                            <h1 class="govuk-fieldset__heading">
-                                {% trans %}Do you have an activation key to add an LPA?{% endtrans %}
+                            <h1 class="govuk-fieldset__heading" data-content-id="h.add-lpa-triage">
+                                {% trans %}add-lpa.triage.heading-page{% endtrans %}
                             </h1>
                         </legend>
 
-                        <p class="govuk-body">
-                            {% trans %}
-                                You need your own unique activation key to add an LPA to your account.
-                                These are sent to you when the LPA is registered and expire after 12 months.
-                            {% endtrans %}
-                        </p>
-
-                        <p class="govuk-body">
-                            {% trans %}
-                                Activation keys are 12 letters and numbers long and start with a C, for example: C-AB12 CD34 EF56.
-                            {% endtrans %}
-                        </p>
-
-                        <p class="govuk-body">
-                            {% trans %}
-                                If you’ve lost your activation key, it’s expired, or you’ve not had one before, you can request a new one.
-                            {% endtrans %}
-                        </p>
+                        {% trans %}
+                            add-lpa.triage.content.activation-key-information
+                        {% context %}html{% notes %}Contains GOV.UK paragraph elements and classes. Preserve the HTML structure and classes when translating.{% endtrans %}
 
                         {{ govuk_form_element(form.get('activation_key_triage'), {'value_options':
                             [
                                 {
-                                    'label': 'Yes, I have an activation key'| trans,
+                                    'label': 'add-lpa.triage.field-activation-key-triage.label-yes'| trans,
                                     'value': 'Yes'
                                 },
                                 {
-                                    'label': 'No, I need to request an activation key'| trans,
+                                    'label': 'add-lpa.triage.field-activation-key-triage.label-no'| trans,
                                     'value': 'No'
                                 }
                             ]}
@@ -59,11 +44,11 @@
 
                     <div class="govuk-button-group">
                         <button role="button" type="submit" data-prevent-double-click="true" draggable="false" class="govuk-button" data-module="govuk-button">
-                            {% trans %}Continue{% endtrans %}
+                            {% trans %}common.button-continue{% endtrans %}
                         </button>
 
                         <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-                            {% trans %}Cancel{% endtrans %}
+                            {% trans %}common.button-cancel{% endtrans %}
                         </a>
                     </div>
 
