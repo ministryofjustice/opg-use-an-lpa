@@ -336,7 +336,7 @@ class LpaContext implements Context
     public function iAmTakenToTheAddAnLPATriagePage(): void
     {
         $this->ui->assertPageAddress('/lpa/add');
-        $this->assertPageContainsTranslatedText('add-lpa.triage.heading-page');
+        $this->ui->assertElementOnPage('h1[data-content-id="h.add-lpa-triage"]');
     }
 
     #[Given('/^I am on the change details page$/')]
