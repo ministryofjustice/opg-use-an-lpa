@@ -13,7 +13,7 @@ use Aws\DynamoDb\Exception\DynamoDbException;
 use Aws\DynamoDb\Marshaler;
 use Fig\Http\Message\StatusCodeInterface;
 
-class ActorUsers implements ActorUsersInterface
+final class ActorUsers implements ActorUsersInterface
 {
     use DynamoHydrateTrait;
 
@@ -34,19 +34,6 @@ class ActorUsers implements ActorUsersInterface
         string $now,
         bool $ignoreOrphanIdentity = false,
     ): void {
-        $identityPinning = [
-            'Put' => [
-                'TableName' => $this->actorUsersTable,
-                'Item'      => [
-                    'Id' => ['S' => 'IDENTITY#' . $identity],
-                ],
-            ],
-        ];
-
-        if (! $ignoreOrphanIdentity) {
-            $identityPinning['Put']['ConditionExpression'] = 'attribute_not_exists(Id)';
-        }
-
         try {
             $result = $this->client->transactWriteItems(
                 [
@@ -62,7 +49,7 @@ class ActorUsers implements ActorUsersInterface
                                 ],
                             ],
                         ],
-                        $identityPinning,
+                        $this->identityPinningOperation($identity, $ignoreOrphanIdentity),
                     ],
                 ]
             );
@@ -72,19 +59,7 @@ class ActorUsers implements ActorUsersInterface
                 throw new CreationException('Failed to create account with code', ['code' => $code]);
             }
         } catch (DynamoDbException $ex) {
-            if ($ex->getAwsErrorCode() !== 'TransactionCanceledException') {
-                $reasons = $ex->toArray()['CancellationReasons'];
-
-                // two transactions (from above) means the array will contain 2 items detailing the failures
-                // we can reliably hard code the keys here unless someone decides to change order of the transaction
-                if ($reasons[1]['Code'] === 'ConditionalCheckFailed') {
-                    throw new ConflictException(
-                        'User identity/subject pinning already exists',
-                        ['identity' => $identity],
-                        $ex,
-                    );
-                }
-            }
+            $this->throwOnIdentityPinningConflict($ex, $identity);
 
             throw new CreationException('Failed to create account with code', [], $ex);
         }
@@ -163,39 +138,85 @@ class ActorUsers implements ActorUsersInterface
             ?? throw new NotFoundException('User not found for identity', ['identity' => $identity]);
     }
 
-    public function migrateToOAuth(array $user, string $identity): array
-    {
-        // Update the data manually, so we don't have to get it again
-        $user['Identity'] = $identity;
-
+    public function migrateToOAuth(
+        array $user,
+        string $identity,
+        bool $ignoreOrphanIdentity = false,
+    ): array {
         $marshaler = new Marshaler();
 
-        $this->client->transactWriteItems([
-            'TransactItems' => [
-                [
-                    'Update' => [
-                        'TableName'                 => $this->actorUsersTable,
-                        'Key'                       => ['Id' => ['S' => $user['Id']]],
-                        'UpdateExpression'          => 'SET #sub = :sub',
-                        'ExpressionAttributeValues' => $marshaler->marshalItem([':sub' => $identity]),
-                        'ExpressionAttributeNames'  => [
-                            '#sub' => 'Identity',
+        try {
+            $result = $this->client->transactWriteItems([
+                'TransactItems' => [
+                    [
+                        'Update' => [
+                            'TableName'                 => $this->actorUsersTable,
+                            'Key'                       => ['Id' => ['S' => $user['Id']]],
+                            'UpdateExpression'          => 'SET #sub = :sub',
+                            'ExpressionAttributeValues' => $marshaler->marshalItem([':sub' => $identity]),
+                            'ExpressionAttributeNames'  => [
+                                '#sub' => 'Identity',
+                            ],
                         ],
                     ],
+                    $this->identityPinningOperation($identity, $ignoreOrphanIdentity),
                 ],
-                [
-                    'Put' => [
-                        'TableName'           => $this->actorUsersTable,
-                        'ConditionExpression' => 'attribute_not_exists(Id)',
-                        'Item'                => [
-                            'Id' => ['S' => 'IDENTITY#' . $identity],
-                        ],
-                    ],
-                ],
-            ],
-        ]);
+            ]);
+
+            $code = $result->get('@metadata')['statusCode'] ?? null;
+            if ($code !== StatusCodeInterface::STATUS_OK) {
+                throw new CreationException('Failed to migrate account with code', ['code' => $code]);
+            }
+        } catch (DynamoDbException $ex) {
+            $this->throwOnIdentityPinningConflict($ex, $identity);
+
+            throw new CreationException('Failed to migrate account with code', [], $ex);
+        }
+
+        $user['Identity'] = $identity;
 
         return $user;
+    }
+
+    /**
+     * @return array{Put: array{
+     *     TableName: string,
+     *     Item: array{Id: array{S: string}},
+     *     ConditionExpression?: string,
+     * }}
+     */
+    private function identityPinningOperation(string $identity, bool $ignoreOrphanIdentity): array
+    {
+        $operation = [
+            'Put' => [
+                'TableName' => $this->actorUsersTable,
+                'Item'      => [
+                    'Id' => ['S' => 'IDENTITY#' . $identity],
+                ],
+            ],
+        ];
+
+        if (! $ignoreOrphanIdentity) {
+            $operation['Put']['ConditionExpression'] = 'attribute_not_exists(Id)';
+        }
+
+        return $operation;
+    }
+
+    private function throwOnIdentityPinningConflict(DynamoDbException $ex, string $identity): void
+    {
+        // The identity pin is the second operation in both creation and migration transactions.
+        if (
+            $ex->getAwsErrorCode() === 'TransactionCanceledException'
+            && ($ex->toArray()['CancellationReasons'][0]['Code'] ?? null) === 'None'
+            && ($ex->toArray()['CancellationReasons'][1]['Code'] ?? null) === 'ConditionalCheckFailed'
+        ) {
+            throw new ConflictException(
+                'User identity/subject pinning already exists',
+                ['identity' => $identity],
+                $ex,
+            );
+        }
     }
 
     public function recordSuccessfulLogin(string $id, string $loginTime): void
