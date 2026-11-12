@@ -17,5 +17,5 @@ interface LogoutStrategy
      * @param UserInterface $user The user object of the currently logged in user
      * @return string|null An optional url to which the user should be redirected
      */
-    public function logout(UserInterface $user): ?string;
+    public function logout(UserInterface $user, string $locale): ?string;
 }

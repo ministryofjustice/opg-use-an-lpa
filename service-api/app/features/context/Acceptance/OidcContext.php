@@ -374,14 +374,37 @@ class OidcContext implements Context
         );
     }
 
-    #[Then('/^I am taken to complete a satisfaction survey$/')]
-    public function iAmTakenToCompleteASatisfactionSurvey(): void
+    #[Then('/^I am taken to complete a satisfaction survey in English$/')]
+    public function iAmTakenToCompleteASatisfactionSurveyInEnglish(): void
+    {
+        $this->assertLogoutRedirectUrl(
+            'https://www.gov.uk/done/use-lasting-power-of-attorney'
+        );
+    }
+
+    #[Then('/^I am taken to complete a satisfaction survey in Welsh$/')]
+    public function iAmTakenToCompleteASatisfactionSurveyInWelsh(): void
+    {
+        $this->assertLogoutRedirectUrl(
+            'https://www.gov.uk/done/defnyddio-atwrneiaeth-arhosol'
+        );
+    }
+
+    private function assertLogoutRedirectUrl(string $expectedUrl): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
         $response = $this->getResponseAsJson();
 
         Assert::assertArrayHasKey('redirect_uri', $response);
+
+        $logoutUrl = parse_url($response['redirect_uri']);
+        parse_str($logoutUrl['query'] ?? '', $query);
+
+        Assert::assertSame(
+            $expectedUrl,
+            $query['post_logout_redirect_uri'] ?? null
+        );
     }
 
     #[Then('/^the login process is a success$/')]
@@ -403,21 +426,22 @@ class OidcContext implements Context
         Assert::assertSame($user['Email'], $this->identityEmail);
     }
 
-    #[When('/^I logout of the application$/')]
-    public function iLogoutOfTheApplication(): void
+    #[When('/^I logout of the application(?: using locale "([^"]+)")?$/')]
+    public function iLogoutOfTheApplication(?string $uiLocale = 'en'): void
     {
         $this->oidcFixtureSetup();
 
         $this->apiPut(
             '/v1/auth/logout',
             [
-                'user' => [
+                'user'      => [
                     'Id'        => '0000-00-00-00-000',
                     'Identity'  => $this->identitySubject,
                     'Email'     => $this->identityEmail,
                     'LastLogin' => (new DateTimeImmutable('-1 day'))->format('c'),
                     'IdToken'   => $this->identityTokenSetup(),
                 ],
+                'ui_locale' => $uiLocale,
             ],
         );
     }
