@@ -17,9 +17,12 @@ interface SessionLpaCacheInterface
      */
     public function lookup(array $uids, ?string $sessionId, callable $lookup): array;
 
+    /** @psalm-api */
     public function invalidateSession(string $sessionId): void;
 
+    /** @psalm-api */
     public function invalidateLpa(string $uid): void;
 
+    /** @psalm-api */
     public function invalidateLpaInSession(string $sessionId, string $uid): void;
 }
