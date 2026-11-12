@@ -575,6 +575,92 @@ class RequestActivationKeyContext implements Context
         $this->ui->assertFieldNotContains('last_name', 'Person');
     }
 
+    #[When('/^I request another activation key$/')]
+    public function iRequestAnotherActivationKey(): void
+    {
+        $this->ui->clickLink('Request another activation key');
+        $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
+    }
+
+    #[When('/^I start again from the beginning$/')]
+    public function iStartAgainFromTheBeginning(): void
+    {
+        $this->ui->visit('/lpa/request-code/lpa-reference-number?startAgain=true');
+        $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
+    }
+
+    #[When('/^I enter the reference number of another LPA$/')]
+    public function iEnterTheReferenceNumberOfAnotherLpa(): void
+    {
+        $this->ui->fillField('opg_reference_number', '700000000138');
+        $this->ui->pressButton('Continue');
+    }
+
+    #[Then('/^I can see my name has already been filled in$/')]
+    public function iCanSeeMyNameHasAlreadyBeenFilledIn(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/your-name');
+
+        [
+            $firstNames,
+            $lastName,
+        ] = $this->donorNames();
+        $this->ui->assertFieldContains('first_names', $firstNames);
+        $this->ui->assertFieldContains('last_name', $lastName);
+    }
+
+    #[Then('/^I can see my name has not been filled in$/')]
+    public function iCanSeeMyNameHasNotBeenFilledIn(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/your-name');
+
+        [
+            $firstNames,
+            $lastName,
+        ] = $this->donorNames();
+        $this->ui->assertFieldNotContains('first_names', $firstNames);
+        $this->ui->assertFieldNotContains('last_name', $lastName);
+    }
+
+    #[When('/^I continue from the your name page$/')]
+    public function iContinueFromTheYourNamePage(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/your-name');
+        $this->ui->pressButton('Continue');
+    }
+
+    #[Then('/^I am asked to check my answers for the other LPA$/')]
+    public function iAmAskedToCheckMyAnswersForTheOtherLpa(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertPageContainsText('Check your answers');
+        $this->ui->assertPageContainsText('700000000138');
+
+        [
+            $firstNames,
+            $lastName,
+        ] = $this->donorNames();
+        $this->ui->assertPageContainsText($firstNames . ' ' . $lastName);
+    }
+
+    /**
+     * @return array{string, string}
+     */
+    private function donorNames(): array
+    {
+        if (isset($this->lpa->uId)) {
+            return [
+                $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames,
+                $this->lpa->donor->surname,
+            ];
+        }
+
+        return [
+            $this->lpa->donor->firstNames,
+            $this->lpa->donor->lastName,
+        ];
+    }
+
     #[Given('/^I have provided my current address$/')]
     public function iHaveProvidedMyCurrentAddress(): void
     {

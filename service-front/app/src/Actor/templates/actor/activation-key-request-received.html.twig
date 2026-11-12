@@ -28,7 +28,7 @@
                     <p class="govuk-body">{% trans %}You'll need an activation key for each LPA that you'd like to add to your account.{% endtrans %}</p>
 
                     <div class="moj-button-menu">
-                        <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'}) }}" role="button"
+                        <a href="{{ path('lpa.add-by-paper', {}, {'requestAnother': 'true'}) }}" role="button"
                            draggable="false" class="govuk-button moj-button-menu__item  "
                            data-module="govuk-button">
                             {% trans %}Request another activation key{% endtrans %}
