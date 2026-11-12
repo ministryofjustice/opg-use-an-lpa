@@ -24,6 +24,26 @@ Feature: Authorise One Login
     And the login process is a success
 
   @acceptance
+  Scenario: I can sign in as a new user with an orphan identity pin
+    Given I do not have a local account
+      And I have an unknown One Login identity
+      And my One Login identity has an orphan identity pin
+     When I complete a One Login sign-in process
+     Then I am returned to the use an lpa service
+      And the login process is a success
+      And the orphan identity pin has been recovered
+
+  @acceptance
+  Scenario: I can migrate my local account with an orphan identity pin
+    Given I have a local account
+      And I have an unknown One Login identity
+      And my One Login identity has an orphan identity pin
+     When I complete a One Login sign-in process
+     Then I am returned to the use an lpa service
+      And the login process is a success
+      And the orphan identity pin has been recovered
+
+  @acceptance
   Scenario: I can successfully sign in via one login as an existing user
     Given I have a local account
       And I have a matching One Login identity
