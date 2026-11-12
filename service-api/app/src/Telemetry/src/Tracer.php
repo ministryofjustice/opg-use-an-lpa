@@ -15,7 +15,7 @@ use Telemetry\Instrumentation\Aws;
 use Telemetry\Instrumentation\Exporter;
 use Telemetry\Instrumentation\Guzzle;
 use Telemetry\Instrumentation\PSR15Handler;
-use Telemetry\Instrumentation\RedisCache;
+use Telemetry\Instrumentation\Redis;
 use Telemetry\Resource\CachingDetector;
 
 /**
@@ -46,7 +46,7 @@ class Tracer
         Exporter::register();
         Aws::register();
         Guzzle::register();
-        RedisCache::register();
+        Redis::register();
         PSR15Handler::register();
     }
 }

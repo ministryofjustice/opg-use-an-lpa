@@ -9,7 +9,7 @@ use OpenTelemetry\API\Trace\SpanKind;
 use OpenTelemetry\API\Trace\StatusCode;
 use OpenTelemetry\Context\Context;
 use OpenTelemetry\SDK\Sdk;
-use Redis;
+use Redis as RedisClient;
 use Symfony\Component\Cache\Adapter\AbstractAdapter;
 use Symfony\Component\Cache\Adapter\AbstractTagAwareAdapter;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
@@ -23,7 +23,7 @@ use function OpenTelemetry\Instrumentation\hook;
 /**
  * Times Redis adapter work, not cache callbacks or deferred-write queueing.
  */
-final class RedisCache
+final class Redis
 {
     public const string NAME = 'redis';
 
@@ -69,7 +69,7 @@ final class RedisCache
     private static function captureEndpoint(object $adapter, array $params, mixed $result, ?Throwable $exception): void
     {
         $redis = $params[0] ?? null;
-        if ($exception !== null || !$redis instanceof Redis) {
+        if ($exception !== null || !$redis instanceof RedisClient) {
             return;
         }
 
