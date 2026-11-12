@@ -110,6 +110,21 @@ class ResolveOAuthUser
                 return null;
             }
 
+            $user = $this->migrateUser($user, $identity, $email);
+        } catch (NotFoundException) {
+            return null;
+        }
+
+        return $user;
+    }
+
+    /**
+     * @psalm-param ActorUser $user
+     * @psalm-return ActorUser
+     */
+    private function migrateUser(array $user, string $identity, string $email): array
+    {
+        try {
             $user = $this->usersRepository->migrateToOAuth($user, $identity);
 
             $this->logger->info(
@@ -120,8 +135,22 @@ class ResolveOAuthUser
                     'event_code' => EventCodes::AUTH_ONELOGIN_ACCOUNT_MIGRATED,
                 ]
             );
-        } catch (NotFoundException) {
-            return null;
+        } catch (ConflictException $e) {
+            if ($e->getAdditionalData() !== ['identity' => $identity]) {
+                throw $e;
+            }
+
+            // Only reached after the identity lookup found no account, as in the creation bypass.
+            $user = $this->usersRepository->migrateToOAuth($user, $identity, true);
+
+            $this->logger->info(
+                'Migrated existing account with email {email} to OIDC login with orphan bypass',
+                [
+                    'identity'   => $identity,
+                    'email'      => new Email($email),
+                    'event_code' => EventCodes::AUTH_ONELOGIN_ACCOUNT_MIGRATED_WITH_ORPHAN_BYPASS,
+                ]
+            );
         }
 
         return $user;
