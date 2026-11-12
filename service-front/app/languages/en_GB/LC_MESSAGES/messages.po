@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-10 15:06+0000\n"
-"Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
+"PO-Revision-Date: 2026-11-12 11:33+0000\n"
+"Last-Translator: Adam Cooper <adam.cooper@publicguardian.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
@@ -4882,3 +4882,28 @@ msgstr "<abbr title=\"lasting power of attorney\">LPA</abbr> reference numbers a
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:25
 msgid "request-activation-key.reference-number.opg_reference_number"
 msgstr "What is the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number?"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:3
+msgid "add-lpa.triage.title"
+msgstr "Do you have an activation key to add an LPA?"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:23
+msgid "add-lpa.triage.heading-page"
+msgstr "Do you have an activation key to add an <abbr title=\"lasting power of attorney\">LPA</abbr>?"
+
+#. Contains GOV.UK paragraph elements and classes. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:27
+msgctxt "html"
+msgid "add-lpa.triage.content.activation-key-information"
+msgstr ""
+"<p class=\"govuk-body\">You need your own unique activation key to add an <abbr title=\"lasting power of attorney\">LPA</abbr> to your account. An activation key will be sent to you when the <abbr title=\"lasting power of attorney\">LPA</abbr> is registered. The key will expire after 12 months.</p>\n"
+"<p class=\"govuk-body\">Activation keys are 12 characters long. They include letters and numbers and always start with a C. For example, C-AB12 CD34 EF56.</p>\n"
+"<p class=\"govuk-body\">If you’ve lost your activation key, it’s expired, or you’ve not had one before, you can request a new one.</p>"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:34
+msgid "add-lpa.triage.field-activation-key-triage.label-yes"
+msgstr "Yes, I have an activation key"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:38
+msgid "add-lpa.triage.field-activation-key-triage.label-no"
+msgstr "No, I need to request an activation key"
