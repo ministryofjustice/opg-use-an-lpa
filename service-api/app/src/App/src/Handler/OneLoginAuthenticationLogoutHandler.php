@@ -6,6 +6,7 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Service\Authentication\OneLoginService;
+use App\DataAccess\Cache\SessionLpaCache;
 use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -19,6 +20,7 @@ class OneLoginAuthenticationLogoutHandler implements RequestHandlerInterface
 {
     public function __construct(
         private OneLoginService $logoutHandlingService,
+        private readonly SessionLpaCache $sessionLpaCache,
     ) {
     }
 
@@ -38,6 +40,8 @@ class OneLoginAuthenticationLogoutHandler implements RequestHandlerInterface
         if (empty($requestData['user']['IdToken'])) {
             throw new BadRequestException('User does not contain an OIDC token value');
         }
+
+        $this->sessionLpaCache->invalidateSession($request->getAttribute('actor-session'));
 
         return new JsonResponse(
             [

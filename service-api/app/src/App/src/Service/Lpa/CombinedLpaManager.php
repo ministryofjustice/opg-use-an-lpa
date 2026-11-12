@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\DataAccess\Cache\SessionLpaCacheInterface;
 use DateTimeImmutable;
 use App\DataAccess\Repository\{AuditableLpasInterface,
     InstructionsAndPreferencesImagesInterface,
@@ -41,6 +42,7 @@ class CombinedLpaManager implements LpaManagerInterface
         private readonly FilterActiveActors $filterActiveActors,
         private readonly RejectInvalidLpa $rejectInvalidLpa,
         private readonly LoggerInterface $logger,
+        private readonly SessionLpaCacheInterface $sessionLpaCache,
     ) {
     }
 
@@ -113,7 +115,7 @@ class CombinedLpaManager implements LpaManagerInterface
         return null;
     }
 
-    public function getAllActiveForUser(string $userId): array
+    public function getAllActiveForUser(string $userId, ?string $sessionId = null): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
         $lpaActorMaps = $this->userLpaActorMap->getByUserId($userId);
@@ -122,7 +124,7 @@ class CombinedLpaManager implements LpaManagerInterface
             return !array_key_exists('ActivateBy', $item);
         });
 
-        return $this->lookupAndFormatLpas($lpaActorMaps, $userId);
+        return $this->lookupAndFormatLpas($lpaActorMaps, $userId, $sessionId);
     }
 
     public function getAllForUser(string $userId): array
@@ -195,9 +197,9 @@ class CombinedLpaManager implements LpaManagerInterface
      * @return array an array with formatted LPA results
      * @throws ApiException
      */
-    private function lookupAndFormatLpas(array $lpaActorMaps, string $userId): array
+    private function lookupAndFormatLpas(array $lpaActorMaps, string $userId, ?string $sessionId = null): array
     {
-        $lpas   = $this->lookupLpas($lpaActorMaps, $userId);
+        $lpas   = $this->lookupLpas($lpaActorMaps, $userId, $sessionId);
         $result = [];
 
         foreach ($lpaActorMaps as $item) {
@@ -259,22 +261,27 @@ class CombinedLpaManager implements LpaManagerInterface
      * @return LpaInterface[]
      * @throws ApiException
      */
-    private function lookupLpas(array $lpaActorMaps, string $originatorId): array
+    private function lookupLpas(array $lpaActorMaps, string $originatorId, ?string $sessionId): array
     {
         [
             $siriusUids,
             $dataStoreUids,
         ] = ($this->resolveLpaTypes)($lpaActorMaps);
 
-        $siriusLpas = count($siriusUids) > 0
-            ? $this->siriusLpas->lookup($siriusUids)
-            : [];
+        $siriusLpas = $this->sessionLpaCache->lookup(
+            $siriusUids,
+            $sessionId,
+            $this->siriusLpas->lookup(...),
+        );
 
-        $dataStoreLpas = count($dataStoreUids) > 0
-            ? $this->dataStoreLpas->setOriginatorId($originatorId)->lookup($dataStoreUids)
-            : [];
+        $dataStoreLpas = $this->sessionLpaCache->lookup(
+            $dataStoreUids,
+            $sessionId,
+            fn (array $uids): array => $this->dataStoreLpas->setOriginatorId($originatorId)->lookup($uids),
+        );
 
         $keyedDataStoreLpas = [];
+
         array_walk($dataStoreLpas, function (LpaInterface $item) use (&$keyedDataStoreLpas) {
             $keyedDataStoreLpas[$item->getData()->getUid()] = $item;
         });

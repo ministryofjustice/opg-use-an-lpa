@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\DataAccess\Cache\SessionLpaCacheInterface;
 use App\Enum\LpaSource;
 use App\Exception\ApiException;
 use App\Exception\MissingCodeExpiryException;
@@ -40,6 +41,7 @@ class SiriusLpaManager implements LpaManagerInterface
         private FilterActiveActors $filterActiveActors,
         private RejectInvalidLpa $rejectInvalidLpa,
         private LoggerInterface $logger,
+        private readonly SessionLpaCacheInterface $sessionLpaCache,
     ) {
     }
 
@@ -102,7 +104,7 @@ class SiriusLpaManager implements LpaManagerInterface
         return null;
     }
 
-    public function getAllActiveForUser(string $userId): array
+    public function getAllActiveForUser(string $userId, ?string $sessionId = null): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
         $lpaActorMaps = $this->userLpaActorMapRepository->getByUserId($userId);
@@ -111,7 +113,7 @@ class SiriusLpaManager implements LpaManagerInterface
             return !array_key_exists('ActivateBy', $item);
         });
 
-        return $this->lookupAndFormatLpas($lpaActorMaps);
+        return $this->lookupAndFormatLpas($lpaActorMaps, $sessionId);
     }
 
     public function getAllForUser(string $userId): array
@@ -177,7 +179,7 @@ class SiriusLpaManager implements LpaManagerInterface
      * @param $lpaActorMaps array Map of LPAs from Dynamo
      * @return array an array with formatted LPA results
      */
-    private function lookupAndFormatLpas(array $lpaActorMaps): array
+    private function lookupAndFormatLpas(array $lpaActorMaps, ?string $sessionId = null): array
     {
         $lpaUids = array_column($lpaActorMaps, 'SiriusUid');
 
@@ -186,7 +188,11 @@ class SiriusLpaManager implements LpaManagerInterface
         }
 
         // Return all the LPA details based on the Sirius Ids.
-        $lpas = $this->lpaRepository->lookup($lpaUids);
+        $lpas = $this->sessionLpaCache->lookup(
+            $lpaUids,
+            $sessionId,
+            $this->lpaRepository->lookup(...),
+        );
 
         $result = [];
 
@@ -195,7 +201,7 @@ class SiriusLpaManager implements LpaManagerInterface
             /**
              * Handle the case where the DB contains modernise records but we're running
              * with the combined flag off.
-             * @var LpaInterface<IsValidInterface&HasActorInterface> $lpa
+             * @var LpaInterface<IsValidInterface&HasActorInterface>|null $lpa
              */
             $lpa = $lpas[$item['SiriusUid'] ?? 'ERROR'] ?? null;
 
