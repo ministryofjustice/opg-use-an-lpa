@@ -61,11 +61,17 @@ interface ActorUsersInterface
     /**
      * Migrates a user account to being authenticated by OAuth
      *
+     * @param bool $ignoreOrphanIdentity Ignore an existing pin only when it is known to be an orphan.
      * @psalm-param ActorUser $user
      * @psalm-return ActorUser
-     * @throws NotFoundException
+     * @throws ConflictException
+     * @throws CreationException
      */
-    public function migrateToOAuth(array $user, string $identity): array;
+    public function migrateToOAuth(
+        array $user,
+        string $identity,
+        bool $ignoreOrphanIdentity = false,
+    ): array;
 
     /**
      * Records a successful login against the actor user
