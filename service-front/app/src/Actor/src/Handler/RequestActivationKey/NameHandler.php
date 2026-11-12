@@ -54,9 +54,7 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
             $postData = $this->form->getData();
 
             //  Set the data in the state and pass to the check your answers handler
-            $this->state($request)->firstNames        = $postData['first_names'];
-            $this->state($request)->lastName          = $postData['last_name'];
-            $this->state($request)->requestingAnother = false;
+            $this->state($request)->updateName($postData['first_names'], $postData['last_name']);
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }

@@ -629,6 +629,57 @@ class RequestActivationKeyContext implements Context
         $this->ui->pressButton('Continue');
     }
 
+    #[When('/^I change the name to a different person$/')]
+    public function iChangeTheNameToADifferentPerson(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/your-name');
+        $this->ui->fillField('first_names', 'Different');
+        $this->ui->fillField('last_name', 'Person');
+    }
+
+    #[Then('/^I am asked for my date of birth without it being filled in$/')]
+    public function iAmAskedForMyDateOfBirthWithoutItBeingFilledIn(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/date-of-birth');
+        $this->ui->assertFieldContains('dob[day]', '');
+        $this->ui->assertFieldContains('dob[month]', '');
+        $this->ui->assertFieldContains('dob[year]', '');
+    }
+
+    #[When('/^I provide the date of birth of the different person$/')]
+    public function iProvideTheDateOfBirthOfTheDifferentPerson(): void
+    {
+        $this->ui->fillField('dob[day]', '09');
+        $this->ui->fillField('dob[month]', '02');
+        $this->ui->fillField('dob[year]', '1998');
+        $this->ui->pressButton('Continue');
+    }
+
+    #[Then('/^I am asked where I currently live without it being filled in$/')]
+    public function iAmAskedWhereICurrentlyLiveWithoutItBeingFilledIn(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/postcode');
+        $this->ui->assertFieldContains('postcode', '');
+    }
+
+    #[When('/^I provide the postcode of the different person$/')]
+    public function iProvideThePostcodeOfTheDifferentPerson(): void
+    {
+        $this->ui->fillField('live_in_uk', 'Yes');
+        $this->ui->fillField('postcode', 'ABC123');
+        $this->ui->pressButton('Continue');
+    }
+
+    #[Then('/^I am asked to check my answers for the different person$/')]
+    public function iAmAskedToCheckMyAnswersForTheDifferentPerson(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertPageContainsText('700000000138');
+        $this->ui->assertPageContainsText('Different Person');
+        $this->ui->assertPageContainsText('9 February 1998');
+        $this->ui->assertPageContainsText('ABC123');
+    }
+
     #[Then('/^I am asked to check my answers for the other LPA$/')]
     public function iAmAskedToCheckMyAnswersForTheOtherLpa(): void
     {

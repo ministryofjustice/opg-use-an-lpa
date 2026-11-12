@@ -46,11 +46,15 @@ class NameHandlerTest extends TestCase
         $details = self::personalDetails();
 
         return [
-            'first time through the workflow' => [
-                ['firstNames' => 'John Henry', 'lastName' => 'Smith', 'referenceNumber' => '700000000138'],
+            'first time through the workflow'                   => [
+                [
+                    'firstNames'      => 'John Henry',
+                    'lastName'        => 'Smith',
+                    'referenceNumber' => '700000000138',
+                ],
                 'lpa.date-of-birth',
             ],
-            'date of birth answered but no address yet' => [
+            'date of birth answered but no address yet'         => [
                 array_merge($details, ['postcode' => null, 'liveInUK' => null]),
                 'lpa.date-of-birth',
             ],
@@ -58,7 +62,7 @@ class NameHandlerTest extends TestCase
                 array_merge($details, ['requestingAnother' => true]),
                 'lpa.check-answers',
             ],
-            'changing name from check your answers' => [
+            'changing name from check your answers'             => [
                 $details,
                 'lpa.check-answers',
             ],
@@ -95,11 +99,11 @@ class NameHandlerTest extends TestCase
         $details = self::personalDetails();
 
         return [
-            'first time through the workflow' => [
+            'first time through the workflow'       => [
                 ['referenceNumber' => '700000000138'],
                 'lpa.add-by-paper',
             ],
-            'requesting another key' => [
+            'requesting another key'                => [
                 array_merge($details, ['requestingAnother' => true]),
                 'lpa.add-by-paper',
             ],
@@ -115,5 +119,25 @@ class NameHandlerTest extends TestCase
     public function it_decides_the_last_page(array $state, string $expected): void
     {
         $this->assertSame($expected, $this->sut->lastPage(new RequestActivationKey(...$state)));
+    }
+
+    #[Test]
+    public function it_asks_for_date_of_birth_when_a_different_name_is_given_for_another_request(): void
+    {
+        $state = new RequestActivationKey(...self::personalDetails());
+        $state->resetForAnotherRequest();
+        $state->updateName('Jane', 'Jones');
+
+        $this->assertSame('lpa.date-of-birth', $this->sut->nextPage($state));
+    }
+
+    #[Test]
+    public function it_skips_to_check_answers_when_the_same_name_is_given_for_another_request(): void
+    {
+        $state = new RequestActivationKey(...self::personalDetails());
+        $state->resetForAnotherRequest();
+        $state->updateName('John Henry', 'Smith');
+
+        $this->assertSame('lpa.check-answers', $this->sut->nextPage($state));
     }
 }

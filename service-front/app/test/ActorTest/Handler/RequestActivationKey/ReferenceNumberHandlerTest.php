@@ -34,7 +34,7 @@ class ReferenceNumberHandlerTest extends TestCase
     public static function states(): array
     {
         return [
-            'first time through the workflow' => [
+            'first time through the workflow'                   => [
                 [],
                 'lpa.your-name',
                 'lpa.add-by-paper-information',
@@ -45,7 +45,10 @@ class ReferenceNumberHandlerTest extends TestCase
                 'lpa.check-answers',
             ],
             'requesting another key with details already given' => [
-                ['postcode' => 'PO3 6BT', 'requestingAnother' => true],
+                [
+                    'postcode'          => 'PO3 6BT',
+                    'requestingAnother' => true,
+                ],
                 'lpa.your-name',
                 'lpa.add-by-paper-information',
             ],

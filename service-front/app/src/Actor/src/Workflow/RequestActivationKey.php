@@ -94,6 +94,26 @@ class RequestActivationKey implements WorkflowState
         $this->requestingAnother = true;
     }
 
+    /**
+     * When requesting another activation key a changed name means a different person, so the
+     * personal details given for the previous request no longer apply.
+     */
+    public function updateName(string $firstNames, string $lastName): void
+    {
+        if (
+            $this->requestingAnother === true
+            && ($this->firstNames !== $firstNames || $this->lastName !== $lastName)
+        ) {
+            $this->dob      = null;
+            $this->liveInUK = null;
+            $this->postcode = null;
+        }
+
+        $this->firstNames        = $firstNames;
+        $this->lastName          = $lastName;
+        $this->requestingAnother = false;
+    }
+
     public function hasPersonalDetails(): bool
     {
         return $this->firstNames !== null

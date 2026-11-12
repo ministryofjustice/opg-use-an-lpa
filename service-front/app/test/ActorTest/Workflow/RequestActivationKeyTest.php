@@ -174,14 +174,38 @@ class RequestActivationKeyTest extends TestCase
         ];
 
         return [
-            'all details present'          => [$complete, true],
-            'lives abroad with no postcode' => [array_merge($complete, ['postcode' => '', 'liveInUK' => 'No']), true],
-            'missing first names'          => [array_merge($complete, ['firstNames' => null]), false],
-            'missing last name'            => [array_merge($complete, ['lastName' => null]), false],
-            'missing date of birth'        => [array_merge($complete, ['dob' => null]), false],
-            'missing postcode'             => [array_merge($complete, ['postcode' => null]), false],
-            'missing live in UK answer'    => [array_merge($complete, ['liveInUK' => null]), false],
-            'no details at all'            => [[], false],
+            'all details present'           => [
+                $complete,
+                true,
+            ],
+            'lives abroad with no postcode' => [
+                array_merge($complete, ['postcode' => '', 'liveInUK' => 'No']),
+                true,
+            ],
+            'missing first names'           => [
+                array_merge($complete, ['firstNames' => null]),
+                false,
+            ],
+            'missing last name'             => [
+                array_merge($complete, ['lastName' => null]),
+                false,
+            ],
+            'missing date of birth'         => [
+                array_merge($complete, ['dob' => null]),
+                false,
+            ],
+            'missing postcode'              => [
+                array_merge($complete, ['postcode' => null]),
+                false,
+            ],
+            'missing live in UK answer'     => [
+                array_merge($complete, ['liveInUK' => null]),
+                false,
+            ],
+            'no details at all'             => [
+                [],
+                false,
+            ],
         ];
     }
 
@@ -192,5 +216,66 @@ class RequestActivationKeyTest extends TestCase
         $sut = new RequestActivationKey(...$data);
 
         Assert::assertSame($expected, $sut->hasPersonalDetails());
+    }
+
+    #[Test]
+    public function it_keeps_personal_details_when_the_same_name_is_given_for_another_request(): void
+    {
+        $sut = new RequestActivationKey(...self::personalDetails()['all details present'][0]);
+        $sut->resetForAnotherRequest();
+
+        $sut->updateName('John Henry', 'Smith');
+
+        Assert::assertTrue($sut->hasPersonalDetails());
+        Assert::assertFalse($sut->requestingAnother);
+    }
+
+    public static function changedNames(): array
+    {
+        return [
+            'first names changed' => [
+                'Jane',
+                'Smith',
+            ],
+            'last name changed'   => [
+                'John Henry',
+                'Jones',
+            ],
+            'both changed'        => [
+                'Jane',
+                'Jones',
+            ],
+        ];
+    }
+
+    #[DataProvider('changedNames')]
+    #[Test]
+    public function it_clears_personal_details_when_a_different_name_is_given_for_another_request(
+        string $firstNames,
+        string $lastName,
+    ): void {
+        $sut = new RequestActivationKey(...self::personalDetails()['all details present'][0]);
+        $sut->resetForAnotherRequest();
+
+        $sut->updateName($firstNames, $lastName);
+
+        Assert::assertSame($firstNames, $sut->firstNames);
+        Assert::assertSame($lastName, $sut->lastName);
+        Assert::assertNull($sut->dob);
+        Assert::assertNull($sut->liveInUK);
+        Assert::assertNull($sut->postcode);
+        Assert::assertFalse($sut->hasPersonalDetails());
+        Assert::assertFalse($sut->requestingAnother);
+    }
+
+    #[Test]
+    public function it_keeps_personal_details_when_the_name_is_changed_outside_of_another_request(): void
+    {
+        $sut = new RequestActivationKey(...self::personalDetails()['all details present'][0]);
+
+        $sut->updateName('Jane', 'Jones');
+
+        Assert::assertSame('Jane', $sut->firstNames);
+        Assert::assertTrue($sut->hasPersonalDetails());
     }
 }
