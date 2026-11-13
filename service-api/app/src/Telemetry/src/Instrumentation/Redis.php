@@ -110,8 +110,8 @@ final class Redis
             ->setParent($parent)
             ->setSpanKind(SpanKind::KIND_CLIENT)
             ->setAttributes([
-                'db.system.name'    => 'redis',
-                'db.operation.name' => $operation,
+                DbAttributes::DB_SYSTEM_NAME    => 'redis',
+                DbAttributes::DB_OPERATION_NAME => $operation,
             ])
             ->startSpan();
 
