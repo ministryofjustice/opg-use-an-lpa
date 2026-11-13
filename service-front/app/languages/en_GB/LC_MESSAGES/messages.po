@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-12 11:33+0000\n"
-"Last-Translator: Adam Cooper <adam.cooper@publicguardian.gov.uk>\n"
+"PO-Revision-Date: 2026-11-13 15:09+0000\n"
+"Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.11.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
 msgid "This LPA has restrictions and conditions.<br>"
@@ -1163,7 +1163,7 @@ msgstr "This service is managed by <abbr title=\"Office of the Public Guardian\"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:47
 msgid "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"> OPG’s personal information charter </a> explains how we process personal data."
-msgstr "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"><abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter</a> explains how we process personal data."
+msgstr "<abbr title=\"Ministry of Justice\">MOJ</abbr> is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"><abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter</a> explains how we process personal data."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:56
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:52
@@ -1301,15 +1301,15 @@ msgstr "Who has access to data in the service"
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:129
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:107
 msgid "MOJ staff are responsible for supporting the service and have access to the secure database."
-msgstr "MOJ staff are responsible for supporting the service and have access to the secure database."
+msgstr "<abbr title=\"Ministry of Justice\">MOJ</abbr> staff are responsible for supporting the service and have access to the secure database."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:132
 msgid "All OPG staff who have access to the database have MOJ security clearance."
-msgstr "All OPG staff who have access to the database have MOJ security clearance."
+msgstr "All <abbr title=\"Office of the Public Guardian\">OPG</abbr> staff who have access to the database have <abbr title=\"Ministry of Justice\">MOJ</abbr> security clearance."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:135
 msgid "Our hosting provider (Amazon Web Services) is not allowed to routinely access the secure data. If they need to do so for operational purposes, their access is strictly controlled and approved by OPG."
-msgstr "Our hosting provider (Amazon Web Services) is not allowed to routinely access the secure data. If they need to do so for operational purposes, their access is strictly controlled and approved by OPG."
+msgstr "Our hosting provider (Amazon Web Services) is not allowed to routinely access the secure data. If they need to do so for operational purposes, their access is strictly controlled and approved by <abbr title=\"Office of the Public Guardian\">OPG</abbr>."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:139
 msgid "You can find out more about how we store and use this data in our <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"> personal information charter </a>."
@@ -1453,7 +1453,7 @@ msgstr "Making a complaint"
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:212
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:189
 msgid "When we ask for personal data, we’ll keep to the law. If you think that your information has not been handled correctly, in addition to contacting the MOJ Data Protection Officer, you can contact the Information Commissioner for independent advice about data protection at the address below:"
-msgstr "When we ask for personal data, we’ll keep to the law. If you think that your information has not been handled correctly, in addition to contacting the MOJ Data Protection Officer, you can contact the Information Commissioner for independent advice about data protection at the address below:"
+msgstr "When we ask for personal data, we’ll keep to the law. If you think that your information has not been handled correctly, in addition to contacting the <abbr title=\"Ministry of Justice\">MOJ</abbr> Data Protection Officer, you can contact the Information Commissioner for independent advice about data protection at the address below:"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:228
 msgid "Phone: 0303 123 1113<br> Textphone: 01625 545860<br> Monday to Friday, 9am to 4:30pm<br>"
@@ -1569,7 +1569,7 @@ msgstr "If the <abbr title=\"lasting power of attorney\">LPA</abbr> was register
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:15
 msgid "If the paper LPA has been lost or destroyed, you can ask OPG for an office copy by calling 0300 456 0300 - office copies cost £35."
-msgstr "If the paper <abbr title=\"lasting power of attorney\">LPA</abbr> has been lost or destroyed, you can ask OPG for an office copy by calling 0300 456 0300 - office copies cost £35."
+msgstr "If the paper <abbr title=\"lasting power of attorney\">LPA</abbr> has been lost or destroyed, you can ask <abbr title=\"Office of the Public Guardian\">OPG</abbr> for an office copy by calling 0300 456 0300 – office copies cost £35."
 
 #: src/Actor/templates/actor/service-names.html.twig:1
 #: src/Common/src/View/Twig/GenericGlobalVariableExtension.php:23
@@ -3051,7 +3051,7 @@ msgstr "Mental Capacity Act 2005"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:190
 msgid "Any dispute you have about these terms of use, or your use of OPG services (whether it be contractual or non-contractual), will be dealt with by the courts of England and Wales."
-msgstr "Any dispute you have about these terms of use, or your use of OPG services (whether it be contractual or non-contractual), will be dealt with by the courts of England and Wales."
+msgstr "Any dispute you have about these terms of use, or your use of <abbr title=\"Office of the Public Guardian\">OPG</abbr> services (whether it be contractual or non-contractual), will be dealt with by the courts of England and Wales."
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:195
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:100
@@ -3794,7 +3794,7 @@ msgstr "This service is managed by <abbr title=\"Office of the Public Guardian\"
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:44
 msgid "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"%link%\"> <abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter </a> explains how we process personal data."
-msgstr "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"><abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter</a> explains how we process personal data."
+msgstr "<abbr title=\"Ministry of Justice\">MOJ</abbr> is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"><abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter</a> explains how we process personal data."
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:55
 msgid "What data we collect and how we use it"
@@ -3842,7 +3842,7 @@ msgstr "It may sometimes be necessary to transfer personal information overseas.
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:110
 msgid "All <abbr title=\"Office of the Public Guardian\">OPG</abbr> staff who have access to the database have MOJ security clearance."
-msgstr "All <abbr title=\"Office of the Public Guardian\">OPG</abbr> staff who have access to the database have MOJ security clearance."
+msgstr "All <abbr title=\"Office of the Public Guardian\">OPG</abbr> staff who have access to the database have <abbr title=\"Ministry of Justice\">MOJ</abbr> security clearance."
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:113
 msgid "Our hosting provider (Amazon Web Services) is not allowed to routinely access the secure data."
@@ -3995,7 +3995,7 @@ msgstr "<abbr title=\"lasting powers of attorney\"> LPAs </abbr>can change. For 
 
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:67
 msgid "We use OPG’s records about registered <abbr title=\"lasting powers of attorney\">LPAs</abbr> to keep this service up to date. However:"
-msgstr "We use OPG’s records about registered <abbr title=\"lasting powers of attorney\">LPAs</abbr> to keep this service up to date. However:"
+msgstr "We use <abbr title=\"Office of the Public Guardian\">OPG</abbr>’s records about registered <abbr title=\"lasting powers of attorney\">LPAs</abbr> to keep this service up to date. However:"
 
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:69
 msgid "we rely on donors and attorneys to tell us about any changes"
@@ -4035,7 +4035,7 @@ msgstr "Data Protection Bill 2018"
 
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:98
 msgid "Any dispute you have about these terms of use, or your use of OPG services (whether it be contractual or non-contractual), will be subject to the exclusive jurisdiction of the courts of England and Wales."
-msgstr "Any dispute you have about these terms of use, or your use of OPG services (whether it be contractual or non-contractual), will be subject to the exclusive jurisdiction of the courts of England and Wales."
+msgstr "Any dispute you have about these terms of use, or your use of <abbr title=\"Office of the Public Guardian\">OPG</abbr> services (whether it be contractual or non-contractual), will be subject to the exclusive jurisdiction of the courts of England and Wales."
 
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:101
 msgid "These terms of use affect your rights and responsibilities under the law. They govern your use of the View a lasting power of attorney service. They do not apply to any other department or online service. Please check these terms of use regularly. We may update them without notice. This might happen if there’s a change in the law or to the way the service works. You’ll agree to any changes if you continue to use the service after the terms of use have been updated"
@@ -4746,7 +4746,7 @@ msgctxt "html-link"
 msgid "activation-key-request.start.reveal-content"
 msgstr ""
 "<p>You can find this on the first page of the <abbr title=\"lasting power of attorney\">LPA</abbr> or any related letters from the Office of the Public Guardian (OPG). It may also be referred to as ‘LPA reference number’, ‘Our ref.’ or ‘Case number’.</p>\n"
-"<p>If you do not have the paper <abbr title=\"lasting power of attorney\">LPA</abbr> or any letters from OPG, check with other people named in the <abbr title=\"lasting power of attorney\">LPA</abbr>. If a professional helped you with the <abbr title=\"lasting power of attorney\">LPA</abbr>, such as a solicitor, they should be able to give you the reference number.</p>\n"
+"<p>If you do not have the paper <abbr title=\"lasting power of attorney\">LPA</abbr> or any letters from <abbr title=\"Office of the Public Guardian\">OPG</abbr>, check with other people named in the <abbr title=\"lasting power of attorney\">LPA</abbr>. If a professional helped you with the <abbr title=\"lasting power of attorney\">LPA</abbr>, such as a solicitor, they should be able to give you the reference number.</p>\n"
 "<p>If you still don’t know the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number or can’t find it, please <a class=\"govuk-link\" href=\"%link%\">contact us</a>.</p>"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:9
