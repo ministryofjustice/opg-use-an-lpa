@@ -8,17 +8,21 @@ use App\DataAccess\DynamoDb\ActorUsers;
 use App\Exception\ConflictException;
 use App\Exception\CreationException;
 use App\Exception\NotFoundException;
-use Aws\CommandInterface;
+use Aws\Command;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
+use Aws\Result;
 use DateTime;
 use DateTimeInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
+#[CoversClass(ActorUsers::class)]
 class ActorUsersTest extends TestCase
 {
     use GenerateAwsResultTrait;
@@ -137,29 +141,37 @@ class ActorUsersTest extends TestCase
     }
 
     #[Test]
-    public function will_throw_exception_when_adding_a_new_user_that_doesnt_succeed_with_orphan(): void
+    public function it_should_report_an_identity_conflict_when_creation_is_cancelled(): void
     {
         $id       = '12345-1234-1234-1234-12345';
         $email    = 'a@b.com';
         $identity = 'urn:fdc:one-login:2023:HASH=';
 
-        $command = $this->prophesize(CommandInterface::class);
-
-        $this->dynamoDbClientProphecy->transactWriteItems(Argument::any())
-            ->willThrow(new DynamoDbException('', $command->reveal(), [
-                'body' => [
-                    'CancellationReasons' => [
-                        ['Code' => 'None'],
-                        ['Code' => 'ConditionalCheckFailed'],
-                    ],
+        $exception = new DynamoDbException('', new Command('TransactWriteItems'), [
+            'code' => 'TransactionCanceledException',
+            'body' => [
+                'CancellationReasons' => [
+                    ['Code' => 'None'],
+                    ['Code' => 'ConditionalCheckFailed'],
                 ],
-            ]));
+            ],
+        ]);
+        $client    = $this->getMockBuilder(DynamoDbClient::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['__call'])
+            ->getMock();
+        $client->expects(self::once())->method('__call')
+            ->with('transactWriteItems', self::anything())->willThrowException($exception);
 
-        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+        $actorRepo = new ActorUsers($client, self::TABLE_NAME);
 
-        $this->expectException(ConflictException::class);
-
-        $actorRepo->add($id, $email, $identity, 'now');
+        try {
+            $actorRepo->add($id, $email, $identity, 'now');
+            self::fail('Expected an identity conflict');
+        } catch (ConflictException $ex) {
+            self::assertSame(['identity' => $identity], $ex->getAdditionalData());
+            self::assertSame($exception, $ex->getPrevious());
+        }
     }
 
     #[Test]
@@ -543,54 +555,213 @@ class ActorUsersTest extends TestCase
     }
 
     #[Test]
-    public function will_migrate_a_local_account_to_oidc(): void
+    #[DataProvider('migrationModes')]
+    public function it_should_migrate_the_existing_account_atomically(bool $ignoreOrphanIdentity): void
     {
         $id       = '12345-1234-1234-1234-12345';
         $identity = 'sub:gov.uk:identity';
+        $pin      = [
+            'TableName' => 'users-table',
+            'Item'      => ['Id' => ['S' => 'IDENTITY#' . $identity]],
+        ];
 
-        $this->dynamoDbClientProphecy->getItem(Argument::any())
-            ->willReturn($this->createAWSResult([
-                'Item' => [
-                    'Id' => [
-                        'S' => $id,
-                    ],
-                ],
-            ]));
+        $client = $this->getMockBuilder(DynamoDbClient::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['__call'])
+            ->getMock();
 
-        $this->dynamoDbClientProphecy
-            ->transactWriteItems([
-                'TransactItems' => [
-                    [
-                        'Update' => [
-                            'TableName'                 => 'users-table',
-                            'Key'                       => ['Id' => ['S' => $id]],
-                            'UpdateExpression'          => 'SET #sub = :sub',
-                            'ExpressionAttributeValues' => [
-                                ':sub' => ['S' => $identity],
-                            ],
-                            'ExpressionAttributeNames'  => [
-                                '#sub' => 'Identity',
+        if (! $ignoreOrphanIdentity) {
+            $pin['ConditionExpression'] = 'attribute_not_exists(Id)';
+        }
+
+        $client->expects(self::once())
+            ->method('__call')
+            ->with('transactWriteItems', [
+                [
+                    'TransactItems' => [
+                        [
+                            'Update' => [
+                                'TableName'                 => 'users-table',
+                                'Key'                       => ['Id' => ['S' => $id]],
+                                'UpdateExpression'          => 'SET #sub = :sub',
+                                'ExpressionAttributeValues' => [
+                                    ':sub' => ['S' => $identity],
+                                ],
+                                'ExpressionAttributeNames'  => [
+                                    '#sub' => 'Identity',
+                                ],
                             ],
                         ],
-                    ],
-                    [
-                        'Put' => [
-                            'TableName'           => 'users-table',
-                            'ConditionExpression' => 'attribute_not_exists(Id)',
-                            'Item'                => [
-                                'Id' => ['S' => 'IDENTITY#' . $identity],
-                            ],
+                        [
+                            'Put' => $pin,
                         ],
                     ],
                 ],
             ])
-            ->shouldBeCalled();
+            ->willReturn($this->createAWSResult(['@metadata' => ['statusCode' => 200]]));
 
-        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
+        $actorRepo = new ActorUsers($client, 'users-table');
+        $original  = [
+            'Id'        => $id,
+            'Email'     => 'user@example.com',
+            'LastLogin' => '2026-11-01T12:00:00+00:00',
+        ];
 
-        $user = $actorRepo->migrateToOAuth(['Id' => $id], $identity);
+        $user = $actorRepo->migrateToOAuth($original, $identity, $ignoreOrphanIdentity);
 
-        $this->assertEquals($id, $user['Id']);
-        $this->assertEquals($identity, $user['Identity']);
+        self::assertSame($original + ['Identity' => $identity], $user);
+    }
+
+    public static function migrationModes(): array
+    {
+        return [
+            'guarded'       => [false],
+            'orphan bypass' => [true],
+        ];
+    }
+
+    #[Test]
+    public function it_should_report_an_identity_conflict_when_migration_is_cancelled(): void
+    {
+        $exception = new DynamoDbException('', new Command('TransactWriteItems'), [
+            'code' => 'TransactionCanceledException',
+            'body' => [
+                'CancellationReasons' => [
+                    ['Code' => 'None'],
+                    ['Code' => 'ConditionalCheckFailed'],
+                ],
+            ],
+        ]);
+
+        $client = $this->getMockBuilder(DynamoDbClient::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['__call'])
+            ->getMock();
+        $client->expects(self::once())->method('__call')
+            ->with('transactWriteItems', self::anything())->willThrowException($exception);
+
+        $repository = new ActorUsers($client, self::TABLE_NAME);
+
+        try {
+            $repository->migrateToOAuth(['Id' => 'existing-id', 'Email' => 'user@example.com'], 'subject');
+            self::fail('Expected an identity conflict');
+        } catch (ConflictException $ex) {
+            self::assertSame(['identity' => 'subject'], $ex->getAdditionalData());
+            self::assertSame($exception, $ex->getPrevious());
+        }
+    }
+
+    #[Test]
+    #[DataProvider('nonIdentityFailures')]
+    public function it_should_not_classify_other_creation_failures_as_orphans(string $code, array $body): void
+    {
+        $exception = new DynamoDbException('', new Command('TransactWriteItems'), ['code' => $code, 'body' => $body]);
+
+        $client = $this->getMockBuilder(DynamoDbClient::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['__call'])
+            ->getMock();
+        $client->expects(self::once())->method('__call')
+            ->with('transactWriteItems', self::anything())->willThrowException($exception);
+
+        $repository = new ActorUsers($client, self::TABLE_NAME);
+
+        try {
+            $repository->add('id', 'user@example.com', 'subject', 'now');
+            self::fail('Expected creation failure');
+        } catch (CreationException $ex) {
+            self::assertSame($exception, $ex->getPrevious());
+        }
+    }
+
+    #[Test]
+    #[DataProvider('nonIdentityFailures')]
+    public function it_should_not_classify_other_migration_failures_as_orphans(string $code, array $body): void
+    {
+        $exception = new DynamoDbException('', new Command('TransactWriteItems'), ['code' => $code, 'body' => $body]);
+
+        $client = $this->getMockBuilder(DynamoDbClient::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['__call'])
+            ->getMock();
+        $client->expects(self::once())->method('__call')
+            ->with('transactWriteItems', self::anything())->willThrowException($exception);
+
+        $repository = new ActorUsers($client, self::TABLE_NAME);
+
+        try {
+            $repository->migrateToOAuth(['Id' => 'id', 'Email' => 'user@example.com'], 'subject');
+            self::fail('Expected migration failure');
+        } catch (CreationException $ex) {
+            self::assertSame($exception, $ex->getPrevious());
+        }
+    }
+
+    public static function nonIdentityFailures(): array
+    {
+        return [
+            'unrelated AWS error'        => [
+                'ProvisionedThroughputExceededException',
+                [],
+            ],
+            'missing reasons'            => [
+                'TransactionCanceledException',
+                [],
+            ],
+            'different operation failed' => [
+                'TransactionCanceledException',
+                [
+                    'CancellationReasons' => [
+                        ['Code' => 'ConditionalCheckFailed'],
+                        ['Code' => 'None'],
+                    ],
+                ],
+            ],
+            'pin transaction conflict'   => [
+                'TransactionCanceledException',
+                [
+                    'CancellationReasons' => [
+                        ['Code' => 'None'],
+                        ['Code' => 'TransactionConflict'],
+                    ],
+                ],
+            ],
+            'both operations failed'     => [
+                'TransactionCanceledException',
+                [
+                    'CancellationReasons' => [
+                        ['Code' => 'ProvisionedThroughputExceeded'],
+                        ['Code' => 'ConditionalCheckFailed'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('unsuccessfulMigrationResponses')]
+    public function it_should_reject_unsuccessful_migration_responses(array $result): void
+    {
+        $client = $this->getMockBuilder(DynamoDbClient::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['__call'])
+            ->getMock();
+        $client->expects(self::once())->method('__call')
+            ->with('transactWriteItems', self::anything())->willReturn(new Result($result));
+
+        $repository = new ActorUsers($client, self::TABLE_NAME);
+
+        $this->expectException(CreationException::class);
+        $this->expectExceptionMessage('Failed to migrate account with code');
+
+        $repository->migrateToOAuth(['Id' => 'id', 'Email' => 'user@example.com'], 'subject');
+    }
+
+    public static function unsuccessfulMigrationResponses(): array
+    {
+        return [
+            'non-OK status'  => [['@metadata' => ['statusCode' => 500]]],
+            'missing status' => [[]],
+        ];
     }
 }

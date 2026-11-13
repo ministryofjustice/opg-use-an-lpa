@@ -8,7 +8,7 @@ namespace App\Service\Log;
  * Contains definitions for event codes to be attached to logged messages where needed.
  * Generally only needed when doing work on the logs that require filtering of specific logging entries.
  */
-class EventCodes
+final class EventCodes
 {
     /**
      * The LPA entered is not marked as 'Registered'
@@ -54,6 +54,12 @@ class EventCodes
      * A one login authentication transaction resulted in a username/password account being migrated.
      */
     public const string AUTH_ONELOGIN_ACCOUNT_MIGRATED = 'AUTH_ONELOGIN_ACCOUNT_MIGRATED';
+
+    /**
+     * An existing account was migrated after bypassing an orphan IDENTITY# record.
+     */
+    public const string AUTH_ONELOGIN_ACCOUNT_MIGRATED_WITH_ORPHAN_BYPASS
+        = 'AUTH_ONELOGIN_ACCOUNT_MIGRATED_WITH_ORPHAN_BYPASS';
 
     /**
      * A one login authentication transaction resulted in a new local account being created.
