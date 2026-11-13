@@ -26,7 +26,7 @@ All commands assume a working directory of `opg-use-my-lpa`.
 Add profiles named `ual-dev` and `management` to your ~/.aws/config file (speak to your team for the configuration details).
 
 Need these dependencies to be installed:
-`brew install awscli composer pre-commit terraform tflint tfsec gettext`
+`brew install awscli composer pre-commit terraform tflint tfswitch gettext`
 `brew install --cask aws-vault docker`
 
 To maintain repo standards and avoid commiting secrets [install pre-commit](https://pre-commit.com/#install) and then initialize with:
