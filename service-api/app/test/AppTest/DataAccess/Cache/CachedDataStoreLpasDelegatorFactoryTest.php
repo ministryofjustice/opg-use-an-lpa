@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace AppTest\DataAccess\ApiGateway;
+namespace AppTest\DataAccess\Cache;
 
-use App\DataAccess\ApiGateway\CachedDataStoreLpas;
-use App\DataAccess\ApiGateway\CachedDataStoreLpasDelegatorFactory;
 use App\DataAccess\ApiGateway\DataStoreLpas;
+use App\DataAccess\Cache\CachedDataStoreLpas;
+use App\DataAccess\Cache\CachedDataStoreLpasDelegatorFactory;
 use App\Service\Cache\CacheFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;

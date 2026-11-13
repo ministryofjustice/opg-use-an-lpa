@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\DataAccess\ApiGateway;
+namespace App\DataAccess\Cache;
 
+use App\DataAccess\ApiGateway\DataStoreLpas;
 use App\DataAccess\Repository\AuditableLpasInterface;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Entity\Lpa;

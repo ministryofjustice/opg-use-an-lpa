@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Acceptance;
 
+use App\DataAccess\Cache\SessionLpaCache;
 use App\DataAccess\DynamoDb\ActorUsers;
+use App\DataAccess\Repository\Response\Lpa;
+use App\Service\Lpa\LpaDataFormatter;
 use App\Service\User\ResolveOAuthUser;
 use AppTest\OidcUtilities;
 use Aws\Command;
@@ -54,6 +57,8 @@ class OidcContext implements Context
     public string $identityEmail   = '';
     public string $identitySubject = '';
     public int $type               = 0;
+    private string $cachedSessionId;
+    private string $cachedLpaUid;
 
     /**
      * @var array{
@@ -434,6 +439,48 @@ class OidcContext implements Context
     public function iWishToLoginToTheUseAnLpaService(): void
     {
         // Not needed in this context
+    }
+
+    #[Given('I have LPAs cached in my session and another session')]
+    public function iHaveLpasCachedInMySessionAndAnotherSession(): void
+    {
+        $this->cachedSessionId = bin2hex(random_bytes(16));
+        $data                  = json_decode(
+            file_get_contents(__DIR__ . '/../../../test/fixtures/test_lpa.json'),
+            true,
+            flags: JSON_THROW_ON_ERROR,
+        );
+        $lpa                   = new Lpa((new LpaDataFormatter())->hydrateObject($data), new DateTimeImmutable());
+        $this->cachedLpaUid    = $lpa->getData()->getUid();
+        $cache                 = $this->base->container->get(SessionLpaCache::class);
+
+        $this->ui->getSession()->setRequestHeader('User-Session', $this->cachedSessionId);
+
+        foreach ([$this->cachedSessionId, $this->cachedSessionId . '-other'] as $sessionId) {
+            $cache->lookup([$this->cachedLpaUid], $sessionId, static fn (): array => [$lpa]);
+        }
+    }
+
+    #[Then('only my logged out session LPA cache is cleared')]
+    public function onlyMyLoggedOutSessionLpaCacheIsCleared(): void
+    {
+        $cache = $this->base->container->get(SessionLpaCache::class);
+
+        try {
+            Assert::assertSame([], $cache->lookup(
+                [$this->cachedLpaUid],
+                $this->cachedSessionId,
+                static fn (): array => [],
+            ));
+            Assert::assertCount(1, $cache->lookup(
+                [$this->cachedLpaUid],
+                $this->cachedSessionId . '-other',
+                static fn (): array => [],
+            ));
+        } finally {
+            $cache->invalidateSession($this->cachedSessionId);
+            $cache->invalidateSession($this->cachedSessionId . '-other');
+        }
     }
 
     private function fetchByEmailFixtures(bool $hasIdentity = false): void

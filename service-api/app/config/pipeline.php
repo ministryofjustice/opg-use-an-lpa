@@ -70,6 +70,7 @@ return function (Application $app): void {
     $app->pipe('/v1/actor-codes', UserIdentificationMiddleware::class);
     $app->pipe('/v1/lpas', UserIdentificationMiddleware::class);
     $app->pipe('/v1/older-lpa', UserIdentificationMiddleware::class);
+    $app->pipe('/v1/auth/logout', UserIdentificationMiddleware::class);
 
     // Register the dispatch middleware in the middleware pipeline
     $app->pipe(DispatchMiddleware::class);

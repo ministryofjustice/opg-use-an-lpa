@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\DataAccess\ApiGateway;
+namespace App\DataAccess\Cache;
 
+use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response\LpaInterface;
 use Psr\Log\LoggerInterface;

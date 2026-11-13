@@ -72,6 +72,22 @@ services:
     image: docker.io/redis:8@sha256:c22af04bb576503bf16b3e34a1fd2fd82de0f765afd866d2e380145e0af30d78
 
   # ---------------------------
+  # PDF Generator (Gotenberg)
+  gotenberg:
+    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/shared/opg-gotenberg:latest
+    command: gotenberg --api-port=8000 --api-timeout=30s
+    ports:
+      - "8000:8000"
+    environment:
+      CHROMIUM_START_TIMEOUT: 30s
+    healthcheck:
+      test: curl -s http://localhost:8000/health >/dev/null || exit 1
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # ---------------------------
   # PDF Generator
   service-pdf:
     image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf-service:latest

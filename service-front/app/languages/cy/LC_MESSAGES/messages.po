@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-10 15:06+0000\n"
+"PO-Revision-Date: 2026-11-12 12:19+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -139,7 +139,7 @@ msgstr[5] "Bydd y cod mynediad yn dod i ben mewn %count% diwrnod"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:23
 msgid "Access code cancelled %date%"
-msgstr "Canslwyd eich cod mynediad ar %date%"
+msgstr "Canslwyd y cod mynediad ar %date%"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:25
 msgid "Access code expired %date%"
@@ -4897,3 +4897,28 @@ msgstr "Mae cyfeirnodau <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn cynnwy
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:25
 msgid "request-activation-key.reference-number.opg_reference_number"
 msgstr "Beth yw cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>?"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:3
+msgid "add-lpa.triage.title"
+msgstr "A oes gennych chi god actifadu i ychwanegu LPA?"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:23
+msgid "add-lpa.triage.heading-page"
+msgstr "A oes gennych chi god actifadu i ychwanegu <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>?"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:34
+msgid "add-lpa.triage.field-activation-key-triage.label-yes"
+msgstr "Oes, mae gen i god actifadu"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:38
+msgid "add-lpa.triage.field-activation-key-triage.label-no"
+msgstr "Nac oes, mae angen i mi ofyn am god actifadu"
+
+#. Contains GOV.UK paragraph elements and classes. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:27
+msgctxt "html"
+msgid "add-lpa.triage.content.activation-key-information"
+msgstr ""
+"<p class=\"govuk-body\">Mae angen eich cod actifadu unigryw eich hun arnoch i ychwanegu atwrneiaeth arhosol (<abbr title=\"atwrneiaeth arhosol\">LPA</abbr>) at eich cyfrif. Bydd cod actifadu yn cael ei anfon atoch pan fydd yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> wedi’i chofrestru. Bydd y cod yn dod i ben ar ôl 12 mis.</p>\n"
+"<p class=\"govuk-body\">Mae codau actifadu yn gyfuniad o 12 llythyren a rhif ac yn dechrau gydag C. Er enghraifft, C-AB12 CD34 EF56.</p>\n"
+"<p class=\"govuk-body\">Os ydych chi wedi colli eich cod actifadu, os ydy wedi dod i ben, neu os nad ydych wedi derbyn un o’r blaen, gallwch ofyn am un newydd.</p>"
