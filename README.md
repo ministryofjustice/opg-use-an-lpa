@@ -23,7 +23,11 @@ Additionally, work related to Use is done in:
 
 All commands assume a working directory of `opg-use-my-lpa`.
 
-Add a profile named `ual-dev` to your ~/.aws/config file (speak to your team for the configuration details).
+Add profiles named `ual-dev` and `management` to your ~/.aws/config file (speak to your team for the configuration details).
+
+Need these dependencies to be installed:
+`brew install awscli composer pre-commit terraform tflint tfswitch gettext`
+`brew install --cask aws-vault docker`
 
 To maintain repo standards and avoid commiting secrets [install pre-commit](https://pre-commit.com/#install) and then initialize with:
 
@@ -41,9 +45,12 @@ If you make a token that lacks an expiry date a similar error will occur
 
 A Makefile is maintained that aliases the most useful docker-compose commands.
 
-To build the service and it's dependencies
+To build the service and it's dependencies for the first time
 
 ```shell
+make reset
+
+# If it's not the first time
 make build
 ```
 
