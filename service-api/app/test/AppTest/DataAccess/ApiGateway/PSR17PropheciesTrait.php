@@ -28,7 +28,7 @@ trait PSR17PropheciesTrait
         $this->requestProphecy        = $this->prophesize(RequestInterface::class);
     }
 
-    public function generatePSR17Prophecies(ResponseInterface $response, string $traceId, array $data): void
+    public function generatePSR17Prophecies(ResponseInterface $response, array $data): void
     {
         $this->generateCleanPSR17Prophecies();
 
@@ -49,15 +49,10 @@ trait PSR17PropheciesTrait
             ->withHeader('Content-Type', 'application/json')
             ->shouldBeCalled()
             ->willReturn($this->requestProphecy->reveal());
-        $this->requestProphecy
-            ->withHeader('x-amzn-trace-id', $traceId)
-            ->shouldBeCalled()
-            ->willReturn($this->requestProphecy->reveal());
     }
 
     public function generatePSR17PropheciesWithoutAssertions(
         ResponseInterface $response,
-        string $traceId,
         array $data,
     ): void {
         $this->generateCleanPSR17Prophecies();
@@ -76,9 +71,6 @@ trait PSR17PropheciesTrait
             ->willReturn($this->requestProphecy->reveal());
         $this->requestProphecy
             ->withHeader('Content-Type', 'application/json')
-            ->willReturn($this->requestProphecy->reveal());
-        $this->requestProphecy
-            ->withHeader('x-amzn-trace-id', $traceId)
             ->willReturn($this->requestProphecy->reveal());
     }
 }

@@ -77,7 +77,6 @@ class SiriusLpasTest extends TestCase
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
             'my test bus',
-            'test-trace-id',
             $this->dataSanitiserStrategy->reveal(),
             $this->loggerInterface->reveal(),
             $this->featureEnabled->reveal(),
@@ -131,7 +130,6 @@ class SiriusLpasTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
-            'test-trace-id',
             [],
         );
 
@@ -165,7 +163,6 @@ class SiriusLpasTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
-            'test-trace-id',
             [],
         );
 
@@ -209,7 +206,6 @@ class SiriusLpasTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
-            'test-trace-id',
             [],
         );
 
@@ -263,7 +259,6 @@ class SiriusLpasTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
-            'test-trace-id',
             [],
         );
 
@@ -300,7 +295,6 @@ class SiriusLpasTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
-            'test-trace-id',
             [],
         );
 
@@ -346,7 +340,6 @@ class SiriusLpasTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
-            'test-trace-id',
             $testData,
         );
 
@@ -360,7 +353,11 @@ class SiriusLpasTest extends TestCase
 
         $service = $this->getLpas();
 
-        $service->requestLetter(new LpaUid((string) $caseUid), $actorUid === null ? null : (string) $actorUid, $additionalInfo);
+        $service->requestLetter(
+            new LpaUid((string) $caseUid),
+            $actorUid === null ? null : (string) $actorUid,
+            $additionalInfo,
+        );
     }
 
     public static function letterRequestDataProvider(): array
@@ -400,7 +397,6 @@ class SiriusLpasTest extends TestCase
                 'actor' => '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
             ]),
             'EventBusName' => 'my test bus',
-            'TraceHeader'  => 'test-trace-id',
         ];
 
         $this->eventBridgeClient
@@ -451,7 +447,6 @@ class SiriusLpasTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
-            'test-trace-id',
             [
                 'case_uid'  => $caseUid,
                 'actor_uid' => $actorUid,
@@ -480,7 +475,6 @@ class SiriusLpasTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $this->prophesize(Response::class)->reveal(),
-            'test-trace-id',
             [
                 'case_uid'  => $caseUid,
                 'actor_uid' => $actorUid,

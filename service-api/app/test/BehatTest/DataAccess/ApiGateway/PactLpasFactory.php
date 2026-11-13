@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace BehatTest\DataAccess\ApiGateway;
 
-use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
+use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\Repository\LpasInterface;
 use App\Service\Features\FeatureEnabled;
-use App\Service\Log\RequestTracing;
 use App\Service\Lpa\LpaDataFormatter;
 use Aws\EventBridge\EventBridgeClient;
 use DI\NotFoundException;
@@ -53,7 +52,6 @@ class PactLpasFactory
             $container->get(RequestSignerFactory::class),
             parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST),
             $config['eventbridge_bus_name'],
-            $container->get(RequestTracing::TRACE_PARAMETER_NAME),
             $container->get(SiriusLpaSanitiser::class),
             $container->get(LoggerInterface::class),
             $container->get(FeatureEnabled::class),

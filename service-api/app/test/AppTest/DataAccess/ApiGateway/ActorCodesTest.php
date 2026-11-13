@@ -57,10 +57,12 @@ class ActorCodesTest extends TestCase
 
         $responseProphecy = $this->prophesize(ResponseInterface::class);
         $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
-        $responseProphecy->getBody()->willReturn((new StreamFactory())->createStream(json_encode(['actor' => 'test-actor'])));
+        $responseProphecy->getBody()->willReturn(
+            (new StreamFactory())->createStream(json_encode(['actor' => 'test-actor']))
+        );
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
-        $this->generatePSR17Prophecies($responseProphecy->reveal(), 'test-trace-id', $testData);
+        $this->generatePSR17Prophecies($responseProphecy->reveal(), $testData);
 
         $this->requestFactoryProphecy
             ->createRequest('POST', Argument::containingString('localhost/v1/validate'))
@@ -72,7 +74,6 @@ class ActorCodesTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id',
         );
 
         $actorCode = $service->validateCode($testData['code'], new LpaUid($testData['lpa']), $testData['dob']);
@@ -98,7 +99,7 @@ class ActorCodesTest extends TestCase
         ])));
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
-        $this->generatePSR17Prophecies($responseProphecy->reveal(), 'test-trace-id', $testData);
+        $this->generatePSR17Prophecies($responseProphecy->reveal(), $testData);
 
         $this->requestFactoryProphecy
             ->createRequest('POST', Argument::containingString('localhost/v1/validate'))
@@ -110,7 +111,6 @@ class ActorCodesTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id',
         );
 
         $actorCode = $service->validateCode($testData['code'], new LpaUid($testData['lpa']), $testData['dob']);
@@ -131,7 +131,6 @@ class ActorCodesTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $this->prophesize(ResponseInterface::class)->reveal(),
-            'test-trace-id',
             $testData
         );
 
@@ -148,7 +147,6 @@ class ActorCodesTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id',
         );
 
         $this->expectException(ApiException::class);
@@ -174,7 +172,6 @@ class ActorCodesTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
-            'test-trace-id',
             $testData,
         );
 
@@ -188,7 +185,6 @@ class ActorCodesTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id',
         );
 
         $this->expectException(ApiException::class);
@@ -205,7 +201,6 @@ class ActorCodesTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
-            'test-trace-id',
             ['code' => 'code'],
         );
 
@@ -219,7 +214,6 @@ class ActorCodesTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id',
         );
 
         $service->flagCodeAsUsed('code');
@@ -230,7 +224,6 @@ class ActorCodesTest extends TestCase
     {
         $this->generatePSR17Prophecies(
             $this->prophesize(ResponseInterface::class)->reveal(),
-            'test-trace-id',
             ['code' => 'code'],
         );
 
@@ -247,7 +240,6 @@ class ActorCodesTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id',
         );
 
         $this->expectException(ApiException::class);
@@ -267,7 +259,6 @@ class ActorCodesTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
-            'test-trace-id',
             ['code' => 'code'],
         );
 
@@ -281,7 +272,6 @@ class ActorCodesTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id',
         );
 
         $this->expectException(ApiException::class);
@@ -311,7 +301,6 @@ class ActorCodesTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
-            'test-trace-id',
             $testData,
         );
 
@@ -325,7 +314,6 @@ class ActorCodesTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id',
         );
 
         $actorCode = $service->checkActorHasCode($testData['lpa'], $testData['actor']);
@@ -355,7 +343,6 @@ class ActorCodesTest extends TestCase
     {
         $this->generatePSR17Prophecies(
             $this->prophesize(ResponseInterface::class)->reveal(),
-            'test-trace-id',
             [
                 'lpa'   => 'test-lpa-id',
                 'actor' => 'test-actor-id',
@@ -375,7 +362,6 @@ class ActorCodesTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id',
         );
 
         $this->expectException(ApiException::class);
@@ -395,7 +381,6 @@ class ActorCodesTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
-            'test-trace-id',
             [
                 'lpa'   => 'test-lpa-id',
                 'actor' => 'test-actor-id',
@@ -412,7 +397,6 @@ class ActorCodesTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id',
         );
 
         $this->expectException(ApiException::class);

@@ -70,7 +70,6 @@ class PaperVerificationCodesTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
-            'test-trace-id',
             [
                 'code' => $code,
             ]
@@ -90,7 +89,6 @@ class PaperVerificationCodesTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id',
         );
 
         $data = $sut->validate(new PaperVerificationCode($code))->getData();
@@ -144,12 +142,13 @@ class PaperVerificationCodesTest extends TestCase
     {
         $responseProphecy = $this->prophesize(ResponseInterface::class);
         $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
-        $responseProphecy->getBody()->willReturn((new StreamFactory())->createStream(json_encode(['expiry_date' => '2025-10-24'])));
+        $responseProphecy->getBody()->willReturn(
+            (new StreamFactory())->createStream(json_encode(['expiry_date' => '2025-10-24']))
+        );
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
-            'test-trace-id',
             [
                 'code'          => 'P-1234-1234-1234-12',
                 'expiry_reason' => 'paper_to_digital',
@@ -170,7 +169,6 @@ class PaperVerificationCodesTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id',
         );
 
         $data = $sut->expire(

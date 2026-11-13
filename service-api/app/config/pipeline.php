@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Middleware\Logging\RequestTracingMiddleware;
 use App\Middleware\ProblemDetailsMiddleware;
 use App\Middleware\UserIdentificationMiddleware;
 use Laminas\Stratigility\Middleware\ErrorHandler;
@@ -40,8 +39,6 @@ return function (Application $app): void {
     // - $app->pipe('/api', $apiMiddleware);
     // - $app->pipe('/docs', $apiDocMiddleware);
     // - $app->pipe('/files', $filesMiddleware);
-
-    $app->pipe(RequestTracingMiddleware::class);
 
     // Register the routing middleware in the middleware pipeline.
     // This middleware registers the Mezzio\Router\RouteResult request attribute.
