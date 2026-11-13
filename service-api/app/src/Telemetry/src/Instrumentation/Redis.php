@@ -9,6 +9,10 @@ use OpenTelemetry\API\Trace\SpanKind;
 use OpenTelemetry\API\Trace\StatusCode;
 use OpenTelemetry\Context\Context;
 use OpenTelemetry\SDK\Sdk;
+use OpenTelemetry\SemConv\Attributes\DbAttributes;
+use OpenTelemetry\SemConv\Attributes\ErrorAttributes;
+use OpenTelemetry\SemConv\Attributes\ExceptionAttributes;
+use OpenTelemetry\SemConv\Attributes\ServerAttributes;
 use Redis as RedisClient;
 use Symfony\Component\Cache\Adapter\AbstractAdapter;
 use Symfony\Component\Cache\Adapter\AbstractTagAwareAdapter;
@@ -74,8 +78,8 @@ final class Redis
         }
 
         self::$endpoints[$adapter] = [
-            'server.address' => $redis->getHost(),
-            'server.port'    => $redis->getPort(),
+            ServerAttributes::SERVER_ADDRESS => $redis->getHost(),
+            ServerAttributes::SERVER_PORT    => $redis->getPort(),
         ];
     }
 
@@ -138,11 +142,14 @@ final class Redis
 
         if ($exception !== null || $failed) {
             $span->setStatus(StatusCode::STATUS_ERROR);
-            $span->setAttribute('error.type', $exception !== null ? $exception::class : 'cache.operation.failed');
+            $span->setAttribute(
+                ErrorAttributes::ERROR_TYPE,
+                $exception !== null ? $exception::class : 'cache.operation.failed'
+            );
 
             // Exception messages and stack traces can contain cache keys or cached data.
             if ($exception !== null) {
-                $span->addEvent('exception', ['exception.type' => $exception::class]);
+                $span->addEvent('exception', [ExceptionAttributes::EXCEPTION_TYPE => $exception::class]);
             }
         }
 
