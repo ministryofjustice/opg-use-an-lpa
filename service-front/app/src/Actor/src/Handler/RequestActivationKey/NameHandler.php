@@ -54,8 +54,7 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
             $postData = $this->form->getData();
 
             //  Set the data in the state and pass to the check your answers handler
-            $this->state($request)->firstNames = $postData['first_names'];
-            $this->state($request)->lastName   = $postData['last_name'];
+            $this->state($request)->updateName($postData['first_names'], $postData['last_name']);
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
@@ -75,11 +74,15 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
 
     public function nextPage(WorkflowState $state): string
     {
-        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.date-of-birth';
+        return $state->hasPersonalDetails() ? 'lpa.check-answers' : 'lpa.date-of-birth';
     }
 
     public function lastPage(WorkflowState $state): string
     {
+        if ($state->requestingAnother === true) {
+            return 'lpa.add-by-paper';
+        }
+
         return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.add-by-paper';
     }
 }

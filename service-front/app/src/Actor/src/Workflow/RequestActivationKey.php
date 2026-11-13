@@ -49,6 +49,7 @@ class RequestActivationKey implements WorkflowState
         ?string $actorAddressResponse = null,
         public ?string $liveInUK = null,
         public ?string $actorAbroadAddress = null,
+        public ?bool $requestingAnother = null,
     ) {
         if ($actorType !== null) {
             $this->setActorRole($actorType);
@@ -71,6 +72,59 @@ class RequestActivationKey implements WorkflowState
      */
     public function reset(): void
     {
+        $this->resetLpaSpecificDetails();
+
+        $this->requestingAnother = false;
+
+        $this->firstNames = null;
+        $this->lastName   = null;
+        $this->dob        = null;
+        $this->liveInUK   = null;
+        $this->postcode   = null;
+    }
+
+    /**
+     * Reset the workflow so that another activation key can be requested, keeping the
+     * personal details the user has already given us.
+     */
+    public function resetForAnotherRequest(): void
+    {
+        $this->resetLpaSpecificDetails();
+
+        $this->requestingAnother = true;
+    }
+
+    /**
+     * When requesting another activation key a changed name means a different person, so the
+     * personal details given for the previous request no longer apply.
+     */
+    public function updateName(string $firstNames, string $lastName): void
+    {
+        if (
+            $this->requestingAnother === true
+            && ($this->firstNames !== $firstNames || $this->lastName !== $lastName)
+        ) {
+            $this->dob      = null;
+            $this->liveInUK = null;
+            $this->postcode = null;
+        }
+
+        $this->firstNames        = $firstNames;
+        $this->lastName          = $lastName;
+        $this->requestingAnother = false;
+    }
+
+    public function hasPersonalDetails(): bool
+    {
+        return $this->firstNames !== null
+            && $this->lastName !== null
+            && $this->dob !== null
+            && $this->liveInUK !== null
+            && $this->postcode !== null;
+    }
+
+    private function resetLpaSpecificDetails(): void
+    {
         $this->referenceNumber    = null;
         $this->actorType          = null;
         $this->donorFirstNames    = null;
@@ -91,12 +145,6 @@ class RequestActivationKey implements WorkflowState
         $this->actorUid             = null;
         $this->needsCleansing       = false;
         $this->actorAddressResponse = null;
-
-        $this->firstNames = null;
-        $this->lastName   = null;
-        $this->dob        = null;
-        $this->liveInUK   = null;
-        $this->postcode   = null;
     }
 
     public function getActorRole(): ?ActorType

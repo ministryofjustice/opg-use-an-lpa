@@ -19,6 +19,50 @@ Feature: Add an older LPA
     Then a letter is requested containing a one time use code
     And I receive an email confirming activation key request
 
+  @ui
+  Scenario: The same person does not have to re-enter their date of birth and address when requesting another activation key
+    Given I am on the add an older LPA page
+    And I provide the details from a valid paper document
+    And I confirm the details I provided are correct
+    And I am shown the details of an LPA
+    And I confirm details shown to me of the found LPA are correct
+    And a letter is requested containing a one time use code
+    When I request another activation key
+    And I enter the reference number of another LPA
+    Then I can see my name has already been filled in
+    When I continue from the your name page
+    Then I am asked to check my answers for the other LPA
+
+  @ui
+  Scenario: A different person is asked for their date of birth and address when requesting another activation key
+    Given I am on the add an older LPA page
+    And I provide the details from a valid paper document
+    And I confirm the details I provided are correct
+    And I am shown the details of an LPA
+    And I confirm details shown to me of the found LPA are correct
+    And a letter is requested containing a one time use code
+    When I request another activation key
+    And I enter the reference number of another LPA
+    And I change the name to a different person
+    And I continue from the your name page
+    Then I am asked for my date of birth without it being filled in
+    When I provide the date of birth of the different person
+    Then I am asked where I currently live without it being filled in
+    When I provide the postcode of the different person
+    Then I am asked to check my answers for the different person
+
+  @ui
+  Scenario: The user has to re-enter their personal details when starting again after requesting an activation key
+    Given I am on the add an older LPA page
+    And I provide the details from a valid paper document
+    And I confirm the details I provided are correct
+    And I am shown the details of an LPA
+    And I confirm details shown to me of the found LPA are correct
+    And a letter is requested containing a one time use code
+    When I start again from the beginning
+    And I enter the reference number of another LPA
+    Then I can see my name has not been filled in
+
   @ui @integration @ff:paper_verification:true
   Scenario: The user can request an activation key for a modernised LPA
     Given I am on the add an older LPA page
