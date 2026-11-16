@@ -28,9 +28,11 @@ final class OpgJsonFormatter extends JsonFormatter
             'extra'        => $record['extra'],
         ];
 
-        if (array_key_exists(RequestTracing::TRACE_PARAMETER_NAME, $record['extra'])) {
-            $output['trace_id'] = $record['extra'][RequestTracing::TRACE_PARAMETER_NAME];
-            unset($output['extra'][RequestTracing::TRACE_PARAMETER_NAME]);
+        foreach (['trace_id', 'alb_trace_id'] as $field) {
+            if (array_key_exists($field, $record['extra'])) {
+                $output[$field] = $record['extra'][$field];
+                unset($output['extra'][$field]);
+            }
         }
 
         return parent::format($output);

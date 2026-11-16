@@ -18,11 +18,15 @@ log_format json_combined escape=json
         '"request_id":"$trace_id"'
     '}';
 
-# ensures that the trace id always has a value, used mostly for
-# local dev as when up on amazon these id's exist
+# Format a random W3C-style request ID as an X-Ray root when no incoming root exists.
+map $request_id $generated_trace_id {
+    "~^(?<trace_prefix>[0-9a-f]{8})(?<trace_suffix>[0-9a-f]{24})$"
+        "Root=1-$trace_prefix-$trace_suffix";
+}
+
 map $http_x_amzn_trace_id $trace_id {
     "~*Root=" $http_x_amzn_trace_id;
-    default "Root=1-$msec-$connection$connection_requests";
+    default   $generated_trace_id;
 }
 
 server {

@@ -18,6 +18,7 @@ use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
+use Symfony\Component\Cache\Adapter\RedisTagAwareAdapter;
 use Symfony\Component\Cache\Exception\CacheException;
 use Throwable;
 use UnexpectedValueException;
@@ -37,8 +38,9 @@ final class PoolFactory implements FactoryInterface
         }
 
         try {
-            $config = $this->getPoolConfiguration($container, $requestedName);
-            $logger = $this->getLogger($container);
+            $config   = $this->getPoolConfiguration($container, $requestedName);
+            $logger   = $this->getLogger($container);
+            $taggable = $config['adapter'] === 'redis-taggable';
 
             $pool = match ($config['adapter']) {
                 'apcu'  => $this->createApcuPool(
@@ -47,11 +49,12 @@ final class PoolFactory implements FactoryInterface
                     $config['version'],
                 ),
                 'array' => $this->createArrayPool($config['default_lifetime'], $config['options']),
-                'redis' => $this->createRedisPool(
+                'redis', 'redis-taggable' => $this->createRedisPool(
                     $container,
                     $config['namespace'],
                     $config['default_lifetime'],
                     $config['options'],
+                    $taggable,
                 ),
                 default => throw new UnexpectedValueException(
                     'Unsupported Symfony cache adapter: ' . $config['adapter']
@@ -152,8 +155,19 @@ final class PoolFactory implements FactoryInterface
         string $namespace,
         int $lifetime,
         array $options,
-    ): RedisAdapter {
+        bool $taggable,
+    ): RedisAdapter|RedisTagAwareAdapter {
+        $connection = $this->createRedisConnection($container, $options);
+
+        return $taggable
+            ? new RedisTagAwareAdapter($connection, $namespace, $lifetime)
+            : new RedisAdapter($connection, $namespace, $lifetime);
+    }
+
+    private function createRedisConnection(ContainerInterface $container, array $options): Redis
+    {
         $redis = $options['connection'] ?? null;
+
         if ($redis === null) {
             throw new UnexpectedValueException('Missing Redis cache configuration');
         }
@@ -171,12 +185,13 @@ final class PoolFactory implements FactoryInterface
 
         $factory    = $container->get(RedisFactory::class);
         $connection = $factory($container, Redis::class);
+
         if (!$connection instanceof Redis) {
             throw new UnexpectedValueException('Redis cache factory must return a Redis connection');
         }
 
         if (
-            !$connection->connect(
+            !$connection->pconnect(
                 $redis['host'],
                 $redis['port'],
                 $redis['timeout'],
@@ -195,7 +210,7 @@ final class PoolFactory implements FactoryInterface
             throw new RuntimeException('Unable to configure Redis cache serializer');
         }
 
-        return new RedisAdapter($connection, $namespace, $lifetime);
+        return $connection;
     }
 
     /**

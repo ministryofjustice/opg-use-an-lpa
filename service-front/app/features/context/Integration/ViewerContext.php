@@ -11,7 +11,6 @@ use BehatTest\Context\ContextUtilities;
 use BehatTest\Context\ViewerContextTrait;
 use Common\Entity\InstructionsAndPreferences\Images;
 use Common\Entity\InstructionsAndPreferences\ImagesStatus;
-use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Pdf\PdfService;
 use Fig\Http\Message\StatusCodeInterface;
@@ -23,6 +22,8 @@ class ViewerContext extends BaseIntegrationContext
     use ViewerContextTrait;
 
     private const LPA_SERVICE_GET_LPA_BY_CODE = 'LpaService::getLpaByCode';
+
+    /** @var array<string, mixed> */
     private array $lpaData;
     private string $lpaShareCode;
     private string $lpaSurname;
@@ -31,10 +32,6 @@ class ViewerContext extends BaseIntegrationContext
 
     protected function prepareContext(): void
     {
-        // This is populated into the container using a Middleware which these integration
-        // tests wouldn't normally touch but the container expects
-        $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
-
         // DO NOT use this method as below to create context global services out of the container
         // it breaks feature flag testing.
         // $this->lpaService = $this->container->get(LpaService::class); // DONT DO THIS
@@ -154,8 +151,8 @@ class ViewerContext extends BaseIntegrationContext
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode([
-                                'lpa' => $this->lpaData,
-                            ]),
+                    'lpa' => $this->lpaData,
+                ]),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
             )
         );
@@ -184,8 +181,8 @@ class ViewerContext extends BaseIntegrationContext
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode([
-                                'lpa' => $this->lpaData,
-                            ]),
+                    'lpa' => $this->lpaData,
+                ]),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
             )
         );

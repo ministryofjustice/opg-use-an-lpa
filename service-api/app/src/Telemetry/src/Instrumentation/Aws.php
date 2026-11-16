@@ -6,11 +6,13 @@ namespace Telemetry\Instrumentation;
 
 use Aws\AwsClient;
 use Aws\DynamoDb\DynamoDbClient;
+use Aws\EventBridge\EventBridgeClient;
 use Aws\ResultInterface;
 use OpenTelemetry\API\Instrumentation\CachedInstrumentation;
 use OpenTelemetry\API\Trace\SpanKind;
 use OpenTelemetry\API\Trace\StatusCode;
 use OpenTelemetry\Context\Context;
+use OpenTelemetry\Contrib\Aws\Xray\Propagator;
 use OpenTelemetry\SDK\Sdk;
 use OpenTelemetry\SemConv\Attributes\HttpAttributes;
 use Telemetry\Suppression;
@@ -19,7 +21,7 @@ use Throwable;
 use function OpenTelemetry\Instrumentation\hook;
 
 /**
- * Creates a client span for every AWS SDK operation, e.g. DynamoDbClient::getItem().
+ * Creates a client span for every AWS SDK operation and propagates it in EventBridge event entries.
  */
 final class Aws
 {
@@ -42,10 +44,10 @@ final class Aws
         hook(AwsClient::class, '__call', pre: self::pre(...), post: self::post(...));
     }
 
-    private static function pre(AwsClient $client, array $params): void
+    private static function pre(AwsClient $client, array $params): ?array
     {
         if (Suppression::isActive()) {
-            return;
+            return null;
         }
 
         $parentContext = Context::getCurrent();
@@ -72,6 +74,40 @@ final class Aws
 
         // The SDK makes its HTTP calls via Guzzle; this span already represents that work.
         OwnedScope::attach(self::NAME, Suppression::apply($span->storeInContext($parentContext)), $client);
+
+        if (
+            $client instanceof EventBridgeClient
+            && in_array(strtolower($command), ['putevents', 'puteventsasync'], true)
+        ) {
+            return self::propagateEventEntries($params);
+        }
+
+        return null;
+    }
+
+    private static function propagateEventEntries(array $params): ?array
+    {
+        $headers = [];
+        (new Propagator())->inject($headers);
+
+        if (!isset($headers['x-amzn-trace-id'])) {
+            return null;
+        }
+
+        // The SDK accepts the operation payload as either a positional or named argument.
+        $argument = array_key_exists('args', $params[1]) ? 'args' : 0;
+        $entries  = $params[1][$argument]['Entries'] ?? null;
+        if (!is_array($entries)) {
+            return null;
+        }
+
+        foreach ($entries as $index => $entry) {
+            if (is_array($entry)) {
+                $params[1][$argument]['Entries'][$index]['TraceHeader'] = $headers['x-amzn-trace-id'];
+            }
+        }
+
+        return [1 => $params[1]];
     }
 
     private static function post(AwsClient $client, array $params, mixed $result, ?Throwable $exception): void

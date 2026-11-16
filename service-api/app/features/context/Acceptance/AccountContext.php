@@ -26,7 +26,7 @@ final class AccountContext implements Context
     public function iAmCurrentlySignedIn(): void
     {
         $this->ui->getSession()->setRequestHeader('User-Token', $this->base->userAccountId);
-        $this->ui->getSession()->setRequestHeader('User-Session', 'test-session-123');
+        $this->ui->getSession()->setRequestHeader('User-Session', bin2hex(random_bytes(16)));
     }
 
     #[Given('/^I confirm that I want to delete my account$/')]

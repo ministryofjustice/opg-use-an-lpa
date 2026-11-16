@@ -121,8 +121,9 @@ final class PSR15Handler
 
         $parent = Context::getCurrent();
         if ($isRoot) {
-            $parent  = Globals::propagator()->extract($request->getHeaders());
-            $span    = self::withServerAttributes($builder->setParent($parent), $request)->startSpan();
+            $parent = Globals::propagator()->extract($request->getHeaders());
+            $span   = self::withServerAttributes($builder->setParent($parent), $request)->startSpan();
+
             $request = $request->withAttribute(SpanInterface::class, $span);
         } else {
             $span = $builder->setSpanKind(SpanKind::KIND_INTERNAL)->startSpan();

@@ -567,26 +567,6 @@ msgstr "you've told us you no longer want to be an attorney"
 msgid "the donor has removed you as an attorney"
 msgstr "the donor has removed you as an attorney"
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:23
-msgid "Do you have an activation key to add an LPA?"
-msgstr "Do you have an activation key to add an LPA?"
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:35
-msgid ""
-"Activation keys are 12 letters and numbers long and start with a C, for "
-"example: C-AB12 CD34 EF56."
-msgstr ""
-"Activation keys are 12 characters long. They include letters and numbers and "
-"always start with a C. For example, C-AB12 CD34 EF56."
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:49
-msgid "Yes, I have an activation key"
-msgstr "Yes, I have an activation key"
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:53
-msgid "No, I need to request an activation key"
-msgstr "No, I need to request an activation key"
-
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:3
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
 msgid "Your new access code"
@@ -6228,23 +6208,6 @@ msgid ""
 msgstr ""
 "As you have not used this service for over 20 minutes, the page has timed out"
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:28
-msgid ""
-"You need your own unique activation key to add an LPA to your account. These "
-"are sent to you when the LPA is registered and expire after 12 months."
-msgstr ""
-"You need your own unique activation key to add an LPA to your account. An "
-"activation key will be sent to you when the LPA is registered. The key will "
-"expire after 12 months."
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:41
-msgid ""
-"If you’ve lost your activation key, it’s expired, or you’ve not had one "
-"before, you can request a new one."
-msgstr ""
-"If you’ve lost your activation key, it’s expired, or you’ve not had one "
-"before, you can request a new one."
-
 #: src/Common/templates/error/409.html.twig:12
 msgid ""
 "Your information is safe and any LPAs you’ve already added to this account "
@@ -6515,6 +6478,7 @@ msgstr ""
 "attorney\">LPA</abbr> reference number or can’t find it, please <a "
 "class=\"govuk-link\" href=\"%link%\">contact us</a>.</p>"
 
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:9
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:8
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:8
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:8
@@ -6523,6 +6487,7 @@ msgstr ""
 msgid "common.back-link"
 msgstr "Back"
 
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:47
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:41
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:45
@@ -6531,6 +6496,7 @@ msgstr "Back"
 msgid "common.button-continue"
 msgstr "Continue"
 
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:51
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:50
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:59
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:39
@@ -6656,3 +6622,33 @@ msgstr "LPA reference numbers are 12 numbers long, for example 7000-0000-0000."
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:25
 msgid "request-activation-key.reference-number.opg_reference_number"
 msgstr "What is the LPA reference number?"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:3
+msgid "add-lpa.triage.title"
+msgstr "Do you have an activation key to add an LPA?"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:23
+msgid "add-lpa.triage.heading-page"
+msgstr "Do you have an activation key to add an LPA?"
+
+#. Contains GOV.UK paragraph elements and classes. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:27
+msgctxt "html"
+msgid "add-lpa.triage.content.activation-key-information"
+msgstr ""
+"<p class=\"govuk-body\">You need your own unique activation key to add an LPA "
+"to your account. An activation key will be sent to you when the LPA is "
+"registered. The key will expire after 12 months.</p>\n"
+"<p class=\"govuk-body\">Activation keys are 12 characters long. They include "
+"letters and numbers and always start with a C. For example, C-AB12 CD34 "
+"EF56.</p>\n"
+"<p class=\"govuk-body\">If you’ve lost your activation key, it’s expired, or "
+"you’ve not had one before, you can request a new one.</p>"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:34
+msgid "add-lpa.triage.field-activation-key-triage.label-yes"
+msgstr "Yes, I have an activation key"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:38
+msgid "add-lpa.triage.field-activation-key-triage.label-no"
+msgstr "No, I need to request an activation key"

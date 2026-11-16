@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace AppTest\DataAccess\ApiGateway;
+namespace AppTest\DataAccess\Cache;
 
-use App\DataAccess\ApiGateway\CachedSiriusLpas;
-use App\DataAccess\ApiGateway\CachedSiriusLpasDelegatorFactory;
 use App\DataAccess\ApiGateway\SiriusLpas;
+use App\DataAccess\Cache\CachedSiriusLpas;
+use App\DataAccess\Cache\CachedSiriusLpasDelegatorFactory;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Service\Cache\CacheFactory;
 use PHPUnit\Framework\Attributes\CoversClass;

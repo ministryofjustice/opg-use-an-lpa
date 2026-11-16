@@ -8,6 +8,7 @@ use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Cache\Psr16Cache;
+use Symfony\Component\Cache\Adapter\TagAwareAdapterInterface;
 use UnexpectedValueException;
 
 class CacheFactory
@@ -25,5 +26,16 @@ class CacheFactory
         }
 
         return new Psr16Cache($pool);
+    }
+
+    public function taggable(string $cacheName): TagAwareAdapterInterface
+    {
+        $pool = $this->container->get('cache.' . $cacheName);
+
+        if (!$pool instanceof TagAwareAdapterInterface) {
+            throw new UnexpectedValueException('cache.' . $cacheName . ' must implement TagAwareAdapterInterface');
+        }
+
+        return $pool;
     }
 }

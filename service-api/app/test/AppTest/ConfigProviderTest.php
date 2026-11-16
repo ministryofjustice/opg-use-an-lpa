@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace AppTest;
 
 use App\ConfigProvider;
-use App\DataAccess\ApiGateway\CachedDataStoreLpasDelegatorFactory;
-use App\DataAccess\ApiGateway\CachedSiriusLpasDelegatorFactory;
 use App\DataAccess\ApiGateway\DataStoreLpas;
 use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\ApiGateway\SiriusLpasFactory;
+use App\DataAccess\Cache\CachedDataStoreLpasDelegatorFactory;
+use App\DataAccess\Cache\CachedSiriusLpasDelegatorFactory;
 use App\DataAccess\Repository\AuditableLpasInterface;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\RequestLetterInterface;

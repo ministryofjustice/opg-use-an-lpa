@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AppTest\DataAccess\ApiGateway;
+namespace AppTest\DataAccess\Cache;
 
-use App\DataAccess\ApiGateway\CachedDataStoreLpas;
 use App\DataAccess\ApiGateway\DataStoreLpas;
+use App\DataAccess\Cache\CachedDataStoreLpas;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Entity\Lpa;
 use PHPUnit\Framework\Attributes\CoversClass;

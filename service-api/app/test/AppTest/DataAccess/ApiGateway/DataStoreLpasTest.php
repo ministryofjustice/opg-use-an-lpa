@@ -50,7 +50,6 @@ class DataStoreLpasTest extends TestCase
     {
         $uid          = 'M-7890-0400-4000';
         $apiBaseUri   = 'http://localhost';
-        $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
 
         $this->generateCleanPSR17Prophecies();
@@ -62,7 +61,6 @@ class DataStoreLpasTest extends TestCase
             $this->requestSignerFactoryProphecy->reveal(),
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
-            $traceId,
         );
 
         $this->requestFactoryProphecy
@@ -102,7 +100,6 @@ class DataStoreLpasTest extends TestCase
                 $this->requestSignerFactoryProphecy->reveal(),
                 $this->lpaDataFormatterProphecy->reveal(),
                 $apiBaseUri,
-                $traceId,
             );
 
             $moderniseLpas->get($uid);
@@ -117,7 +114,6 @@ class DataStoreLpasTest extends TestCase
     {
         $uid          = 'M-7890-0400-4000';
         $apiBaseUri   = 'http://localhost';
-        $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
 
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
@@ -128,7 +124,7 @@ class DataStoreLpasTest extends TestCase
         $responseProphecy->getBody()->willReturn($responseBodyProphecy->reveal());
         $responseProphecy->getHeaderLine('Date')->willReturn('Wed, 16 Feb 2022 16:45:46 GMT');
 
-        $this->generatePSR17Prophecies($responseProphecy->reveal(), $traceId, []);
+        $this->generatePSR17Prophecies($responseProphecy->reveal(), []);
 
         $this->requestFactoryProphecy
             ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid . '?presign-images')
@@ -157,7 +153,6 @@ class DataStoreLpasTest extends TestCase
             $this->requestSignerFactoryProphecy->reveal(),
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
-            $traceId,
         );
 
         $this->expectException(ApiException::class);
@@ -169,7 +164,6 @@ class DataStoreLpasTest extends TestCase
     {
         $uid          = 'M-7890-0400-4000';
         $apiBaseUri   = 'http://localhost';
-        $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
 
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
@@ -180,7 +174,7 @@ class DataStoreLpasTest extends TestCase
         $responseProphecy->getBody()->willReturn($responseBodyProphecy->reveal());
         $responseProphecy->getHeaderLine('Date')->willReturn('Wed, 16 Feb 2022 16:45:46 GMT');
 
-        $this->generatePSR17Prophecies($responseProphecy->reveal(), $traceId, []);
+        $this->generatePSR17Prophecies($responseProphecy->reveal(), []);
 
         $this->requestFactoryProphecy
             ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid . '?presign-images')
@@ -209,7 +203,6 @@ class DataStoreLpasTest extends TestCase
             $this->requestSignerFactoryProphecy->reveal(),
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
-            $traceId,
         );
 
         $shouldBeAnLPA = $moderniseLpas->setOriginatorId($originatorId)->get($uid);
@@ -223,7 +216,6 @@ class DataStoreLpasTest extends TestCase
     {
         $uid          = 'M-7890-0400-4000';
         $apiBaseUri   = 'http://localhost';
-        $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
 
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
@@ -234,7 +226,7 @@ class DataStoreLpasTest extends TestCase
         $responseProphecy->getBody()->willReturn($responseBodyProphecy->reveal());
         $responseProphecy->getHeaderLine('Date')->willReturn('Wed, 16 Feb 2022 16:45:46 GMT');
 
-        $this->generatePSR17Prophecies($responseProphecy->reveal(), $traceId, []);
+        $this->generatePSR17Prophecies($responseProphecy->reveal(), []);
 
         $this->requestFactoryProphecy
             ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid . '?presign-images')
@@ -259,7 +251,6 @@ class DataStoreLpasTest extends TestCase
             $this->requestSignerFactoryProphecy->reveal(),
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
-            $traceId,
         );
 
         $shouldBeANull = $moderniseLpas->setOriginatorId($originatorId)->get($uid);
@@ -271,7 +262,6 @@ class DataStoreLpasTest extends TestCase
     public function can_lookup_multiple_lpas(): void
     {
         $apiBaseUri   = 'http://localhost';
-        $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
 
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
@@ -303,7 +293,7 @@ class DataStoreLpasTest extends TestCase
         $responseProphecy->getBody()->willReturn($responseBodyProphecy->reveal());
         $responseProphecy->getHeaderLine('Date')->willReturn('Wed, 16 Feb 2022 16:45:46 GMT');
 
-        $this->generatePSR17Prophecies($responseProphecy->reveal(), $traceId, []);
+        $this->generatePSR17Prophecies($responseProphecy->reveal(), []);
 
         $this->httpClientProphecy->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($responseProphecy->reveal());
@@ -354,7 +344,6 @@ class DataStoreLpasTest extends TestCase
             $this->requestSignerFactoryProphecy->reveal(),
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
-            $traceId,
         );
 
         $lpas = $moderniseLpas->setOriginatorId($originatorId)->lookup([
@@ -380,7 +369,6 @@ class DataStoreLpasTest extends TestCase
             'M-789Q-X7DT-5PDP',
         ];
         $apiBaseUri   = 'http://localhost';
-        $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
 
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
@@ -392,7 +380,7 @@ class DataStoreLpasTest extends TestCase
         $responseProphecy->getStatusCode()->willReturn(200);
         $responseProphecy->getBody()->willReturn($responseBodyProphecy->reveal());
 
-        $this->generatePSR17Prophecies($responseProphecy->reveal(), $traceId, []);
+        $this->generatePSR17Prophecies($responseProphecy->reveal(), []);
 
         $this->httpClientProphecy->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($responseProphecy->reveal());
@@ -420,7 +408,6 @@ class DataStoreLpasTest extends TestCase
             $this->requestSignerFactoryProphecy->reveal(),
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
-            $traceId,
         );
 
         $this->expectException(ApiException::class);
@@ -433,7 +420,6 @@ class DataStoreLpasTest extends TestCase
     {
         $uid          = 'M-7890-0400-4000';
         $apiBaseUri   = 'http://localhost';
-        $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
 
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
@@ -441,7 +427,7 @@ class DataStoreLpasTest extends TestCase
 
         $responseProphecy = $this->prophesize(ResponseInterface::class);
 
-        $this->generatePSR17Prophecies($responseProphecy->reveal(), $traceId, []);
+        $this->generatePSR17Prophecies($responseProphecy->reveal(), []);
 
         $this->requestFactoryProphecy
             ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid . '?presign-images')
@@ -470,7 +456,6 @@ class DataStoreLpasTest extends TestCase
             $this->requestSignerFactoryProphecy->reveal(),
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
-            $traceId,
         );
 
         $this->expectException(ApiException::class);
@@ -486,12 +471,11 @@ class DataStoreLpasTest extends TestCase
             'M-789Q-X7DT-5PDP',
         ];
         $apiBaseUri   = 'http://localhost';
-        $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
 
         $responseProphecy = $this->prophesize(ResponseInterface::class);
 
-        $this->generatePSR17Prophecies($responseProphecy->reveal(), $traceId, []);
+        $this->generatePSR17Prophecies($responseProphecy->reveal(), []);
 
         $this->httpClientProphecy->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($responseProphecy->reveal());
@@ -519,7 +503,6 @@ class DataStoreLpasTest extends TestCase
             $this->requestSignerFactoryProphecy->reveal(),
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
-            $traceId,
         );
 
         $this->expectException(ApiException::class);

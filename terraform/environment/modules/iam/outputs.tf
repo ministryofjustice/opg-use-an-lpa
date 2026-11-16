@@ -6,6 +6,7 @@ output "ecs_task_roles" {
     use_task_role           = aws_iam_role.use_task_role
     viewer_task_role        = aws_iam_role.viewer_task_role
     pdf_task_role           = aws_iam_role.pdf_task_role
+    gotenberg_task_role     = aws_iam_role.gotenberg_task_role
     mock_onelogin_task_role = aws_iam_role.mock_onelogin_task_role
   }
 }

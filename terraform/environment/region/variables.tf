@@ -313,3 +313,9 @@ variable "default_tags" {
   description = "Default tags to apply to all resources"
   type        = map(string)
 }
+
+variable "gotenberg_tag" {
+  description = "The image tag to use for the Gotenberg container."
+  type        = string
+  default     = "v0.5.0"
+}

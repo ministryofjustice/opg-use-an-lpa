@@ -7,7 +7,6 @@ namespace BehatTest\DataAccess\ApiGateway;
 use App\DataAccess\ApiGateway\InstructionsAndPreferencesImages;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\Repository\InstructionsAndPreferencesImagesInterface;
-use App\Service\Log\RequestTracing;
 use DI\NotFoundException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -36,7 +35,6 @@ class PactInstructionsAndPreferencesImagesFactory
             $container->get(StreamFactoryInterface::class),
             $container->get(RequestSignerFactory::class),
             parse_url($config['iap_images_api']['endpoint'], PHP_URL_HOST),
-            $container->get(RequestTracing::TRACE_PARAMETER_NAME),
         );
     }
 }

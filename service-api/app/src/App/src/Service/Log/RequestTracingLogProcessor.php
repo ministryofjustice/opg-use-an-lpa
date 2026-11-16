@@ -4,37 +4,24 @@ declare(strict_types=1);
 
 namespace App\Service\Log;
 
-use DI\NotFoundException;
 use Monolog\Processor\ProcessorInterface;
-use Psr\Container\ContainerInterface;
+use OpenTelemetry\Contrib\Aws\Xray\Propagator;
 
-class RequestTracingLogProcessor implements ProcessorInterface
+final class RequestTracingLogProcessor implements ProcessorInterface
 {
-    /**
-     * This log process needs access to the latest trace-id that has been discovered. Because this
-     * process happens in a middleware and because this processor may be instantiated before that
-     * middleware we need to be able to query that traceId at runtime - and so for that we need
-     * to be given the container.
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct(private ContainerInterface $container)
-    {
-    }
-
     /**
      * @inheritDoc
      */
     public function __invoke(array $record): array
     {
-        try {
-            $traceId = $this->container->get(RequestTracing::TRACE_PARAMETER_NAME);
-        } catch (NotFoundException) {
-            // we tried our best
-            $traceId = 'NO-TRACE-ID-DISCOVERED';
+        $headers = [];
+
+        (new Propagator())->inject($headers);
+
+        if (isset($headers[RequestTracing::TRACE_HEADER_NAME])) {
+            $record['extra']['trace_id'] = $headers[RequestTracing::TRACE_HEADER_NAME];
         }
 
-        $record['extra'][RequestTracing::TRACE_PARAMETER_NAME] = $traceId;
         return $record;
     }
 }

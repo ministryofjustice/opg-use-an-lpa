@@ -11,8 +11,10 @@ Feature: A user of the system is able to logout
   @acceptance
   Scenario: A user can logout in English
     Given I am currently signed in
+    And I have LPAs cached in my session and another session
     When I logout of the application using locale "en"
     Then I am taken to complete a satisfaction survey in English
+    And only my logged out session LPA cache is cleared
 
   @acceptance
   Scenario: A user can logout in Welsh
