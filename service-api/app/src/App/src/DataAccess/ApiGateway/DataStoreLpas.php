@@ -28,7 +28,6 @@ class DataStoreLpas extends AbstractApiClient implements AuditableLpasInterface
         RequestSignerFactory $requestSignerFactory,
         private LpaDataFormatter $lpaDataFormatter,
         string $apiBaseUri,
-        string $traceId,
     ) {
         parent::__construct(
             $httpClient,
@@ -36,7 +35,6 @@ class DataStoreLpas extends AbstractApiClient implements AuditableLpasInterface
             $streamFactory,
             $requestSignerFactory,
             $apiBaseUri,
-            $traceId,
         );
     }
 

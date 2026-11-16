@@ -6,7 +6,6 @@ namespace Common\Service\ApiClient;
 
 use Common\Exception\ApiException;
 use Common\Service\Context\UserContext;
-use Common\Service\Log\RequestTracing;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Request;
@@ -22,13 +21,11 @@ class Client
      *
      * @param ClientInterface $httpClient
      * @param string $apiBaseUri
-     * @param ?string $traceId
      * @param UserContext $userContext Shared context populated and cleared by UserContextMiddleware for each request.
      */
     public function __construct(
         private ClientInterface $httpClient,
         private string $apiBaseUri,
-        private ?string $traceId,
         private UserContext $userContext,
     ) {
     }
@@ -208,11 +205,6 @@ class Client
             'Accept'       => 'application/json',
             'Content-Type' => 'application/json',
         ];
-
-        // the trace Id is used for logging of the path of requests through infrastructure
-        if (!empty($this->traceId)) {
-            $headerLines[RequestTracing::TRACE_HEADER_NAME] = $this->traceId;
-        }
 
         //  If the logged in user has an auth token already then set that in the header
         if ($this->userContext->userId !== null && $this->userContext->sessionId !== null) {

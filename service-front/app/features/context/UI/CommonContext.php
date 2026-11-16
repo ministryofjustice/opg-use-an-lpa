@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
-use Actor\Handler\LpaDashboardHandler;
 use Behat\Behat\Context\Context;
+use Behat\Hook\AfterScenario;
 use Behat\Hook\BeforeScenario;
 use Behat\Step\Given;
 use Behat\Step\Then;
@@ -14,13 +14,9 @@ use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
 use Common\Middleware\Session\SessionExpiryMiddleware;
 use Common\Middleware\Session\SessionExpiryMiddlewareFactory;
-use Common\Service\ApiClient\Client;
-use Common\Service\ApiClient\ClientFactory;
-use Common\Service\Lpa\LpaService;
 use Common\Service\Session\EncryptedCookiePersistence;
 use Common\Service\Session\EncryptedCookiePersistenceFactory;
 use DI\Container;
-use DI\Definition\AutowireDefinition;
 use DI\Definition\Helper\FactoryDefinitionHelper;
 use DI\Definition\Reference;
 use Exception;
@@ -28,6 +24,10 @@ use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Session\SessionMiddleware;
 use Mezzio\Session\SessionMiddlewareFactory;
 use Mezzio\Session\SessionPersistenceInterface;
+use OpenTelemetry\Context\ScopeInterface;
+use OpenTelemetry\Contrib\Aws\Xray\Propagator;
+use OpenTelemetry\SDK\Sdk;
+use OpenTelemetry\SDK\Trace\TracerProvider;
 use PHPUnit\Framework\Assert;
 
 class CommonContext implements Context
@@ -35,7 +35,10 @@ class CommonContext implements Context
     use BaseUiContextTrait;
 
     private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES = 'SystemMessageService::getMessages';
-    private $traceId; // The X-Amzn-Trace-Id that gets attached to incoming requests by the AWS LB
+    private const TRACE_HEADER                        =
+        'Root=1-67891233-abcdef012345678912345678;Parent=53995c3f42cd8ad8;Sampled=1';
+
+    private ?ScopeInterface $telemetryScope = null;
 
     #[Given('I access the service home page')]
     public function iAccessTheServiceHomepage(): void
@@ -92,20 +95,20 @@ class CommonContext implements Context
     #[Given('/^I attach a tracing header to my requests$/')]
     public function iAttachATracingHeaderToMyRequests(): void
     {
-        // This horrible container manipulation brought to you by:
-        // https://github.com/minkphp/MinkBrowserKitDriver/issues/79
-        //
-        // Hopefully the PR for it will get merged in which case the feature test "An inbound tracing header
-        // is attached to outbound requests" can be reworked to remove all this nasty.
-        /** @var Container $container */
-        $container = $this->base->container;
-        $container->set(Client::class, new FactoryDefinitionHelper($container->get(ClientFactory::class)));
-        $container->set(LpaService::class, new AutowireDefinition(LpaService::class));
-        $container->set(LpaDashboardHandler::class, new AutowireDefinition(LpaDashboardHandler::class));
+        // Use the real instrumentation with no exporters or external telemetry connections.
+        $this->telemetryScope = Sdk::builder()
+            ->setTracerProvider(new TracerProvider())
+            ->setPropagator(new Propagator())
+            ->buildAndRegisterGlobal();
 
-        $this->traceId = 'Root=1-1-11';
+        $this->ui->getSession()->setRequestHeader('X-Amzn-Trace-Id', self::TRACE_HEADER);
+    }
 
-        $this->ui->getSession()->setRequestHeader('X-Amzn-Trace-Id', $this->traceId);
+    #[AfterScenario('@logging')]
+    public function resetTracingContext(): void
+    {
+        $this->telemetryScope?->detach();
+        $this->telemetryScope = null;
     }
 
     #[Then('/^I see a (.*) cookie consent banner$/')]
@@ -320,7 +323,13 @@ class CommonContext implements Context
     public function myOutboundRequestsHaveAttachedTracingHeaders(): void
     {
         $request = $this->apiFixtures->getLastRequest();
-        Assert::assertTrue($request->hasHeader(strtolower('X-Amzn-Trace-Id')), 'No X-Amzn-Trace-Id header');
+        $header  = $request->getHeaderLine('X-Amzn-Trace-Id');
+
+        Assert::assertMatchesRegularExpression(
+            '/^Root=1-67891233-abcdef012345678912345678;Parent=[0-9a-f]{16};Sampled=1$/',
+            $header,
+        );
+        Assert::assertStringNotContainsString('Parent=53995c3f42cd8ad8', $header);
     }
 
     #[When('my session expires')]

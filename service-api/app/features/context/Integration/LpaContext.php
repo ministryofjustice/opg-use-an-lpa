@@ -18,7 +18,6 @@ use App\Exception\LpaNotRegisteredException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Features\FeatureEnabled;
-use App\Service\Log\RequestTracing;
 use App\Service\Lpa\AccessForAll\AccessForAllLpaService;
 use App\Service\Lpa\AccessForAll\AccessForAllValidation;
 use App\Service\Lpa\AccessForAll\AddAccessForAllLpa;
@@ -2273,10 +2272,6 @@ class LpaContext extends BaseIntegrationContext
 
     protected function prepareContext(): void
     {
-        // This is populated into the container using a Middleware which these integration
-        // tests wouldn't normally touch but the container expects
-        $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
-
         $this->apiFixtures = $this->container->get(MockHandler::class);
         $this->awsFixtures = $this->container->get(AwsMockHandler::class);
         $this->lpaService  = $this->container->get(LpaManagerInterface::class);

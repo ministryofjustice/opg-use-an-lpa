@@ -7,97 +7,62 @@ namespace AppTest\DataAccess\ApiGateway;
 use App\DataAccess\ApiGateway\DataStoreLpas;
 use App\DataAccess\ApiGateway\DataStoreLpasFactory;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
-use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
-use App\DataAccess\Repository\DataSanitiserStrategy;
-use App\Service\Log\RequestTracing;
 use App\Service\Lpa\LpaDataFormatter;
 use Exception;
-use GuzzleHttp\Client as GuzzleHttpClient;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-class DataStoreLpasFactoryTest extends TestCase
+#[CoversClass(DataStoreLpasFactory::class)]
+final class DataStoreLpasFactoryTest extends TestCase
 {
-    use ProphecyTrait;
-
     #[Test]
     public function can_instantiate(): void
     {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
-        $containerProphecy
-            ->get(ClientInterface::class)
-            ->willReturn(
-                $this->prophesize(GuzzleHttpClient::class)->reveal()
-            );
-        $containerProphecy
-            ->get(RequestFactoryInterface::class)
-            ->willReturn(
-                $this->prophesize(RequestFactoryInterface::class)->reveal()
-            );
-        $containerProphecy
-            ->get(StreamFactoryInterface::class)
-            ->willReturn(
-                $this->prophesize(StreamFactoryInterface::class)->reveal()
-            );
-
-        $requestSignerFactory = $this->prophesize(RequestSignerFactory::class);
-        $requestSignerFactory->__invoke()->willReturn($this->prophesize(RequestSignerFactory::class)->reveal());
-
-        $containerProphecy->get(RequestSignerFactory::class)->willReturn(
-            $requestSignerFactory->reveal()
-        );
-
-        $containerProphecy
-            ->get(LpaDataFormatter::class)
-            ->willReturn(
-                $this->prophesize(LpaDataFormatter::class)->reveal()
-            );
-
-        $containerProphecy->get('config')->willReturn(
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects(self::exactly(6))->method('get')->willReturnMap([
             [
-                'lpa_data_store_api' => [
-                    'endpoint' => 'http://test',
-                ],
-            ]
-        );
+                'config',
+                ['lpa_data_store_api' => ['endpoint' => 'http://test']],
+            ],
+            [
+                ClientInterface::class,
+                $this->createStub(ClientInterface::class),
+            ],
+            [
+                RequestFactoryInterface::class,
+                $this->createStub(RequestFactoryInterface::class),
+            ],
+            [
+                StreamFactoryInterface::class,
+                $this->createStub(StreamFactoryInterface::class),
+            ],
+            [
+                RequestSignerFactory::class,
+                $this->createStub(RequestSignerFactory::class),
+            ],
+            [
+                LpaDataFormatter::class,
+                $this->createStub(LpaDataFormatter::class),
+            ],
+        ]);
 
-        $containerProphecy->get(RequestTracing::TRACE_PARAMETER_NAME)->willReturn('');
-
-        $containerProphecy->get(SiriusLpaSanitiser::class)->willReturn(
-            $this->prophesize(SiriusLpaSanitiser::class)->reveal()
-        );
-
-        $containerProphecy->get(DataSanitiserStrategy::class)->willReturn(
-            $this->prophesize(DataSanitiserStrategy::class)->reveal()
-        );
-
-        $factory = new DataStoreLpasFactory();
-        $repo    = $factory($containerProphecy->reveal());
-
-        $this->assertInstanceOf(DataStoreLpas::class, $repo);
+        self::assertInstanceOf(DataStoreLpas::class, (new DataStoreLpasFactory())($container));
     }
 
     #[Test]
     public function cannot_instantiate(): void
     {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
-
-        $containerProphecy->get(ClientInterface::class)->willReturn(
-            $this->prophesize(GuzzleHttpClient::class)->reveal()
-        );
-
-        $containerProphecy->get('config')->willReturn([]);
-
-        $factory = new DataStoreLpasFactory();
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects(self::once())->method('get')->with('config')->willReturn([]);
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('LPA data store API endpoint is not set');
 
-        $factory($containerProphecy->reveal());
+        (new DataStoreLpasFactory())($container);
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\DataAccess\ApiGateway;
 
-use App\Service\Log\RequestTracing;
 use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
@@ -27,7 +26,6 @@ class PaperVerificationCodesFactory
             $container->get(StreamFactoryInterface::class),
             $container->get(RequestSignerFactory::class),
             $config['codes_api']['endpoint'],
-            $container->get(RequestTracing::TRACE_PARAMETER_NAME)
         );
     }
 }

@@ -14,15 +14,18 @@ use App\Value\LpaUid;
 use App\Value\PaperVerificationCode;
 use DateInterval;
 use DateTimeImmutable;
-use FunctionalTest\AbstractFunctionalTestCase;
 use PhpPact\Consumer\InteractionBuilder;
 use PhpPact\Consumer\Matcher\Matcher;
 use PhpPact\Consumer\Model\ConsumerRequest;
 use PhpPact\Consumer\Model\ProviderResponse;
 use PhpPact\Standalone\MockService\MockServerConfig;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\Test;
 
-class PaperVerificationCodesTest extends AbstractFunctionalTestCase
+#[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
+class PaperVerificationCodesTest extends TracedApiClientTestCase
 {
     private InteractionBuilder $builder;
 
@@ -33,7 +36,6 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
         $config                          = $this->container->get('config');
         $config['codes_api']['endpoint'] = 'http://localhost:9090';
 
-        $this->containerModifier->setValue(RequestTracing::TRACE_PARAMETER_NAME, 'trace-id');
         $this->containerModifier->setValue('config', $config);
 
         $mockServer = new MockServerConfig();

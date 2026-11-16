@@ -11,5 +11,7 @@ Feature: A user of the system is able to logout
   @acceptance
   Scenario: A user can logout
     Given I am currently signed in
+    And I have LPAs cached in my session and another session
     When I logout of the application
     Then I am taken to complete a satisfaction survey
+    And only my logged out session LPA cache is cleared

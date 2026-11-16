@@ -56,7 +56,7 @@ class InstructionsAndPreferencesImagesTest extends TestCase
         $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
         $responseProphecy->getBody()->willReturn((new StreamFactory())->createStream(json_encode($testData)));
 
-        $this->generatePSR17Prophecies($responseProphecy->reveal(), 'test-trace-id', $testData);
+        $this->generatePSR17Prophecies($responseProphecy->reveal(), $testData);
 
         $this->requestFactoryProphecy
             ->createRequest('GET', Argument::containingString('localhost/v1/image-request/700000000001'))
@@ -68,7 +68,6 @@ class InstructionsAndPreferencesImagesTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id'
         );
 
         $instructionsAndPreferencesImages = $service->getInstructionsAndPreferencesImages($testData['uId']);
@@ -86,7 +85,6 @@ class InstructionsAndPreferencesImagesTest extends TestCase
     {
         $this->generatePSR17Prophecies(
             $this->prophesize(ResponseInterface::class)->reveal(),
-            'test-trace-id',
             []
         );
 
@@ -103,7 +101,6 @@ class InstructionsAndPreferencesImagesTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id'
         );
 
         $this->expectException(ApiException::class);
@@ -131,7 +128,6 @@ class InstructionsAndPreferencesImagesTest extends TestCase
 
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
-            'test-trace-id',
             $testData,
         );
 
@@ -145,7 +141,6 @@ class InstructionsAndPreferencesImagesTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id'
         );
 
         $this->expectException(ApiException::class);

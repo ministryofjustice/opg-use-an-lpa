@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
-use App\Service\Log\RequestTracing;
 use App\Service\User\UserService;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
@@ -19,6 +18,8 @@ class AccountContext extends BaseIntegrationContext
     use SetupEnv;
 
     private AwsMockHandler $awsFixtures;
+
+    /** @var array<string, mixed> */
     private array $createUserResponse;
     public string $userAccountId;
     public string $userAccountEmail;
@@ -139,10 +140,6 @@ class AccountContext extends BaseIntegrationContext
 
     protected function prepareContext(): void
     {
-        // This is populated into the container using a Middleware which these integration
-        // tests wouldn't normally touch but the container expects
-        $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
-
         $this->awsFixtures = $this->container->get(AwsMockHandler::class);
     }
 }

@@ -46,6 +46,7 @@ final class ConfigProvider
                 Psr\Cache\CacheItemPoolInterface::class                                => 'cache.request',
                 CacheInterface::class                                                  => 'cache.request',
                 TagAwareCacheInterface::class                                          => 'cache.request.taggable',
+                DataAccess\Cache\SessionLpaCacheInterface::class                       => DataAccess\Cache\SessionLpaCache::class,
 
                 // PSR20
                 Psr\Clock\ClockInterface::class                                        => Service\InternalClock::class,
@@ -96,6 +97,7 @@ final class ConfigProvider
                 'cache.one-login'                                             => Service\Cache\Symfony\PoolFactory::class,
                 'cache.system-message'                                        => Service\Cache\Symfony\PoolFactory::class,
                 'cache.lpa-data-store'                                        => Service\Cache\Symfony\PoolFactory::class,
+                'cache.lpa-in-session'                                        => Service\Cache\Symfony\PoolFactory::class,
 
                 // PSR18
                 Psr\Http\Client\ClientInterface::class                        => Service\ApiClient\ClientFactory::class,
@@ -152,10 +154,10 @@ final class ConfigProvider
                     Service\SystemMessage\CachedSystemMessageDelegatorFactory::class,
                 ],
                 DataAccess\ApiGateway\SiriusLpas::class               => [
-                    DataAccess\ApiGateway\CachedSiriusLpasDelegatorFactory::class,
+                    DataAccess\Cache\CachedSiriusLpasDelegatorFactory::class,
                 ],
                 DataAccess\ApiGateway\DataStoreLpas::class            => [
-                    DataAccess\ApiGateway\CachedDataStoreLpasDelegatorFactory::class,
+                    DataAccess\Cache\CachedDataStoreLpasDelegatorFactory::class,
                 ],
             ],
         ];

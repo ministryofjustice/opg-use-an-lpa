@@ -10,7 +10,6 @@ use Behat\Step\When;
 use BehatTest\Context\ActorContextTrait;
 use BehatTest\Context\ContextUtilities;
 use Common\Service\Context\UserContext;
-use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\LpaService;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
@@ -157,10 +156,6 @@ class AccountContext extends BaseIntegrationContext
 
     protected function prepareContext(): void
     {
-        // This is populated into the container using a Middleware which these integration
-        // tests wouldn't normally touch but the container expects
-        $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
-
         // DO NOT use this method as below to create context global services out of the container
         // it breaks feature flag testing.
         // $this->lpaService = $this->container->get(LpaService::class); // DONT DO THIS

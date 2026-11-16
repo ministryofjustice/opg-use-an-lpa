@@ -2,26 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App\DataAccess\ApiGateway;
+namespace App\DataAccess\Cache;
 
-use App\DataAccess\Repository\AuditableLpasInterface;
+use App\DataAccess\ApiGateway\SiriusLpas;
+use App\DataAccess\Repository\LpasInterface;
 use App\Service\Cache\CacheFactory;
 use Laminas\ServiceManager\Factory\DelegatorFactoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
-final class CachedDataStoreLpasDelegatorFactory implements DelegatorFactoryInterface
+final class CachedSiriusLpasDelegatorFactory implements DelegatorFactoryInterface
 {
     public function __invoke(
         ContainerInterface $container,
         $name,
         callable $callback,
         ?array $options = null,
-    ): AuditableLpasInterface {
+    ): LpasInterface {
         $cacheFactory = $container->get(CacheFactory::class);
 
-        return new CachedDataStoreLpas(
-            /** @var DataStoreLpas */
+        return new CachedSiriusLpas(
+            /** @var SiriusLpas */
             call_user_func($callback),
             ($cacheFactory)('request'),
             $container->get(LoggerInterface::class),

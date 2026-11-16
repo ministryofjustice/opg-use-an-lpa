@@ -204,6 +204,7 @@ $(MO_FILES): %.mo: %.po
 	@msgfmt -o "$@" "$<"
 
 $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem:
+	@mkdir -p $(SM_PATH)
 	@openssl genpkey -algorithm RSA -out $(SM_PATH)private_key.pem -pkeyopt rsa_keygen_bits:2048
 	@openssl rsa -pubout -in $(SM_PATH)private_key.pem -out $(SM_PATH)public_key.pem
 
