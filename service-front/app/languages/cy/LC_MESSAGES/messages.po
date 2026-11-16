@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-12 12:19+0000\n"
+"PO-Revision-Date: 2026-11-13 15:09+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=(n==0) ? 0 : (n==1) ? 1 : (n==2) ? 2 : (n==3) ? 3 :(n==6) ? 4 : 5;\n"
-"X-Generator: Weblate 2026.11.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
 msgid "This LPA has restrictions and conditions.<br>"
@@ -1175,7 +1175,7 @@ msgstr "<abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> sy’n rhe
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:47
 msgid "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"> OPG’s personal information charter </a> explains how we process personal data."
-msgstr "<abbr title=\"Weinyddiaeth Gyfiawnder\">MOJ</abbr> yw’r rheolydd data ar gyfer y data personol a gedwir gennym. Mae <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter.cy\">siarter gwybodaeth bersonol <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr></a> yn egluro sut rydym yn prosesu data personol."
+msgstr "<abbr title=\"Y Weinyddiaeth Gyfiawnder\">MOJ</abbr> yw’r rheolydd data ar gyfer y data personol a gedwir gennym. Mae <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter.cy\">siarter gwybodaeth bersonol <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr></a> yn egluro sut rydym yn prosesu data personol."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:56
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:52
@@ -1314,11 +1314,11 @@ msgstr "Pwy sydd â mynediad i ddata yn y gwasanaeth hwn"
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:129
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:107
 msgid "MOJ staff are responsible for supporting the service and have access to the secure database."
-msgstr "Staff y Weinyddiaeth Gyfiawnder (MOJ) sy’n gyfrifol am gefnogi’r gwasanaeth ac mae ganddynt fynediad at y gronfa ddata ddiogel."
+msgstr "Staff <abbr title=\"Y Weinyddiaeth Gyfiawnder\">MOJ</abbr> sy’n gyfrifol am gefnogi’r gwasanaeth ac mae ganddynt fynediad at y gronfa ddata ddiogel."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:132
 msgid "All OPG staff who have access to the database have MOJ security clearance."
-msgstr "Mae gan holl staff <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> sydd â mynediad at y gronfa ddata gliriad diogelwch <abbr title=\"Weinyddiaeth Gyfiawnder\">MOJ</abbr>."
+msgstr "Mae gan holl staff <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> sydd â mynediad at y gronfa ddata gliriad diogelwch <abbr title=\"Y Weinyddiaeth Gyfiawnder\">MOJ</abbr>."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:135
 msgid "Our hosting provider (Amazon Web Services) is not allowed to routinely access the secure data. If they need to do so for operational purposes, their access is strictly controlled and approved by OPG."
@@ -1466,7 +1466,7 @@ msgstr "Gwneud cwyn"
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:212
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:189
 msgid "When we ask for personal data, we’ll keep to the law. If you think that your information has not been handled correctly, in addition to contacting the MOJ Data Protection Officer, you can contact the Information Commissioner for independent advice about data protection at the address below:"
-msgstr "Pan fyddwn yn gofyn am ddata personol, byddwn yn cadw at y gyfraith. Os credwch fod eich gwybodaeth wedi cael ei thrin yn anghywir, yn ogystal â chysylltu â Swyddog Diogelu Data yr <abbr title=\"Weinyddiaeth Gyfiawnder\">MOJ</abbr>, gallwch gysylltu â’r Comisiynydd Gwybodaeth i gael cyngor annibynnol ar ddiogelu data. Dyma’r cyfeiriad:"
+msgstr "Pan fyddwn yn gofyn am ddata personol, byddwn yn cadw at y gyfraith. Os credwch fod eich gwybodaeth wedi cael ei thrin yn anghywir, yn ogystal â chysylltu â Swyddog Diogelu Data yr <abbr title=\"Y Weinyddiaeth Gyfiawnder\">MOJ</abbr>, gallwch gysylltu â’r Comisiynydd Gwybodaeth i gael cyngor annibynnol ar ddiogelu data. Dyma’r cyfeiriad:"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:228
 msgid "Phone: 0303 123 1113<br> Textphone: 01625 545860<br> Monday to Friday, 9am to 4:30pm<br>"
@@ -1583,7 +1583,7 @@ msgstr "Os cofrestrwyd yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> cyn y d
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:15
 msgid "If the paper LPA has been lost or destroyed, you can ask OPG for an office copy by calling 0300 456 0300 - office copies cost £35."
-msgstr "Os yw’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur wedi’i cholli neu ei dinistrio, gallwch ofyn i OPG am gopi swyddfa drwy ffonio 0300 456 0300 – mae copi swyddfa yn costio £35."
+msgstr "Os yw’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur wedi’i cholli neu ei dinistrio, gallwch ofyn i <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> am gopi swyddfa drwy ffonio 0300 456 0300 – mae copi swyddfa yn costio £35."
 
 #: src/Actor/templates/actor/service-names.html.twig:1
 #: src/Common/src/View/Twig/GenericGlobalVariableExtension.php:23
@@ -3809,7 +3809,7 @@ msgstr "<abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> sy’n rhe
 # Link is hard coded to the welsh version
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:44
 msgid "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"%link%\"> <abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter </a> explains how we process personal data."
-msgstr "<abbr title=\"Weinyddiaeth Gyfiawnder\">MOJ</abbr> yw’r rheolydd data ar gyfer y data personol a gedwir gennym. Mae <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter.cy\">siarter gwybodaeth bersonol <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr></a> yn egluro sut rydym yn prosesu data personol."
+msgstr "<abbr title=\"Y Weinyddiaeth Gyfiawnder\">MOJ</abbr> yw’r rheolydd data ar gyfer y data personol a gedwir gennym. Mae <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter.cy\">siarter gwybodaeth bersonol <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr></a> yn egluro sut rydym yn prosesu data personol."
 
 # What data we collect and how we use it
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:55
@@ -3858,7 +3858,7 @@ msgstr "Weithiau bydd angen trosglwyddo gwybodaeth bersonol dramor. Bydd unrhyw 
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:110
 msgid "All <abbr title=\"Office of the Public Guardian\">OPG</abbr> staff who have access to the database have MOJ security clearance."
-msgstr "Mae gan holl staff <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> sydd â mynediad at y gronfa ddata gliriad diogelwch <abbr title=\"Weinyddiaeth Gyfiawnder\">MOJ</abbr>."
+msgstr "Mae gan holl staff <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> sydd â mynediad at y gronfa ddata gliriad diogelwch <abbr title=\"Y Weinyddiaeth Gyfiawnder\">MOJ</abbr>."
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:113
 msgid "Our hosting provider (Amazon Web Services) is not allowed to routinely access the secure data."
@@ -4774,7 +4774,7 @@ msgctxt "html-link"
 msgid "activation-key-request.start.reveal-content"
 msgstr ""
 "<p>Gallwch ddod o hyd iddo ar dudalen gyntaf yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> neu unrhyw lythyron perthnasol gan Swyddfa’r Gwarcheidwad Cyhoeddus (OPG). Mae’n bosib y caiff ei alw’n ‘Cyfeirnod yr LPA’, yn ‘Ein cyf.’ neu’n 'Rhif achos’.</p>\n"
-"<p>Os nad oes gennych yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur nac unrhyw lythyron gan OPG, holwch bobl eraill sydd wedi’u henwi yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Fe ddylai gweithiwr proffesiynol a fu, o bosib, yn eich helpu gyda’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, megis cyfreithiwr, allu rhoi’r cyfeirnod i chi.</p>\n"
+"<p>Os nad oes gennych yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur nac unrhyw lythyron gan <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr>, holwch bobl eraill sydd wedi’u henwi yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Fe ddylai gweithiwr proffesiynol a fu, o bosib, yn eich helpu gyda’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, megis cyfreithiwr, allu rhoi’r cyfeirnod i chi.</p>\n"
 "<p>Os nad ydych yn gwybod beth yw cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> o hyd neu’n methu dod o hyd iddo, dylech <a class=\"govuk-link\" href=\"%link%\">gysylltu â ni</a>.</p>"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:9
