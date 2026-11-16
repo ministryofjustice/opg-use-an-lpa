@@ -8,7 +8,7 @@ use Common\Workflow\Traits\JsonSerializable;
 use Common\Workflow\WorkflowState;
 use DateTimeImmutable;
 
-class RequestActivationKey implements WorkflowState
+final class RequestActivationKey implements WorkflowState
 {
     use JsonSerializable;
 

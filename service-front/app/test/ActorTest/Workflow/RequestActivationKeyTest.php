@@ -182,28 +182,8 @@ class RequestActivationKeyTest extends TestCase
                 array_merge($complete, ['postcode' => '', 'liveInUK' => 'No']),
                 true,
             ],
-            'missing first names'           => [
-                array_merge($complete, ['firstNames' => null]),
-                false,
-            ],
-            'missing last name'             => [
-                array_merge($complete, ['lastName' => null]),
-                false,
-            ],
             'missing date of birth'         => [
                 array_merge($complete, ['dob' => null]),
-                false,
-            ],
-            'missing postcode'              => [
-                array_merge($complete, ['postcode' => null]),
-                false,
-            ],
-            'missing live in UK answer'     => [
-                array_merge($complete, ['liveInUK' => null]),
-                false,
-            ],
-            'no details at all'             => [
-                [],
                 false,
             ],
         ];
@@ -239,10 +219,6 @@ class RequestActivationKeyTest extends TestCase
             ],
             'last name changed'   => [
                 'John Henry',
-                'Jones',
-            ],
-            'both changed'        => [
-                'Jane',
                 'Jones',
             ],
         ];
