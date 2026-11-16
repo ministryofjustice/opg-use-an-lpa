@@ -49,7 +49,10 @@ class LogoutPageHandler extends AbstractHandler implements SessionAware, UserAwa
         $session?->regenerate();
 
         if ($user !== null) {
-            $redirectUrl = $this->logoutStrategy->logout($user);
+            $redirectUrl = $this->logoutStrategy->logout(
+                $user,
+                $request->getAttribute('locale')
+            );
         }
 
         $this->getLogger()->info(

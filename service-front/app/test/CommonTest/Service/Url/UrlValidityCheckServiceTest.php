@@ -16,6 +16,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Locale;
 
 class UrlValidityCheckServiceTest extends TestCase
 {
@@ -34,6 +35,8 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->serverRequestInterfaceProphecy = $this->prophesize(ServerRequestInterface::class);
         $this->urlHelperProphecy              = $this->prophesize(UrlHelper::class);
         $this->locale                         = 'en_GB';
+
+        Locale::setDefault($this->locale);
     }
 
     #[Test]
@@ -191,7 +194,9 @@ class UrlValidityCheckServiceTest extends TestCase
     #[Test]
     public function it_returns_a_welsh_url_for_home_if_referer_is_invalid_and_locale_is_cy(): void
     {
-        $this->locale      = 'cy_GB';
+        $this->locale = 'cy_GB';
+        Locale::setDefault($this->locale);
+
         $englishRefererUrl = 'https://use.lastingpowerofattorney.opg.service.justice.gov.uk/login';
         $homeUrl           = 'https://localhost:9002/home';
         $welshHomeUrl      = 'https://localhost:9002/cy/home';
@@ -227,7 +232,9 @@ class UrlValidityCheckServiceTest extends TestCase
     #[Test]
     public function it_returns_a_valid_welsh_referer_if_locale_is_cy(): void
     {
-        $this->locale      = 'cy_GB';
+        $this->locale = 'cy_GB';
+        Locale::setDefault($this->locale);
+
         $refererUrl        = 'https://use.lastingpowerofattorney.opg.service.justice.gov.uk/cy/login';
         $englishRefererUrl = 'https://use.lastingpowerofattorney.opg.service.justice.gov.uk/login';
 

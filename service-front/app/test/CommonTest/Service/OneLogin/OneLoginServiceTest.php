@@ -143,7 +143,8 @@ class OneLoginServiceTest extends TestCase
             ->httpPut(
                 '/v1/auth/logout',
                 [
-                    'user' => $userProphecy->reveal(),
+                    'user'      => $userProphecy->reveal(),
+                    'ui_locale' => 'cy',
                 ]
             )->willReturn(['redirect_uri' => $redirect]);
 
@@ -153,7 +154,8 @@ class OneLoginServiceTest extends TestCase
             $this->logger->reveal()
         );
 
-        $response = $oneLoginService->logout($userProphecy->reveal());
+        $response = $oneLoginService->logout($userProphecy->reveal(), 'cy_GB');
+
         $this->assertEquals($redirect, $response);
     }
 }
