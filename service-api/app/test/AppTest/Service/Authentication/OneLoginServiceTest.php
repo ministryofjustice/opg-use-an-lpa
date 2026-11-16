@@ -204,4 +204,35 @@ class OneLoginServiceTest extends TestCase
             $logoutUrl,
         );
     }
+
+    #[Test]
+    public function creates_welsh_logout_url(): void
+    {
+        $fakeRedirect = 'http://fakehost/logout';
+
+        $service = $this->prophesize(AuthorisationService::class);
+        $service->getLogoutUri()->willReturn($fakeRedirect);
+
+        $serviceBuilder = $this->prophesize(AuthorisationServiceBuilder::class);
+        $serviceBuilder->build()
+            ->willReturn($service->reveal());
+
+        $randomByteGenerator = $this->prophesize(RandomByteGenerator::class);
+
+        $authorisationRequestService = new OneLoginService(
+            $serviceBuilder->reveal(),
+            $this->prophesize(UserInfoService::class)->reveal(),
+            $this->prophesize(ResolveOAuthUser::class)->reveal(),
+            $randomByteGenerator->reveal(),
+        );
+
+        $logoutUrl = $authorisationRequestService->createLogoutUrl('token', 'cy');
+
+        $this->assertStringContainsString($fakeRedirect, $logoutUrl);
+        $this->assertStringContainsString('id_token_hint=token', $logoutUrl);
+        $this->assertStringContainsString(
+            'post_logout_redirect_uri=' . urlencode(OneLoginService::LOGOUT_REDIRECT_URL_CY),
+            $logoutUrl,
+        );
+    }
 }
