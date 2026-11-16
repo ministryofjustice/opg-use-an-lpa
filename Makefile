@@ -207,6 +207,46 @@ $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem:
 	@openssl genpkey -algorithm RSA -out $(SM_PATH)private_key.pem -pkeyopt rsa_keygen_bits:2048
 	@openssl rsa -pubout -in $(SM_PATH)private_key.pem -out $(SM_PATH)public_key.pem
 
+playwright-test: ##@playright Runs playwright tests suite.
+	$(COMPOSE) build playwright-tests
+	$(COMPOSE) run --rm playwright-tests test
+.PHONY: playwright-test
+
+playwright-report: ##@playwright Shows report of last run in the browser.
+	$(COMPOSE) build playwright-tests
+	$(COMPOSE) run --rm -p 9323:9323 playwright-tests show-report
+.PHONY: playwright-report
+
+playwright-lint: ##@playwright Runs eslint on all tests.
+	$(COMPOSE) build playwright-tests
+	$(COMPOSE) run --rm playwright-tests lint
+.PHONY: playwright-lint
+
+playwright-lint-fix: ##@playwright Runs eslint on all tests and fixes any fixable issues.
+	$(COMPOSE) build playwright-tests
+	$(COMPOSE) run --rm playwright-tests lint-fix
+.PHONY: playwright-lint-fix
+
+playwright-ui: ##@playwright Runs tests in UI interface for debugging.
+	$(COMPOSE) build playwright-tests
+	$(COMPOSE) run --rm -p 9525:9525 playwright-tests ui
+.PHONY: playwright-ui
+
+playwright-check-format: ##@playwright Checks formatting of tests.
+	$(COMPOSE) build playwright-tests
+	$(COMPOSE) run --rm playwright-tests check-format
+.PHONY: playwright-check-format
+
+playwright-format: ##@playwright Formats the tests.
+	$(COMPOSE) build playwright-tests
+	$(COMPOSE) run --rm playwright-tests format
+.PHONY: playwright-format
+
+playwright-typecheck: ##@playwright Typechecks the tests.
+	$(COMPOSE) build playwright-tests
+	$(COMPOSE) run --rm playwright-tests typecheck
+.PHONY: playwright-typecheck
+
 # empty target to stop additional arguments from calling
 %:
 	@true
