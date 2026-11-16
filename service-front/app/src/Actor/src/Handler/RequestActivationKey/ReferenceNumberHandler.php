@@ -110,10 +110,8 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler
 
     public function lastPage(WorkflowState $state): string
     {
-        if ($state->requestingAnother === true) {
-            return 'lpa.add-by-paper-information';
-        }
-
-        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.add-by-paper-information';
+        return $state->changingAnswer === true
+            ? 'lpa.check-answers'
+            : 'lpa.add-by-paper-information';
     }
 }

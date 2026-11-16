@@ -66,6 +66,8 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
             $this->state($request)->postcode = $postData['postcode'];
             $this->state($request)->liveInUK = $postData['live_in_uk'];
 
+            $this->state($request)->skippedPersonalDetails = false;
+
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
@@ -90,7 +92,7 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
 
     public function lastPage(WorkflowState $state): string
     {
-        return $state->liveInUK !== null ? 'lpa.check-answers' : 'lpa.date-of-birth';
+        return $state->changingAnswer === true ? 'lpa.check-answers' : 'lpa.date-of-birth';
     }
 
     public function nextPage(WorkflowState $state): string

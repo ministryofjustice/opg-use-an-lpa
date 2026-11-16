@@ -596,6 +596,13 @@ class RequestActivationKeyContext implements Context
         $this->ui->pressButton('Continue');
     }
 
+    #[Then('/^I can see the reference number of the other LPA$/')]
+    public function iCanSeeTheReferenceNumberOfTheOtherLpa(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
+        $this->ui->assertFieldContains('opg_reference_number', '700000000138');
+    }
+
     #[Then('/^I can see my name has already been filled in$/')]
     public function iCanSeeMyNameHasAlreadyBeenFilledIn(): void
     {
@@ -1005,6 +1012,13 @@ class RequestActivationKeyContext implements Context
     {
         $this->ui->pressButton('Continue');
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+    }
+
+    #[Then('/^I am returned to the check answers page$/')]
+    public function iAmReturnedToTheCheckAnswersPage(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertPageContainsText('Check your answers');
     }
 
     #[When('I provide details from an LPA registered before Sept 2019')]

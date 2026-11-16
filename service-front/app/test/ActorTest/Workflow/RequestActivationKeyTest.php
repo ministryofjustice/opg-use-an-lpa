@@ -20,31 +20,33 @@ class RequestActivationKeyTest extends TestCase
         return [
             [
                 [
-                    'firstNames'           => 'John Henry',
-                    'lastName'             => 'Smith',
-                    'dob'                  => '1955-11-05T00:00:00+00:00',
-                    'postcode'             => 'PO3 6BT',
-                    'referenceNumber'      => '700000000138',
-                    'actorType'            => 'attorney',
-                    'donorFirstNames'      => 'James Hubert',
-                    'donorLastName'        => 'Swinton',
-                    'donorDob'             => '1975-11-05T00:00:00+00:00',
-                    'actorAddress1'        => '1 Example Street',
-                    'actorAddress2'        => '',
-                    'actorAddressTown'     => 'Portsmouth',
-                    'actorAddressCounty'   => 'Hampshire',
-                    'attorneyFirstNames'   => '',
-                    'attorneyLastName'     => '',
-                    'attorneyDob'          => null,
-                    'addressOnPaper'       => '',
-                    'telephone'            => '01234567890',
-                    'noTelephone'          => false,
-                    'actorUid'             => '700000000435',
-                    'needsCleansing'       => false,
-                    'actorAddressResponse' => 'Yes',
-                    'liveInUK'             => 'Yes',
-                    'actorAbroadAddress'   => null,
-                    'requestingAnother'    => true,
+                    'firstNames'             => 'John Henry',
+                    'lastName'               => 'Smith',
+                    'dob'                    => '1955-11-05T00:00:00+00:00',
+                    'postcode'               => 'PO3 6BT',
+                    'referenceNumber'        => '700000000138',
+                    'actorType'              => 'attorney',
+                    'donorFirstNames'        => 'James Hubert',
+                    'donorLastName'          => 'Swinton',
+                    'donorDob'               => '1975-11-05T00:00:00+00:00',
+                    'actorAddress1'          => '1 Example Street',
+                    'actorAddress2'          => '',
+                    'actorAddressTown'       => 'Portsmouth',
+                    'actorAddressCounty'     => 'Hampshire',
+                    'attorneyFirstNames'     => '',
+                    'attorneyLastName'       => '',
+                    'attorneyDob'            => null,
+                    'addressOnPaper'         => '',
+                    'telephone'              => '01234567890',
+                    'noTelephone'            => false,
+                    'actorUid'               => '700000000435',
+                    'needsCleansing'         => false,
+                    'actorAddressResponse'   => 'Yes',
+                    'liveInUK'               => 'Yes',
+                    'actorAbroadAddress'     => null,
+                    'requestingAnother'      => true,
+                    'skippedPersonalDetails' => true,
+                    'changingAnswer'         => true,
                 ],
             ],
         ];
@@ -114,6 +116,8 @@ class RequestActivationKeyTest extends TestCase
                     break;
                 case 'needsCleansing':
                 case 'requestingAnother':
+                case 'skippedPersonalDetails':
+                case 'changingAnswer':
                     Assert::assertFalse($sut->$key);
                     break;
                 default:
@@ -150,6 +154,8 @@ class RequestActivationKeyTest extends TestCase
                     Assert::assertNull($sut->getActorAddressResponse());
                     break;
                 case 'needsCleansing':
+                case 'skippedPersonalDetails':
+                case 'changingAnswer':
                     Assert::assertFalse($sut->$key);
                     break;
                 case 'requestingAnother':
@@ -207,6 +213,7 @@ class RequestActivationKeyTest extends TestCase
         $sut->updateName('John Henry', 'Smith');
 
         Assert::assertTrue($sut->hasPersonalDetails());
+        Assert::assertTrue($sut->skippedPersonalDetails);
         Assert::assertFalse($sut->requestingAnother);
     }
 
@@ -241,6 +248,7 @@ class RequestActivationKeyTest extends TestCase
         Assert::assertNull($sut->liveInUK);
         Assert::assertNull($sut->postcode);
         Assert::assertFalse($sut->hasPersonalDetails());
+        Assert::assertFalse($sut->skippedPersonalDetails);
         Assert::assertFalse($sut->requestingAnother);
     }
 
@@ -253,5 +261,6 @@ class RequestActivationKeyTest extends TestCase
 
         Assert::assertSame('Jane', $sut->firstNames);
         Assert::assertTrue($sut->hasPersonalDetails());
+        Assert::assertNull($sut->skippedPersonalDetails);
     }
 }

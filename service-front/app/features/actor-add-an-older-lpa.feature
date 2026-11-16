@@ -32,6 +32,10 @@ Feature: Add an older LPA
     Then I can see my name has already been filled in
     When I continue from the your name page
     Then I am asked to check my answers for the other LPA
+    When I request to go back
+    Then I can see my name has already been filled in
+    When I request to go back
+    Then I can see the reference number of the other LPA
 
   @ui
   Scenario: A different person is asked for their date of birth and address when requesting another activation key
@@ -50,6 +54,8 @@ Feature: Add an older LPA
     Then I am asked where I currently live without it being filled in
     When I provide the postcode of the different person
     Then I am asked to check my answers for the different person
+    When I request to go back
+    Then I am taken back to the postcode page where I can see my answers and change them
 
   @ui
   Scenario: The user has to re-enter their personal details when starting again after requesting an activation key

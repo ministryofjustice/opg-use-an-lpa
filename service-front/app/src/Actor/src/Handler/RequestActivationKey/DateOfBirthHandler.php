@@ -63,6 +63,8 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
                 (int) $postData['dob']['day']
             );
 
+            $this->state($request)->skippedPersonalDetails = false;
+
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
@@ -81,7 +83,7 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
 
     public function lastPage(WorkflowState $state): string
     {
-        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.your-name';
+        return $state->changingAnswer === true ? 'lpa.check-answers' : 'lpa.your-name';
     }
 
     public function nextPage(WorkflowState $state): string

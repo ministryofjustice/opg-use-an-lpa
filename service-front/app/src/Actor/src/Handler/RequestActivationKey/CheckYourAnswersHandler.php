@@ -276,6 +276,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
 
     public function lastPage(WorkflowState $state): string
     {
-        return 'lpa.postcode';
+        return $state->skippedPersonalDetails === true ? 'lpa.your-name' : 'lpa.postcode';
     }
 }

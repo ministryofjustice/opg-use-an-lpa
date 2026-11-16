@@ -50,6 +50,11 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements
             return $this->redirectToRoute('lpa.add-by-paper');
         }
 
+        // the "Change" links on the check answers page mean the back link should return there
+        if ($request->getMethod() === 'GET') {
+            $this->state($request)->changingAnswer = array_key_exists('change', $request->getQueryParams());
+        }
+
         return match ($request->getMethod()) {
             'POST' => $this->handlePost($request),
             default => $this->handleGet($request),

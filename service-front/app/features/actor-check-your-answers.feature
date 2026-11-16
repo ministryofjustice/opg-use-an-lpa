@@ -45,6 +45,32 @@ Feature: Check your answers before requesting an activation key
     Then I press continue and I am taken back to the check answers page
 
   @ui
+  Scenario: The user can go back through each of their answers in turn
+    Given I have requested an activation key with valid details
+    When I request to go back
+    Then I am taken back to the postcode page where I can see my answers and change them
+    When I request to go back
+    Then I am taken back to the date of birth page where I can see my answers and change them
+    When I request to go back
+    Then I am taken back to the your names page where I can see my answers and change them
+    When I request to go back
+    Then I am taken back to the reference number page where I can see my answer and change it
+
+  @ui
+  Scenario Outline: The user is returned to check their answers when going back from changing an answer
+    Given I have requested an activation key with valid details
+    When I request to go back and change my <answer>
+    And I request to go back
+    Then I am returned to the check answers page
+
+    Examples:
+      | answer               |
+      | LPA reference number |
+      | names                |
+      | date of birth        |
+      | postcode             |
+
+  @ui
   Scenario: The user can go back and change their entered postcode
     Given I have requested an activation key with valid details
     When I press cancel

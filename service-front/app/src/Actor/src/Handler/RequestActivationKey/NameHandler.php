@@ -79,10 +79,6 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
 
     public function lastPage(WorkflowState $state): string
     {
-        if ($state->requestingAnother === true) {
-            return 'lpa.add-by-paper';
-        }
-
-        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.add-by-paper';
+        return $state->changingAnswer === true ? 'lpa.check-answers' : 'lpa.add-by-paper';
     }
 }

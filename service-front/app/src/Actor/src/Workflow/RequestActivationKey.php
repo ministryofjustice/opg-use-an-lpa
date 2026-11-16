@@ -50,6 +50,8 @@ final class RequestActivationKey implements WorkflowState
         public ?string $liveInUK = null,
         public ?string $actorAbroadAddress = null,
         public ?bool $requestingAnother = null,
+        public ?bool $skippedPersonalDetails = null,
+        public ?bool $changingAnswer = null,
     ) {
         if ($actorType !== null) {
             $this->setActorRole($actorType);
@@ -96,17 +98,19 @@ final class RequestActivationKey implements WorkflowState
 
     /**
      * When requesting another activation key a changed name means a different person, so the
-     * personal details given for the previous request no longer apply.
+     * personal details given for the previous request no longer apply. An unchanged name means
+     * the date of birth and address pages are skipped.
      */
     public function updateName(string $firstNames, string $lastName): void
     {
-        if (
-            $this->requestingAnother === true
-            && ($this->firstNames !== $firstNames || $this->lastName !== $lastName)
-        ) {
-            $this->dob      = null;
-            $this->liveInUK = null;
-            $this->postcode = null;
+        if ($this->requestingAnother === true) {
+            if ($this->firstNames !== $firstNames || $this->lastName !== $lastName) {
+                $this->dob      = null;
+                $this->liveInUK = null;
+                $this->postcode = null;
+            }
+
+            $this->skippedPersonalDetails = $this->hasPersonalDetails();
         }
 
         $this->firstNames        = $firstNames;
@@ -142,9 +146,11 @@ final class RequestActivationKey implements WorkflowState
         $this->noTelephone        = null;
         $this->addressOnPaper     = null;
 
-        $this->actorUid             = null;
-        $this->needsCleansing       = false;
-        $this->actorAddressResponse = null;
+        $this->actorUid               = null;
+        $this->needsCleansing         = false;
+        $this->actorAddressResponse   = null;
+        $this->skippedPersonalDetails = false;
+        $this->changingAnswer         = false;
     }
 
     public function getActorRole(): ?ActorType
