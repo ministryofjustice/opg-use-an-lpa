@@ -141,9 +141,10 @@ final class RequestActivationKey implements WorkflowState
 
     public function previousPage(): ?string
     {
-        $count = count($this->visitedPages ?? []);
+        $visited = $this->visitedPages ?? [];
+        $count   = count($visited);
 
-        return $count > 1 ? $this->visitedPages[$count - 2] : null;
+        return $count > 1 ? $visited[$count - 2] : null;
     }
 
     private function resetLpaSpecificDetails(): void
