@@ -106,6 +106,19 @@ The Actor service will be available via [http://localhost:9002/home](http://loca
 
 The API service will be available via [http://localhost:9010](http://localhost:9010)
 
+### IDE containers for PHPStorm
+
+IDE tooling (PHP interpreters, test runners, linters) should use the containers in `docker-compose.ide.yml`
+(`api-ide`, `front-ide` and `smoke-ide`) rather than the environment's containers. They run in a separate
+compose project, so the IDE starting or recreating them never disturbs the environment started by `make up`.
+The shared PhpStorm interpreters in `.idea/php.xml` are already configured to use them, and PhpStorm
+starts them as needed.
+
+`smoke-ide` joins the environment's network to reach the running services, so start the environment first.
+To test against different URLs, set `BEHAT_ACTOR_URL`, `BEHAT_OLD_ACTOR_URL`, `BEHAT_VIEWER_URL` and
+`BEHAT_OLD_VIEWER_URL` in `tests/smoke/.env`. Their hostnames must resolve on the environment's network.
+Make `BEHAT_FF_PAPER_VERIFICATION` match your environment's `PAPER_VERIFICATION`.
+
 ### Tests
 
 To run all the unit tests (the command for viewer-app and actor-app will run exactly the same suite of unit tests in the front service)
