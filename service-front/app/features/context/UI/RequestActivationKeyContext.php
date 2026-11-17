@@ -588,6 +588,23 @@ class RequestActivationKeyContext implements Context
         $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
     }
 
+    #[Given('/^I have successfully requested an activation key$/')]
+    public function iHaveSuccessfullyRequestedAnActivationKey(): void
+    {
+        $this->iAmOnTheCheckLPADetailsPage();
+        $this->iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect();
+        $this->aLetterIsRequestedContainingAOneTimeUseCode();
+    }
+
+    #[Given('/^I have requested another activation key for the same person$/')]
+    public function iHaveRequestedAnotherActivationKeyForTheSamePerson(): void
+    {
+        $this->iRequestAnotherActivationKey();
+        $this->iEnterTheReferenceNumberOfAnotherLpa();
+        $this->iContinueFromTheYourNamePage();
+        $this->iAmAskedToCheckMyAnswersForTheOtherLpa();
+    }
+
     #[When('/^I start again from the beginning$/')]
     public function iStartAgainFromTheBeginning(): void
     {

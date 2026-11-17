@@ -21,12 +21,7 @@ Feature: Add an older LPA
 
   @ui
   Scenario: The same person does not have to re-enter their date of birth and address when requesting another activation key
-    Given I am on the add an older LPA page
-    And I provide the details from a valid paper document
-    And I confirm the details I provided are correct
-    And I am shown the details of an LPA
-    And I confirm details shown to me of the found LPA are correct
-    And a letter is requested containing a one time use code
+    Given I have successfully requested an activation key
     When I request another activation key
     And I enter the reference number of another LPA
     Then I can see my name has already been filled in
@@ -43,16 +38,8 @@ Feature: Add an older LPA
 
   @ui
   Scenario Outline: The user is no longer treated as skipping their details when they change them after requesting another activation key
-    Given I am on the add an older LPA page
-    And I provide the details from a valid paper document
-    And I confirm the details I provided are correct
-    And I am shown the details of an LPA
-    And I confirm details shown to me of the found LPA are correct
-    And a letter is requested containing a one time use code
-    When I request another activation key
-    And I enter the reference number of another LPA
-    And I continue from the your name page
-    Then I am asked to check my answers for the other LPA
+    Given I have successfully requested an activation key
+    And I have requested another activation key for the same person
     When I request to go back and change my <answer>
     And <change>
     Then I am on the check your answers page
@@ -66,16 +53,8 @@ Feature: Add an older LPA
 
   @ui
   Scenario: The user is no longer treated as skipping their details when they change their name after requesting another activation key
-    Given I am on the add an older LPA page
-    And I provide the details from a valid paper document
-    And I confirm the details I provided are correct
-    And I am shown the details of an LPA
-    And I confirm details shown to me of the found LPA are correct
-    And a letter is requested containing a one time use code
-    When I request another activation key
-    And I enter the reference number of another LPA
-    And I continue from the your name page
-    Then I am asked to check my answers for the other LPA
+    Given I have successfully requested an activation key
+    And I have requested another activation key for the same person
     When I request to go back and change my names
     And I change the name to a different person
     And I continue from the your name page
@@ -99,12 +78,7 @@ Feature: Add an older LPA
 
   @ui
   Scenario: A different person is asked for their date of birth and address when requesting another activation key
-    Given I am on the add an older LPA page
-    And I provide the details from a valid paper document
-    And I confirm the details I provided are correct
-    And I am shown the details of an LPA
-    And I confirm details shown to me of the found LPA are correct
-    And a letter is requested containing a one time use code
+    Given I have successfully requested an activation key
     When I request another activation key
     And I enter the reference number of another LPA
     And I change the name to a different person
@@ -119,12 +93,7 @@ Feature: Add an older LPA
 
   @ui
   Scenario: The user has to re-enter their personal details when starting again after requesting an activation key
-    Given I am on the add an older LPA page
-    And I provide the details from a valid paper document
-    And I confirm the details I provided are correct
-    And I am shown the details of an LPA
-    And I confirm details shown to me of the found LPA are correct
-    And a letter is requested containing a one time use code
+    Given I have successfully requested an activation key
     When I start again from the beginning
     And I enter the reference number of another LPA
     Then I can see my name has not been filled in
