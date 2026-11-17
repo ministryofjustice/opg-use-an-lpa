@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Actor\Workflow\RequestActivationKey;
+use DateTimeImmutable;
 use DateTimeInterface;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
@@ -45,10 +46,7 @@ class RequestActivationKeyTest extends TestCase
                     'liveInUK'                    => 'Yes',
                     'actorAbroadAddress'          => null,
                     'workflowPreviouslyCompleted' => true,
-                    'visitedPages'                => [
-                        'lpa.add-by-paper',
-                        'lpa.your-name',
-                    ],
+                    'checkAnswersReached'         => true,
                 ],
             ],
         ];
@@ -118,6 +116,7 @@ class RequestActivationKeyTest extends TestCase
                     break;
                 case 'needsCleansing':
                 case 'workflowPreviouslyCompleted':
+                case 'checkAnswersReached':
                     Assert::assertFalse($sut->$key);
                     break;
                 default:
@@ -152,6 +151,7 @@ class RequestActivationKeyTest extends TestCase
                     Assert::assertNull($sut->getActorAddressResponse());
                     break;
                 case 'needsCleansing':
+                case 'checkAnswersReached':
                     Assert::assertFalse($sut->$key);
                     break;
                 case 'workflowPreviouslyCompleted':
@@ -234,81 +234,82 @@ class RequestActivationKeyTest extends TestCase
         Assert::assertNull($sut->workflowPreviouslyCompleted);
     }
 
+    #[DataProvider('changedNames')]
     #[Test]
-    public function it_has_no_previous_page_until_a_second_page_is_visited(): void
-    {
-        $sut = new RequestActivationKey();
-        Assert::assertNull($sut->previousPage());
-
-        $sut->visitPage('lpa.add-by-paper');
-        Assert::assertNull($sut->previousPage());
-
-        $sut->visitPage('lpa.your-name');
-        Assert::assertSame('lpa.add-by-paper', $sut->previousPage());
-    }
-
-    #[Test]
-    public function it_follows_the_route_taken_when_going_back(): void
-    {
-        $sut   = new RequestActivationKey();
-        $route = [
-            'lpa.add-by-paper',
-            'lpa.your-name',
-            'lpa.date-of-birth',
-            'lpa.postcode',
-            'lpa.check-answers',
-        ];
-        foreach ($route as $page) {
-            $sut->visitPage($page);
-        }
-
-        $sut->visitPage('lpa.postcode');
-        Assert::assertSame('lpa.date-of-birth', $sut->previousPage());
-
-        $sut->visitPage('lpa.date-of-birth');
-        Assert::assertSame('lpa.your-name', $sut->previousPage());
-    }
-
-    #[Test]
-    public function it_returns_to_the_page_a_change_was_made_from(): void
-    {
+    public function it_keeps_personal_details_when_a_different_name_is_given_after_checking_answers(
+        string $firstNames,
+        string $lastName,
+    ): void {
         $sut = new RequestActivationKey(
-            visitedPages: [
-                'lpa.add-by-paper',
-                'lpa.your-name',
-                'lpa.date-of-birth',
-                'lpa.postcode',
-                'lpa.check-answers',
-            ],
+            ...array_merge(self::completedPersonalDetails(), ['checkAnswersReached' => true])
         );
 
-        $sut->visitPage('lpa.date-of-birth');
-        Assert::assertSame('lpa.check-answers', $sut->previousPage());
+        $sut->updateName($firstNames, $lastName);
 
-        $sut->visitPage('lpa.check-answers');
-        Assert::assertSame('lpa.postcode', $sut->previousPage());
+        Assert::assertSame($firstNames, $sut->firstNames);
+        Assert::assertSame($lastName, $sut->lastName);
+        Assert::assertNotNull($sut->dob);
+        Assert::assertSame('PO3 6BT', $sut->postcode);
+        Assert::assertFalse($sut->workflowPreviouslyCompleted);
     }
 
     #[Test]
-    public function it_ignores_a_repeat_visit_to_the_current_page(): void
+    public function it_still_treats_details_as_skipped_when_the_same_date_of_birth_is_given(): void
     {
-        $sut = new RequestActivationKey(visitedPages: ['lpa.add-by-paper', 'lpa.your-name']);
+        $sut = new RequestActivationKey(...self::completedPersonalDetails());
 
-        $sut->visitPage('lpa.your-name');
+        $sut->updateDob(new DateTimeImmutable('1955-11-05T14:30:00+00:00'));
 
-        Assert::assertSame(['lpa.add-by-paper', 'lpa.your-name'], $sut->visitedPages);
+        Assert::assertTrue($sut->workflowPreviouslyCompleted);
     }
 
     #[Test]
-    public function it_limits_the_number_of_pages_remembered(): void
+    public function it_no_longer_treats_details_as_skipped_when_a_different_date_of_birth_is_given(): void
     {
-        $sut = new RequestActivationKey();
+        $sut = new RequestActivationKey(...self::completedPersonalDetails());
 
-        for ($i = 0; $i < 12; $i++) {
-            $sut->visitPage('page-' . $i);
-        }
+        $sut->updateDob(new DateTimeImmutable('1960-01-01'));
 
-        Assert::assertCount(10, $sut->visitedPages);
-        Assert::assertSame('page-10', $sut->previousPage());
+        Assert::assertSame('1960-01-01', $sut->dob->format('Y-m-d'));
+        Assert::assertFalse($sut->workflowPreviouslyCompleted);
+    }
+
+    #[Test]
+    public function it_still_treats_details_as_skipped_when_the_same_address_is_given(): void
+    {
+        $sut = new RequestActivationKey(...self::completedPersonalDetails());
+
+        $sut->updateAddress('Yes', 'PO3 6BT');
+
+        Assert::assertTrue($sut->workflowPreviouslyCompleted);
+    }
+
+    public static function changedAddresses(): array
+    {
+        return [
+            'postcode changed'      => [
+                'Yes',
+                'AB1 2CD',
+            ],
+            'no longer lives in UK' => [
+                'No',
+                null,
+            ],
+        ];
+    }
+
+    #[DataProvider('changedAddresses')]
+    #[Test]
+    public function it_no_longer_treats_details_as_skipped_when_a_different_address_is_given(
+        string $liveInUK,
+        ?string $postcode,
+    ): void {
+        $sut = new RequestActivationKey(...self::completedPersonalDetails());
+
+        $sut->updateAddress($liveInUK, $postcode);
+
+        Assert::assertSame($liveInUK, $sut->liveInUK);
+        Assert::assertSame($postcode, $sut->postcode);
+        Assert::assertFalse($sut->workflowPreviouslyCompleted);
     }
 }

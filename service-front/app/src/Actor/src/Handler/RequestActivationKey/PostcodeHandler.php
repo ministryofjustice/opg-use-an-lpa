@@ -28,8 +28,6 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $this->state($request)->visitPage('lpa.postcode');
-
         if (($postcode = $this->state($request)->postcode) !== null) {
             $this->form->setData(
                 [
@@ -65,8 +63,7 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
             $postData = $this->form->getData();
 
             //  Set the data in the session and pass to the check your answers handler
-            $this->state($request)->postcode = $postData['postcode'];
-            $this->state($request)->liveInUK = $postData['live_in_uk'];
+            $this->state($request)->updateAddress($postData['live_in_uk'], $postData['postcode']);
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
@@ -92,7 +89,9 @@ class PostcodeHandler extends AbstractRequestKeyHandler implements UserAware, Cs
 
     public function lastPage(WorkflowState $state): string
     {
-        return $state->previousPage() ?? 'lpa.date-of-birth';
+        return $state->liveInUK !== null && $state->checkAnswersReached === true
+            ? 'lpa.check-answers'
+            : 'lpa.date-of-birth';
     }
 
     public function nextPage(WorkflowState $state): string

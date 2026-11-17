@@ -31,8 +31,6 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $this->state($request)->visitPage('lpa.your-name');
-
         $this->form->setData(
             [
                 'first_names' => $this->state($request)->firstNames,
@@ -81,6 +79,8 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
 
     public function lastPage(WorkflowState $state): string
     {
-        return $state->previousPage() ?? 'lpa.add-by-paper';
+        return $state->postcode !== null && $state->checkAnswersReached === true
+            ? 'lpa.check-answers'
+            : 'lpa.add-by-paper';
     }
 }

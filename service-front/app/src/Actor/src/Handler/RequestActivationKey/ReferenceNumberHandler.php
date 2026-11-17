@@ -52,8 +52,6 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler
             $this->state($request)->resetForAnotherRequest();
         }
 
-        $this->state($request)->visitPage('lpa.add-by-paper');
-
         $this->form->setData(
             [
                 'opg_reference_number' => $this->state($request)->referenceNumber,
@@ -103,15 +101,15 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler
 
     public function nextPage(WorkflowState $state): string
     {
-        if ($state->workflowPreviouslyCompleted === true) {
-            return 'lpa.your-name';
-        }
-
-        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.your-name';
+        return $state->postcode !== null && $state->checkAnswersReached === true
+            ? 'lpa.check-answers'
+            : 'lpa.your-name';
     }
 
     public function lastPage(WorkflowState $state): string
     {
-        return $state->previousPage() ?? 'lpa.add-by-paper-information';
+        return $state->postcode !== null && $state->checkAnswersReached === true
+            ? 'lpa.check-answers'
+            : 'lpa.add-by-paper-information';
     }
 }

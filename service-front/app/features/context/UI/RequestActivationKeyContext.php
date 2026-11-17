@@ -372,6 +372,12 @@ class RequestActivationKeyContext implements Context
         $this->ui->assertFieldContains('postcode', 'ABC123');
     }
 
+    #[Then('/^I am taken back to the postcode page$/')]
+    public function iAmTakenBackToThePostcodePage(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/postcode');
+    }
+
     #[Then('/^I am taken back to the reference number page where I can see my answer and change it$/')]
     public function iAmTakenBackToTheReferenceNumberPageWhereICanSeeMyAnswerAndChangeIt(): void
     {

@@ -29,8 +29,6 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $this->state($request)->visitPage('lpa.date-of-birth');
-
         /** @var DateTimeImmutable $dob */
         if (($dob = $this->state($request)->dob) !== null) {
             $this->form->setData(
@@ -59,10 +57,12 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
             $postData = $this->form->getData();
 
             // Set the data in the session and pass to the check your answers handler
-            $this->state($request)->dob = (new DateTimeImmutable())->setDate(
-                (int) $postData['dob']['year'],
-                (int) $postData['dob']['month'],
-                (int) $postData['dob']['day']
+            $this->state($request)->updateDob(
+                (new DateTimeImmutable())->setDate(
+                    (int) $postData['dob']['year'],
+                    (int) $postData['dob']['month'],
+                    (int) $postData['dob']['day']
+                )
             );
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
@@ -83,7 +83,9 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
 
     public function lastPage(WorkflowState $state): string
     {
-        return $state->previousPage() ?? 'lpa.your-name';
+        return $state->postcode !== null && $state->checkAnswersReached === true
+            ? 'lpa.check-answers'
+            : 'lpa.your-name';
     }
 
     public function nextPage(WorkflowState $state): string
