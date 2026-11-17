@@ -82,6 +82,19 @@ class ResolveOAuthUser
             }
         } catch (NotFoundException) {
             return null;
+        } catch (ConflictException $e) {
+            if (isset($e->getAdditionalData()['users'])) {
+                $this->logger->error(
+                    'Multiple accounts {users} hold OIDC identity {identity}, refusing login',
+                    [
+                        'identity'   => $identity,
+                        'users'      => $e->getAdditionalData()['users'],
+                        'event_code' => EventCodes::AUTH_ONELOGIN_DUPLICATE_IDENTITY,
+                    ]
+                );
+            }
+
+            throw $e;
         }
 
         return $user;
@@ -125,7 +138,7 @@ class ResolveOAuthUser
     private function migrateUser(array $user, string $identity, string $email): array
     {
         try {
-            $user = $this->usersRepository->migrateToOAuth($user, $identity);
+            $migrated = $this->usersRepository->migrateToOAuth($user, $identity);
 
             $this->logger->info(
                 'Migrated existing account with email {email} to OIDC login',
@@ -135,13 +148,19 @@ class ResolveOAuthUser
                     'event_code' => EventCodes::AUTH_ONELOGIN_ACCOUNT_MIGRATED,
                 ]
             );
-        } catch (ConflictException $e) {
-            if ($e->getAdditionalData() !== ['identity' => $identity]) {
-                throw $e;
-            }
 
-            // Only reached after the identity lookup found no account, as in the creation bypass.
-            $user = $this->usersRepository->migrateToOAuth($user, $identity, true);
+            return $migrated;
+        } catch (ConflictException $e) {
+            $winner = $this->accountClaimedConcurrently($e, $identity, $email);
+
+            if ($winner !== null) {
+                return $winner;
+            }
+        }
+
+        // The identity is pinned to an account that does not exist, the repository will verify that atomically.
+        try {
+            $migrated = $this->usersRepository->migrateToOAuth($user, $identity, true);
 
             $this->logger->info(
                 'Migrated existing account with email {email} to OIDC login with orphan bypass',
@@ -151,9 +170,11 @@ class ResolveOAuthUser
                     'event_code' => EventCodes::AUTH_ONELOGIN_ACCOUNT_MIGRATED_WITH_ORPHAN_BYPASS,
                 ]
             );
-        }
 
-        return $user;
+            return $migrated;
+        } catch (ConflictException $e) {
+            return $this->accountClaimedConcurrently($e, $identity, $email) ?? throw $e;
+        }
     }
 
     /**
@@ -174,17 +195,19 @@ class ResolveOAuthUser
                     'event_code' => EventCodes::AUTH_ONELOGIN_ACCOUNT_CREATED,
                 ]
             );
+
+            return $user;
         } catch (ConflictException $e) {
-            /**
-             * if the exception contains an identity as a reason then it is an orphan identity and we can
-             * work around it. this should only be used assuming that we've already identified that an account
-             * doesn't already exist with this identity @see attemptToFetchUserByIdentity()
-             */
-            if (count($e->getAdditionalData()) === 1 && isset($e->getAdditionalData()['identity'])) {
-                $user = $this->userService->addWithOrphanIdentityBypass($email, $identity);
-            } else {
-                throw $e;
+            $winner = $this->accountClaimedConcurrently($e, $identity, $email);
+
+            if ($winner !== null) {
+                return $winner;
             }
+        }
+
+        // The identity is pinned to an account that does not exist, the repository will verify that atomically.
+        try {
+            $user = $this->userService->addWithOrphanIdentityBypass($email, $identity);
 
             $this->logger->info(
                 'Created new OIDC login for account with email {email} with orphan bypass',
@@ -192,6 +215,36 @@ class ResolveOAuthUser
                     'identity'   => $identity,
                     'email'      => new Email($email),
                     'event_code' => EventCodes::AUTH_ONELOGIN_ACCOUNT_CREATED_WITH_ORPHAN_BYPASS,
+                ]
+            );
+
+            return $user;
+        } catch (ConflictException $e) {
+            return $this->accountClaimedConcurrently($e, $identity, $email) ?? throw $e;
+        }
+    }
+
+    /**
+     * An identity pinning conflict means the identity is already claimed. Either by a concurrent request that
+     * has since committed an account, or by an orphan pin. Looking the identity up again tells the two apart.
+     *
+     * @psalm-return ?ActorUser The account that holds the identity, null if the pin is an orphan
+     * @throws ConflictException When the conflict is not about the identity pin
+     */
+    private function accountClaimedConcurrently(ConflictException $e, string $identity, string $email): ?array
+    {
+        if ($e->getAdditionalData() !== ['identity' => $identity]) {
+            throw $e;
+        }
+
+        $user = $this->attemptToFetchUserByIdentity($identity, $email);
+
+        if ($user !== null) {
+            $this->logger->info(
+                'Identity {identity} was claimed by a concurrent login, using that account',
+                [
+                    'identity'   => $identity,
+                    'event_code' => EventCodes::AUTH_ONELOGIN_ACCOUNT_CLAIMED_CONCURRENTLY,
                 ]
             );
         }

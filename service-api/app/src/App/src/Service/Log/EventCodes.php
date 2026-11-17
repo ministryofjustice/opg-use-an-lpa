@@ -56,6 +56,16 @@ final class EventCodes
     public const string AUTH_ONELOGIN_ACCOUNT_MIGRATED = 'AUTH_ONELOGIN_ACCOUNT_MIGRATED';
 
     /**
+     * More than one account holds the same OIDC identity so the login was refused for manual resolution.
+     */
+    public const string AUTH_ONELOGIN_DUPLICATE_IDENTITY = 'AUTH_ONELOGIN_DUPLICATE_IDENTITY';
+
+    /**
+     * An identity pinning conflict was resolved by using the account that a concurrent login created or claimed.
+     */
+    public const string AUTH_ONELOGIN_ACCOUNT_CLAIMED_CONCURRENTLY = 'AUTH_ONELOGIN_ACCOUNT_CLAIMED_CONCURRENTLY';
+
+    /**
      * An existing account was migrated after bypassing an orphan IDENTITY# record.
      */
     public const string AUTH_ONELOGIN_ACCOUNT_MIGRATED_WITH_ORPHAN_BYPASS

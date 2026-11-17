@@ -539,15 +539,7 @@ class OidcContext implements Context
 
     private function fetchByEmailFixtures(bool $hasIdentity = false): void
     {
-        /** @see ActorUsers::getByIdentity() */
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Items' => [],
-                ],
-            ),
-        );
-
+        $this->identityLookupMissFixtures();
         if (!$hasIdentity) {
             unset($this->localAccount['Identity']);
 
@@ -594,15 +586,25 @@ class OidcContext implements Context
 
     private function fetchByIdentityFixtures(): void
     {
-        /** @see ActorUsers::getByIdentity() */
+        /** @see ActorUsers::getByIdentity() the identity pin, which records the owning account */
         $this->awsFixtures->append(
             new Result(
                 [
-                    'Items' => [
-                        $this->marshalAwsResultData(
-                            $this->localAccount
-                        ),
+                    'Item' => [
+                        'Id'     => ['S' => 'IDENTITY#' . $this->identitySubject],
+                        'UserId' => ['S' => $this->localAccount['Id']],
                     ],
+                ],
+            ),
+        );
+
+        /** @see ActorUsers::getByIdentity() the owning account */
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        $this->localAccount
+                    ),
                 ],
             ),
         );
@@ -627,15 +629,7 @@ class OidcContext implements Context
 
     private function newUserFixtures(): void
     {
-        /** @see ActorUsers::getByIdentity() */
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Items' => [],
-                ],
-            ),
-        );
-
+        $this->identityLookupMissFixtures();
         /** @see ActorUsers::getByEmail() */
         $this->awsFixtures->append(
             new Result(
@@ -648,44 +642,80 @@ class OidcContext implements Context
         $this->identityWriteFixtures(false);
     }
 
+    /**
+     * @see ActorUsers::getByIdentity() for an identity that no account holds. An orphan pin has no owner recorded.
+     */
+    private function identityLookupMissFixtures(): void
+    {
+        $this->identityPinReadFixture();
+
+        $this->awsFixtures->append(new Result(['Items' => []]));
+    }
+
+    private function identityPinReadFixture(): void
+    {
+        $this->awsFixtures->append(
+            new Result(
+                $this->hasOrphanIdentityPin
+                    ? ['Item' => ['Id' => ['S' => 'IDENTITY#' . $this->identitySubject]]]
+                    : [],
+            ),
+        );
+    }
+
     private function identityWriteFixtures(bool $migration): void
     {
-        $attempts = $this->hasOrphanIdentityPin ? 2 : 1;
+        $this->identityWriteFixture($migration, false);
 
-        for ($attempt = 0; $attempt < $attempts; $attempt++) {
-            $this->awsFixtures->append(function (Command $command) use ($migration): ResultInterface {
-                Assert::assertSame('TransactWriteItems', $command->getName());
-                Assert::assertCount(2, $command['TransactItems']);
-
-                $items = $command['TransactItems'];
-                $pin   = $items[1]['Put'];
-
-                Assert::assertSame(['Id' => ['S' => 'IDENTITY#' . $this->identitySubject]], $pin['Item']);
-
-                if ($this->identityWriteAttempts === 0) {
-                    Assert::assertSame('attribute_not_exists(Id)', $pin['ConditionExpression']);
-                } else {
-                    Assert::assertArrayNotHasKey('ConditionExpression', $pin);
-                }
-
-                $this->writtenAccountId = $this->assertAccountWrite($items[0], $migration);
-                $this->identityWriteAttempts++;
-
-                if ($this->hasOrphanIdentityPin && $this->identityWriteAttempts === 1) {
-                    throw new DynamoDbException('Identity pin already exists', $command, [
-                        'code' => 'TransactionCanceledException',
-                        'body' => [
-                            'CancellationReasons' => [
-                                ['Code' => 'None'],
-                                ['Code' => 'ConditionalCheckFailed'],
-                            ],
-                        ],
-                    ]);
-                }
-
-                return new Result(['@metadata' => ['statusCode' => StatusCodeInterface::STATUS_OK]]);
-            });
+        if ($this->hasOrphanIdentityPin) {
+            // the conflict is resolved by looking the identity up again, then taking over the orphan pin
+            $this->identityLookupMissFixtures();
+            $this->identityPinReadFixture();
+            $this->identityWriteFixture($migration, true);
         }
+    }
+
+    private function identityWriteFixture(bool $migration, bool $takeOverOrphan): void
+    {
+        $this->awsFixtures->append(function (Command $command) use ($migration, $takeOverOrphan): ResultInterface {
+            Assert::assertSame('TransactWriteItems', $command->getName());
+            Assert::assertCount(2, $command['TransactItems']);
+
+            $items = $command['TransactItems'];
+            $pin   = $items[1]['Put'];
+
+            $this->writtenAccountId = $this->assertAccountWrite($items[0], $migration);
+
+            Assert::assertSame(
+                [
+                    'Id'     => ['S' => 'IDENTITY#' . $this->identitySubject],
+                    'UserId' => ['S' => $this->writtenAccountId],
+                ],
+                $pin['Item'],
+            );
+            Assert::assertSame(
+                $takeOverOrphan
+                    ? 'attribute_exists(Id) AND attribute_not_exists(UserId)'
+                    : 'attribute_not_exists(Id)',
+                $pin['ConditionExpression'],
+            );
+
+            $this->identityWriteAttempts++;
+
+            if ($this->hasOrphanIdentityPin && !$takeOverOrphan) {
+                throw new DynamoDbException('Identity pin already exists', $command, [
+                    'code' => 'TransactionCanceledException',
+                    'body' => [
+                        'CancellationReasons' => [
+                            ['Code' => 'None'],
+                            ['Code' => 'ConditionalCheckFailed'],
+                        ],
+                    ],
+                ]);
+            }
+
+            return new Result(['@metadata' => ['statusCode' => StatusCodeInterface::STATUS_OK]]);
+        });
     }
 
     private function assertAccountWrite(array $operation, bool $migration): string
@@ -693,6 +723,10 @@ class OidcContext implements Context
         if ($migration) {
             Assert::assertSame(['Id' => ['S' => $this->localAccount['Id']]], $operation['Update']['Key']);
             Assert::assertSame('SET #sub = :sub', $operation['Update']['UpdateExpression']);
+            Assert::assertSame(
+                'attribute_exists(Id) AND attribute_not_exists(#sub)',
+                $operation['Update']['ConditionExpression'],
+            );
             Assert::assertSame(['#sub' => 'Identity'], $operation['Update']['ExpressionAttributeNames']);
             Assert::assertSame(
                 [':sub' => ['S' => $this->identitySubject]],

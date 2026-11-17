@@ -504,7 +504,7 @@ class ResolveOAuthUserTest extends TestCase
         $attempt  = 0;
 
         $users = $this->createMock(UserService::class);
-        $users->expects(self::once())
+        $users->expects(self::exactly(2))
             ->method('getByIdentity')
             ->with('subject')
             ->willThrowException(new NotFoundException());
@@ -658,5 +658,198 @@ class ResolveOAuthUserTest extends TestCase
         $this->expectExceptionObject($error);
 
         $resolver('subject', $original['Email']);
+    }
+
+    #[Test]
+    public function it_should_use_the_account_created_by_a_concurrent_login_instead_of_creating_one(): void
+    {
+        $winner = [
+            'Id'       => 'winner-id',
+            'Email'    => 'user@example.com',
+            'Identity' => 'subject',
+        ];
+
+        $users = $this->createMock(UserService::class);
+        $users->expects(self::exactly(2))
+            ->method('getByIdentity')
+            ->with('subject')
+            ->willReturnOnConsecutiveCalls(
+                self::throwException(new NotFoundException()),
+                $winner,
+            );
+        $users->method('getByEmail')->willThrowException(new NotFoundException());
+        $users->expects(self::once())
+            ->method('add')
+            ->willThrowException(new ConflictException('', ['identity' => 'subject']));
+        $users->expects(self::never())->method('addWithOrphanIdentityBypass');
+
+        $repository = $this->createMock(ActorUsersInterface::class);
+        $repository->expects(self::once())->method('recordSuccessfulLogin')->with('winner-id');
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::exactly(2))->method('info');
+
+        $clock = $this->createStub(ClockInterface::class);
+        $clock->method('now')->willReturn(new DateTimeImmutable());
+
+        $resolver = new ResolveOAuthUser(
+            $repository,
+            $users,
+            $this->createStub(RecoverAccount::class),
+            $clock,
+            $logger,
+        );
+
+        self::assertSame($winner, $resolver('subject', 'user@example.com'));
+    }
+
+    #[Test]
+    public function it_should_use_the_account_claimed_by_a_concurrent_login_instead_of_migrating(): void
+    {
+        $original = [
+            'Id'    => 'existing-id',
+            'Email' => 'user@example.com',
+        ];
+        $winner   = [
+            'Id'       => 'winner-id',
+            'Email'    => 'user@example.com',
+            'Identity' => 'subject',
+        ];
+
+        $users = $this->createMock(UserService::class);
+        $users->expects(self::exactly(2))
+            ->method('getByIdentity')
+            ->willReturnOnConsecutiveCalls(self::throwException(new NotFoundException()), $winner);
+        $users->method('getByEmail')->willReturn($original);
+
+        $repository = $this->createMock(ActorUsersInterface::class);
+        $repository->expects(self::once())
+            ->method('migrateToOAuth')
+            ->with($original, 'subject', false)
+            ->willThrowException(new ConflictException('', ['identity' => 'subject']));
+        $repository->expects(self::once())->method('recordSuccessfulLogin')->with('winner-id');
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::exactly(2))->method('info');
+
+        $clock = $this->createStub(ClockInterface::class);
+        $clock->method('now')->willReturn(new DateTimeImmutable());
+
+        $resolver = new ResolveOAuthUser(
+            $repository,
+            $users,
+            $this->createStub(RecoverAccount::class),
+            $clock,
+            $logger,
+        );
+
+        self::assertSame($winner, $resolver('subject', 'user@example.com'));
+    }
+
+    #[Test]
+    public function it_should_use_the_account_that_wins_a_race_against_the_orphan_takeover(): void
+    {
+        $winner = [
+            'Id'       => 'winner-id',
+            'Email'    => 'user@example.com',
+            'Identity' => 'subject',
+        ];
+
+        $users = $this->createMock(UserService::class);
+        $users->expects(self::exactly(3))
+            ->method('getByIdentity')
+            ->willReturnOnConsecutiveCalls(
+                self::throwException(new NotFoundException()),
+                self::throwException(new NotFoundException()),
+                $winner,
+            );
+        $users->method('getByEmail')->willThrowException(new NotFoundException());
+        $users->method('add')->willThrowException(new ConflictException('', ['identity' => 'subject']));
+        $users->expects(self::once())
+            ->method('addWithOrphanIdentityBypass')
+            ->willThrowException(new ConflictException('', ['identity' => 'subject']));
+
+        $repository = $this->createMock(ActorUsersInterface::class);
+        $repository->expects(self::once())->method('recordSuccessfulLogin')->with('winner-id');
+
+        $clock = $this->createStub(ClockInterface::class);
+        $clock->method('now')->willReturn(new DateTimeImmutable());
+
+        $resolver = new ResolveOAuthUser(
+            $repository,
+            $users,
+            $this->createStub(RecoverAccount::class),
+            $clock,
+            $this->createStub(LoggerInterface::class),
+        );
+
+        self::assertSame($winner, $resolver('subject', 'user@example.com'));
+    }
+
+    #[Test]
+    public function it_should_rethrow_a_repeated_conflict_when_no_account_holds_the_identity(): void
+    {
+        $error = new ConflictException('', ['identity' => 'subject']);
+
+        $users = $this->createMock(UserService::class);
+        $users->method('getByIdentity')->willThrowException(new NotFoundException());
+        $users->method('getByEmail')->willThrowException(new NotFoundException());
+        $users->method('add')->willThrowException(new ConflictException('', ['identity' => 'subject']));
+        $users->method('addWithOrphanIdentityBypass')->willThrowException($error);
+
+        $repository = $this->createMock(ActorUsersInterface::class);
+        $repository->expects(self::never())->method('recordSuccessfulLogin');
+
+        $resolver = new ResolveOAuthUser(
+            $repository,
+            $users,
+            $this->createStub(RecoverAccount::class),
+            $this->createStub(ClockInterface::class),
+            $this->createStub(LoggerInterface::class),
+        );
+
+        $this->expectExceptionObject($error);
+
+        $resolver('subject', 'user@example.com');
+    }
+
+    #[Test]
+    public function it_should_log_and_fail_the_login_when_multiple_accounts_hold_the_identity(): void
+    {
+        $error = new ConflictException('', ['identity' => 'subject', 'users' => ['a', 'b']]);
+
+        $users = $this->createMock(UserService::class);
+        $users->method('getByIdentity')->willThrowException($error);
+        $users->expects(self::never())->method('getByEmail');
+        $users->expects(self::never())->method('add');
+
+        $repository = $this->createMock(ActorUsersInterface::class);
+        $repository->expects(self::never())->method('recordSuccessfulLogin');
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())
+            ->method('error')
+            ->with(
+                self::anything(),
+                self::callback(
+                    static fn (array $context): bool => $context['users'] === [
+                        'a',
+                        'b',
+                    ]
+                        && $context['event_code'] === EventCodes::AUTH_ONELOGIN_DUPLICATE_IDENTITY
+                ),
+            );
+
+        $resolver = new ResolveOAuthUser(
+            $repository,
+            $users,
+            $this->createStub(RecoverAccount::class),
+            $this->createStub(ClockInterface::class),
+            $logger,
+        );
+
+        $this->expectExceptionObject($error);
+
+        $resolver('subject', 'user@example.com');
     }
 }
