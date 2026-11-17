@@ -72,4 +72,5 @@ alone.
   `$this->redirectToRoute($this->nextPage($this->state($request)))`. Templates get the back link from
   `$this->lastPage($this->state($request))`.
 - `isMissingPrerequisite()` returns true when state needed to reach this page is missing, so the handler can redirect
-  to the start of the workflow.
+  to the start of the workflow.  Write them as plain logical statements over the workflow state,
+  such as ternaries, `if` returns, or a `match (true)`.
