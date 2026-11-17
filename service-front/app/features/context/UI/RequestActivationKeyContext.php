@@ -1014,13 +1014,6 @@ class RequestActivationKeyContext implements Context
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
     }
 
-    #[Then('/^I am returned to the check answers page$/')]
-    public function iAmReturnedToTheCheckAnswersPage(): void
-    {
-        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-        $this->ui->assertPageContainsText('Check your answers');
-    }
-
     #[When('I provide details from an LPA registered before Sept 2019')]
     public function iProvideDetailsFromAnLpaRegisteredBeforeSept2019(): void
     {

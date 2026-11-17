@@ -20,33 +20,35 @@ class RequestActivationKeyTest extends TestCase
         return [
             [
                 [
-                    'firstNames'             => 'John Henry',
-                    'lastName'               => 'Smith',
-                    'dob'                    => '1955-11-05T00:00:00+00:00',
-                    'postcode'               => 'PO3 6BT',
-                    'referenceNumber'        => '700000000138',
-                    'actorType'              => 'attorney',
-                    'donorFirstNames'        => 'James Hubert',
-                    'donorLastName'          => 'Swinton',
-                    'donorDob'               => '1975-11-05T00:00:00+00:00',
-                    'actorAddress1'          => '1 Example Street',
-                    'actorAddress2'          => '',
-                    'actorAddressTown'       => 'Portsmouth',
-                    'actorAddressCounty'     => 'Hampshire',
-                    'attorneyFirstNames'     => '',
-                    'attorneyLastName'       => '',
-                    'attorneyDob'            => null,
-                    'addressOnPaper'         => '',
-                    'telephone'              => '01234567890',
-                    'noTelephone'            => false,
-                    'actorUid'               => '700000000435',
-                    'needsCleansing'         => false,
-                    'actorAddressResponse'   => 'Yes',
-                    'liveInUK'               => 'Yes',
-                    'actorAbroadAddress'     => null,
-                    'requestingAnother'      => true,
-                    'skippedPersonalDetails' => true,
-                    'changingAnswer'         => true,
+                    'firstNames'                  => 'John Henry',
+                    'lastName'                    => 'Smith',
+                    'dob'                         => '1955-11-05T00:00:00+00:00',
+                    'postcode'                    => 'PO3 6BT',
+                    'referenceNumber'             => '700000000138',
+                    'actorType'                   => 'attorney',
+                    'donorFirstNames'             => 'James Hubert',
+                    'donorLastName'               => 'Swinton',
+                    'donorDob'                    => '1975-11-05T00:00:00+00:00',
+                    'actorAddress1'               => '1 Example Street',
+                    'actorAddress2'               => '',
+                    'actorAddressTown'            => 'Portsmouth',
+                    'actorAddressCounty'          => 'Hampshire',
+                    'attorneyFirstNames'          => '',
+                    'attorneyLastName'            => '',
+                    'attorneyDob'                 => null,
+                    'addressOnPaper'              => '',
+                    'telephone'                   => '01234567890',
+                    'noTelephone'                 => false,
+                    'actorUid'                    => '700000000435',
+                    'needsCleansing'              => false,
+                    'actorAddressResponse'        => 'Yes',
+                    'liveInUK'                    => 'Yes',
+                    'actorAbroadAddress'          => null,
+                    'workflowPreviouslyCompleted' => true,
+                    'visitedPages'                => [
+                        'lpa.add-by-paper',
+                        'lpa.your-name',
+                    ],
                 ],
             ],
         ];
@@ -115,9 +117,7 @@ class RequestActivationKeyTest extends TestCase
                     Assert::assertNull($sut->getActorAddressResponse());
                     break;
                 case 'needsCleansing':
-                case 'requestingAnother':
-                case 'skippedPersonalDetails':
-                case 'changingAnswer':
+                case 'workflowPreviouslyCompleted':
                     Assert::assertFalse($sut->$key);
                     break;
                 default:
@@ -130,8 +130,6 @@ class RequestActivationKeyTest extends TestCase
     #[Test]
     public function it_can_be_reset_for_another_request_keeping_personal_details(array $data): void
     {
-        $data['requestingAnother'] = null;
-
         $sut = new RequestActivationKey(...$data);
 
         $sut->resetForAnotherRequest();
@@ -154,11 +152,9 @@ class RequestActivationKeyTest extends TestCase
                     Assert::assertNull($sut->getActorAddressResponse());
                     break;
                 case 'needsCleansing':
-                case 'skippedPersonalDetails':
-                case 'changingAnswer':
                     Assert::assertFalse($sut->$key);
                     break;
-                case 'requestingAnother':
+                case 'workflowPreviouslyCompleted':
                     Assert::assertTrue($sut->$key);
                     break;
                 default:
@@ -167,30 +163,29 @@ class RequestActivationKeyTest extends TestCase
         }
     }
 
-    private static function personalDetails(): array
+    private static function completedPersonalDetails(): array
     {
         return [
-            'firstNames' => 'John Henry',
-            'lastName'   => 'Smith',
-            'dob'        => '1955-11-05T00:00:00+00:00',
-            'postcode'   => 'PO3 6BT',
-            'liveInUK'   => 'Yes',
+            'firstNames'                  => 'John Henry',
+            'lastName'                    => 'Smith',
+            'dob'                         => '1955-11-05T00:00:00+00:00',
+            'postcode'                    => 'PO3 6BT',
+            'liveInUK'                    => 'Yes',
+            'workflowPreviouslyCompleted' => true,
         ];
     }
 
     #[Test]
-    public function it_keeps_personal_details_when_the_same_name_is_given_for_another_request(): void
+    public function it_keeps_personal_details_when_the_same_name_is_given_after_a_completed_request(): void
     {
-        $sut = new RequestActivationKey(...self::personalDetails());
-        $sut->resetForAnotherRequest();
+        $sut = new RequestActivationKey(...self::completedPersonalDetails());
 
         $sut->updateName('John Henry', 'Smith');
 
         Assert::assertNotNull($sut->dob);
         Assert::assertSame('Yes', $sut->liveInUK);
         Assert::assertSame('PO3 6BT', $sut->postcode);
-        Assert::assertTrue($sut->skippedPersonalDetails);
-        Assert::assertFalse($sut->requestingAnother);
+        Assert::assertTrue($sut->workflowPreviouslyCompleted);
     }
 
     public static function changedNames(): array
@@ -209,12 +204,11 @@ class RequestActivationKeyTest extends TestCase
 
     #[DataProvider('changedNames')]
     #[Test]
-    public function it_clears_personal_details_when_a_different_name_is_given_for_another_request(
+    public function it_clears_personal_details_when_a_different_name_is_given_after_a_completed_request(
         string $firstNames,
         string $lastName,
     ): void {
-        $sut = new RequestActivationKey(...self::personalDetails());
-        $sut->resetForAnotherRequest();
+        $sut = new RequestActivationKey(...self::completedPersonalDetails());
 
         $sut->updateName($firstNames, $lastName);
 
@@ -223,19 +217,98 @@ class RequestActivationKeyTest extends TestCase
         Assert::assertNull($sut->dob);
         Assert::assertNull($sut->liveInUK);
         Assert::assertNull($sut->postcode);
-        Assert::assertFalse($sut->skippedPersonalDetails);
-        Assert::assertFalse($sut->requestingAnother);
+        Assert::assertFalse($sut->workflowPreviouslyCompleted);
     }
 
     #[Test]
-    public function it_keeps_personal_details_when_the_name_is_changed_outside_of_another_request(): void
+    public function it_keeps_personal_details_when_the_name_is_changed_before_a_request_is_completed(): void
     {
-        $sut = new RequestActivationKey(...self::personalDetails());
+        $sut = new RequestActivationKey(
+            ...array_merge(self::completedPersonalDetails(), ['workflowPreviouslyCompleted' => null])
+        );
 
         $sut->updateName('Jane', 'Jones');
 
         Assert::assertSame('Jane', $sut->firstNames);
         Assert::assertSame('PO3 6BT', $sut->postcode);
-        Assert::assertNull($sut->skippedPersonalDetails);
+        Assert::assertNull($sut->workflowPreviouslyCompleted);
+    }
+
+    #[Test]
+    public function it_has_no_previous_page_until_a_second_page_is_visited(): void
+    {
+        $sut = new RequestActivationKey();
+        Assert::assertNull($sut->previousPage());
+
+        $sut->visitPage('lpa.add-by-paper');
+        Assert::assertNull($sut->previousPage());
+
+        $sut->visitPage('lpa.your-name');
+        Assert::assertSame('lpa.add-by-paper', $sut->previousPage());
+    }
+
+    #[Test]
+    public function it_follows_the_route_taken_when_going_back(): void
+    {
+        $sut   = new RequestActivationKey();
+        $route = [
+            'lpa.add-by-paper',
+            'lpa.your-name',
+            'lpa.date-of-birth',
+            'lpa.postcode',
+            'lpa.check-answers',
+        ];
+        foreach ($route as $page) {
+            $sut->visitPage($page);
+        }
+
+        $sut->visitPage('lpa.postcode');
+        Assert::assertSame('lpa.date-of-birth', $sut->previousPage());
+
+        $sut->visitPage('lpa.date-of-birth');
+        Assert::assertSame('lpa.your-name', $sut->previousPage());
+    }
+
+    #[Test]
+    public function it_returns_to_the_page_a_change_was_made_from(): void
+    {
+        $sut = new RequestActivationKey(
+            visitedPages: [
+                'lpa.add-by-paper',
+                'lpa.your-name',
+                'lpa.date-of-birth',
+                'lpa.postcode',
+                'lpa.check-answers',
+            ],
+        );
+
+        $sut->visitPage('lpa.date-of-birth');
+        Assert::assertSame('lpa.check-answers', $sut->previousPage());
+
+        $sut->visitPage('lpa.check-answers');
+        Assert::assertSame('lpa.postcode', $sut->previousPage());
+    }
+
+    #[Test]
+    public function it_ignores_a_repeat_visit_to_the_current_page(): void
+    {
+        $sut = new RequestActivationKey(visitedPages: ['lpa.add-by-paper', 'lpa.your-name']);
+
+        $sut->visitPage('lpa.your-name');
+
+        Assert::assertSame(['lpa.add-by-paper', 'lpa.your-name'], $sut->visitedPages);
+    }
+
+    #[Test]
+    public function it_limits_the_number_of_pages_remembered(): void
+    {
+        $sut = new RequestActivationKey();
+
+        for ($i = 0; $i < 12; $i++) {
+            $sut->visitPage('page-' . $i);
+        }
+
+        Assert::assertCount(10, $sut->visitedPages);
+        Assert::assertSame('page-10', $sut->previousPage());
     }
 }

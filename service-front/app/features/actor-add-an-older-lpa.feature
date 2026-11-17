@@ -38,6 +38,20 @@ Feature: Add an older LPA
     Then I can see the reference number of the other LPA
 
   @ui
+  Scenario: The same person does not have to re-enter their date of birth and address when requesting another activation key after their details were checked
+    Given I have provided valid details that match the Lpa
+    And My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
+    And I provide my contact details
+    And I am asked to consent and confirm my details
+    And I confirm that the data is correct and click the confirm and submit button
+    And I am told my activation key request has been received
+    When I request another activation key
+    And I enter the reference number of another LPA
+    Then I can see my name has already been filled in
+    When I continue from the your name page
+    Then I am asked to check my answers for the other LPA
+
+  @ui
   Scenario: A different person is asked for their date of birth and address when requesting another activation key
     Given I am on the add an older LPA page
     And I provide the details from a valid paper document

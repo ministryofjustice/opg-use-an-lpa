@@ -90,7 +90,9 @@ class CheckYourAnswersHandler extends AbstractHandler implements
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         $state = $this->state($request);
-        $data  = [
+        $state->visitPage('lpa.check-answers');
+
+        $data = [
             'reference_number' => $state->referenceNumber,
             'first_names'      => $state->firstNames,
             'last_name'        => $state->lastName,
@@ -276,6 +278,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
 
     public function lastPage(WorkflowState $state): string
     {
-        return $state->skippedPersonalDetails === true ? 'lpa.your-name' : 'lpa.postcode';
+        return $state->previousPage() ?? 'lpa.postcode';
     }
 }

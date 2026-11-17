@@ -29,6 +29,8 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
+        $this->state($request)->visitPage('lpa.date-of-birth');
+
         /** @var DateTimeImmutable $dob */
         if (($dob = $this->state($request)->dob) !== null) {
             $this->form->setData(
@@ -63,8 +65,6 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
                 (int) $postData['dob']['day']
             );
 
-            $this->state($request)->skippedPersonalDetails = false;
-
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
@@ -83,7 +83,7 @@ class DateOfBirthHandler extends AbstractRequestKeyHandler implements UserAware,
 
     public function lastPage(WorkflowState $state): string
     {
-        return $state->changingAnswer === true ? 'lpa.check-answers' : 'lpa.your-name';
+        return $state->previousPage() ?? 'lpa.your-name';
     }
 
     public function nextPage(WorkflowState $state): string

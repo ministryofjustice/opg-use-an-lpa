@@ -12,6 +12,9 @@ final class RequestActivationKey implements WorkflowState
 {
     use JsonSerializable;
 
+    // the history is held in the session cookie, so keep it small
+    private const int MAX_VISITED_PAGES = 10;
+
     private ?ActorType $actorType                       = null;
     private ?ActorAddressResponse $actorAddressResponse = null;
     public ?DateTimeImmutable $dob;
@@ -49,9 +52,8 @@ final class RequestActivationKey implements WorkflowState
         ?string $actorAddressResponse = null,
         public ?string $liveInUK = null,
         public ?string $actorAbroadAddress = null,
-        public ?bool $requestingAnother = null,
-        public ?bool $skippedPersonalDetails = null,
-        public ?bool $changingAnswer = null,
+        public ?bool $workflowPreviouslyCompleted = null,
+        public ?array $visitedPages = null,
     ) {
         if ($actorType !== null) {
             $this->setActorRole($actorType);
@@ -76,7 +78,7 @@ final class RequestActivationKey implements WorkflowState
     {
         $this->resetLpaSpecificDetails();
 
-        $this->requestingAnother = false;
+        $this->workflowPreviouslyCompleted = false;
 
         $this->firstNames = null;
         $this->lastName   = null;
@@ -92,30 +94,56 @@ final class RequestActivationKey implements WorkflowState
     public function resetForAnotherRequest(): void
     {
         $this->resetLpaSpecificDetails();
-
-        $this->requestingAnother = true;
     }
 
     /**
-     * When requesting another activation key a changed name means a different person, so the
-     * personal details given for the previous request no longer apply. An unchanged name means
-     * the date of birth and address pages are skipped.
+     * Once an activation key has been requested a changed name means a different person, so the
+     * personal details given for the previous request no longer apply.
      */
     public function updateName(string $firstNames, string $lastName): void
     {
-        if ($this->requestingAnother === true) {
-            if ($this->firstNames !== $firstNames || $this->lastName !== $lastName) {
-                $this->dob      = null;
-                $this->liveInUK = null;
-                $this->postcode = null;
-            }
+        if (
+            $this->workflowPreviouslyCompleted === true
+            && ($this->firstNames !== $firstNames || $this->lastName !== $lastName)
+        ) {
+            $this->dob      = null;
+            $this->liveInUK = null;
+            $this->postcode = null;
 
-            $this->skippedPersonalDetails = $this->postcode !== null;
+            $this->workflowPreviouslyCompleted = false;
         }
 
-        $this->firstNames        = $firstNames;
-        $this->lastName          = $lastName;
-        $this->requestingAnother = false;
+        $this->firstNames = $firstNames;
+        $this->lastName   = $lastName;
+    }
+
+    /**
+     * Records the pages the user has moved through so that the back link can follow the route
+     * they actually took. Returning to the page before the current one is treated as going back.
+     */
+    public function visitPage(string $page): void
+    {
+        $visited = $this->visitedPages ?? [];
+        $count   = count($visited);
+
+        if ($count > 0 && $visited[$count - 1] === $page) {
+            return;
+        }
+
+        if ($count > 1 && $visited[$count - 2] === $page) {
+            array_pop($visited);
+        } else {
+            $visited[] = $page;
+        }
+
+        $this->visitedPages = array_slice($visited, -self::MAX_VISITED_PAGES);
+    }
+
+    public function previousPage(): ?string
+    {
+        $count = count($this->visitedPages ?? []);
+
+        return $count > 1 ? $this->visitedPages[$count - 2] : null;
     }
 
     private function resetLpaSpecificDetails(): void
@@ -137,11 +165,10 @@ final class RequestActivationKey implements WorkflowState
         $this->noTelephone        = null;
         $this->addressOnPaper     = null;
 
-        $this->actorUid               = null;
-        $this->needsCleansing         = false;
-        $this->actorAddressResponse   = null;
-        $this->skippedPersonalDetails = false;
-        $this->changingAnswer         = false;
+        $this->actorUid             = null;
+        $this->needsCleansing       = false;
+        $this->actorAddressResponse = null;
+        $this->visitedPages         = null;
     }
 
     public function getActorRole(): ?ActorType
