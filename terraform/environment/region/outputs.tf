@@ -97,3 +97,7 @@ output "receive_events_sqs_queue_name" {
 output "vpc_id" {
   value = data.aws_vpc.main.id
 }
+
+output "cloudwatch_alarm_topic_arn" {
+  value = aws_sns_topic.cloudwatch_to_pagerduty.arn
+}
