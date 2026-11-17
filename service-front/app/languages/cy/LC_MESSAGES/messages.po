@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-17 11:23+0000\n"
+"PO-Revision-Date: 2026-11-17 14:01+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -63,9 +63,9 @@ msgid_plural "%count% active access codes"
 msgstr[0] "%count% cod mynediad actif"
 msgstr[1] "%count% cod mynediad actif"
 msgstr[2] "%count% god mynediad actif"
-msgstr[3] "%count% cod mynediad actif"
-msgstr[4] "%count% o godau mynediad actif"
-msgstr[5] "%count% o godau mynediad actif"
+msgstr[3] "%count% chod mynediad actif"
+msgstr[4] "%count% chod mynediad actif"
+msgstr[5] "%count% cod mynediad actif"
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:44
 msgid "No active access codes"
@@ -96,15 +96,15 @@ msgstr "Dileu’r LPA o fy nghyfrif"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:2
 msgid "This LPA has preferences or instructions. You might need to show organisations the paper LPA."
-msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys dymuniadau neu gyfarwyddiadau. Efallai y bydd angen i chi ddangos LPA bapur i sefydliadau."
+msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys dymuniadau neu gyfarwyddiadau. Efallai y bydd angen i chi ddangos <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i sefydliadau."
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:6
 msgid "This LPA has instructions. You might need to show organisations the paper LPA."
-msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys cyfarwyddiadau. Efallai y bydd angen i chi ddangos LPA bapur i sefydliadau."
+msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys cyfarwyddiadau. Efallai y bydd angen i chi ddangos yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i sefydliadau."
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:10
 msgid "This LPA has preferences. You might need to show organisations the paper LPA."
-msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys dymuniadau. Efallai y bydd angen i chi ddangos LPA bapur i sefydliadau."
+msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys dymuniadau. Efallai y bydd angen i chi ddangos yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i sefydliadau."
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:14
 msgid "This LPA has preferences and instructions."
@@ -1788,7 +1788,7 @@ msgstr "Ble i ddod o hyd i ddyddiad cofrestru’r LPA"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:31
 msgid "You can find the registration date on the letter that told you the LPA had been registered, or on the stamp on the first page of the paper LPA."
-msgstr "Mae’r dyddiad cofrestru i’w weld ar y llythyr a oedd yn dweud bod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> wedi cael ei chofrestru, neu ar y stamp ar dudalen gyntaf yr LPA bapur."
+msgstr "Mae’r dyddiad cofrestru i’w weld ar y llythyr a oedd yn dweud bod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> wedi cael ei chofrestru, neu ar y stamp ar dudalen gyntaf yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur."
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:32
 msgid "If you’re not sure when the LPA was registered, you can continue and we’ll check for you."
@@ -1801,7 +1801,7 @@ msgstr "Os cofrestrwyd yr LPA cyn 1 Medi 2019"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:43
 msgid "If the LPA was registered before 1 September 2019, you cannot get an activation key for it. If organisations want to see the LPA, show them the paper copy."
-msgstr "Os cofrestrwyd yr LPA cyn 1 Medi 2019, ni chewch dderbyn god actifadu ar ei chyfer. Os yw sefydliadau am weld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, dangoswch y copi papur iddynt."
+msgstr "Os cofrestrwyd yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> cyn 1 Medi 2019, ni chewch dderbyn cod actifadu ar ei chyfer. Os yw sefydliadau am weld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, dangoswch y copi papur iddynt."
 
 # Welsh says ‘Please let us know if a donor or attorney's details change’
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:47
@@ -2034,7 +2034,7 @@ msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:33
 msgid "Address on paper LPA"
-msgstr "Eich cyfeiriad ar yr LPA bapur"
+msgstr "Eich cyfeiriad ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:37
 msgid "Not sure"
@@ -2510,7 +2510,7 @@ msgstr "Rhowch ddyddiad geni’r rhoddwr"
 #: src/Actor/templates/actor/form-error-messages.html.twig:52
 msgctxt "error"
 msgid "Enter your address on the paper LPA"
-msgstr "Rhowch y cyfeiriad sydd ar yr atwrneiaeth arhosol bapur"
+msgstr "Rhowch y cyfeiriad sydd ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
 
 #. Add Older LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:53
@@ -2568,7 +2568,7 @@ msgstr "Os oes gan <abbr title=“atwrneiaeth arhosol”>LPA</abbr> ddymuniadau 
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:28
 msgid "You’ll need to show organisations the paper LPA if any part of your preferences and instructions cannot be read properly."
-msgstr "Bydd angen i chi ddangos yr LPA bapur i sefydliadau os na ellir darllen unrhyw ran o’ch dymuniadau a chyfarwyddiadau yn iawn."
+msgstr "Bydd angen i chi ddangos yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i sefydliadau os na ellir darllen unrhyw ran o’ch dymuniadau a chyfarwyddiadau yn iawn."
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:34
 msgid "Before giving organisations access to the LPA online, check that:"
@@ -2667,7 +2667,7 @@ msgstr "yw’r wybodaeth am driniaeth cynnal bywyd yn anghywir"
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:32
 msgid "the registration date or the date the donor signed the LPA are incorrect"
-msgstr "yw’r dyddiad cofrestru neu’r dyddiad y gwnaeth y rhoddwr lofnodi’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn anghywir"
+msgstr "yw’r dyddiad cofrestru neu’r dyddiad y gwnaeth y rhoddwr lofnodi’r LPA yn anghywir"
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:42
 msgid "your name"
@@ -2779,12 +2779,12 @@ msgstr "A oes angen newid manylion atwrnai?"
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:108
 #: src/Common/templates/partials/full-lpa-display.html.twig:108
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> details"
-msgstr "Manylion <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
+msgstr "Manylion yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:129
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:126
 msgid "If any scanned images are not readable, organisations may ask to see the paper LPA so that they can find out what the preferences or instructions are."
-msgstr "Os na ellir darllen unrhyw ddelwedd a sganiwyd, gall sefydliadau ofyn am gael gweld yr LPA bapur er mwyn gweld y dymuniadau a chyfarwyddiadau."
+msgstr "Os na ellir darllen unrhyw ddelwedd a sganiwyd, gall sefydliadau ofyn am gael gweld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur er mwyn gweld y dymuniadau a chyfarwyddiadau."
 
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:139
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:136
@@ -3418,7 +3418,7 @@ msgstr "Ni allwn ddangos y dymuniadau ar gyfer yr <abbr title=\"atwrneiaeth arho
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:54
 msgid "We cannot show the preferences for this LPA. Until we can fix this problem, if you need to see these you’ll need to ask the person who gave you the access code to show you the paper LPA."
-msgstr "Ni allwn ddangos y dymuniadau ar gyfer y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, os byddwch angen gweld y rhain bydd rhaid i chi ofyn i'r person a roddodd y cod mynediad i chi i weld yr LPA."
+msgstr "Ni allwn ddangos y dymuniadau ar gyfer y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, os byddwch angen gweld y rhain bydd rhaid i chi ofyn i'r person a roddodd y cod mynediad i chi i weld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:63
 msgid ""
@@ -3442,7 +3442,7 @@ msgstr "Ni allwn ddangos y cyfarwyddiadau ar gyfer yr Atwrneiaeth Arhosol hon. B
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:83
 msgid "We cannot show the instructions for this LPA. Until we can fix this problem, if you need to see these you\"ll need to ask the person who gave you the access code to show you the paper LPA."
-msgstr "Ni allwn ddangos y cyfarwyddiadau ar gyfer yr LPA hon. Hyd nes y gallwn ddatrys y broblem hon, os byddwch angen gweld y rhain, bydd rhaid i chi ofyn i'r person a roddodd y cod mynediad i chi i ddangos yr LPA bapur i chi."
+msgstr "Ni allwn ddangos y cyfarwyddiadau ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon. Hyd nes y gallwn ddatrys y broblem hon, os byddwch angen gweld y rhain, bydd rhaid i chi ofyn i'r person a roddodd y cod mynediad i chi ddangos yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i chi."
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:91
 msgid ""
@@ -3580,7 +3580,7 @@ msgstr "Lawrlwytho’r crynodeb hwn o’r <abbr title=\"atwrneiaeth arhosol\">LP
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:119
 #: src/Common/templates/partials/full-lpa-display.html.twig:119
 msgid "If any scanned images are not readable, ask the person who gave you the access code to show you the paper LPA."
-msgstr "Os na allwch ddarllen y ddelwedd a sganiwyd, gofynnwch i’r unigolyn a roddodd y cod mynediad i chi am gael gweld yr LPA bapur."
+msgstr "Os na allwch ddarllen y ddelwedd a sganiwyd, gofynnwch i’r unigolyn a roddodd y cod mynediad i chi am gael gweld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur."
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:148
 #: src/Common/templates/partials/full-lpa-display.html.twig:148
