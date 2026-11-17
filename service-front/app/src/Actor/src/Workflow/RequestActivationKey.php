@@ -110,21 +110,12 @@ final class RequestActivationKey implements WorkflowState
                 $this->postcode = null;
             }
 
-            $this->skippedPersonalDetails = $this->hasPersonalDetails();
+            $this->skippedPersonalDetails = $this->postcode !== null;
         }
 
         $this->firstNames        = $firstNames;
         $this->lastName          = $lastName;
         $this->requestingAnother = false;
-    }
-
-    public function hasPersonalDetails(): bool
-    {
-        return $this->firstNames !== null
-            && $this->lastName !== null
-            && $this->dob !== null
-            && $this->liveInUK !== null
-            && $this->postcode !== null;
     }
 
     private function resetLpaSpecificDetails(): void

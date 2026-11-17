@@ -165,54 +165,30 @@ class RequestActivationKeyTest extends TestCase
                     Assert::assertNull($sut->$key);
             }
         }
-
-        Assert::assertTrue($sut->hasPersonalDetails());
     }
 
-    public static function personalDetails(): array
+    private static function personalDetails(): array
     {
-        $complete = [
+        return [
             'firstNames' => 'John Henry',
             'lastName'   => 'Smith',
             'dob'        => '1955-11-05T00:00:00+00:00',
             'postcode'   => 'PO3 6BT',
             'liveInUK'   => 'Yes',
         ];
-
-        return [
-            'all details present'           => [
-                $complete,
-                true,
-            ],
-            'lives abroad with no postcode' => [
-                array_merge($complete, ['postcode' => '', 'liveInUK' => 'No']),
-                true,
-            ],
-            'missing date of birth'         => [
-                array_merge($complete, ['dob' => null]),
-                false,
-            ],
-        ];
-    }
-
-    #[DataProvider('personalDetails')]
-    #[Test]
-    public function it_knows_if_it_has_all_personal_details(array $data, bool $expected): void
-    {
-        $sut = new RequestActivationKey(...$data);
-
-        Assert::assertSame($expected, $sut->hasPersonalDetails());
     }
 
     #[Test]
     public function it_keeps_personal_details_when_the_same_name_is_given_for_another_request(): void
     {
-        $sut = new RequestActivationKey(...self::personalDetails()['all details present'][0]);
+        $sut = new RequestActivationKey(...self::personalDetails());
         $sut->resetForAnotherRequest();
 
         $sut->updateName('John Henry', 'Smith');
 
-        Assert::assertTrue($sut->hasPersonalDetails());
+        Assert::assertNotNull($sut->dob);
+        Assert::assertSame('Yes', $sut->liveInUK);
+        Assert::assertSame('PO3 6BT', $sut->postcode);
         Assert::assertTrue($sut->skippedPersonalDetails);
         Assert::assertFalse($sut->requestingAnother);
     }
@@ -237,7 +213,7 @@ class RequestActivationKeyTest extends TestCase
         string $firstNames,
         string $lastName,
     ): void {
-        $sut = new RequestActivationKey(...self::personalDetails()['all details present'][0]);
+        $sut = new RequestActivationKey(...self::personalDetails());
         $sut->resetForAnotherRequest();
 
         $sut->updateName($firstNames, $lastName);
@@ -247,7 +223,6 @@ class RequestActivationKeyTest extends TestCase
         Assert::assertNull($sut->dob);
         Assert::assertNull($sut->liveInUK);
         Assert::assertNull($sut->postcode);
-        Assert::assertFalse($sut->hasPersonalDetails());
         Assert::assertFalse($sut->skippedPersonalDetails);
         Assert::assertFalse($sut->requestingAnother);
     }
@@ -255,12 +230,12 @@ class RequestActivationKeyTest extends TestCase
     #[Test]
     public function it_keeps_personal_details_when_the_name_is_changed_outside_of_another_request(): void
     {
-        $sut = new RequestActivationKey(...self::personalDetails()['all details present'][0]);
+        $sut = new RequestActivationKey(...self::personalDetails());
 
         $sut->updateName('Jane', 'Jones');
 
         Assert::assertSame('Jane', $sut->firstNames);
-        Assert::assertTrue($sut->hasPersonalDetails());
+        Assert::assertSame('PO3 6BT', $sut->postcode);
         Assert::assertNull($sut->skippedPersonalDetails);
     }
 }

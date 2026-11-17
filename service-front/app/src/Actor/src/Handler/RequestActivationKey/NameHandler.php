@@ -74,7 +74,7 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
 
     public function nextPage(WorkflowState $state): string
     {
-        return $state->hasPersonalDetails() ? 'lpa.check-answers' : 'lpa.date-of-birth';
+        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.date-of-birth';
     }
 
     public function lastPage(WorkflowState $state): string
