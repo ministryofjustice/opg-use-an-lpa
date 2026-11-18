@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-17 14:01+0000\n"
+"PO-Revision-Date: 2026-11-17 15:06+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
@@ -2401,7 +2401,7 @@ msgstr "Check your date of birth is correct – you cannot be an attorney or a d
 #: src/Actor/templates/actor/form-error-messages.html.twig:32
 msgctxt "error"
 msgid "Select if you have an activation key to add an LPA"
-msgstr "Select if you have an activation key to add an LPA"
+msgstr "Select if you have an activation key to add an <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:33
