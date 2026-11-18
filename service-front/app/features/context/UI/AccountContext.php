@@ -383,7 +383,7 @@ class AccountContext implements Context
     #[When('/^I navigate to the actor cookies page$/')]
     public function iNavigateToTheActorCookiesPage(): void
     {
-        $this->ui->clickLink('cookie policy');
+        $this->followContentLink('/cookies');
     }
 
     #[When('/^I attempt to login to my deleted account$/')]
@@ -411,7 +411,7 @@ class AccountContext implements Context
     #[When('/^I request to see the actor privacy notice$/')]
     public function iRequestToSeeTheActorPrivacyNoticePage(): void
     {
-        $this->ui->clickLink('privacy notice');
+        $this->followContentLink('/privacy-notice');
     }
 
     #[When('/^I request to see the actor terms of use$/')]
@@ -722,13 +722,13 @@ class AccountContext implements Context
     public function iSeeTheLPADashboardWithAnyLPAsInAccount(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
-        $this->ui->clickLink('Add another LPA');
+        $this->ui->clickLink($this->translatedText('dashboard.home.button-add-another-lpa', context: 'html'));
     }
 
     #[Then('/I see an empty LPA dashboard$/')]
     public function iSeeAnEmptyLPADashboard(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
-        $this->ui->clickLink('Add your first LPA');
+        $this->ui->clickLink($this->translatedText('dashboard.home.button-add-first-lpa', context: 'html'));
     }
 }
