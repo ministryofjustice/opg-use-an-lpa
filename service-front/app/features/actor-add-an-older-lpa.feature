@@ -84,15 +84,17 @@ Feature: Add an older LPA
   @ui
   Scenario: A different person is asked for their date of birth and address when requesting another activation key
     Given I have successfully requested an activation key
-    When I request another activation key
-    And I enter the reference number of another LPA
+    And I request another activation key
+    When I enter the reference number of another LPA
     And I change the name to a different person
     And I continue from the your name page
     Then I am asked for my date of birth without it being filled in
-    When I provide the date of birth of the different person
-    Then I am asked where I currently live without it being filled in
+    
+    Given I provide the date of birth of the different person
+    And I am asked where I currently live without it being filled in
     When I provide the postcode of the different person
     Then I am asked to check my answers for the different person
+    
     When I request to go back
     Then I am taken back to the postcode page where I can see my answers and change them
 
