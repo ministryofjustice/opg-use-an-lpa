@@ -46,6 +46,7 @@ Feature: Add an older LPA
     When I request to go back and change my <answer>
     And <change>
     Then I am on the check your answers page
+    
     When I request to go back
     Then I am taken back to the postcode page
 
