@@ -747,6 +747,95 @@ class ResolveOAuthUserTest extends TestCase
     }
 
     #[Test]
+    public function it_should_use_the_account_that_wins_a_race_against_the_orphan_migration(): void
+    {
+        $original = [
+            'Id'    => 'existing-id',
+            'Email' => 'user@example.com',
+        ];
+        $winner   = [
+            'Id'       => 'winner-id',
+            'Email'    => 'user@example.com',
+            'Identity' => 'subject',
+        ];
+
+        $users = $this->createMock(UserService::class);
+        $users->expects(self::exactly(3))
+            ->method('getByIdentity')
+            ->willReturnOnConsecutiveCalls(
+                self::throwException(new NotFoundException()),
+                self::throwException(new NotFoundException()),
+                $winner,
+            );
+        $users->method('getByEmail')->willReturn($original);
+        $users->expects(self::never())->method('add');
+        $users->expects(self::never())->method('addWithOrphanIdentityBypass');
+
+        $repository = $this->createMock(ActorUsersInterface::class);
+        $repository->expects(self::exactly(2))
+            ->method('migrateToOAuth')
+            ->willThrowException(new ConflictException('', ['identity' => 'subject']));
+        $repository->expects(self::once())->method('recordSuccessfulLogin')->with('winner-id');
+
+        $clock = $this->createStub(ClockInterface::class);
+        $clock->method('now')->willReturn(new DateTimeImmutable());
+
+        $resolver = new ResolveOAuthUser(
+            $repository,
+            $users,
+            $this->createStub(RecoverAccount::class),
+            $clock,
+            $this->createStub(LoggerInterface::class),
+        );
+
+        self::assertSame($winner, $resolver('subject', 'user@example.com'));
+    }
+
+    #[Test]
+    public function it_should_rethrow_a_repeated_migration_conflict_when_no_account_holds_the_identity(): void
+    {
+        $original = [
+            'Id'    => 'existing-id',
+            'Email' => 'user@example.com',
+        ];
+        $error    = new ConflictException('', ['identity' => 'subject']);
+
+        $users = $this->createMock(UserService::class);
+        $users->method('getByIdentity')->willThrowException(new NotFoundException());
+        $users->method('getByEmail')->willReturn($original);
+        $users->expects(self::never())->method('add');
+        $users->expects(self::never())->method('addWithOrphanIdentityBypass');
+
+        $repository = $this->createMock(ActorUsersInterface::class);
+        $repository->expects(self::exactly(2))
+            ->method('migrateToOAuth')
+            ->willReturnCallback(function (
+                array $user,
+                string $identity,
+                bool $ignoreOrphanIdentity = false,
+            ) use ($error): array {
+                if ($ignoreOrphanIdentity) {
+                    throw $error;
+                }
+
+                throw new ConflictException('', ['identity' => $identity]);
+            });
+        $repository->expects(self::never())->method('recordSuccessfulLogin');
+
+        $resolver = new ResolveOAuthUser(
+            $repository,
+            $users,
+            $this->createStub(RecoverAccount::class),
+            $this->createStub(ClockInterface::class),
+            $this->createStub(LoggerInterface::class),
+        );
+
+        $this->expectExceptionObject($error);
+
+        $resolver('subject', 'user@example.com');
+    }
+
+    #[Test]
     public function it_should_use_the_account_that_wins_a_race_against_the_orphan_takeover(): void
     {
         $winner = [
