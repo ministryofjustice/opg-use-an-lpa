@@ -50,6 +50,7 @@ Feature: Check your answers before requesting an activation key
     When I request to go back and change my <answer>
     And I request to go back
     Then I am on the check your answers page
+    
     When I request to go back
     Then I am taken back to the postcode page where I can see my answers and change them
 
