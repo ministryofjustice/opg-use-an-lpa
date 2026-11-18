@@ -37,6 +37,7 @@ Use this workflow when converting a `service-front` Twig template to explicit tr
 - For fully qualified external URLs (for example `https://www.gov.uk/...`), do not use placeholders: write the URL directly into the translation value, use context `html`, and note in the translator notes that link destinations must be preserved.
 - Use an `html` context and a short note for a hint that contains HTML such as line breaks. Capture the translated value in Twig when the consuming form helper needs a string value.
 - Do not put dynamic route generation or application logic into a translation value.
+- Keep the template readable: separate each section with a blank line. A section is a heading with the content block it introduces, a standalone content block, a warning or other component, a partial include, or a button group. Keep a heading directly above its content block without a blank line between them. Retain any existing blank lines, and use spaces rather than tabs to indent lines you change.
 
 Example content block:
 
@@ -44,6 +45,23 @@ Example content block:
 {% trans with {'%link%': path('contact-us')} %}
     feature.page.content-details
 {% context %}html-link{% notes %}Contains GOV.UK HTML markup and a contact-us link using the %link% placeholder.{% endtrans %}
+```
+
+Example section spacing:
+
+```twig
+<h1 class="govuk-heading-xl">{% trans %}feature.page.heading-page{% endtrans %}</h1>
+
+{% trans %}
+    feature.page.content-intro
+{% context %}html{% notes %}Contains GOV.UK HTML elements and classes.{% endtrans %}
+
+<h2 class="govuk-heading-m">{% trans %}feature.page.heading-details{% endtrans %}</h2>
+{% trans %}
+    feature.page.content-details
+{% context %}html{% notes %}Contains GOV.UK HTML elements and classes.{% endtrans %}
+
+{{ include('@partials/contact-details/email.html.twig') }}
 ```
 
 ## Help the translator
