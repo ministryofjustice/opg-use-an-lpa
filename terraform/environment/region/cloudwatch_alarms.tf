@@ -345,6 +345,45 @@ resource "aws_cloudwatch_metric_alarm" "high_task_memory" {
   provider      = aws.region
 }
 
+resource "aws_cloudwatch_metric_alarm" "dynamodb_read_capacity_anomaly" {
+  for_each                  = var.dynamodb_tables
+  alarm_name                = "${var.environment_name}-${each.key}-read-capacity-anomaly"
+  alarm_description         = "DynamoDB read consumption anomaly."
+  actions_enabled           = var.dynamodb_alarms_enabled
+  comparison_operator       = "GreaterThanUpperThreshold"
+  evaluation_periods        = 3
+  datapoints_to_alarm       = 2
+  threshold_metric_id       = "expected"
+  treat_missing_data        = "notBreaching"
+  insufficient_data_actions = []
+  alarm_actions             = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  ok_actions                = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+
+  metric_query {
+    id          = "reads"
+    return_data = true
+
+    metric {
+      metric_name = "ConsumedReadCapacityUnits"
+      namespace   = "AWS/DynamoDB"
+      period      = 300
+      stat        = "Sum"
+      dimensions = {
+        TableName = each.value.name
+      }
+    }
+  }
+
+  metric_query {
+    id          = "expected"
+    expression  = "ANOMALY_DETECTION_BAND(reads, 2)"
+    label       = "Expected DynamoDB read consumption"
+    return_data = true
+  }
+
+  provider = aws.region
+}
+
 resource "aws_cloudwatch_metric_alarm" "cpu_usage_anomaly" {
   for_each            = local.ecs_services
   actions_enabled     = false
