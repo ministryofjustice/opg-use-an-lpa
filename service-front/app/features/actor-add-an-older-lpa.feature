@@ -25,14 +25,17 @@ Feature: Add an older LPA
     When I request another activation key
     And I enter the reference number of another LPA
     Then I can see my name has already been filled in
-    When I request to go back
-    Then I can see the reference number of the other LPA
+    
+    Given I request to go back
+    And I can see the reference number of the other LPA
     When I enter the reference number of another LPA
     And I continue from the your name page
     Then I am asked to check my answers for the other LPA
-    When I request to go back and change my date of birth
-    And I request to go back
+    
+    Given I request to go back and change my date of birth
+    When I request to go back
     Then I am asked to check my answers for the other LPA
+    
     When I request to go back
     Then I can see my name has already been filled in
 
