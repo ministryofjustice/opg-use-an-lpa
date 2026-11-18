@@ -53,6 +53,7 @@ map $http_user_agent $samesite_strip {
 server {
     listen        8080 default_server;
     server_name   _;
+    http2 off;
     server_tokens off;
 
     error_log  /var/log/nginx/error.log "warn";
@@ -140,6 +141,7 @@ server {
 server {
     listen      8000 default_server;
     server_name _;
+    http2 off;
 
     access_log off;
 
@@ -168,6 +170,7 @@ server {
 server {
     listen      8081 default_server;
     server_name _;
+    http2 off;
 
     location /_csp_response {
         access_log off;

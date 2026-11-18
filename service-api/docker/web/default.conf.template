@@ -32,6 +32,7 @@ map $http_x_amzn_trace_id $trace_id {
 server {
     listen       8080 default_server;
     server_name  _;
+    http2 off;
     server_tokens off;
 
     error_log /var/log/nginx/error.log "warn";
