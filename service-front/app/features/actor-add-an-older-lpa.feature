@@ -77,6 +77,7 @@ Feature: Add an older LPA
     When I request another activation key
     And I enter the reference number of another LPA
     Then I can see my name has already been filled in
+    
     When I continue from the your name page
     Then I am asked to check my answers for the other LPA
 
