@@ -63,6 +63,7 @@ Feature: Add an older LPA
     And I change the name to a different person
     And I continue from the your name page
     Then I am on the check your answers page
+    
     When I request to go back
     Then I am taken back to the postcode page
 
