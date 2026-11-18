@@ -91,6 +91,11 @@ variable "dns_namespace_env" {
   type        = string
 }
 
+variable "dynamodb_alarms_enabled" {
+  description = "Whether to create DynamoDB alarms."
+  type        = bool
+}
+
 variable "dynamodb_tables" {
   description = "The DynamoDB tables to use."
   type = map(object({

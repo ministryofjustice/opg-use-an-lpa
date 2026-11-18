@@ -92,6 +92,7 @@ variable "environments" {
       deploy_opentelemetry_sidecar                     = bool
       fargate_spot                                     = bool
       unused_accounts_lambda                           = bool
+      dynamodb_alarms_enabled                          = bool
       application_flags = object({
         allow_meris_lpas       = bool
         support_datastore_lpas = bool
