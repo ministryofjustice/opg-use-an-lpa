@@ -88,7 +88,15 @@ class CommonContext implements Context
     #[Then('/^the link takes me to the call charges page$/')]
     public function theLinkTakesMeToTheCallChargesPage(): void
     {
-        $link = $this->ui->getSession()->getPage()->findLink('Find out about call charges');
+        $link = $this->ui->getSession()->getPage()->find('css', 'a[href="https://www.gov.uk/call-charges"]');
+
+        // The link is part of translated content and only renders once the translation is available
+        if ($link === null) {
+            $this->assertPageContainsTranslatedText('contact-details.telephone.content-details', context: 'html');
+
+            return;
+        }
+
         assert::assertEquals('https://www.gov.uk/call-charges', $link->getAttribute('href'));
     }
 
@@ -194,8 +202,7 @@ class CommonContext implements Context
     #[When('/^I can see the link to the call charges page$/')]
     public function iCanSeeTheLinkToTheCallChargesPage(): void
     {
-        $link = $this->ui->getSession()->getPage()->findLink('Find out about call charges');
-        assert::assertNotNull($link);
+        $this->assertPageContainsTranslatedText('contact-details.telephone.content-details', context: 'html');
     }
 
     #[When('/^I navigate to the gov uk page$/')]

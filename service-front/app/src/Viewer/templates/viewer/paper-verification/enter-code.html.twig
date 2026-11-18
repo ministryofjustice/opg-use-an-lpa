@@ -1,6 +1,6 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block page_title %}{% trans %}Enter the LPA access or paper verification code{% endtrans %}{% endblock %}
+{% block page_title %}{% trans %}view-lpa.enter-code-paper-verification.title{% endtrans %}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -16,65 +16,60 @@
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                             <h1 class="govuk-fieldset__heading">
-                                {% trans %}Enter the LPA access or paper verification code{% endtrans %}
+                                {% trans %}
+                                    view-lpa.enter-code-paper-verification.heading-page
+                                {% context %}html{% notes %}Contains an abbr element for LPA. Preserve the HTML when translating.{% endtrans %}
                             </h1>
                         </legend>
 
                         <details id="what-are-access-codes-reveal" class="govuk-details" data-gaEventType="onClick" data-gaAction="AccessCodeReveal" data-gaCategory="Details" data-gaLabel="What are LPA access and paper verification codes?">
                             <summary class="govuk-details__summary">
                                 <span class="govuk-details__summary-text">
-                                    {% trans %}What are LPA access and paper verification codes?{% endtrans %}
+                                    {% trans %}
+                                        view-lpa.enter-code-paper-verification.reveal-code-types-title
+                                    {% context %}html{% notes %}Contains an abbr element for LPA. Preserve the HTML when translating.{% endtrans %}
                                 </span>
                             </summary>
                             <div class="govuk-details__text">
-                                <p class="govuk-body">
-                                    {% trans %}These are codes given to you by the donor or an attorney named on a lasting power of attorney.{% endtrans %}
-                                </p>
-                                <h3 class="govuk-heading-s">{% trans %}Access codes{% endtrans %}</h3>
-                                <p class="govuk-body">
-                                    {% trans %}Donors and attorneys request these codes online, using their Use a lasting power of attorney account.{% endtrans %}
-                                </p>
-                                <h3 class="govuk-heading-s">{% trans %}Paper verification codes{% endtrans %}</h3>
-                                <p class="govuk-body">
-                                    {% trans %}These codes are posted to donors and attorneys who do not want to use an LPA online. Each code
-                                    is unique to the person who received it When you are  given a paper verification code to view the LPA,
-                                    you should also be given the:{% endtrans %}
-                                    <ul class="list list-bullet">
-                                        <li>{% trans %}LPA reference number this will be on any letters we’ve sent to the donor or attorneys{% endtrans %}</li>
-                                        <li>{% trans %}date of birth of the person who the paper verification code was sent to{% endtrans %}</li>
-                                        <li>{% trans %}number of attorneys named on the notice of registration{% endtrans %}</li>
-                                        <li>{% trans %}name of 1 attorney named on the notice of registration{% endtrans %}</li>
-                                    </ul>
-                                </p>
+                                {% trans %}
+                                    view-lpa.enter-code-paper-verification.reveal-code-types-content
+                                {% context %}html{% notes %}Contains GOV.UK paragraph, heading and list elements and classes, and abbr elements for LPA. Preserve the HTML structure and classes when translating.{% endtrans %}
                             </div>
                         </details>
 
                         {{ govuk_form_element(form.get('donor_surname'), {
-                              'label': 'Donor’s last name' | trans
+                              'label': 'view-lpa.enter-code-paper-verification.field-donor-surname.label' | trans
                         }) }}
 
+                        {% set lpaCodeHint %}
+                            {% trans %}
+                                view-lpa.enter-code-paper-verification.field-lpa-code.hint
+                            {% context %}html{% notes %}Contains an HTML line break. Preserve the line break and markup when translating.{% endtrans %}
+                        {% endset %}
+
                         {{ govuk_form_element(form.get('lpa_code'), {
-                               'label': 'LPA access or paper verification code' | trans,
-                               'hint': 'Access codes start with a V. For example, V-AB12-CD34-EF56.<br/>Paper verification codes start with a P. For example, P-AB12-CD34-EF56-G7' | trans
+                               'label': 'view-lpa.enter-code-paper-verification.field-lpa-code.label' | trans,
+                               'hint': lpaCodeHint
                         }) }}
 
                         <details id="access-code-reveal" class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="AccessCodeReveal" data-gaCategory="Details" data-gaLabel="The code I\'ve been given does not start with V or P.">
                             <summary class="govuk-details__summary" role="button" >
                                 <span class="govuk-details__summary-text">
-                                    {% trans %}The code I’ve been given does not start with V or P.{% endtrans %}
+                                    {% trans %}view-lpa.enter-code-paper-verification.reveal-wrong-code-title{% endtrans %}
                                 </span>
                             </summary>
                             <div class="govuk-details__text">
-                                <p class="govuk-body">
-                                    {% trans %}The donor or attorney may have given you the wrong code. Ask them to check the
-                                    code they’ve given you is correct.{% endtrans %}
-                                </p>
+                                {% trans %}
+                                    view-lpa.enter-code-paper-verification.reveal-wrong-code-content
+                                {% context %}html{% notes %}Contains a GOV.UK paragraph element and class. Preserve the HTML structure and classes when translating.{% endtrans %}
                             </div>
                         </details>
 
-                        <p class="govuk-body">{% trans with {'%link%': path('terms-of-use')} %}By continuing you agree to our <a href="%link%" target="_blank" class="govuk-link" rel="noreferrer noopener">terms of use (opens in new tab)</a>.{% endtrans %}</p>
+                        {% trans with {'%link%': path('terms-of-use')} %}
+                            view-lpa.enter-code-paper-verification.content-terms
+                        {% context %}html-link{% notes %}Contains a GOV.UK paragraph element and a terms of use link, opening in a new tab, using the %link% placeholder. Preserve the HTML, link attributes and placeholder when translating.{% endtrans %}
 
-                        <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+                        <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}common.button-continue{% endtrans %}</button>
 
                     </fieldset>
 

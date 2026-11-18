@@ -88,9 +88,11 @@ trait BaseUiContextTrait
      * Additionally, if you give it text that is not a translation key this will silently succeed as the default
      * behaviour of gettext it to return the key if no translation is found.
      *
-     * @param string $text The full translation key of a piece of text
-     * @param array  $replacements An array of replacement tokens to be substituted into the translation
-     * @param int    $count The number items to pluralise the translation with
+     * @param string      $text The full translation key of a piece of text
+     * @param array       $replacements An array of replacement tokens to be substituted into the translation
+     * @param string|null $context The gettext context of the translation, e.g. "html"
+     * @param int|null    $count The number items to pluralise the translation with
+     * @param string|null $plural The plural translation key, required when pluralising
      * @return void
      * @throws ExpectationException
      */
@@ -99,10 +101,47 @@ trait BaseUiContextTrait
         array $replacements = [],
         ?string $context = null,
         ?int $count = null,
+        ?string $plural = null,
     ): void {
-        $tt = $this->base->translator->translate($text, $replacements, context: $context, count: $count);
+        $tt = $this->translatedText($text, $replacements, $context, $count, $plural);
 
         $this->ui->assertSession()->pageTextContains($tt);
+    }
+
+    /**
+     * Translates a key into the text a user would see on the page. Translations with an "html" gettext context
+     * have their markup (e.g. abbr elements) removed so that they can be compared to page text or used to find
+     * links and buttons.
+     *
+     * @param string      $text The full translation key of a piece of text
+     * @param array       $replacements An array of replacement tokens to be substituted into the translation
+     * @param string|null $context The gettext context of the translation, e.g. "html"
+     * @param int|null    $count The number items to pluralise the translation with
+     * @param string|null $plural The plural translation key, required when pluralising
+     */
+    public function translatedText(
+        string $text,
+        array $replacements = [],
+        ?string $context = null,
+        ?int $count = null,
+        ?string $plural = null,
+    ): string {
+        $translated = $this->base->translator->translate(
+            $text,
+            $replacements,
+            context: $context,
+            plural: $plural,
+            count: $count,
+        );
+
+        if ($context === null || !str_starts_with($context, 'html')) {
+            return $translated;
+        }
+
+        // Block level elements render as whitespace, and page text is compared with whitespace collapsed
+        $text = strip_tags(str_replace(['</p>', '<br>', '<br/>', '</li>'], ' ', $translated));
+
+        return trim(preg_replace('/\s+/u', ' ', $text));
     }
 
     /**
@@ -110,20 +149,45 @@ trait BaseUiContextTrait
      *
      * With all the same conditions and downsides.
      *
-     * @param string $text The full translation key of a piece of text
-     * @param array $replacements An array of replacement tokens to be substituted into the translation
-     * @param int $count The number items to pluralise the translation with
+     * @param string      $text The full translation key of a piece of text
+     * @param array       $replacements An array of replacement tokens to be substituted into the translation
+     * @param string|null $context The gettext context of the translation, e.g. "html"
+     * @param int|null    $count The number items to pluralise the translation with
+     * @param string|null $plural The plural translation key, required when pluralising
      * @return void
      * @throws ExpectationException
- */
+     */
     public function assertPageNotContainsTranslatedText(
         string $text,
         array $replacements = [],
+        ?string $context = null,
         ?int $count = null,
+        ?string $plural = null,
     ): void {
-        $tt = $this->base->translator->translate($text, $replacements, count: $count);
+        $tt = $this->translatedText($text, $replacements, $context, $count, $plural);
 
         $this->ui->assertSession()->pageTextNotContains($tt);
+    }
+
+    /**
+     * Follows a link held within translated page content.
+     *
+     * Links that are part of a translated content block are only rendered once the translation is available. Until
+     * then the content renders as its translation key, so the link destination is visited directly instead.
+     *
+     * @param string $href The link destination as it appears in the href attribute
+     */
+    public function followContentLink(string $href): void
+    {
+        $link = $this->ui->getSession()->getPage()->find('css', sprintf('main a[href="%s"]', $href));
+
+        if ($link !== null) {
+            $link->click();
+
+            return;
+        }
+
+        $this->ui->visit($href);
     }
 
     /**

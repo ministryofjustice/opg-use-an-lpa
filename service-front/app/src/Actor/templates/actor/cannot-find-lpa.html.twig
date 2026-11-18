@@ -1,29 +1,29 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Cannot find LPA{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}request-activation-key.lpa-not-found.title{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path('lpa.check-answers') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+            <a href="{{ path('lpa.check-answers') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}common.back-link{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-xl" data-content-id="h.cannot-find-lpa">{% trans %}We could not find a lasting power of attorney{% endtrans %}</h1>
-                    <p class="govuk-body">{% trans %}This could be because:{% endtrans %}</p>
+                    <h1 class="govuk-heading-xl" data-content-id="h.cannot-find-lpa">{% trans %}request-activation-key.lpa-not-found.heading-page{% endtrans %}</h1>
 
-                    <ul class="govuk-list govuk-list--bullet">
-                        <li>{% trans %}the LPA reference number you entered is incorrect{% endtrans %}</li>
-                        <li>{% trans %}some of the details you entered about yourself do not match our records{% endtrans %}</li>
-                    </ul>
+                    {% trans %}
+                        request-activation-key.lpa-not-found.content-reasons
+                    {% context %}html{% notes %}Contains GOV.UK HTML elements and classes. Preserve the HTML structure and classes when translating.{% endtrans %}
 
-                    <h3 class="govuk-heading-m">{% trans %}Your answers{% endtrans %}</h3>
+                    <h3 class="govuk-heading-m">{% trans %}request-activation-key.lpa-not-found.heading-your-answers{% endtrans %}</h3>
                     <dl class="govuk-summary-list govuk-summary-list">
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
-                                {% trans %}LPA reference number{% endtrans %}
+                                {% trans %}
+                                    request-activation-key.lpa-not-found.label-lpa-reference-number
+                                {% context %}html{% notes %}Contains an abbr element for LPA. Preserve the HTML when translating.{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
                                 {{ lpa_reference_number }}
@@ -31,7 +31,7 @@
                         </div>
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
-                                {% trans %}Name{% endtrans %}
+                                {% trans %}request-activation-key.lpa-not-found.label-name{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
                                 {{ first_name ~ ' ' ~  last_name }}
@@ -39,7 +39,7 @@
                         </div>
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
-                                {% trans %}Date of birth{% endtrans %}
+                                {% trans %}request-activation-key.lpa-not-found.label-dob{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
                                 {{ code_date(dob) }}
@@ -48,7 +48,7 @@
                         {% if live_in_uk == 'Yes' %}
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
-                                    {% trans %}Postcode{% endtrans %}
+                                    {% trans %}request-activation-key.lpa-not-found.label-postcode{% endtrans %}
                                 </dt>
                                 <dd class="govuk-summary-list__value">
                                     {{ postcode }}
@@ -57,16 +57,18 @@
                         {% else %}
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
-                                    {% trans %}Do you live in the UK?{% endtrans %}
+                                    {% trans %}request-activation-key.lpa-not-found.label-live-in-uk{% endtrans %}
                                 </dt>
                                 <dd class="govuk-summary-list__value">
-                                    {% trans %}No{% endtrans %}
+                                    {% trans %}request-activation-key.lpa-not-found.value-live-in-uk-no{% endtrans %}
                                 </dd>
                             </div>
                         {% endif %}
                     </dl>
 
-                    <p class="govuk-body">{% trans %}If you’re sure you entered the correct information, contact us.{% endtrans %}</p>
+                    {% trans %}
+                        request-activation-key.lpa-not-found.content-contact-us
+                    {% context %}html{% notes %}Contains a GOV.UK paragraph element and class. Preserve the HTML structure and classes when translating.{% endtrans %}
 
                     {{ include('@partials/contact-details/email.html.twig') }}
 
@@ -76,12 +78,12 @@
                         <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'}) }}" role="button"
                            draggable="false" class="govuk-button moj-button-menu__item  "
                            data-module="govuk-button">
-                            {% trans %}Try again{% endtrans %}
+                            {% trans %}request-activation-key.lpa-not-found.button-try-again{% endtrans %}
                         </a>
                         <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
                            class="govuk-button moj-button-menu__item govuk-button--secondary "
                            data-module="govuk-button">
-                            {% trans %}Back to your LPAs{% endtrans %}
+                            {% trans %}common.button-back-to-your-lpas{% endtrans %}
                         </a>
                     </div>
                 </div>
