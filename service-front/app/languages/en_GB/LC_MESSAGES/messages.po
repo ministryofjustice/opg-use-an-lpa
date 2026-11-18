@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-13 15:09+0000\n"
+"PO-Revision-Date: 2026-11-17 14:01+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
@@ -92,15 +92,15 @@ msgstr "Remove LPA"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:2
 msgid "This LPA has preferences or instructions. You might need to show organisations the paper LPA."
-msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences or instructions. You might need to show organisations the paper LPA."
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences or instructions. You might need to show organisations the paper <abbr title=\"lasting power of attorney\">LPA</abbr>."
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:6
 msgid "This LPA has instructions. You might need to show organisations the paper LPA."
-msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has instructions. You might need to show organisations the paper LPA."
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has instructions. You might need to show organisations the paper <abbr title=\"lasting power of attorney\">LPA</abbr>."
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:10
 msgid "This LPA has preferences. You might need to show organisations the paper LPA."
-msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences. You might need to show organisations the paper LPA."
+msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences. You might need to show organisations the paper <abbr title=\"lasting power of attorney\">LPA</abbr>."
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:14
 msgid "This LPA has preferences and instructions."
@@ -849,7 +849,7 @@ msgstr "Any lasting power of attorney (LPA) you add to your account will appear 
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:24
 msgid "Find out about <a href=\"%link1%\" class=\"govuk-link\">managing LPAs</a> and how attorneys should support donors <a href=\"%link2%\" class=\"govuk-link\">to make decisions</a>."
-msgstr "Find out about <a href=\"%link1%\" class=\"govuk-link\">managing LPAs</a> and how attorneys should support donors <a href=\"%link2%\" class=\"govuk-link\">to make decisions</a>."
+msgstr "Find out how to <a href=\"%link1%\" class=\"govuk-link\">prove you’re an attorney on an LPA</a> and how to use it."
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:34
 msgid "What can I do with this service?"
@@ -1773,7 +1773,7 @@ msgstr "Where to find the LPA registration date"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:31
 msgid "You can find the registration date on the letter that told you the LPA had been registered, or on the stamp on the first page of the paper LPA."
-msgstr "You can find the registration date on the letter that told you the LPA had been registered, or on the stamp on the first page of the paper LPA."
+msgstr "You can find the registration date on the letter that told you the <abbr title=\"lasting power of attorney\">LPA</abbr> had been registered, or on the stamp on the first page of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>."
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:32
 msgid "If you’re not sure when the LPA was registered, you can continue and we’ll check for you."
@@ -1785,7 +1785,7 @@ msgstr "LPAs registered before 1 September 2019"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:43
 msgid "If the LPA was registered before 1 September 2019, you cannot get an activation key for it. If organisations want to see the LPA, show them the paper copy."
-msgstr "If the LPA was registered before 1 September 2019, you cannot get an activation key for it. If organisations want to see the LPA, show them the paper copy."
+msgstr "If the <abbr title=\"lasting power of attorney\">LPA</abbr> was registered before 1 September 2019, you cannot get an activation key for it. If organisations want to see the <abbr title=\"lasting power of attorney\">LPA</abbr>, show them the paper copy."
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:47
 msgid "Let us know if your details have changed"
@@ -1947,7 +1947,7 @@ msgstr "If you do not have the paper <abbr title=\"lasting power of attorney\">L
 
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:18
 msgid "What is your address on the paper LPA?"
-msgstr "What is your address on the paper LPA?"
+msgstr "What is your address on the paper <abbr title=\"lasting power of attorney\">LPA</abbr>?"
 
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:3
 msgid "What is your current postcode?"
@@ -2015,7 +2015,7 @@ msgstr "Change<span class=\"govuk-visually-hidden\"> address</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:33
 msgid "Address on paper LPA"
-msgstr "Your address on paper LPA"
+msgstr "Your address on paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:37
 msgid "Not sure"
@@ -2491,7 +2491,7 @@ msgstr "Enter the donor's date of birth"
 #: src/Actor/templates/actor/form-error-messages.html.twig:52
 msgctxt "error"
 msgid "Enter your address on the paper LPA"
-msgstr "Enter your address on the paper LPA"
+msgstr "Enter your address on the paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #. Add Older LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:53
@@ -2549,7 +2549,7 @@ msgstr "If an <abbr title=\"lasting power of attorney\">LPA</abbr> has preferenc
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:28
 msgid "You’ll need to show organisations the paper LPA if any part of your preferences and instructions cannot be read properly."
-msgstr "You’ll need to show organisations the paper LPA if any part of your preferences and instructions cannot be read properly."
+msgstr "You’ll need to show organisations the paper <abbr title=\"lasting power of attorney\">LPA</abbr> if any part of your preferences and instructions cannot be read properly."
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:34
 msgid "Before giving organisations access to the LPA online, check that:"
@@ -2569,7 +2569,7 @@ msgstr "any continuation sheets you used are not missing"
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:59
 msgid "I do not have the paper LPA"
-msgstr "I do not have the paper LPA"
+msgstr "I do not have the paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:63
 msgid "When an LPA is registered, we post the LPA to either:"
@@ -2668,7 +2668,7 @@ msgstr "Back to GOV.UK"
 
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:10
 msgid "We've already sent you an activation key for this LPA"
-msgstr "We've already sent you an activation key for this LPA"
+msgstr "We've already sent you an activation key for this <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:14
 msgid "If you've lost the letter, you can ask for a new key. This will cancel the key we sent you before."
@@ -2764,7 +2764,7 @@ msgstr "<abbr title=\"lasting power of attorney\">LPA</abbr> details"
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:129
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:126
 msgid "If any scanned images are not readable, organisations may ask to see the paper LPA so that they can find out what the preferences or instructions are."
-msgstr "If any scanned images are not readable, organisations may ask to see the paper LPA so that they can find out what the preferences or instructions are."
+msgstr "If any scanned images are not readable, organisations may ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr> so that they can find out what the preferences or instructions are."
 
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:139
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:136
@@ -3399,7 +3399,7 @@ msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:54
 msgid "We cannot show the preferences for this LPA. Until we can fix this problem, if you need to see these you’ll need to ask the person who gave you the access code to show you the paper LPA."
-msgstr "We cannot show the preferences for this LPA. Until we can fix this problem, if you need to see these you’ll need to ask the person who gave you the access code to show you the paper LPA."
+msgstr "We cannot show the preferences for this <abbr title=\"lasting power of attorney\">LPA</abbr>. Until we can fix this problem, if you need to see these you’ll need to ask the person who gave you the access code to show you the paper <abbr title=\"lasting power of attorney\">LPA</abbr>."
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:63
 msgid ""
@@ -3431,7 +3431,7 @@ msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:83
 msgid "We cannot show the instructions for this LPA. Until we can fix this problem, if you need to see these you\"ll need to ask the person who gave you the access code to show you the paper LPA."
-msgstr "We cannot show the instructions for this LPA. Until we can fix this problem, if you need to see these you\"ll need to ask the person who gave you the access code to show you the paper LPA."
+msgstr "We cannot show the instructions for this <abbr title=\"lasting power of attorney\">LPA</abbr>. Until we can fix this problem, if you need to see these you\"ll need to ask the person who gave you the access code to show you the paper <abbr title=\"lasting power of attorney\">LPA</abbr>."
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:91
 msgid ""
@@ -3567,7 +3567,7 @@ msgstr "Download this <abbr title=\"lasting power of attorney\">LPA</abbr> summa
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:119
 #: src/Common/templates/partials/full-lpa-display.html.twig:119
 msgid "If any scanned images are not readable, ask the person who gave you the access code to show you the paper LPA."
-msgstr "If any scanned images are not readable, ask the person who gave you the access code to show you the paper LPA."
+msgstr "If any scanned images are not readable, ask the person who gave you the access code to show you the paper <abbr title=\"lasting power of attorney\">LPA</abbr>."
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:148
 #: src/Common/templates/partials/full-lpa-display.html.twig:148
