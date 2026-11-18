@@ -49,6 +49,7 @@ module "eu_west_1" {
   public_access_enabled                            = var.public_access_enabled
   regions                                          = local.environment.regions
   region_name                                      = "eu-west-1"
+  dynamodb_alarms_enabled                          = local.environment.dynamodb_alarms_enabled
   default_tags                                     = local.default_tags
   session_expires_use                              = local.environment.session_expires_use
   session_expires_view                             = local.environment.session_expires_view
@@ -144,6 +145,7 @@ module "eu_west_2" {
   public_access_enabled                            = var.public_access_enabled
   regions                                          = local.environment.regions
   region_name                                      = "eu-west-2"
+  dynamodb_alarms_enabled                          = local.environment.dynamodb_alarms_enabled
   default_tags                                     = local.default_tags
   session_expires_use                              = local.environment.session_expires_use
   session_expires_view                             = local.environment.session_expires_view
