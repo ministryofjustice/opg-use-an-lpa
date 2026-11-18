@@ -48,6 +48,8 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler
     {
         if (array_key_exists('startAgain', $request->getQueryParams())) {
             $this->state($request)->reset();
+        } elseif (array_key_exists('requestAnother', $request->getQueryParams())) {
+            $this->state($request)->resetForAnotherRequest();
         }
 
         $this->form->setData(
@@ -99,11 +101,15 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler
 
     public function nextPage(WorkflowState $state): string
     {
-        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.your-name';
+        return $state->postcode !== null && $state->checkAnswersReached === true
+            ? 'lpa.check-answers'
+            : 'lpa.your-name';
     }
 
     public function lastPage(WorkflowState $state): string
     {
-        return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.add-by-paper-information';
+        return $state->postcode !== null && $state->checkAnswersReached === true
+            ? 'lpa.check-answers'
+            : 'lpa.add-by-paper-information';
     }
 }

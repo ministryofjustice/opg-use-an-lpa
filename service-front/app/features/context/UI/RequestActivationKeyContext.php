@@ -372,6 +372,12 @@ class RequestActivationKeyContext implements Context
         $this->ui->assertFieldContains('postcode', 'ABC123');
     }
 
+    #[Then('/^I am taken back to the postcode page$/')]
+    public function iAmTakenBackToThePostcodePage(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/postcode');
+    }
+
     #[Then('/^I am taken back to the reference number page where I can see my answer and change it$/')]
     public function iAmTakenBackToTheReferenceNumberPageWhereICanSeeMyAnswerAndChangeIt(): void
     {
@@ -573,6 +579,167 @@ class RequestActivationKeyContext implements Context
 
         $this->ui->assertFieldNotContains('first_names', 'The Attorney');
         $this->ui->assertFieldNotContains('last_name', 'Person');
+    }
+
+    #[When('/^I request another activation key$/')]
+    public function iRequestAnotherActivationKey(): void
+    {
+        $this->ui->clickLink('Request another activation key');
+        $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
+    }
+
+    #[Given('/^I have successfully requested an activation key$/')]
+    public function iHaveSuccessfullyRequestedAnActivationKey(): void
+    {
+        $this->iAmOnTheCheckLPADetailsPage();
+        $this->iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect();
+        $this->aLetterIsRequestedContainingAOneTimeUseCode();
+    }
+
+    #[Given('/^I have requested another activation key for the same person$/')]
+    public function iHaveRequestedAnotherActivationKeyForTheSamePerson(): void
+    {
+        $this->iRequestAnotherActivationKey();
+        $this->iEnterTheReferenceNumberOfAnotherLpa();
+        $this->iContinueFromTheYourNamePage();
+        $this->iAmAskedToCheckMyAnswersForTheOtherLpa();
+    }
+
+    #[When('/^I start again from the beginning$/')]
+    public function iStartAgainFromTheBeginning(): void
+    {
+        $this->ui->visit('/lpa/request-code/lpa-reference-number?startAgain=true');
+        $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
+    }
+
+    #[When('/^I enter the reference number of another LPA$/')]
+    public function iEnterTheReferenceNumberOfAnotherLpa(): void
+    {
+        $this->ui->fillField('opg_reference_number', '700000000138');
+        $this->ui->pressButton('Continue');
+    }
+
+    #[Then('/^I can see the reference number of the other LPA$/')]
+    public function iCanSeeTheReferenceNumberOfTheOtherLpa(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
+        $this->ui->assertFieldContains('opg_reference_number', '700000000138');
+    }
+
+    #[Then('/^I can see my name has already been filled in$/')]
+    public function iCanSeeMyNameHasAlreadyBeenFilledIn(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/your-name');
+
+        [
+            $firstNames,
+            $lastName,
+        ] = $this->donorNames();
+        $this->ui->assertFieldContains('first_names', $firstNames);
+        $this->ui->assertFieldContains('last_name', $lastName);
+    }
+
+    #[Then('/^I can see my name has not been filled in$/')]
+    public function iCanSeeMyNameHasNotBeenFilledIn(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/your-name');
+
+        [
+            $firstNames,
+            $lastName,
+        ] = $this->donorNames();
+        $this->ui->assertFieldNotContains('first_names', $firstNames);
+        $this->ui->assertFieldNotContains('last_name', $lastName);
+    }
+
+    #[When('/^I continue from the your name page$/')]
+    public function iContinueFromTheYourNamePage(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/your-name');
+        $this->ui->pressButton('Continue');
+    }
+
+    #[When('/^I change the name to a different person$/')]
+    public function iChangeTheNameToADifferentPerson(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/your-name');
+        $this->ui->fillField('first_names', 'Different');
+        $this->ui->fillField('last_name', 'Person');
+    }
+
+    #[Then('/^I am asked for my date of birth without it being filled in$/')]
+    public function iAmAskedForMyDateOfBirthWithoutItBeingFilledIn(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/date-of-birth');
+        $this->ui->assertFieldContains('dob[day]', '');
+        $this->ui->assertFieldContains('dob[month]', '');
+        $this->ui->assertFieldContains('dob[year]', '');
+    }
+
+    #[When('/^I provide the date of birth of the different person$/')]
+    public function iProvideTheDateOfBirthOfTheDifferentPerson(): void
+    {
+        $this->ui->fillField('dob[day]', '09');
+        $this->ui->fillField('dob[month]', '02');
+        $this->ui->fillField('dob[year]', '1998');
+        $this->ui->pressButton('Continue');
+    }
+
+    #[Then('/^I am asked where I currently live without it being filled in$/')]
+    public function iAmAskedWhereICurrentlyLiveWithoutItBeingFilledIn(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/postcode');
+        $this->ui->assertFieldContains('postcode', '');
+    }
+
+    #[When('/^I provide the postcode of the different person$/')]
+    public function iProvideThePostcodeOfTheDifferentPerson(): void
+    {
+        $this->ui->fillField('live_in_uk', 'Yes');
+        $this->ui->fillField('postcode', 'ABC123');
+        $this->ui->pressButton('Continue');
+    }
+
+    #[Then('/^I am asked to check my answers for the different person$/')]
+    public function iAmAskedToCheckMyAnswersForTheDifferentPerson(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertPageContainsText('700000000138');
+        $this->ui->assertPageContainsText('Different Person');
+        $this->ui->assertPageContainsText('9 February 1998');
+        $this->ui->assertPageContainsText('ABC123');
+    }
+
+    #[Then('/^I am asked to check my answers for the other LPA$/')]
+    public function iAmAskedToCheckMyAnswersForTheOtherLpa(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertPageContainsText('Check your answers');
+        $this->ui->assertPageContainsText('700000000138');
+
+        [
+            $firstNames,
+            $lastName,
+        ] = $this->donorNames();
+        $this->ui->assertPageContainsText($firstNames . ' ' . $lastName);
+    }
+
+    /**
+     * @return array{string, string}
+     */
+    private function donorNames(): array
+    {
+        if (isset($this->lpa->uId)) {
+            return [
+                $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames,
+                $this->lpa->donor->surname,
+            ];
+        }
+
+        return [
+            $this->lpa->donor->firstNames,
+            $this->lpa->donor->lastName,
+        ];
     }
 
     #[Given('/^I have provided my current address$/')]

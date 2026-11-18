@@ -190,6 +190,8 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
             $letterExpectedDate = (new Carbon())->addWeeks(4);
 
             if ($result->getResponse() === AccessForAllResult::SUCCESS) {
+                $state->workflowPreviouslyCompleted = true;
+
                 return $this->sendEmailToUser($state, $letterExpectedDate);
             }
 

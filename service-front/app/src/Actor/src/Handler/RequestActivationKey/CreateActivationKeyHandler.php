@@ -87,6 +87,8 @@ class CreateActivationKeyHandler extends AbstractHandler implements
 
             switch ($result->getResponse()) {
                 case AccessForAllResult::SUCCESS:
+                    $state->workflowPreviouslyCompleted = true;
+
                     $letterExpectedDate = (new Carbon())->addWeeks(2);
 
                     $this->notifyService->sendEmailToUser(

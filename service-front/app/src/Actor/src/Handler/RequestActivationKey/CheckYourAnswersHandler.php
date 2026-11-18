@@ -89,8 +89,10 @@ class CheckYourAnswersHandler extends AbstractHandler implements
      */
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $state = $this->state($request);
-        $data  = [
+        $state                      = $this->state($request);
+        $state->checkAnswersReached = true;
+
+        $data = [
             'reference_number' => $state->referenceNumber,
             'first_names'      => $state->firstNames,
             'last_name'        => $state->lastName,
@@ -276,6 +278,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements
 
     public function lastPage(WorkflowState $state): string
     {
-        return 'lpa.postcode';
+        // the date of birth and postcode pages are skipped when the same person requests another key
+        return $state->workflowPreviouslyCompleted === true ? 'lpa.your-name' : 'lpa.postcode';
     }
 }

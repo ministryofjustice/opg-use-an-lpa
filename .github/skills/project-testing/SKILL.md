@@ -111,6 +111,11 @@ For all other test layers:
 
 - `~@wip` is configured globally, so `@wip` scenarios do not run.
 - Reuse existing steps before adding a new step definition.
+- When the same sequence of setup steps repeats across scenarios, consider consolidating it into a single descriptive
+  composite step whose context method calls the existing step methods (for example
+  `I have provided valid details that match the Lpa` in `RequestActivationKeyContext`). Keep scenarios focused on the
+  behaviour under test. Only consolidate steps that are setup for the scenario; keep the steps that show the behaviour
+  under test visible. Use a `Background` only when every scenario in the feature shares the steps.
 - Put a scenario at the lowest profile that proves the behaviour.
 - Preserve service/profile tags because suites filter on them.
 - Feature flags use tags such as `@ff:flag_name:true`, `@ff:flag_name:false`, or `@ff:flag_name:from_env`.

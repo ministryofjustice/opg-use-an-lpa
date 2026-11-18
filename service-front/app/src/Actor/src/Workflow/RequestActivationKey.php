@@ -8,7 +8,7 @@ use Common\Workflow\Traits\JsonSerializable;
 use Common\Workflow\WorkflowState;
 use DateTimeImmutable;
 
-class RequestActivationKey implements WorkflowState
+final class RequestActivationKey implements WorkflowState
 {
     use JsonSerializable;
 
@@ -49,6 +49,8 @@ class RequestActivationKey implements WorkflowState
         ?string $actorAddressResponse = null,
         public ?string $liveInUK = null,
         public ?string $actorAbroadAddress = null,
+        public ?bool $workflowPreviouslyCompleted = null,
+        public ?bool $checkAnswersReached = null,
     ) {
         if ($actorType !== null) {
             $this->setActorRole($actorType);
@@ -71,6 +73,83 @@ class RequestActivationKey implements WorkflowState
      */
     public function reset(): void
     {
+        $this->resetLpaSpecificDetails();
+
+        $this->workflowPreviouslyCompleted = false;
+
+        $this->firstNames = null;
+        $this->lastName   = null;
+        $this->dob        = null;
+        $this->liveInUK   = null;
+        $this->postcode   = null;
+    }
+
+    /**
+     * Reset the workflow so that another activation key can be requested, keeping the
+     * personal details the user has already given us.
+     */
+    public function resetForAnotherRequest(): void
+    {
+        $this->resetLpaSpecificDetails();
+    }
+
+    /**
+     * Once an activation key has been requested a changed name means a different person, so the
+     * personal details given for the previous request no longer apply. A change made from the
+     * check answers page is treated as it would be had no key been requested.
+     */
+    public function updateName(string $firstNames, string $lastName): void
+    {
+        if (
+            $this->workflowPreviouslyCompleted === true
+            && ($this->firstNames !== $firstNames || $this->lastName !== $lastName)
+        ) {
+            if ($this->checkAnswersReached !== true) {
+                $this->dob      = null;
+                $this->liveInUK = null;
+                $this->postcode = null;
+            }
+
+            $this->workflowPreviouslyCompleted = false;
+        }
+
+        $this->firstNames = $firstNames;
+        $this->lastName   = $lastName;
+    }
+
+    /**
+     * Changing a date of birth given for a previous request means the user has not skipped it.
+     */
+    public function updateDob(DateTimeImmutable $dob): void
+    {
+        if (
+            $this->workflowPreviouslyCompleted === true
+            && $this->dob?->format('Y-m-d') !== $dob->format('Y-m-d')
+        ) {
+            $this->workflowPreviouslyCompleted = false;
+        }
+
+        $this->dob = $dob;
+    }
+
+    /**
+     * Changing an address given for a previous request means the user has not skipped it.
+     */
+    public function updateAddress(string $liveInUK, ?string $postcode): void
+    {
+        if (
+            $this->workflowPreviouslyCompleted === true
+            && ($this->liveInUK !== $liveInUK || $this->postcode !== $postcode)
+        ) {
+            $this->workflowPreviouslyCompleted = false;
+        }
+
+        $this->liveInUK = $liveInUK;
+        $this->postcode = $postcode;
+    }
+
+    private function resetLpaSpecificDetails(): void
+    {
         $this->referenceNumber    = null;
         $this->actorType          = null;
         $this->donorFirstNames    = null;
@@ -91,12 +170,7 @@ class RequestActivationKey implements WorkflowState
         $this->actorUid             = null;
         $this->needsCleansing       = false;
         $this->actorAddressResponse = null;
-
-        $this->firstNames = null;
-        $this->lastName   = null;
-        $this->dob        = null;
-        $this->liveInUK   = null;
-        $this->postcode   = null;
+        $this->checkAnswersReached  = false;
     }
 
     public function getActorRole(): ?ActorType
