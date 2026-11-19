@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-19 12:30+0000\n"
+"PO-Revision-Date: 2026-11-19 12:50+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -4922,3 +4922,11 @@ msgstr ""
 "<p class=\"govuk-body\">Mae angen eich cod actifadu unigryw eich hun arnoch i ychwanegu atwrneiaeth arhosol (<abbr title=\"atwrneiaeth arhosol\">LPA</abbr>) at eich cyfrif. Bydd cod actifadu yn cael ei anfon atoch pan fydd yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> wedi’i chofrestru. Bydd y cod yn dod i ben ar ôl 12 mis.</p>\n"
 "<p class=\"govuk-body\">Mae codau actifadu yn gyfuniad o 12 llythyren a rhif ac yn dechrau gydag C. Er enghraifft, C-AB12 CD34 EF56.</p>\n"
 "<p class=\"govuk-body\">Os ydych chi wedi colli eich cod actifadu, os ydy wedi dod i ben, neu os nad ydych wedi derbyn un o’r blaen, gallwch ofyn am un newydd.</p>"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:3
+msgid "dashboard.home.title"
+msgstr "Eich atwrneiaethau arhosol"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:25
+msgid "dashboard.home.heading-page"
+msgstr "Eich atwrneiaethau arhosol"
