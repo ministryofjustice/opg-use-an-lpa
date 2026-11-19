@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-19 15:52+0000\n"
+"PO-Revision-Date: 2026-11-19 16:56+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -5075,3 +5075,47 @@ msgstr "Enw’r atwrnai"
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:17
 msgid "request-activation-key.replacement-attorney.heading-page"
 msgstr "Ni chewch wneud cais am god actifadu os ydych yn atwrnai wrth gefn"
+
+#. Contains GOV.UK HTML elements and classes, and links to GOV.UK guidance.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:20
+msgctxt "html"
+msgid "request-activation-key.replacement-attorney.content-becoming-active"
+msgstr ""
+"<p class=\"govuk-body\">Dim ond y rhoddwr neu atwrnai gweithredol gaiff ofyn am god actifadu.</p>\n"
+"<p class=\"govuk-body\">Byddwch yn atwrnai gweithredol os bydd un o’r atwrneiod yn rhoi’r gorau i gyflawni ei rôl. Bydd hyn yn digwydd os yw:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>wedi marw</li>\n"
+"<li>wedi <a href=\"https://www.gov.uk/lasting-power-attorney-duties/stop-attorney\" class=\"govuk-link\">cam i lawr yn ffurfiol</a> (‘ymwrthod â'i benodiad’)</li>\n"
+"<li>wedi cael ei <a href=\"https://www.gov.uk/power-of-attorney/change-your-lasting-power-of-attorney\" class=\"govuk-link\">dynnu o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> gan y rhoddwr</a></li>\n"
+"<li>wedi colli galluedd meddyliol</li>\n"
+"<li>wedi’i ddatgan yn fethdalwr neu fod ganddo orchymyn rhyddhau o ddyled (atwrneiod eiddo a materion ariannol yn unig)</li>\n"
+"<li>wedi bod yn briod â’r rhoddwr neu mewn partneriaeth sifil â’r rhoddwr, ac mae’r berthynas wedi dod i ben yn gyfreithiol (oni bai bod y rhoddwr wedi dweud fel arall yn y cyfarwyddiadau a roesant ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>)</li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">Rhaid i chi <a href=\"https://www.gov.uk/lasting-power-attorney-duties/changes-you-need-to-report\" class=\"govuk-link\">roi gwybod i ni os ydych yn credu bod angen i chi gamu i mewn fel atwrnai gweithredol</a>. Ar ôl i ni ddiweddaru ein cofnodion i ddangos eich bod yn atwrnai gweithredol, byddwch yn gallu gofyn am god actifadu.</p>"
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:3
+msgid "request-activation-key.received.title"
+msgstr "Rydym wedi derbyn eich cais am god actifadu"
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:12
+msgid "request-activation-key.received.heading-page"
+msgstr "Rydym wedi derbyn eich cais am god actifadu"
+
+#. Contains GOV.UK paragraph elements and classes, and a %date% placeholder for
+#. the date by which the user should have heard from us. Preserve the HTML
+#. structure, classes and placeholder when translating.
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:18
+msgctxt "html"
+msgid "request-activation-key.received.content-what-happens-next"
+msgstr ""
+"<p class=\"govuk-body\">Ar ôl i ni wirio’r holl fanylion byddwn yn anfon llythyr atoch gyda’ch cod actifadu ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon. Byddwn yn ei anfon drwy’r post oherwydd bod hynny’n fwy diogel.</p>\n"
+"<p class=\"govuk-body\">Byddwn yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom.</p>\n"
+"<p class=\"govuk-body\">Rydym wedi anfon e-bost atoch yn cadarnhau’r holl fanylion hyn.</p>\n"
+"<p class=\"govuk-body\">Bydd y rhan fwyaf o bobl yn clywed gennym neu’n derbyn cod actifadu o fewn 2 wythnos i wneud cais. Fodd bynnag, weithiau bydd yn cymryd mwy o amser. Os na fyddwch wedi clywed gennym erbyn %date%, cysylltwch â ni.</p>"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:27
+msgctxt "html"
+msgid "request-activation-key.received.heading-more-than-one-lpa"
+msgstr "A oes gennych chi fwy nag un <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>?"
