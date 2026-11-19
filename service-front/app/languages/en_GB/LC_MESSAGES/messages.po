@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-19 12:50+0000\n"
-"Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
+"PO-Revision-Date: 2026-11-19 15:06+0000\n"
+"Last-Translator: Adam Cooper <adam.cooper@publicguardian.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
@@ -4944,3 +4944,160 @@ msgstr ""
 "<li>view the online summary of an <abbr title=\"lasting power of attorney\">LPA</abbr> yourself</li>\n"
 "</ul>\n"
 "<p>LPA summaries do not show the names of any replacement attorneys unless they step in to replace an attorney</p>"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:50
+msgctxt "html"
+msgid "dashboard.home.button-add-another-lpa"
+msgstr "Add another <abbr title=\"lasting power of attorney\">LPA</abbr>"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:54
+msgctxt "html"
+msgid "dashboard.home.button-add-first-lpa"
+msgstr "Add your first <abbr title=\"lasting power of attorney\">LPA</abbr>"
+
+#. Contains an abbr element for LPA and a %count% placeholder for the number of
+#. LPAs in the account. Preserve the HTML and placeholder when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:66
+msgctxt "html"
+msgid "dashboard.home.content-lpa-count"
+msgid_plural "dashboard.home.content-lpa-count-plural"
+msgstr[0] "You have %count% <abbr title=\"lasting power of attorney\">LPA</abbr> in your account"
+msgstr[1] "You have %count% <abbr title=\"lasting powers of attorney\">LPAs</abbr> in your account"
+
+#. Contains an abbr element for LPAs. Preserve the HTML when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:84
+msgctxt "html"
+msgid "dashboard.home.heading-duplicate-lpas"
+msgstr "Your account contains duplicate <abbr title=\"lasting powers of attorney\">LPAs</abbr>"
+
+#. Contains GOV.UK paragraph elements and classes and abbr elements for LPA.
+#. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:89
+msgctxt "html"
+msgid "dashboard.home.content-duplicate-lpas"
+msgstr ""
+"<p class=\"govuk-body govuk-!-margin-top-2 govuk-!-margin-left-12\">You might find it easier to manage your account by removing duplicate <abbr title=\"lasting powers of attorney\">LPAs</abbr>.</p>\n"
+"<p class=\"govuk-body\">It doesn’t matter which <abbr title=\"lasting power of attorney\">LPA</abbr> you remove but it would be more accurate to keep those that show as added by you, especially when creating access codes for organisations.</p>\n"
+"<p class=\"govuk-body\">Removing duplicate <abbr title=\"lasting powers of attorney\">LPAs</abbr> is optional.</p>"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:3
+msgid "request-activation-key.lpa-not-found.title"
+msgstr "Cannot find LPA"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:14
+msgid "request-activation-key.lpa-not-found.heading-page"
+msgstr "Lasting power of attorney not found"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:16
+msgctxt "html"
+msgid "request-activation-key.lpa-not-found.content-reasons"
+msgstr ""
+"<p class=\"govuk-body\">This could be because:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number you entered is incorrect</li>\n"
+"<li>some of the details you entered about yourself do not match our records</li>\n"
+"</ul>"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:20
+msgid "request-activation-key.lpa-not-found.heading-your-answers"
+msgstr "Your answers"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:24
+msgctxt "html"
+msgid "request-activation-key.lpa-not-found.label-lpa-reference-number"
+msgstr "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:34
+msgid "request-activation-key.lpa-not-found.label-name"
+msgstr "Name"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:42
+msgid "request-activation-key.lpa-not-found.label-dob"
+msgstr "Date of birth"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:51
+msgid "request-activation-key.lpa-not-found.label-postcode"
+msgstr "Postcode"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:60
+msgid "request-activation-key.lpa-not-found.label-live-in-uk"
+msgstr "Do you live in the UK?"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:63
+msgid "request-activation-key.lpa-not-found.value-live-in-uk-no"
+msgstr "No"
+
+#. Contains a GOV.UK paragraph element and class. Preserve the HTML structure
+#. and classes when translating.
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:69
+msgctxt "html"
+msgid "request-activation-key.lpa-not-found.content-contact-us"
+msgstr "<p class=\"govuk-body\">If you’re sure you entered the correct information, contact us.</p>"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:81
+msgid "request-activation-key.lpa-not-found.button-try-again"
+msgstr "Try again"
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:45
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:86
+#: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:25
+msgid "common.button-back-to-your-lpas"
+msgstr "Back to your LPAs"
+
+#: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:3
+msgid "request-activation-key.replacement-attorney.title"
+msgstr "Attorney details"
+
+#: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:17
+msgid "request-activation-key.replacement-attorney.heading-page"
+msgstr "You cannot request an activation key if you are a replacement attorney"
+
+#. Contains GOV.UK HTML elements and classes, and links to GOV.UK guidance.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:20
+msgctxt "html"
+msgid "request-activation-key.replacement-attorney.content-becoming-active"
+msgstr ""
+"<p class=\"govuk-body\">Only the donor or an active attorney can request an activation key.</p>\n"
+"<p class=\"govuk-body\">You can only become an active attorney if one of the attorneys has stopped carrying out their role. This happens if they:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>have died</li>\n"
+"<li>have <a href=\"https://www.gov.uk/lasting-power-attorney-duties/stop-attorney\" class=\"govuk-link\">formally stepped down</a> (‘disclaimed their appointment’)</li>\n"
+"<li>have been <a href=\"https://www.gov.uk/power-of-attorney/change-your-lasting-power-of-attorney\" class=\"govuk-link\">removed from the <abbr title=\"lasting power of attorney\">LPA</abbr> by the donor</a></li>\n"
+"<li>have lost mental capacity</li>\n"
+"<li>have been declared bankrupt or have a debt relief order (property and finance attorneys only)</li>\n"
+"<li>were married to, or in a civil partnership with, the donor, and the relationship has legally ended (unless the donor said otherwise in the instructions they made on the <abbr title=\"lasting power of attorney\">LPA</abbr>)</li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">You must <a href=\"https://www.gov.uk/lasting-power-attorney-duties/changes-you-need-to-report\" class=\"govuk-link\">let us know if you think you need to step in as an active attorney</a>. Once we’ve updated our records to show you are an active attorney, you’ll be able to request an activation key.</p>"
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:3
+msgid "request-activation-key.received.title"
+msgstr "We've got your activation key request"
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:12
+msgid "request-activation-key.received.heading-page"
+msgstr "We've got your activation key request"
+
+#. Contains GOV.UK paragraph elements and classes, and a %date% placeholder for
+#. the date by which the user should have heard from us. Preserve the HTML
+#. structure, classes and placeholder when translating.
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:18
+msgctxt "html"
+msgid "request-activation-key.received.content-what-happens-next"
+msgstr ""
+"<p class=\"govuk-body\">Once we've checked all the details, we'll post you a letter with your activation key for this <abbr title=\"lasting power of attorney\">LPA</abbr>. We send it by post because it's more secure.</p>\n"
+"<p class=\"govuk-body\">We'll contact you if we need any more information.</p>\n"
+"<p class=\"govuk-body\">Once you've got the activation key, you'll be able to use it to add the <abbr title=\"lasting power of attorney\">LPA</abbr> to your account.</p>\n"
+"<p class=\"govuk-body\">We've sent you an email to confirm all these details.</p>\n"
+"<p class=\"govuk-body\">Most people hear from us or get the activation key within 2 weeks of requesting it. However, sometimes it can take a bit longer. If you have not heard from us by %date%, please get in touch.</p>"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:27
+msgctxt "html"
+msgid "request-activation-key.received.heading-more-than-one-lpa"
+msgstr "Have more than one <abbr title=\"lasting power of attorney\">LPA</abbr>?"
