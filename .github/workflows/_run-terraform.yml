@@ -14,6 +14,16 @@ on:
         required: false
         type: string
         default: ""
+      gotenberg_tag:
+        description: "Gotenberg image tag to deploy"
+        required: false
+        type: string
+        default: ""
+      use_gotenberg_latest_green:
+        description: "Use the shared latest-green Gotenberg build"
+        required: false
+        type: boolean
+        default: false
       apply:
         description: "Whether to apply terraform"
         required: false
@@ -45,6 +55,10 @@ on:
     secrets:
       OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY:
         required: true
+    outputs:
+      gotenberg_tag:
+        description: "Deployed Gotenberg image tag"
+        value: ${{ jobs.terraform_workflow.outputs.gotenberg_tag }}
 
 permissions:
   id-token: write
@@ -52,6 +66,8 @@ permissions:
 jobs:
   terraform_workflow:
     runs-on: ubuntu-latest
+    outputs:
+      gotenberg_tag: ${{ steps.gotenberg_tag.outputs.tag }}
     steps:
       - name: export versions to use
         id: version-output
@@ -141,6 +157,8 @@ jobs:
           TF_WORKSPACE: ${{ inputs.workspace }}
           TF_VAR_container_version: ${{ steps.version-output.outputs.tag }}
           TF_VAR_admin_container_version: ${{ steps.version-output.outputs.admin-tag }}
+          TF_VAR_gotenberg_tag: ${{ inputs.gotenberg_tag }}
+          TF_VAR_use_gotenberg_latest_green: ${{ inputs.use_gotenberg_latest_green }}
         run: |
           terraform workspace show
           terraform plan -input=false -parallelism=30 -lock-timeout=5m -out=terraform.plan ${{ inputs.extra_vars }}
@@ -150,12 +168,20 @@ jobs:
         if: inputs.apply == 'true'
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
-          TF_VAR_container_version: ${{ steps.version-output.outputs.tag }}
-          TF_VAR_admin_container_version: ${{ steps.version-output.outputs.admin-tag }}
           CI: true
         run: |
           terraform apply -lock-timeout=500s -input=false -auto-approve -parallelism=30 ${{ inputs.extra_vars }} terraform.plan
         working-directory: terraform/${{ inputs.terraform_path }}
+
+      - name: Record deployed Gotenberg tag
+        id: gotenberg_tag
+        if: inputs.apply == 'true' && inputs.terraform_path == 'environment'
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+        run: |
+          tag=$(terraform output -raw gotenberg_tag)
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+        working-directory: terraform/environment
 
       - name: install terraform workspace manager
         if: inputs.apply == 'true' && inputs.add_ttl == 'true'

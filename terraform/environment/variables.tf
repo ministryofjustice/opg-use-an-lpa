@@ -15,6 +15,18 @@ variable "admin_container_version" {
   description = "The version of the admin container image to deploy"
 }
 
+variable "gotenberg_tag" {
+  type        = string
+  default     = null
+  description = "Gotenberg image tag to deploy when not using the latest green build"
+}
+
+variable "use_gotenberg_latest_green" {
+  type        = bool
+  default     = false
+  description = "Read the shared latest-green Gotenberg build"
+}
+
 variable "public_access_enabled" {
   type        = bool
   default     = false

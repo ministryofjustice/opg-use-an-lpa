@@ -320,7 +320,6 @@ variable "default_tags" {
 }
 
 variable "gotenberg_tag" {
-  description = "The image tag to use for the Gotenberg container."
+  description = "The image tag for Gotenberg"
   type        = string
-  default     = "v0.5.0"
 }

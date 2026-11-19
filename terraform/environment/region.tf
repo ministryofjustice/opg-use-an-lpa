@@ -24,6 +24,7 @@ module "eu_west_1" {
   environment_name                                 = local.environment_name
   event_bus_enabled                                = local.environment.event_bus_enabled
   event_reciever_kms_key_arn                       = data.aws_kms_alias.event_receiver.target_key_arn
+  gotenberg_tag                                    = local.gotenberg_tag
   google_analytics_id_use                          = local.environment.google_analytics_id_use
   google_analytics_id_view                         = local.environment.google_analytics_id_view
   gov_uk_onelogin_client_id_secret_name            = local.environment.gov_uk_onelogin_client_id_secret_name
@@ -120,6 +121,7 @@ module "eu_west_2" {
   environment_name                                 = local.environment_name
   event_bus_enabled                                = local.environment.event_bus_enabled
   event_reciever_kms_key_arn                       = data.aws_kms_alias.event_receiver.target_key_arn
+  gotenberg_tag                                    = local.gotenberg_tag
   google_analytics_id_use                          = local.environment.google_analytics_id_use
   google_analytics_id_view                         = local.environment.google_analytics_id_view
   gov_uk_onelogin_client_id_secret_name            = local.environment.gov_uk_onelogin_client_id_secret_name

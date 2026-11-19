@@ -205,6 +205,16 @@ jobs:
     secrets:
       OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
+  resolve_gotenberg_version:
+    name: resolve preproduction-tested Gotenberg version
+    uses: ./.github/workflows/_resolve-gotenberg.yml
+    needs:
+      - workflow_variables
+    if: needs.workflow_variables.outputs.specific_path != 'docs'
+    with:
+      operation: get
+      environment: preproduction
+
   terraform_apply_production:
     name: terraform apply production
     uses: ./.github/workflows/_run-terraform.yml
@@ -213,9 +223,11 @@ jobs:
       - workflow_variables
       - phpcs_analysis
       - psalm_analysis
+      - resolve_gotenberg_version
     with:
       apply: true
       container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}
+      gotenberg_tag: ${{ needs.resolve_gotenberg_version.outputs.tag }}
       extra_vars: "-var public_access_enabled=true"
       oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
       oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_PRODUCTION }}
@@ -231,9 +243,11 @@ jobs:
     needs:
       - terraform_apply_shared_production
       - workflow_variables
+      - resolve_gotenberg_version
     with:
       apply: true
       container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}
+      gotenberg_tag: ${{ needs.resolve_gotenberg_version.outputs.tag }}
       oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
       oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
       specific_path: all
@@ -266,6 +280,17 @@ jobs:
           use_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$use_fqdn/healthcheck)
           [[ $use_response == 200 ]] || (echo "Error with Use health check. HTTP status: ${use_response}" && exit 1)
 
+  save_production_gotenberg_version:
+    name: save deployed Gotenberg version
+    uses: ./.github/workflows/_resolve-gotenberg.yml
+    needs:
+      - production_health_check
+      - terraform_apply_production
+    with:
+      operation: put
+      environment: production
+      tag: ${{ needs.terraform_apply_production.outputs.gotenberg_tag }}
+
   slack_notify_documentation_update:
     name: notify documentation update
     uses: ./.github/workflows/_slack-notification.yml
@@ -285,6 +310,7 @@ jobs:
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - production_health_check
+      - save_production_gotenberg_version
       - slack_notify_documentation_update
       - workflow_variables
     with:
@@ -293,7 +319,7 @@ jobs:
           needs.workflow_variables.outputs.translations_update == 'true', 'translations_update.txt',
           'production_release.txt'
         ) }}
-      workflow_status: ${{ needs.production_health_check.result }}
+      workflow_status: ${{ needs.save_production_gotenberg_version.result }}
       workspace: production
     secrets:
       webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
@@ -308,10 +334,11 @@ jobs:
       - slack_notify
       - slack_notify_documentation_update
       - production_health_check
+      - save_production_gotenberg_version
     steps:
       - name: workflow has ended
         run: |
-          if ${{ needs.production_health_check.result == 'success' }}; then
+          if ${{ needs.production_health_check.result == 'success' && needs.save_production_gotenberg_version.result == 'success' }}; then
             echo "Deployment to production successful"
             echo "Tag Used: main-${{ needs.workflow_variables.outputs.semver_tag }}"
             echo "URL: https://use-lasting-power-of-attorney.service.gov.uk"
