@@ -314,6 +314,21 @@ jobs:
       needs.workflow_variables.result == 'success' &&
       needs.seed_dynamodb.result == 'success'
 
+  save_development_gotenberg_version:
+    name: save tested Gotenberg version
+    uses: ./.github/workflows/_resolve-gotenberg.yml
+    needs:
+      - run_behat_suite
+      - terraform_apply_environment
+    if: |
+      always() &&
+      needs.run_behat_suite.result == 'success' &&
+      needs.terraform_apply_environment.result == 'success'
+    with:
+      operation: put
+      environment: development
+      tag: ${{ needs.terraform_apply_environment.outputs.gotenberg_tag }}
+
   slack_notify:
     name: notify of result
     uses: ./.github/workflows/_slack-notification.yml
@@ -388,16 +403,3 @@ jobs:
             echo "Previous jobs in pipeline failed."
             exit 1
           fi
-
-  save_development_gotenberg_version:
-    name: save tested Gotenberg version
-    uses: ./.github/workflows/_resolve-gotenberg.yml
-    needs:
-      - end_of_workflow
-      - workflow_variables
-      - terraform_apply_environment
-    if: needs.end_of_workflow.result == 'success' && needs.workflow_variables.outputs.specific_path != 'docs'
-    with:
-      operation: put
-      environment: development
-      tag: ${{ needs.terraform_apply_environment.outputs.gotenberg_tag }}

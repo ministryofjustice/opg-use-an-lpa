@@ -136,16 +136,6 @@ jobs:
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  resolve_gotenberg_version:
-    name: resolve development-tested Gotenberg version
-    uses: ./.github/workflows/_resolve-gotenberg.yml
-    needs:
-      - workflow_variables
-    if: needs.workflow_variables.outputs.specific_path != 'docs'
-    with:
-      operation: get
-      environment: development
-
   terraform_apply_shared_preproduction:
     name: terraform apply shared preproduction
     uses: ./.github/workflows/_run-terraform.yml
@@ -158,6 +148,16 @@ jobs:
       workspace: preproduction
     secrets:
       OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+
+  resolve_gotenberg_version:
+    name: resolve development-tested Gotenberg version
+    uses: ./.github/workflows/_resolve-gotenberg.yml
+    needs:
+      - workflow_variables
+    if: needs.workflow_variables.outputs.specific_path != 'docs'
+    with:
+      operation: get
+      environment: development
 
   terraform_apply_preproduction:
     name: terraform apply preproduction
@@ -203,6 +203,17 @@ jobs:
       ONE_LOGIN_CREDENTIALS: ${{ secrets.ONE_LOGIN_CREDENTIALS }}
       ONE_LOGIN_USER_PASSWORD: ${{ secrets.ONE_LOGIN_USER_PASSWORD }}
 
+  save_preproduction_gotenberg_version:
+    name: save tested Gotenberg version
+    uses: ./.github/workflows/_resolve-gotenberg.yml
+    needs:
+      - run_behat_suite_preproduction
+      - terraform_apply_preproduction
+    with:
+      operation: put
+      environment: preproduction
+      tag: ${{ needs.terraform_apply_preproduction.outputs.gotenberg_tag }}
+
   # Required end of workflow job
   end_of_workflow:
     name: end of workflow
@@ -243,16 +254,3 @@ jobs:
           echo "Previous jobs in pipeline failed."
           exit 1
           fi
-
-  save_preproduction_gotenberg_version:
-    name: save tested Gotenberg version
-    uses: ./.github/workflows/_resolve-gotenberg.yml
-    needs:
-      - end_of_workflow
-      - workflow_variables
-      - terraform_apply_preproduction
-    if: needs.end_of_workflow.result == 'success' && needs.workflow_variables.outputs.specific_path != 'docs'
-    with:
-      operation: put
-      environment: preproduction
-      tag: ${{ needs.terraform_apply_preproduction.outputs.gotenberg_tag }}
