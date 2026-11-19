@@ -26,7 +26,6 @@ output "admin_container_version" {
 output "gotenberg_tag" {
   value       = local.gotenberg_tag
   description = "The tag of the Gotenberg image that has been deployed"
-  sensitive   = true
 }
 
 output "workspace_name" {
