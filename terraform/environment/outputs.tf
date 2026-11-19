@@ -23,6 +23,12 @@ output "admin_container_version" {
   description = "The tag of the admin container image that has been deployed"
 }
 
+output "gotenberg_tag" {
+  value       = local.gotenberg_tag
+  description = "The tag of the Gotenberg image that has been deployed"
+  sensitive   = true
+}
+
 output "workspace_name" {
   value       = terraform.workspace
   description = "The name of the Terraform workspace"

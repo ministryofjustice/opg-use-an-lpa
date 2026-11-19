@@ -1,0 +1,61 @@
+name: "[Job] Manage Gotenberg version parameter"
+
+on:
+  workflow_call:
+    inputs:
+      operation:
+        description: "Whether to get or put the Gotenberg version"
+        required: true
+        type: string
+      environment:
+        description: "Environment name in the Gotenberg version parameter path"
+        required: true
+        type: string
+      tag:
+        description: "Gotenberg image tag to store when operation is put"
+        required: false
+        type: string
+        default: ""
+    outputs:
+      tag:
+        description: "Gotenberg image tag, populated when operation is get"
+        value: ${{ jobs.resolve_gotenberg_version.outputs.tag }}
+
+permissions:
+  id-token: write
+
+jobs:
+  resolve_gotenberg_version:
+    name: get or put Gotenberg version
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.get_gotenberg_version.outputs.tag }}
+    steps:
+      - name: Configure AWS credentials for Parameter Store
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        with:
+          aws-region: eu-west-1
+          role-to-assume: ${{ vars.OIDC_PARAMETER_STORE_ROLE }}
+          role-duration-seconds: 900
+          role-session-name: OPGUseAnLPAGotenbergVersion
+
+      - name: Get Gotenberg version
+        id: get_gotenberg_version
+        if: inputs.operation == 'get'
+        env:
+          SSM_PARAMETER_NAME: /use-an-lpa/gotenberg-version/${{ inputs.environment }}
+        run: |
+          tag=$(aws ssm get-parameter --name "$SSM_PARAMETER_NAME" --query Parameter.Value --output text)
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Put Gotenberg version
+        if: inputs.operation == 'put'
+        env:
+          SSM_PARAMETER_NAME: /use-an-lpa/gotenberg-version/${{ inputs.environment }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          aws ssm put-parameter \
+            --name "$SSM_PARAMETER_NAME" \
+            --type String \
+            --value "$TAG" \
+            --overwrite

@@ -15,6 +15,10 @@ on:
         description: "Terraform workspace to deploy to"
         required: true
         default: "ur"
+      gotenberg_tag:
+        description: "Gotenberg image tag (leave blank to use latest-green)"
+        required: false
+        type: string
 
 defaults:
   run:
@@ -191,6 +195,8 @@ jobs:
       workspace: ${{ inputs.terraform_workspace }}
       terraform_path: environment
       container_version: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+      gotenberg_tag: ${{ inputs.gotenberg_tag }}
+      use_gotenberg_latest_green: ${{ inputs.gotenberg_tag == '' }}
       apply: true
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       add_ttl: true

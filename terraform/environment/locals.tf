@@ -21,6 +21,7 @@ locals {
   }
 
   mock_onelogin_version = "latest"
+  gotenberg_tag         = var.use_gotenberg_latest_green ? data.aws_ssm_parameter.gotenberg_version[0].value : var.gotenberg_tag
 
   default_tags = merge(local.mandatory_moj_tags, local.optional_tags)
 }

@@ -136,6 +136,16 @@ jobs:
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  resolve_gotenberg_version:
+    name: resolve development-tested Gotenberg version
+    uses: ./.github/workflows/_resolve-gotenberg.yml
+    needs:
+      - workflow_variables
+    if: needs.workflow_variables.outputs.specific_path != 'docs'
+    with:
+      operation: get
+      environment: development
+
   terraform_apply_shared_preproduction:
     name: terraform apply shared preproduction
     uses: ./.github/workflows/_run-terraform.yml
@@ -156,9 +166,11 @@ jobs:
       - terraform_apply_shared_preproduction
       - workflow_variables
       - docker_build_scan_push
+      - resolve_gotenberg_version
     with:
       apply: true
       container_version: integration-${{ needs.workflow_variables.outputs.semver_tag }}
+      gotenberg_tag: ${{ needs.resolve_gotenberg_version.outputs.tag }}
       oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
       oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_PREPRODUCTION }}
       specific_path: all
@@ -201,17 +213,21 @@ jobs:
       - node_test
       - node_build
       - docker_build_scan_push
+      - resolve_gotenberg_version
       - terraform_apply_shared_preproduction
       - terraform_apply_preproduction
       - seed_dynamodb_preproduction
       - run_behat_suite_preproduction
+    if: always()
 
     steps:
       - name: End of Workflow
         run: |
           if  ${{ contains(needs.node_test.result, 'success') || contains(needs.node_test.result, 'skipped') }} &&
               ${{ contains(needs.node_build.result, 'success') || contains(needs.node_build.result, 'skipped') }} &&
+              ${{ contains(needs.terraform_lint.result, 'success') }} &&
               ${{ contains(needs.docker_build_scan_push.result, 'success') }} &&
+              ${{ contains(needs.resolve_gotenberg_version.result, 'success') }} &&
               ${{ contains(needs.terraform_apply_shared_preproduction.result, 'success') }} &&
               ${{ contains(needs.terraform_apply_preproduction.result, 'success') }} &&
               ${{ contains(needs.seed_dynamodb_preproduction.result, 'success') }} &&
@@ -227,4 +243,16 @@ jobs:
           echo "Previous jobs in pipeline failed."
           exit 1
           fi
-    if: always()
+
+  save_preproduction_gotenberg_version:
+    name: save tested Gotenberg version
+    uses: ./.github/workflows/_resolve-gotenberg.yml
+    needs:
+      - end_of_workflow
+      - workflow_variables
+      - terraform_apply_preproduction
+    if: needs.end_of_workflow.result == 'success' && needs.workflow_variables.outputs.specific_path != 'docs'
+    with:
+      operation: put
+      environment: preproduction
+      tag: ${{ needs.terraform_apply_preproduction.outputs.gotenberg_tag }}

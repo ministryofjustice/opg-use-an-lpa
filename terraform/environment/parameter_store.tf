@@ -1,3 +1,9 @@
+data "aws_ssm_parameter" "gotenberg_version" {
+  count    = var.use_gotenberg_latest_green ? 1 : 0
+  name     = "/opg-gotenberg-latest-green-build"
+  provider = aws.shared_production
+}
+
 resource "aws_ssm_parameter" "container_version" {
   name     = "/use-an-lpa/container-version/${local.environment_name}"
   type     = "String"
