@@ -1,8 +1,5 @@
 name: "[Workflow] PR Environment"
 
-concurrency:
-  group: ${{ github.ref }}-${{ github.workflow }}
-
 defaults:
   run:
     shell: bash
