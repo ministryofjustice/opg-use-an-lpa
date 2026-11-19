@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-17 15:06+0000\n"
+"PO-Revision-Date: 2026-11-19 12:50+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
@@ -4907,3 +4907,40 @@ msgstr "Yes, I have an activation key"
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:38
 msgid "add-lpa.triage.field-activation-key-triage.label-no"
 msgstr "No, I need to request an activation key"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:3
+msgid "dashboard.home.title"
+msgstr "Your lasting powers of attorney"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:25
+msgid "dashboard.home.heading-page"
+msgstr "Your lasting powers of attorney"
+
+#. Contains GOV.UK paragraph elements and classes, an abbr element for LPA and
+#. a link to GOV.UK guidance. Preserve the HTML structure, classes and link
+#. destination when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:31
+msgctxt "html"
+msgid "dashboard.home.content-intro"
+msgstr ""
+"<p class=\"govuk-body-l\">Any lasting power of attorney (LPA) you add to your account will appear on this page.</p>\n"
+"<p class=\"govuk-body-m\">Find out how to <a href=\"https://www.gov.uk/lasting-power-attorney-duties\" class=\"govuk-link\">prove you’re an attorney on an <abbr title=\"lasting power of attorney\">LPA</abbr></a> and how to use it.</p>"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:38
+msgid "dashboard.home.reveal-service-title"
+msgstr "What can I do with this service?"
+
+#. Contains a paragraph and a GOV.UK bulleted list with abbr elements for LPA.
+#. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:42
+msgctxt "html"
+msgid "dashboard.home.reveal-service-content"
+msgstr ""
+"<p>Use this service to:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>create access codes that enable organisations to view the online summary of an <abbr title=\"lasting power of attorney\">LPA</abbr></li>\n"
+"<li>keep track of the organisations that have online access to an <abbr title=\"lasting power of attorney\">LPA</abbr></li>\n"
+"<li>ask for an activation key if you have not been given one, or if it has expired</li>\n"
+"<li>view the online summary of an <abbr title=\"lasting power of attorney\">LPA</abbr> yourself</li>\n"
+"</ul>\n"
+"<p>LPA summaries do not show the names of any replacement attorneys unless they step in to replace an attorney</p>"
