@@ -1,11 +1,11 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}What is your name?{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}request-activation-key.your-name.title{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}common.back-link{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -13,30 +13,31 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-xl">{% trans %}What is your name?{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}request-activation-key.your-name.heading-page{% endtrans %}</h1>
 
                     {{ govuk_form_open(form) }}
                     {{ govuk_form_element(form.get('__csrf')) }}
 
                     {% if isModernised %}
-                      {{ govuk_form_element(form.get('first_names'), {
-                          'label': 'First names' | trans,
-                          'hint': 'Include any middle names.' | trans,
-                          'attr' : {'class': 'govuk-input--width-20'}
-                      }) }}
+                        {{ govuk_form_element(form.get('first_names'), {
+                            'label': 'common.field-first-names.label' | trans,
+                            'hint': 'request-activation-key.your-name.field-first-names.hint' | trans,
+                            'attr' : {'class': 'govuk-input--width-20'}
+                        }) }}
                     {% else %}
-                      {{ govuk_form_element(form.get('first_names'), {
-                          'label': 'First name' | trans,
-                          'attr' : {'class': 'govuk-input--width-20'}
-                      }) }}
+                        {{ govuk_form_element(form.get('first_names'), {
+                            'label': 'request-activation-key.your-name.field-first-names.label-single' | trans,
+                            'attr' : {'class': 'govuk-input--width-20'}
+                        }) }}
                     {% endif %}
 
                     {{ govuk_form_element(form.get('last_name'), {
-                          'label': 'Last name' | trans,
-                          'attr' : {'class': 'govuk-input--width-20'}
+                        'label': 'common.field-last-name.label' | trans,
+                        'attr' : {'class': 'govuk-input--width-20'}
                     }) }}
 
-                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}common.button-continue{% endtrans %}</button>
+
                     {{ govuk_form_close() }}
                 </div>
             </div>

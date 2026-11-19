@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Check your details{% endtrans %} - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}request-activation-key.check-details.title{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
 
@@ -9,13 +9,14 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-xl">{% trans %}Check your details{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}request-activation-key.check-details.heading-page{% endtrans %}</h1>
+
 
                     <dl class="govuk-summary-list govuk-summary-list">
                         {% if data.actor_current_address is defined %}
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
-                                    {% trans %}Current address{% endtrans %}
+                                    {% trans %}request-activation-key.check-details.label-current-address{% endtrans %}
                                 </dt>
                                 <dd class="govuk-summary-list__value">
                                     {% for line in data.actor_current_address %}
@@ -24,29 +25,29 @@
                                 </dd>
                                 <dd class="govuk-summary-list__actions">
                                     <a class="govuk-link" id="change-current-address" href="{{ path('lpa.add.actor-address') }}">
-                                        {% trans %}Change<span class="govuk-visually-hidden"> address</span>{% endtrans %}
+                                        {% trans %}request-activation-key.check-details.link-change-current-address{% context %}html{% notes %}Visible link text “Change” followed by visually hidden text, read by screen readers, describing the current address being changed. Preserve the span and its class when translating.{% endtrans %}
                                     </a>
                                 </dd>
                             </div>
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
-                                    {% trans %}Address on paper LPA{% endtrans %}
+                                    {% trans %}request-activation-key.check-details.label-address-on-paper{% context %}html{% notes %}Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.{% endtrans %}
                                 </dt>
                                 <dd class="govuk-summary-list__value">
                                     {% if data.actor_address_response == enum('Actor\\Workflow\\ActorAddressResponse').NOT_SURE %}
-                                        {% trans %}Not sure{% endtrans %}
+                                        {% trans %}request-activation-key.check-details.value-not-sure{% endtrans %}
                                     {% elseif data.address_on_paper is defined %}
                                         <pre class="govuk-body">{{ data.address_on_paper }}</pre>
                                     {% else %}
-                                        {% trans %}Same as above{% endtrans %}
+                                        {% trans %}request-activation-key.check-details.value-same-as-above{% endtrans %}
                                     {% endif %}
                                 </dd>
                                 <dd class="govuk-summary-list__actions">
                                     <a class="govuk-link" id="change-address-on-paper" href="{{ data.actor_address_response == enum('Actor\\Workflow\\ActorAddressResponse').NO ? path('lpa.add.address-on-paper') : path('lpa.add.actor-address') }}">
                                         {% if data.address_on_paper is defined %}
-                                            {% trans %}Change<span class="govuk-visually-hidden"> address on paper LPA</span>{% endtrans %}
+                                            {% trans %}request-activation-key.check-details.link-change-address-on-paper{% context %}html{% notes %}Visible link text “Change” followed by visually hidden text, read by screen readers, describing the address on the paper LPA being changed. Contains an abbreviation element for LPA; preserve its title attribute. Preserve the span and its class when translating.{% endtrans %}
                                         {% else %}
-                                            {% trans %}Change<span class="govuk-visually-hidden"> address</span>{% endtrans %}
+                                            {% trans %}request-activation-key.check-details.link-change-address-on-paper-same{% context %}html{% notes %}Visible link text “Change” followed by visually hidden text, read by screen readers, describing the address on the paper LPA, shown when it is the same as the current address. Preserve the span and its class when translating.{% endtrans %}
                                         {% endif %}
                                     </a>
                                 </dd>
@@ -55,47 +56,47 @@
                         {% if data.actor_role is defined %}
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
-                                    {% trans %}Your role{% endtrans %}
+                                    {% trans %}request-activation-key.check-details.label-role{% endtrans %}
                                 </dt>
                                 {% if data.actor_role == enum('Actor\\Workflow\\ActorType').DONOR %}
                                     <dd class="govuk-summary-list__value">
-                                        {% trans %}Donor{% endtrans %}
+                                        {% trans %}common.value-donor{% endtrans %}
                                     </dd>
                                 {% else %}
                                     <dd class="govuk-summary-list__value">
-                                        {% trans %}Attorney{% endtrans %}
+                                        {% trans %}common.value-attorney{% endtrans %}
                                     </dd>
                                 {% endif %}
                                 <dd class="govuk-summary-list__actions">
                                     <a class="govuk-link" id="change-your-role" href="{{ path('lpa.add.actor-role') }}">
-                                        {% trans %}Change<span class="govuk-visually-hidden"> role</span>{% endtrans %}
+                                        {% trans %}request-activation-key.check-details.link-change-role{% context %}html{% notes %}Visible link text “Change” followed by visually hidden text, read by screen readers, describing the role being changed. Preserve the span and its class when translating.{% endtrans %}
                                     </a>
                                 </dd>
                             </div>
                             {% if data.actor_role == enum('Actor\\Workflow\\ActorType').ATTORNEY %}
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
-                                        {% trans %}Donor's name{% endtrans %}
+                                        {% trans %}request-activation-key.check-details.label-donor-name{% endtrans %}
                                     </dt>
                                     <dd class="govuk-summary-list__value">
                                         {{ data.donor_first_names ~ ' ' ~  data.donor_last_name }}
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
                                         <a class="govuk-link" id="change-donors-name" href="{{ path('lpa.add.donor-details') }}">
-                                            {% trans %}Change<span class="govuk-visually-hidden"> donor's name</span>{% endtrans %}
+                                            {% trans %}request-activation-key.check-details.link-change-donor-name{% context %}html{% notes %}Visible link text “Change” followed by visually hidden text, read by screen readers, describing the donor’s name being changed. Preserve the span and its class when translating.{% endtrans %}
                                         </a>
                                     </dd>
                                 </div>
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
-                                        {% trans %}Donor's date of birth{% endtrans %}
+                                        {% trans %}request-activation-key.check-details.label-donor-dob{% endtrans %}
                                     </dt>
                                     <dd class="govuk-summary-list__value">
                                         {{ code_date(data.donor_dob) }}
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
                                         <a class="govuk-link" id="change-donors-date-of-birth" href="{{ path('lpa.add.donor-details') }}">
-                                            {% trans %}Change<span class="govuk-visually-hidden"> donor's date of birth</span>{% endtrans %}
+                                            {% trans %}request-activation-key.check-details.link-change-donor-dob{% context %}html{% notes %}Visible link text “Change” followed by visually hidden text, read by screen readers, describing the donor’s date of birth being changed. Preserve the span and its class when translating.{% endtrans %}
                                         </a>
                                     </dd>
                                 </div>
@@ -103,27 +104,27 @@
                             {% if data.actor_role == enum('Actor\\Workflow\\ActorType').DONOR %}
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
-                                        {% trans %}Attorney's name{% endtrans %}
+                                        {% trans %}request-activation-key.check-details.label-attorney-name{% endtrans %}
                                     </dt>
                                     <dd class="govuk-summary-list__value">
                                         {{ data.attorney_first_names ~ ' ' ~  data.attorney_last_name }}
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
                                         <a class="govuk-link" id="change-attorney-name" href="{{ path('lpa.add.attorney-details') }}">
-                                            {% trans %}Change<span class="govuk-visually-hidden"> attorney's name</span>{% endtrans %}
+                                            {% trans %}request-activation-key.check-details.link-change-attorney-name{% context %}html{% notes %}Visible link text “Change” followed by visually hidden text, read by screen readers, describing the attorney’s name being changed. Preserve the span and its class when translating.{% endtrans %}
                                         </a>
                                     </dd>
                                 </div>
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
-                                        {% trans %}Attorney's date of birth{% endtrans %}
+                                        {% trans %}request-activation-key.check-details.label-attorney-dob{% endtrans %}
                                     </dt>
                                     <dd class="govuk-summary-list__value">
                                         {{ code_date(data.attorney_dob) }}
                                     </dd>
                                     <dd class="govuk-summary-list__actions">
                                         <a class="govuk-link" id="change-attorney-date-of-birth" href="{{ path('lpa.add.attorney-details') }}">
-                                            {% trans %}Change<span class="govuk-visually-hidden"> attorney's date of birth</span>{% endtrans %}
+                                            {% trans %}request-activation-key.check-details.link-change-attorney-dob{% context %}html{% notes %}Visible link text “Change” followed by visually hidden text, read by screen readers, describing the attorney’s date of birth being changed. Preserve the span and its class when translating.{% endtrans %}
                                         </a>
                                     </dd>
                                 </div>
@@ -131,18 +132,18 @@
                         {% endif %}
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
-                                {% trans %}Telephone number{% endtrans %}
+                                {% trans %}request-activation-key.check-details.label-telephone{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
                                 {% if data.telephone is defined %}
                                     {{ data.telephone }}
                                 {% elseif data.no_phone %}
-                                    {% trans %}Not provided{% endtrans %}
+                                    {% trans %}request-activation-key.check-details.value-not-provided{% endtrans %}
                                 {% endif %}
                             </dd>
                             <dd class="govuk-summary-list__actions">
                                 <a class="govuk-link" id="change-telephone-number-details" href="{{ path('lpa.add.contact-details') }}">
-                                    {% trans %}Change<span class="govuk-visually-hidden"> telephone number</span>{% endtrans %}
+                                    {% trans %}request-activation-key.check-details.link-change-telephone{% context %}html{% notes %}Visible link text “Change” followed by visually hidden text, read by screen readers, describing the phone number being changed. Preserve the span and its class when translating.{% endtrans %}
                                 </a>
                             </dd>
                         </div>
@@ -151,8 +152,8 @@
                     <div class="govuk-warning-text">
                         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                         <strong class="govuk-warning-text__text">
-                            <span class="govuk-visually-hidden">{% trans %}Warning{% endtrans %}</span>
-                            {% trans %}I understand that the information I've given will be stored securely and used to process my activation key request.{% endtrans %}
+                            <span class="govuk-visually-hidden">{% trans %}common.warning-hidden-text{% notes %}Visually hidden prefix read out by screen readers before GOV.UK warning text, shown alongside a “!” icon. It is not visible on screen.{% endtrans %}</span>
+                            {% trans %}request-activation-key.check-details.warning-consent{% endtrans %}
                         </strong>
                     </div>
 
@@ -160,7 +161,7 @@
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
-                    <button name="workflow_submit" data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Confirm and submit request{% endtrans %}</button>
+                    <button name="workflow_submit" data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}request-activation-key.check-details.button-submit{% endtrans %}</button>
 
                     {{ govuk_form_close() }}
                 </div>

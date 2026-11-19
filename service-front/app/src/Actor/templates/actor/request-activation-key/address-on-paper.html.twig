@@ -1,11 +1,11 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}What is your address on the paper LPA?{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}request-activation-key.address-on-paper.title{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}common.back-link{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -15,7 +15,7 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl" id="address-on-paper-heading">{% trans %}What is your address on the paper LPA?{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl" id="address-on-paper-heading">{% trans %}request-activation-key.address-on-paper.heading-page{% context %}html{% notes %}Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.{% endtrans %}</h1>
 
                     {{ govuk_form_open(form) }}
 
@@ -27,7 +27,9 @@
                             'autocomplete' : 'street-address'
                         })}}
                     </div>
-                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}common.button-continue{% endtrans %}</button>
+
                     {{ govuk_form_close() }}
                 </div>
             </div>
