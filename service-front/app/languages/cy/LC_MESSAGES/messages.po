@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-20 13:09+0000\n"
+"PO-Revision-Date: 2026-11-20 14:35+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -5130,3 +5130,79 @@ msgstr "<p class=\"govuk-body\">Bydd angen cod actifadu arnoch ar gyfer pob <abb
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:40
 msgid "request-activation-key.received.button-request-another"
 msgstr "Gofyn am god actifadu arall"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:3
+msgid "terms-of-use.use.title"
+msgstr "Telerau defnyddio"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:10
+msgid "terms-of-use.use.heading-page"
+msgstr "Telerau defnyddio"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:12
+msgctxt "html"
+msgid "terms-of-use.use.content-intro"
+msgstr ""
+"<p class=\"govuk-body\">Mae’r gwasanaeth Defnyddio atwrneiaeth arhosol (LPA) yn eich galluiogi i greu codau mynediad i’w rhoi i bobl broffesiynol neu sefydliadau fel y gallant weld crynodeb o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar-lein. Er enghraifft, sefydliadau ariannol, gweithwyr proffesiynol meddygol a sefydliadau gofal.</p>\n"
+"<p class=\"govuk-body\">Mae’r gwasanaeth ar gyfer rhoddwyr ac atwrneiod wedi’u henwi mewn <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Nid yw ar gyfer atwrneiod wrth gefn.</p>\n"
+"<p class=\"govuk-body\">Dylech allu defnyddio’r gwasanaeth hwn yn lle dangos yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur lawn i rywun.</p>"
+
+#. Visually hidden prefix read out by screen readers before GOV.UK warning
+#. text, shown alongside a “!” icon. It is not visible on screen.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:19
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:26
+msgid "common.warning-hidden-text"
+msgstr "Rhybudd"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:20
+msgctxt "html"
+msgid "terms-of-use.use.warning-download-print"
+msgstr "Ni chewch ddefnyddio copi wedi’i lawrlwytho neu gopi wedi’i argraffu o’r crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar-lein, yn lle’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur lawn neu gopi swyddogol ohoni"
+
+#. Contains GOV.UK HTML elements and classes, and links to external websites.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:26
+msgctxt "html"
+msgid "terms-of-use.use.content-agreement"
+msgstr "<p class=\"govuk-body\">Trwy ddefnyddio’r gwasanaeth hwn rydych yn cytuno i’r telerau defnyddio hyn a <a class=\"govuk-link\" href=\"https://www.gov.uk/help/terms-conditions\">thelerau ac amodau GOV.UK</a>.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:30
+msgid "terms-of-use.use.heading-attorney-responsibilities"
+msgstr "Eich cyfrifoldebau fel atwrnai"
+
+#. Contains GOV.UK HTML elements and classes, and links to external websites.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
+msgctxt "html"
+msgid "terms-of-use.use.content-attorney-responsibilities"
+msgstr ""
+"<p class=\"govuk-body\">Os ydych yn atwrnai, cofiwch bod defnyddio’r gwasanaeth hwn i roi mynediad i rywun i grynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yr un fath â defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur lawn.</p>\n"
+"<p class=\"govuk-body\">Pan fyddwch yn defnyddio <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> mae’n rhaid i chi wastad ddilyn y cyfrifoldebau cyfreithiol y gwnaethoch gytuno iddynt wrth lofnodi’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Er enghraifft, mae’n rhaid i chi wastad:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>ddilyn egwyddorion <a class=\"govuk-link\" href=\"https://www.gov.uk/government/publications/mental-capacity-act-code-of-practice\">y Ddeddf Galluedd Meddyliol</a></li>\n"
+"<li>ystyried unrhyw ddymuniadau neu gyfarwyddiadau a nodwyd gan y rhoddwr yn ei <abbr title=\"atwrneiaeth arhosol\">LPA</abbr></li>\n"
+"<li>gweithredu er lles pennaf y rhoddwr</li>\n"
+"</ul>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:35
+msgid "terms-of-use.use.heading-account-security"
+msgstr "Diogelu eich cyfrif"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:36
+msgctxt "html"
+msgid "terms-of-use.use.content-account-security"
+msgstr ""
+"<p class=\"govuk-body\">Pan fyddwch yn creu cyfrif ar-lein ar gyfer y gwasanaeth hwn, defnyddiwch gyfeiriad e-bost dilys a defnyddiwch gyfrinair cadarn na all rhywun arall ddyfalu beth ydyw yn hawdd.</p>\n"
+"<p class=\"govuk-body\">Eich cyfrifoldeb chi yw cadw eich manylion mewngofnodi yn ddiogel. Ni ddylech ddefnyddio cyfeiriad e-bost rydych yn ei rannu â rhywun arall i greu eich cyfrif. Peidiwch â rhannu eich cyfrinair gyda neb neu ei ysgrifennu ar ddarn o bapur.</p>\n"
+"<p class=\"govuk-body\">Chi sy’n gyfrifol am yr holl weithgaredd ar eich cyfrif gwasanaeth Defnyddio atwrneiaeth arhosol. Rydym yn cadw cofnod o’ch gweithgaredd at ddibenion diogelwch ac i atal twyll.</p>\n"
+"<p class=\"govuk-body\">Rydym yn argymell eich bod yn allgofnodi o’ch cyfrif pan nad ydych yn defnyddio’r gwasanaeth. Byddwn yn eich allgofnodi’n awtomatig os nad ydych wedi defnyddio’r gwasanaeth am 60 munud.</p>\n"
+"<p class=\"govuk-body\">Os ydych yn lawrlwytho neu’n argraffu copi o grynodeb yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, gwnewch yn siŵr eich bod yn cadw’r wybodaeth yn saff ac yn ddiogel.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:40
+msgid "terms-of-use.use.heading-access-codes"
+msgstr "Defnyddio codau mynediad yn gyfrifol"
