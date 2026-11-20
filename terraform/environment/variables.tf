@@ -69,6 +69,7 @@ variable "environments" {
       create_dashboard                                 = bool
       create_onelogin_dashboard                        = bool
       cloudwatch_application_insights_enabled          = bool
+      cloudwatch_anomaly_detection_alarms_enabled      = bool
       csp_enforce                                      = string
       csp_auth_domain                                  = string
       csp_iap_domain                                   = string

@@ -346,7 +346,7 @@ resource "aws_cloudwatch_metric_alarm" "high_task_memory" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "dynamodb_read_capacity_anomaly" {
-  for_each                  = var.dynamodb_tables
+  for_each                  = var.cloudwatch_anomaly_detection_alarms_enabled ? var.dynamodb_tables : {}
   alarm_name                = "${var.environment_name}-${each.key}-read-capacity-anomaly"
   alarm_description         = "DynamoDB read consumption anomaly."
   actions_enabled           = var.dynamodb_alarms_enabled
@@ -385,7 +385,7 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_read_capacity_anomaly" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_usage_anomaly" {
-  for_each            = local.ecs_services
+  for_each            = var.cloudwatch_anomaly_detection_alarms_enabled ? local.ecs_services : {}
   actions_enabled     = false
   alarm_name          = "${var.environment_name}-${each.key}-cpu-usage-anomaly"
   alarm_description   = "Anomaly detection for CPU utilisation of the ${each.key} service in ${var.environment_name}"
@@ -422,7 +422,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_usage_anomaly" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "memory_usage_anomaly" {
-  for_each            = local.ecs_services
+  for_each            = var.cloudwatch_anomaly_detection_alarms_enabled ? local.ecs_services : {}
   actions_enabled     = false
   alarm_name          = "${var.environment_name}-${each.key}-memory-usage-anomaly"
   alarm_description   = "Anomaly detection for memory utilisation of the ${each.key} service in ${var.environment_name}"
