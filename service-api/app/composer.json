@@ -14,7 +14,7 @@
             "tbachert/spi": false
         },
         "platform": {
-            "php": "8.4.27"
+            "php": "8.4.28"
         }
     },
     "extra": {
@@ -36,7 +36,7 @@
         "forum": "https://discourse.zendframework.com/c/questions/expressive"
     },
     "require": {
-        "php": "^8.4.27",
+        "php": "^8.4.28",
         "ext-apcu": "*",
         "ext-gmp": "*",
         "ext-openssl": "*",
