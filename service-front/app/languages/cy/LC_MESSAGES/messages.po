@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-19 16:56+0000\n"
+"PO-Revision-Date: 2026-11-20 13:08+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -5119,3 +5119,10 @@ msgstr ""
 msgctxt "html"
 msgid "request-activation-key.received.heading-more-than-one-lpa"
 msgstr "A oes gennych chi fwy nag un <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>?"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:32
+msgctxt "html"
+msgid "request-activation-key.received.content-more-than-one-lpa"
+msgstr "<p class=\"govuk-body\">Bydd angen cod actifadu arnoch ar gyfer pob <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yr hoffech ei hychwanegu at eich cyfrif.</p>"
