@@ -323,3 +323,7 @@ variable "gotenberg_tag" {
   description = "The image tag for Gotenberg"
   type        = string
 }
+
+variable "cloudwatch_anomaly_detection_alarms_enabled" {
+  type = bool
+}
