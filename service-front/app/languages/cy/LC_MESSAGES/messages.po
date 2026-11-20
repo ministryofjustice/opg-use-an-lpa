@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-20 14:35+0000\n"
+"PO-Revision-Date: 2026-11-20 14:58+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -5206,3 +5206,71 @@ msgstr ""
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:40
 msgid "terms-of-use.use.heading-access-codes"
 msgstr "Defnyddio codau mynediad yn gyfrifol"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:41
+msgctxt "html"
+msgid "terms-of-use.use.content-access-codes"
+msgstr ""
+"<p class=\"govuk-body\">Pan fyddwch yn rhoi cod mynediad <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> i rywun, rydych yn gadael iddynt weld gwybodaeth bersonol am y rhoddwr a’r atwrneiod yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>.</p>\n"
+"<p class=\"govuk-body\">Cadwch y codau mynediad yn ddiogel. Rhowch godau mynediad i weithwyr proffesiynol a sefydliadau rydych yn ymddiried ynddynt yn unig ac y mae’n briodol iddynt fod angen gweld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>.</p>\n"
+"<p class=\"govuk-body\">Nid ydym yn gyfrifol am sut y defnyddir, y rhennir neu y cedwir gwybodaeth bersonol a gaiff ei gweld drwy ddefnyddio cod rydych wedi’i greu.</p>\n"
+"<p class=\"govuk-body\">Os byddwch yn colli cod neu’n poeni y gall cod gael ei ddefnyddio gan unigolyn heb awdurdod, gallwch ganslo’r cod drwy’r gwasanaeth.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:45
+msgid "terms-of-use.use.heading-access-securely"
+msgstr "Defnyddio’r gwasanaeth yn ddiogel"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:46
+msgctxt "html"
+msgid "terms-of-use.use.content-access-securely"
+msgstr ""
+"<p class=\"govuk-body\">Rydych chi’n gyfrifol am ddefnyddio’r gwasanaeth yn ddiogel. Ni ddylech ddefnyddio’r gwasanaeth ar gyfrifiadur neu rwydwaith a allai adael gwybodaeth bersonol yn hygyrch i eraill neu a allai fod yn anniogel. Er enghraifft, ni ddylech:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>adael cyfrifiadur heb ei warchod wrth ddefnydio’r gwasanaeth</li>\n"
+"<li>defnyddio’r gwasanaeth gyda chyfrifiadur cyhoeddus neu gyfrifiadur sy’n cael ei rannu gyda phobl eraill</li>\n"
+"</ul>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:50
+msgid "terms-of-use.use.heading-information-safe"
+msgstr "Cadw eich gwybodaeth yn ddiogel"
+
+#. Contains GOV.UK HTML markup, a privacy notice link using the %privacy-
+#. notice% placeholder and a cookie policy link using the %cookie% placeholder.
+#. Preserve the HTML and placeholders when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:51
+msgctxt "html-link"
+msgid "terms-of-use.use.content-information-safe"
+msgstr "<p class=\"govuk-body\">Bydd unrhyw wybodaeth a roddir gennych yn cael ei storio’n ddiogel a’i defnyddio yn unol â’n <a class=\"govuk-link\" href=\"%privacy-notice%\">hysbysiad preifatrwydd</a> a’n <a class=\"govuk-link\" href=\"%cookie%\">polisi cwcis</a>.</p>"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:56
+msgctxt "html"
+msgid "terms-of-use.use.heading-change-lpa"
+msgstr "Rhowch wybod i ni os ydych am i ni newid yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
+
+#. Contains GOV.UK HTML elements and classes, and links to external websites.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:60
+msgctxt "html"
+msgid "terms-of-use.use.content-change-lpa"
+msgstr ""
+"<p class=\"govuk-body\">Pan fydd gweithwyr proffesiynol a sefydliadau yn edrych ar grynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, mae’n bwysig eu bod yn gweld gwybodaeth gyfredol.</p>\n"
+"<p class=\"govuk-body\">Rhowch wybod i Swyddfa’r Gwarcheidwad Cyhoeddus (OPG) os oes <a class=\"govuk-link\" href=\"https://www.gov.uk/power-of-attorney/change-your-lasting-power-of-attorney\"> angen gwneud newidiadau i wybodaeth mewn <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> </a>. Yna byddwn yn diweddaru’r gofrestr atwrneiaethau arhosol ac yn gwneud y newidiadau angenrheidiol i’r crynodeb ar-lein.</p>\n"
+"<p class=\"govuk-body\">Er enghraifft, dylech roi gwybod i ni os yw:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>y rhoddwr neu atwrnai wedi newid ei enw neu ei gyfeiriad</li>\n"
+"<li>y rhoddwr eisiau tynnu enw atwrnai oddi ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr></li>\n"
+"<li>atwrnai wedi marw neu os nad yw’n gallu parhau i weithredu fel atwrnai</li>\n"
+"<li>y rhoddwr eisiau conslo ei <abbr title=\"atwrneiaeth arhosol\">LPA</abbr></li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">Wedi i chi roi gwybod i ni am newid, fe all gymryd ychydig o ddyddiau cyn iddo ddangos ar y gwasanaeth ar-lein.</p>\n"
+"<p class=\"govuk-body\">Rhowch wybod i ni am newidiadau mae angen eu gwneud cyn gynted â phosibl.</p>\n"
+"<p class=\"govuk-body\"><b>Only the Court of Protection can change a registeredDim ond y Llys Gwarchod gaiff newid <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> gofrestredig</b>. Ni ddylech wneud newidiadau i’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur gyda beiro, hylif cywiro neu mewn unrhyw ffordd arall. Mae hyn yn wir am bob newid, hyd yn oed pethau bychan megis cywiro gwall sillafu yn enw unigolyn. Os byddwch yn newid yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, mae’n bosib na fyddwch yn gallu ei defnyddio mwyach.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:64
+msgid "terms-of-use.use.heading-online-summary"
+msgstr "Y crynodeb ar-lein"
