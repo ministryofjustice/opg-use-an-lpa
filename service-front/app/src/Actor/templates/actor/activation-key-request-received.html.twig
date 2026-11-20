@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}We've got your activation key request{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}request-activation-key.received.title{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -9,34 +9,40 @@
                 <div class="govuk-grid-column-two-thirds">
                     <div class="govuk-panel govuk-panel--confirmation">
                         <h1 class="govuk-panel__title">
-                            {% trans %}We've got your activation key request{% endtrans %}
+                            {% trans %}request-activation-key.received.heading-page{% endtrans %}
                         </h1>
                     </div>
                 </div>
                 <div class="govuk-grid-column-two-thirds">
 
-                    <p class="govuk-body">{% trans %}Once we've checked all the details, we'll post you a letter with your activation key for this LPA. We send it by post because it's more secure.{% endtrans %}</p>
-                    <p class="govuk-body">{% trans %}We'll contact you if we need any more information.{% endtrans %}</p>
-                    <p class="govuk-body">{% trans %}Once you've got the activation key, you'll be able to use it to add the LPA to your account.{% endtrans %}</p>
-                    <p class="govuk-body">{% trans %}We've sent you an email to confirm all these details.{% endtrans %}</p>
-                    <p class="govuk-body">{% trans with {'%date%': lpa_date(date)} %}Most people hear from us or get the activation key within 2 weeks of requesting it. However, sometimes it can take a bit longer. If you have not heard from us by %date%, please get in touch.{% endtrans %}</p>
+                    {% trans with {'%date%': lpa_date(date)} %}
+                        request-activation-key.received.content-what-happens-next
+                    {% context %}html{% notes %}Contains GOV.UK paragraph elements and classes, and a %date% placeholder for the date by which the user should have heard from us. Preserve the HTML structure, classes and placeholder when translating.{% endtrans %}
 
                     {{ include('@partials/contact-details/email.html.twig') }}
+
                     {{ include('@partials/contact-details/telephone.html.twig') }}
 
-                    <h2 class="govuk-heading-l">{% trans %}Have more than one LPA?{% endtrans %}</h2>
-                    <p class="govuk-body">{% trans %}You'll need an activation key for each LPA that you'd like to add to your account.{% endtrans %}</p>
+                    <h2 class="govuk-heading-l">
+                        {% trans %}
+                            request-activation-key.received.heading-more-than-one-lpa
+                        {% context %}html{% notes %}Contains an abbr element for LPA. Preserve the HTML when translating.{% endtrans %}
+                    </h2>
+
+                    {% trans %}
+                        request-activation-key.received.content-more-than-one-lpa
+                    {% context %}html{% notes %}Contains GOV.UK HTML elements and classes. Preserve the HTML structure and classes when translating.{% endtrans %}
 
                     <div class="moj-button-menu">
                         <a href="{{ path('lpa.add-by-paper', {}, {'requestAnother': 'true'}) }}" role="button"
                            draggable="false" class="govuk-button moj-button-menu__item  "
                            data-module="govuk-button">
-                            {% trans %}Request another activation key{% endtrans %}
+                            {% trans %}request-activation-key.received.button-request-another{% endtrans %}
                         </a>
                         <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
                            class="govuk-button moj-button-menu__item govuk-button--secondary "
                            data-module="govuk-button">
-                            {% trans %}Back to your LPAs{% endtrans %}
+                            {% trans %}common.button-back-to-your-lpas{% endtrans %}
                         </a>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Your lasting powers of attorney{% endtrans %} - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}dashboard.home.title{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -22,44 +22,38 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
-                    <h1 class="govuk-heading-xl">{% trans %}Your lasting powers of attorney{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}dashboard.home.heading-page{% endtrans %}</h1>
                 </div>
             </div>
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <p class="govuk-body-l">{% trans %}Any lasting power of attorney (LPA) you add to your account will appear on this page.{% endtrans %}</p>
+                    {% trans %}
+                        dashboard.home.content-intro
+                    {% context %}html{% notes %}Contains GOV.UK paragraph elements and classes, an abbr element for LPA and a link to GOV.UK guidance. Preserve the HTML structure, classes and link destination when translating.{% endtrans %}
 
-                    <p class="govuk-body-m">
-                        {% trans with {
-                            '%link1%': is_english(path()) ? 'https://www.gov.uk/lasting-power-attorney-duties' : 'https://www.gov.uk/atwrneiaeth-arhosol',
-                            '%link2%': is_english(path()) ? 'https://www.gov.uk/make-decisions-for-someone/making-decisions' : 'https://www.gov.uk/gwneud-penderfyniadau-dros-rywun/gwneud-penderfyniadau',
-                        } %}
-                            Find out about <a href="%link1%" class="govuk-link">managing LPAs</a> and how attorneys should support donors <a href="%link2%" class="govuk-link">to make decisions</a>.
-                        {% endtrans %}
-                    </p>
                     <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="Details" data-gaCategory="Service Information" data-gaLabel="What can I do with this service?">
                         <summary class="govuk-details__summary" role="button" >
                             <span class="govuk-details__summary-text">
-                              {% trans %}What can I do with this service?{% endtrans %}
+                              {% trans %}dashboard.home.reveal-service-title{% endtrans %}
                             </span>
                         </summary>
                         <div class="govuk-details__text">
-                            <p>{% trans %}Use this service to:{% endtrans %}</p>
-                            <ul class="govuk-list govuk-list--bullet">
-                                <li>{% trans %}give organisations access to an online summary of an <abbr title="lasting power of attorney">LPA</abbr> by making a secure access code{% endtrans %}</li>
-                                <li>{% trans %}keep track of the organisations that have online access to an <abbr title="lasting power of attorney">LPA</abbr>{% endtrans %}</li>
-                                <li>{% trans %}view an <abbr title="lasting power of attorney">LPA</abbr> summary, including a scanned image of any restrictions and conditions (can also be known as “preferences and instructions” depending on when the LPA was made){% endtrans %}</li>
-                                <li>{% trans %}ask for an activation key if you have not been given one - or it has expired{% endtrans %}</li>
-                            </ul>
+                            {% trans %}
+                                dashboard.home.reveal-service-content
+                            {% context %}html{% notes %}Contains a paragraph and a GOV.UK bulleted list with abbr elements for LPA. Preserve the HTML structure and classes when translating.{% endtrans %}
                         </div>
                     </details>
 
                     <a href="{{ path('lpa.add') }}" draggable="false" class="govuk-button">
                         {% if total_lpas > 0 %}
-                            {% trans %}Add another LPA{% endtrans %}
+                            {% trans %}
+                                dashboard.home.button-add-another-lpa
+                            {% context %}html{% notes %}Contains an abbr element for LPA. Preserve the HTML when translating.{% endtrans %}
                         {% else %}
-                            {% trans %}Add your first LPA{% endtrans %}
+                            {% trans %}
+                                dashboard.home.button-add-first-lpa
+                            {% context %}html{% notes %}Contains an abbr element for LPA. Preserve the HTML when translating.{% endtrans %}
                         {% endif %}
                     </a>
                 </div>
@@ -69,7 +63,9 @@
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-full">
                         <p class="govuk-body govuk-!-margin-bottom-0">
-                            {% trans count total_lpas %}You have %count% LPA in your account | You have %count% LPAs in your account{% endtrans %}
+                            {% trans count total_lpas %}
+                                dashboard.home.content-lpa-count | dashboard.home.content-lpa-count-plural
+                            {% context %}html{% notes %}Contains an abbr element for LPA and a %count% placeholder for the number of LPAs in the account. Preserve the HTML and placeholder when translating.{% endtrans %}
                         </p> <br>
 
                         {% if has_duplicate_lpas %}
@@ -85,12 +81,14 @@
                                 </div>
                                 <div class="moj-alert__content">
                                     <h2 class="moj-alert__heading">
-		                                {% trans %}Your account contains duplicate LPAs{% endtrans %}
-	                                </h2>
+                                        {% trans %}
+                                            dashboard.home.heading-duplicate-lpas
+                                        {% context %}html{% notes %}Contains an abbr element for LPAs. Preserve the HTML when translating.{% endtrans %}
+                                    </h2>
 
-	                                <p class="govuk-body govuk-!-margin-top-2 govuk-!-margin-left-12">{% trans %}You might find it easier to manage your account by removing duplicate LPAs.{% endtrans %}</p>
-                                    <p class="govuk-body">{% trans %}It doesn’t matter which LPA you remove but it would be more accurate to keep those that show as added by you, especially when creating access codes for organisations.{% endtrans %}</p>
-                                    <p class="govuk-body">{% trans %}Removing duplicate LPAs is optional.{% endtrans %}</p>
+                                    {% trans %}
+                                        dashboard.home.content-duplicate-lpas
+                                    {% context %}html{% notes %}Contains GOV.UK paragraph elements and classes and abbr elements for LPA. Preserve the HTML structure and classes when translating.{% endtrans %}
                                 </div>
                             </div>
                         {% endif %}

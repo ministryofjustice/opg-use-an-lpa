@@ -72,7 +72,7 @@ class RequestActivationKeyContext implements Context
     public function iAmToldICannotRequestAnActivationKey(): void
     {
         $this->ui->assertPageAddress('/lpa/add/actor-role');
-        $this->ui->assertPageContainsText('You cannot request an activation key if you are a replacement attorney');
+        $this->assertPageContainsTranslatedText('request-activation-key.replacement-attorney.heading-page');
     }
 
     #[Then('/^I am asked for the attorney details$/')]
@@ -584,7 +584,7 @@ class RequestActivationKeyContext implements Context
     #[When('/^I request another activation key$/')]
     public function iRequestAnotherActivationKey(): void
     {
-        $this->ui->clickLink('Request another activation key');
+        $this->ui->getSession()->getPage()->find('css', 'main a[href$="requestAnother=true"]')->click();
         $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
     }
 
@@ -1851,8 +1851,12 @@ class RequestActivationKeyContext implements Context
         if ($time === '4 weeks') {
             $date = (new DateTime())->modify('+4 weeks')->format('j F Y');
 
-            $this->ui->assertPageContainsText("We've got your activation key request");
-            $this->ui->assertPageContainsText('If you have not heard from us by ' . $date . ', please get in touch.');
+            $this->assertPageContainsTranslatedText('request-activation-key.received.heading-page');
+            $this->assertPageContainsTranslatedText(
+                'request-activation-key.received.content-what-happens-next',
+                ['%date%' => $date],
+                context: 'html',
+            );
         } else {
             $date = (new DateTime())->modify('+2 weeks')->format('j F Y');
             $this->ui->assertPageContainsText("We're posting you an activation key");
