@@ -38,6 +38,7 @@ func TestLogoutHandler(t *testing.T) {
 	cookie := rr.Result().Cookies()[0]
 	assert.Equal(t, "AWSELBAuthSessionCookie-0", cookie.Name)
 	assert.True(t, cookie.MaxAge < 0) // Ensure the cookie is set to expire immediately.
+	assert.True(t, cookie.HttpOnly)
 
 	// Check the caching headers.
 	assert.Equal(t, "no-store, no-cache, must-revalidate, max-age=0", rr.Header().Get("Cache-Control"))
