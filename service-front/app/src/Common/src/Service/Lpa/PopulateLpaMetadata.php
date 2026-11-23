@@ -17,7 +17,7 @@ class PopulateLpaMetadata
     /**
      * The maximum number of viewer code requests that will be in flight to the API at once
      */
-    public const CONCURRENCY = 10;
+    public const int CONCURRENCY = 10;
 
     public function __construct(private ViewerCodeService $viewerCodeService)
     {
@@ -51,7 +51,7 @@ class PopulateLpaMetadata
             yield $this->viewerCodeService
                 ->getShareCodesAsync($lpaData['user-lpa-actor-token'], true)
                 ->then(function (ArrayObject $shareCodes) use ($lpas, $lpaKey): void {
-                    $lpas->$lpaKey->activeCodeCount = $shareCodes->activeCodeCount;
+                    $lpas->$lpaKey->activeCodeCount = $shareCodes['activeCodeCount'];
                     $lpas->$lpaKey->shareCodes      = $shareCodes;
                 });
         }
