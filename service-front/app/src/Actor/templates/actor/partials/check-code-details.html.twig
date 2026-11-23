@@ -17,7 +17,9 @@
         </h3>
 
         <div class="govuk-accordion__section-summary govuk-body" id="accordion-sections-summary-{{ id_counter }}">
-            {% if not (check_if_code_has_expired(code.Expires) or check_if_code_is_cancelled(code)) %}
+            {% if days_remaining_to_expiry(code.Expires) === '0' and (not check_if_code_is_cancelled(code)) %}
+                {% trans %}Access code expires today{% endtrans %}
+            {% elseif not (check_if_code_has_expired(code.Expires) or check_if_code_is_cancelled(code)) %}
                 {% trans count days_remaining_to_expiry(code.Expires) %}Access code expires in %count% day|Access code expires in %count% days{% endtrans %}
             {% elseif check_if_code_is_cancelled(code) %}
                 {% trans with {'%date%': code_date(code.Cancelled)} %}Access code cancelled %date%{% endtrans %}
