@@ -194,7 +194,7 @@ class LpaExtension extends AbstractExtension
     {
         if ($expiryDate) {
             $date = new DateTime($expiryDate);
-            return $date <= (new DateTime('now'))->setTime(23, 59, 59);
+            return $date <= new DateTime('now');
         }
 
         return null;

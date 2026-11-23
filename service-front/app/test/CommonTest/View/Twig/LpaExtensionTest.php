@@ -80,7 +80,7 @@ class LpaExtensionTest extends TestCase
 
         $this->assertSame(
             '<span class="lpa-access-code__part">V</span><span class="lpa-access-code__separator" aria-hidden="true">-</span><span class="lpa-access-code__part">AB12</span><span class="lpa-access-code__separator" aria-hidden="true">-</span><span class="lpa-access-code__part">CD34</span><span class="lpa-access-code__separator" aria-hidden="true">-</span><span class="lpa-access-code__part">EF56</span>',
-            $extension->formatViewerCodeWithSpans('AB12CD34EF56')
+            $extension->formatViewerCodeWithSpans('AB12CD34EF56') //pragma: allowlist secret
         );
     }
 
@@ -437,9 +437,10 @@ class LpaExtensionTest extends TestCase
 
     public static function expiryDateProvider()
     {
-        $future     = (new DateTime('+1 week'))->format('Y-m-d');
-        $past       = (new DateTime('-1 week'))->format('Y-m-d');
-        $endOfToday = (new DateTime('now'))->setTime(23, 59, 59)->format('Y-m-d');
+        $future     = (new DateTime('+1 week'))->format(DateTime::RFC3339);
+        $past       = (new DateTime('-1 week'))->format(DateTime::RFC3339);
+        $endOfToday = (new DateTime('now'))->setTime(23, 59, 59)->format(DateTime::RFC3339);
+        $yesterday  = (new DateTime('yesterday'))->setTime(23, 59, 59)->format(DateTime::RFC3339);
 
         return [
             [
@@ -452,6 +453,10 @@ class LpaExtensionTest extends TestCase
             ],
             [
                 $endOfToday,
+                false,
+            ],
+            [
+                $yesterday,
                 true,
             ],
             [
