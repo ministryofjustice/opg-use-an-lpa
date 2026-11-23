@@ -13,6 +13,7 @@ module "eu_west_1" {
   cookie_expires_use                               = local.environment.cookie_expires_use
   cookie_expires_view                              = local.environment.cookie_expires_view
   cloudwatch_application_insights_enabled          = local.environment.cloudwatch_application_insights_enabled
+  cloudwatch_anomaly_detection_alarms_enabled      = local.environment.cloudwatch_anomaly_detection_alarms_enabled
   create_onelogin_dashboard                        = local.environment.create_onelogin_dashboard
   create_dashboard                                 = local.environment.create_dashboard
   csp_enforce                                      = local.environment.csp_enforce
@@ -24,6 +25,7 @@ module "eu_west_1" {
   environment_name                                 = local.environment_name
   event_bus_enabled                                = local.environment.event_bus_enabled
   event_reciever_kms_key_arn                       = data.aws_kms_alias.event_receiver.target_key_arn
+  gotenberg_tag                                    = local.gotenberg_tag
   google_analytics_id_use                          = local.environment.google_analytics_id_use
   google_analytics_id_view                         = local.environment.google_analytics_id_view
   gov_uk_onelogin_client_id_secret_name            = local.environment.gov_uk_onelogin_client_id_secret_name
@@ -109,6 +111,7 @@ module "eu_west_2" {
   cookie_expires_use                               = local.environment.cookie_expires_use
   cookie_expires_view                              = local.environment.cookie_expires_view
   cloudwatch_application_insights_enabled          = local.environment.cloudwatch_application_insights_enabled
+  cloudwatch_anomaly_detection_alarms_enabled      = local.environment.cloudwatch_anomaly_detection_alarms_enabled
   create_onelogin_dashboard                        = local.environment.create_onelogin_dashboard
   create_dashboard                                 = local.environment.create_dashboard
   csp_enforce                                      = local.environment.csp_enforce
@@ -120,6 +123,7 @@ module "eu_west_2" {
   environment_name                                 = local.environment_name
   event_bus_enabled                                = local.environment.event_bus_enabled
   event_reciever_kms_key_arn                       = data.aws_kms_alias.event_receiver.target_key_arn
+  gotenberg_tag                                    = local.gotenberg_tag
   google_analytics_id_use                          = local.environment.google_analytics_id_use
   google_analytics_id_view                         = local.environment.google_analytics_id_view
   gov_uk_onelogin_client_id_secret_name            = local.environment.gov_uk_onelogin_client_id_secret_name

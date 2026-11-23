@@ -25,6 +25,7 @@ class ConflictException extends AbstractApiException implements LoggableAddition
         // choose to be explicit about what is being logged to avoid leakage.
         return array_filter([
             'identity' => $data['identity'] ?? '',
+            'users'    => $data['users'] ?? '',
             'email'    => isset($data['email']) ? new Email($data['email']) : '',
         ]);
     }

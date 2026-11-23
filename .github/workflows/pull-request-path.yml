@@ -1,8 +1,5 @@
 name: "[Workflow] PR Environment"
 
-concurrency:
-  group: ${{ github.ref }}-${{ github.workflow }}
-
 defaults:
   run:
     shell: bash
@@ -264,6 +261,7 @@ jobs:
       apply: true
       add_ttl: true
       container_version: ${{ needs.resolve_docker_tag.outputs.docker_tag }}
+      use_gotenberg_latest_green: true
       oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
       oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
@@ -316,6 +314,21 @@ jobs:
       needs.workflow_variables.result == 'success' &&
       needs.seed_dynamodb.result == 'success'
 
+  save_development_gotenberg_version:
+    name: save tested Gotenberg version
+    uses: ./.github/workflows/_resolve-gotenberg.yml
+    needs:
+      - run_behat_suite
+      - terraform_apply_environment
+    if: |
+      always() &&
+      needs.run_behat_suite.result == 'success' &&
+      needs.terraform_apply_environment.result == 'success'
+    with:
+      operation: put
+      environment: development
+      tag: ${{ needs.terraform_apply_environment.outputs.gotenberg_tag }}
+
   slack_notify:
     name: notify of result
     uses: ./.github/workflows/_slack-notification.yml
@@ -343,6 +356,7 @@ jobs:
       - docker_build_scan_push
       - run_behat_suite
       - terraform_apply_environment
+    if: always()
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -389,5 +403,3 @@ jobs:
             echo "Previous jobs in pipeline failed."
             exit 1
           fi
-
-    if: always()

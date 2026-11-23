@@ -35,6 +35,11 @@ variable "management_role" {
   default = "opg-use-an-lpa-ci-boundary"
 }
 
+variable "shared_production_role" {
+  type    = string
+  default = "opg-use-an-lpa-shared-production-read-only"
+}
+
 provider "aws" {
   region = "eu-west-1"
   default_tags {
@@ -115,6 +120,18 @@ provider "aws" {
   }
   assume_role {
     role_arn     = "arn:aws:iam::238302996107:role/${var.backup_role}"
+    session_name = "terraform-session"
+  }
+}
+
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "shared_production"
+  default_tags {
+    tags = local.default_tags
+  }
+  assume_role {
+    role_arn     = "arn:aws:iam::997462338508:role/${var.shared_production_role}"
     session_name = "terraform-session"
   }
 }

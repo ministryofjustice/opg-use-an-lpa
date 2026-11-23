@@ -431,6 +431,7 @@
     <inspection_tool class="LaravelPintValidationInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="LaravelRoutesInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="LaravelSimplifyOrderBy" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="LaravelUnknownConfigKeyInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="LaravelUnknownEloquentFactoryInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="LaravelUnknownInertiaPageInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="LaravelUnknownRouteNameInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />

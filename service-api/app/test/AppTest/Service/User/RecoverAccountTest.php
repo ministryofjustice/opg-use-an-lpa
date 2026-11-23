@@ -6,9 +6,12 @@ namespace AppTest\Service\User;
 
 use App\DataAccess\Repository\ActorUsersInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
+use App\Exception\ConflictException;
+use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use App\Service\User\RecoverAccount;
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -18,6 +21,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @psalm-import-type ActorUser from ActorUsersInterface
  */
+#[CoversClass(RecoverAccount::class)]
 class RecoverAccountTest extends TestCase
 {
     use ProphecyTrait;
@@ -153,6 +157,62 @@ class RecoverAccountTest extends TestCase
                     'Identity' => 'fakeSub',
                 ],
             ],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('migrationFailures')]
+    public function it_should_propagate_migration_failures_without_bypassing_the_pin(
+        ConflictException|CreationException $error,
+    ): void {
+        $user     = [
+            'Id'       => 'new-id',
+            'Identity' => 'subject',
+            'Email'    => 'old@example.com',
+        ];
+        $existing = [
+            'Id'    => 'original-id',
+            'Email' => 'user@example.com',
+        ];
+
+        $users = $this->createMock(ActorUsersInterface::class);
+        $users->method('getByEmail')->with($existing['Email'])->willReturn($existing);
+        $users->expects(self::once())->method('delete')->with($user['Id'])->willReturn($user);
+        $users->expects(self::once())
+            ->method('migrateToOAuth')
+            ->willReturnCallback(function (
+                array $account,
+                string $identity,
+                bool $ignoreOrphanIdentity = false,
+            ) use (
+                $existing,
+                $error
+            ): array {
+                self::assertSame($existing, $account);
+                self::assertSame('subject', $identity);
+                self::assertFalse($ignoreOrphanIdentity);
+
+                throw $error;
+            });
+
+        $lpas = $this->createStub(UserLpaActorMapInterface::class);
+        $lpas->method('getByUserId')->willReturn([]);
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::never())->method('info');
+
+        $recover = new RecoverAccount($users, $lpas, $logger);
+
+        $this->expectExceptionObject($error);
+
+        $recover($user, $existing['Email']);
+    }
+
+    public static function migrationFailures(): array
+    {
+        return [
+            'pin conflict'  => [new ConflictException('', ['identity' => 'subject'])],
+            'other failure' => [new CreationException()],
         ];
     }
 }
