@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-11-09T09:23:50+00:00\n"
-"PO-Revision-Date: 2026-11-09 09:25+0000\n"
+"POT-Creation-Date: 2026-11-23T16:23:36+00:00\n"
+"PO-Revision-Date: 2026-11-23 16:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: none\n"
 "Language: en\n"
@@ -7189,3 +7189,7 @@ msgstr ""
 "<p class=\"govuk-body\">By continuing you agree to our <a href=\"%link%\" "
 "target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">terms of "
 "use (opens in new tab)</a>.</p>"
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:21
+msgid "Access code expires today"
+msgstr "Access code expires today"
