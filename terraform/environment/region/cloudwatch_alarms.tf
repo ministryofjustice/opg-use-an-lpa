@@ -1,7 +1,7 @@
 resource "aws_cloudwatch_metric_alarm" "viewer_5xx_errors" {
   count               = !var.shared_load_balancers_enabled ? 1 : 0
   actions_enabled     = true
-  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions       = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   alarm_description   = "5XX Errors returned to viewer users for ${var.environment_name}"
   alarm_name          = "${var.environment_name} viewer 5XX errors"
   comparison_operator = "GreaterThanThreshold"
@@ -13,7 +13,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_5xx_errors" {
   insufficient_data_actions = []
   metric_name               = "HTTPCode_Target_5XX_Count"
   namespace                 = "AWS/ApplicationELB"
-  ok_actions                = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  ok_actions                = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   period                    = 60
   statistic                 = "Sum"
   tags                      = {}
@@ -26,7 +26,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_5xx_errors" {
 resource "aws_cloudwatch_metric_alarm" "actor_5xx_errors" {
   count               = !var.shared_load_balancers_enabled ? 1 : 0
   actions_enabled     = true
-  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions       = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   alarm_description   = "5XX Errors returned to actor users for ${var.environment_name}"
   alarm_name          = "${var.environment_name} actor 5XX errors"
   comparison_operator = "GreaterThanThreshold"
@@ -38,7 +38,7 @@ resource "aws_cloudwatch_metric_alarm" "actor_5xx_errors" {
   insufficient_data_actions = []
   metric_name               = "HTTPCode_Target_5XX_Count"
   namespace                 = "AWS/ApplicationELB"
-  ok_actions                = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  ok_actions                = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   period                    = 60
   statistic                 = "Sum"
   tags                      = {}
@@ -62,8 +62,8 @@ resource "aws_cloudwatch_metric_alarm" "viewer_4xx_anomaly" {
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
 
-  alarm_actions = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
-  ok_actions    = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
+  ok_actions    = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   metric_query {
     id          = "ad1"
     expression  = "ANOMALY_DETECTION_BAND(m1, 4)"
@@ -98,8 +98,8 @@ resource "aws_cloudwatch_metric_alarm" "actor_4xx_anomaly" {
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
 
-  alarm_actions = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
-  ok_actions    = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
+  ok_actions    = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   metric_query {
     id          = "ad1"
     expression  = "ANOMALY_DETECTION_BAND(m1, 4)"
@@ -125,7 +125,7 @@ resource "aws_cloudwatch_metric_alarm" "actor_4xx_anomaly" {
 resource "aws_cloudwatch_metric_alarm" "unexpected_data_lpa_api_resposnes" {
   actions_enabled     = true
   alarm_name          = "${var.environment_name}_unexpected_data_lpa_api_resposnes"
-  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions       = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   alarm_description   = "increase in unexpected data lpa api resposnes"
   namespace           = "${var.environment_name}_events"
   metric_name         = "${var.environment_name}_unexpected_data_lpa_api_responses"
@@ -143,7 +143,7 @@ resource "aws_cloudwatch_metric_alarm" "unexpected_data_lpa_api_resposnes" {
 resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
   actions_enabled     = true
   alarm_name          = "${var.environment_name}_api_5xx_errors"
-  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions       = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   metric_name         = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
   period              = 60
@@ -160,7 +160,7 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
 resource "aws_cloudwatch_metric_alarm" "onelogin_reported_unavailable" {
   actions_enabled     = true
   alarm_name          = "${var.environment_name}_onelogin_reported_unavailable"
-  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions       = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   alarm_description   = "Triggers when GOV.UK One Login logs that the service is unavailable"
   metric_name         = "auth_onelogin_not_available_event"
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -187,7 +187,7 @@ resource "aws_cloudwatch_metric_alarm" "actor_ddos_attack_external" {
   threshold           = "0"
   alarm_description   = "Triggers when AWS Shield Advanced detects a DDoS attack"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions       = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   dimensions = {
     ResourceArn = aws_lb.use[0].arn
   }
@@ -207,7 +207,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_ddos_attack_external" {
   threshold           = "0"
   alarm_description   = "Triggers when AWS Shield Advanced detects a DDoS attack"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions       = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   dimensions = {
     ResourceArn = aws_lb.viewer[0].arn
   }
@@ -228,7 +228,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
   threshold           = "0"
   alarm_description   = "Triggers when AWS Shield Advanced detects a DDoS attack"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions       = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   dimensions = {
     ResourceArn = aws_lb.admin[0].arn
   }
@@ -236,59 +236,14 @@ resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
   provider = aws.region
 }
 
-# ECS Task Monitoring Alarms - PDF Service
-resource "aws_cloudwatch_metric_alarm" "pdf_high_task_cpu" {
-  alarm_name          = "${var.environment_name}-pdf-high-task-cpu"
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = 3
-  threshold           = 90
-  alarm_description   = "A single ECS task for the pdf service is sustaining very high CPU utilisation"
-
-  metric_query {
-    id          = "max_cpu"
-    return_data = true
-    metric {
-      metric_name = "CPUUtilization"
-      namespace   = "AWS/ECS"
-      period      = 60
-      stat        = "Maximum"
-      dimensions = {
-        ServiceName = aws_ecs_service.pdf.name
-        ClusterName = aws_ecs_cluster.use_an_lpa.name
-      }
-    }
-  }
-
-  alarm_actions             = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
-  insufficient_data_actions = []
-  provider                  = aws.region
+moved {
+  from = aws_cloudwatch_metric_alarm.pdf_high_task_cpu
+  to   = aws_cloudwatch_metric_alarm.high_task_cpu["pdf"]
 }
 
-resource "aws_cloudwatch_metric_alarm" "pdf_high_task_memory" {
-  alarm_name          = "${var.environment_name}-pdf-high-task-memory"
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = 3
-  threshold           = 90
-  alarm_description   = "A single ECS task for the pdf service is sustaining very high memory utilisation"
-
-  metric_query {
-    id          = "max_mem"
-    return_data = true
-    metric {
-      metric_name = "MemoryUtilization"
-      namespace   = "AWS/ECS"
-      period      = 60
-      stat        = "Maximum"
-      dimensions = {
-        ServiceName = aws_ecs_service.pdf.name
-        ClusterName = aws_ecs_cluster.use_an_lpa.name
-      }
-    }
-  }
-
-  alarm_actions             = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
-  insufficient_data_actions = []
-  provider                  = aws.region
+moved {
+  from = aws_cloudwatch_metric_alarm.pdf_high_task_memory
+  to   = aws_cloudwatch_metric_alarm.high_task_memory["pdf"]
 }
 
 resource "aws_cloudwatch_metric_alarm" "high_task_cpu" {
@@ -314,7 +269,8 @@ resource "aws_cloudwatch_metric_alarm" "high_task_cpu" {
     }
   }
 
-  alarm_actions = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
+  ok_actions    = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   provider      = aws.region
 }
 
@@ -341,7 +297,8 @@ resource "aws_cloudwatch_metric_alarm" "high_task_memory" {
     }
   }
 
-  alarm_actions = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
+  ok_actions    = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   provider      = aws.region
 }
 
@@ -356,8 +313,8 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_read_capacity_anomaly" {
   threshold_metric_id       = "expected"
   treat_missing_data        = "notBreaching"
   insufficient_data_actions = []
-  alarm_actions             = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
-  ok_actions                = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions             = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
+  ok_actions                = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
 
   metric_query {
     id          = "reads"
@@ -376,7 +333,7 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_read_capacity_anomaly" {
 
   metric_query {
     id          = "expected"
-    expression  = "ANOMALY_DETECTION_BAND(reads, 2)"
+    expression  = "ANOMALY_DETECTION_BAND(reads, 4)"
     label       = "Expected DynamoDB read consumption"
     return_data = true
   }
@@ -394,8 +351,8 @@ resource "aws_cloudwatch_metric_alarm" "cpu_usage_anomaly" {
   datapoints_to_alarm = 3
   threshold_metric_id = "ad1"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
-  ok_actions          = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions       = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
+  ok_actions          = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
 
   metric_query {
     id          = "ad1"
@@ -431,8 +388,8 @@ resource "aws_cloudwatch_metric_alarm" "memory_usage_anomaly" {
   datapoints_to_alarm = 3
   threshold_metric_id = "ad1"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
-  ok_actions          = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions       = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
+  ok_actions          = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
 
   metric_query {
     id          = "ad1"
@@ -467,8 +424,8 @@ resource "aws_cloudwatch_metric_alarm" "nat_gateway_egress_anomaly" {
   evaluation_periods  = 2
   threshold_metric_id = "ad1"
   actions_enabled     = false
-  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
-  ok_actions          = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions       = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
+  ok_actions          = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   treat_missing_data  = "notBreaching"
 
   metric_query {
@@ -511,5 +468,6 @@ locals {
     viewer = aws_ecs_service.viewer.name
     admin  = aws_ecs_service.admin.name
     api    = aws_ecs_service.api.name
+    pdf    = aws_ecs_service.pdf.name
   }
 }

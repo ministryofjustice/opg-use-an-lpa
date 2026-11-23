@@ -100,3 +100,12 @@ resource "aws_sns_topic_subscription" "cloudwatch_sns_subscription" {
 
   provider = aws.region
 }
+
+data "aws_sns_topic" "extended_support" {
+  name     = "extended-support-sns-topic"
+  provider = aws.region
+}
+
+locals {
+  extended_support_sns_topic_arn = var.account.extended_support_alerts_enabled ? data.aws_sns_topic.extended_support.arn : null
+}
