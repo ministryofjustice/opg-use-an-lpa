@@ -376,7 +376,7 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_read_capacity_anomaly" {
 
   metric_query {
     id          = "expected"
-    expression  = "ANOMALY_DETECTION_BAND(reads, 2)"
+    expression  = "ANOMALY_DETECTION_BAND(reads, 4)"
     label       = "Expected DynamoDB read consumption"
     return_data = true
   }
