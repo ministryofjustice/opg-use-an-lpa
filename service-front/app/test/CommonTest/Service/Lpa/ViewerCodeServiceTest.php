@@ -8,6 +8,7 @@ use ArrayObject;
 use Common\Service\ApiClient\Client;
 use Common\Service\Lpa\ViewerCodeService;
 use DateTime;
+use GuzzleHttp\Promise\FulfilledPromise;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -97,6 +98,36 @@ class ViewerCodeServiceTest extends TestCase
 
         $this->assertInstanceOf(ArrayObject::class, $shareCodes);
         $this->assertEmpty($shareCodes);
+    }
+
+    #[Test]
+    public function it_gets_share_codes_asynchronously_with_an_active_count(): void
+    {
+        $lpaId = '98765432-01234-01234-01234-012345678902';
+
+        $return = [
+            [
+                'Added'   => '2020-09-16 22:00:00',
+                'Expires' => (new DateTime('-1 week'))->format('c'),
+            ],
+            [
+                'Added'   => '2020-09-17 22:00:00',
+                'Expires' => (new DateTime('+1 week'))->format('c'),
+            ],
+        ];
+
+        $this->apiClientProphecy
+            ->expects($this->once())
+            ->method('httpGetAsync')->with('/v1/lpas/' . $lpaId . '/codes')
+            ->willReturn(new FulfilledPromise($return));
+
+        $viewerCodeService = new ViewerCodeService($this->apiClientProphecy);
+
+        $shareCodes = $viewerCodeService->getShareCodesAsync($lpaId, true)->wait();
+
+        $this->assertInstanceOf(ArrayObject::class, $shareCodes);
+        $this->assertEquals('2020-09-17 22:00:00', $shareCodes[0]['Added']);
+        $this->assertEquals(1, $shareCodes['activeCodeCount']);
     }
 
     #[Test]

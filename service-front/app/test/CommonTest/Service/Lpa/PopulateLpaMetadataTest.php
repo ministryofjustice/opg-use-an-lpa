@@ -9,7 +9,11 @@ use Common\Entity\CaseActor;
 use Common\Service\Lpa\Factory\PersonDataFormatter;
 use Common\Service\Lpa\PopulateLpaMetadata;
 use Common\Service\Lpa\ViewerCodeService;
+use Common\Exception\ApiException;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
+use GuzzleHttp\Promise\FulfilledPromise;
+use GuzzleHttp\Promise\Promise;
+use GuzzleHttp\Promise\RejectedPromise;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -36,16 +40,17 @@ class PopulateLpaMetadataTest extends TestCase
 
         $this->viewerCodeService = $this->createMock(ViewerCodeService::class);
         $this->viewerCodeService
-            ->expects($this->atLeastOnce())
-            ->method('getShareCodes')
+            ->method('getShareCodesAsync')
             ->with($this->actorToken, true)
-            ->willReturn(
-                new ArrayObject(
-                    [
-                        'activeCodeCount' => 1,
-                    ],
-                    ArrayObject::ARRAY_AS_PROPS
-                ),
+            ->willReturnCallback(
+                fn () => new FulfilledPromise(
+                    new ArrayObject(
+                        [
+                            'activeCodeCount' => 1,
+                        ],
+                        ArrayObject::ARRAY_AS_PROPS
+                    ),
+                )
             );
 
         $siriusActor = new CaseActor();
@@ -160,5 +165,78 @@ class PopulateLpaMetadataTest extends TestCase
 
         $this->assertObjectHasProperty('56-5-5-5-5678', $result);
         $this->assertEquals(true, $result->{'56-5-5-5-5678'}->actorActive);
+    }
+
+    #[Test]
+    public function it_requests_viewer_codes_for_all_lpas_concurrently(): void
+    {
+        $log = [];
+
+        $viewerCodeService = $this->createMock(ViewerCodeService::class);
+        $viewerCodeService
+            ->expects($this->exactly(3))
+            ->method('getShareCodesAsync')
+            ->willReturnCallback(function (string $token) use (&$log): Promise {
+                $log[]   = 'request ' . $token;
+                $promise = new Promise(function () use (&$promise, &$log, $token): void {
+                    $log[] = 'response ' . $token;
+                    $promise->resolve(
+                        new ArrayObject(['activeCodeCount' => strlen($token)], ArrayObject::ARRAY_AS_PROPS)
+                    );
+                });
+
+                return $promise;
+            });
+
+        $lpas = [];
+        foreach (['a', 'bb', 'ccc'] as $token) {
+            $lpas[$token] = ['user-lpa-actor-token' => $token] + $this->siriusLpa;
+        }
+
+        $sut    = new PopulateLpaMetadata($viewerCodeService);
+        $result = $sut($this->getLpas($lpas));
+
+        $this->assertEquals(
+            [
+                'request a',
+                'request bb',
+                'request ccc',
+                'response a',
+                'response bb',
+                'response ccc',
+            ],
+            $log,
+        );
+        $this->assertEquals(1, $result->a->activeCodeCount);
+        $this->assertEquals(2, $result->bb->activeCodeCount);
+        $this->assertEquals(3, $result->ccc->activeCodeCount);
+        $this->assertTrue($result->ccc->actorActive);
+    }
+
+    #[Test]
+    public function it_throws_when_a_viewer_code_request_fails(): void
+    {
+        $viewerCodeService = $this->createMock(ViewerCodeService::class);
+        $viewerCodeService
+            ->expects($this->once())
+            ->method('getShareCodesAsync')
+            ->willReturn(new RejectedPromise(ApiException::create('Error whilst making http GET request')));
+
+        $sut = new PopulateLpaMetadata($viewerCodeService);
+
+        $this->expectException(ApiException::class);
+        $sut($this->getLpas([$this->actorToken => $this->siriusLpa]));
+    }
+
+    #[Test]
+    public function it_handles_an_account_with_no_lpas(): void
+    {
+        $viewerCodeService = $this->createMock(ViewerCodeService::class);
+        $viewerCodeService->expects($this->never())->method('getShareCodesAsync');
+
+        $sut    = new PopulateLpaMetadata($viewerCodeService);
+        $result = $sut(new ArrayObject([], ArrayObject::ARRAY_AS_PROPS));
+
+        $this->assertCount(0, $result);
     }
 }

@@ -9,8 +9,15 @@ use Common\Service\ApiClient\Client;
 use Common\Service\Context\UserContext;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
+use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Psr7\Request as GuzzleRequest;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -20,6 +27,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Throwable;
 
 #[CoversClass(Client::class)]
 class ClientTest extends TestCase
@@ -44,6 +52,100 @@ class ClientTest extends TestCase
             ->willReturn($streamProphecy);
 
         return $responseProphecy;
+    }
+
+    // ============
+    // httpGetAsync
+    // ============
+    private function guzzleClient(GuzzleResponse|Throwable ...$queue): Client
+    {
+        return new Client(
+            new GuzzleClient(['handler' => HandlerStack::create(new MockHandler($queue)), 'http_errors' => false]),
+            'https://localhost',
+            new UserContext(),
+        );
+    }
+
+    #[Test]
+    #[AllowMockObjectsWithoutExpectations]
+    public function can_get_asynchronously_with_a_guzzle_client(): void
+    {
+        $client = $this->guzzleClient(new GuzzleResponse(StatusCodeInterface::STATUS_OK, [], '{"a":1}'));
+
+        $promise = $client->httpGetAsync('/simple_get', ['simple_query' => 'query_value']);
+
+        $this->assertInstanceOf(PromiseInterface::class, $promise);
+        $this->assertEquals(['a' => 1], $promise->wait());
+    }
+
+    #[Test]
+    #[AllowMockObjectsWithoutExpectations]
+    public function rejects_a_non_200_response_to_an_async_get_request(): void
+    {
+        $client = $this->guzzleClient(
+            new GuzzleResponse(
+                StatusCodeInterface::STATUS_NOT_FOUND,
+                [],
+                json_encode(['title' => 'Not found', 'details' => '', 'data' => []]),
+            )
+        );
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+        $client->httpGetAsync('/simple_bad_get')->wait();
+    }
+
+    #[Test]
+    #[AllowMockObjectsWithoutExpectations]
+    public function rejects_a_malformed_response_to_an_async_get_request(): void
+    {
+        $client = $this->guzzleClient(new GuzzleResponse(StatusCodeInterface::STATUS_OK, [], 'not json'));
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('Malformed JSON response from server');
+        $client->httpGetAsync('/simple_get')->wait();
+    }
+
+    #[Test]
+    #[AllowMockObjectsWithoutExpectations]
+    public function rejects_with_an_api_exception_when_an_async_get_request_fails(): void
+    {
+        $client = $this->guzzleClient(
+            new ConnectException('Connection refused', new GuzzleRequest('GET', 'https://localhost'))
+        );
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_GATEWAY);
+        $client->httpGetAsync('/simple_get')->wait();
+    }
+
+    #[Test]
+    public function falls_back_to_a_synchronous_request_for_non_guzzle_clients(): void
+    {
+        $this->apiClient
+            ->expects($this->once())
+            ->method('sendRequest')
+            ->with(self::isInstanceOf(RequestInterface::class))
+            ->willReturn($this->setupResponse('{"a":1}', StatusCodeInterface::STATUS_OK));
+
+        $client = new Client($this->apiClient, 'https://localhost', new UserContext());
+
+        $this->assertEquals(['a' => 1], $client->httpGetAsync('/simple_get')->wait());
+    }
+
+    #[Test]
+    public function fallback_rejects_with_an_api_exception_when_a_request_fails(): void
+    {
+        $this->apiClient
+            ->expects($this->once())
+            ->method('sendRequest')
+            ->willThrowException($this->createStub(ConnectException::class));
+
+        $client = new Client($this->apiClient, 'https://localhost', new UserContext());
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_GATEWAY);
+        $client->httpGetAsync('/simple_get')->wait();
     }
 
     // ============
