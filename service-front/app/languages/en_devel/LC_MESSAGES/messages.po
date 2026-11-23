@@ -6599,10 +6599,6 @@ msgstr "Year"
 msgid "request-activation-key.reference-number.title"
 msgstr "What is the LPA reference number?"
 
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:18
-msgid "request-activation-key.reference-number.heading-page"
-msgstr "What is the LPA reference number?"
-
 #. Contains a line break. Preserve the HTML markup when translating.
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:26
 msgctxt "html"

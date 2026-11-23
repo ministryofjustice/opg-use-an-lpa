@@ -4762,10 +4762,6 @@ msgstr ""
 msgid "request-activation-key.reference-number.title"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:18
-msgid "request-activation-key.reference-number.heading-page"
-msgstr ""
-
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:26
 msgid "request-activation-key.reference-number.field-lpa-reference-number.hint-with-paper-verification"
 msgstr ""
