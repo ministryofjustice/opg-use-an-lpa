@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-20 14:58+0000\n"
+"PO-Revision-Date: 2026-11-23 11:15+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -5274,3 +5274,108 @@ msgstr ""
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:64
 msgid "terms-of-use.use.heading-online-summary"
 msgstr "Y crynodeb ar-lein"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:65
+msgctxt "html"
+msgid "terms-of-use.use.content-online-summary"
+msgstr ""
+"<p class=\"govuk-body\">Nid yw sgrinluniau, copi wedi’i lawrlwytho neu gopi wedi’i argraffu o grynodeb <abbr title=\"lasting power of attorney\">LPA</abbr> ar-lein yn brawf o <abbr title=\"lasting power of attorney\">LPA</abbr> ar mae’n bosib na fydd yn dangos status diweddaraf <abbr title=\"lasting power of attorney\">LPA</abbr>.</p>\n"
+"<p class=\"govuk-body\">Ni fydd enwau unrhyw rai a nodir fel atwrneiod wrth gefn i’w gweld yn y crynodeb o’r <abbr title=\"lasting power of attorney\">LPA</abbr>. Bydd yr enwau’n ymddangos os byddant yn camu i mewn fel atwrnai a bod <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> wedi diweddaru ei chofnodion.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:69
+msgid "terms-of-use.use.heading-governing-law"
+msgstr "Y gyfraith lywodraethol"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:70
+msgctxt "html"
+msgid "terms-of-use.use.content-governing-law"
+msgstr ""
+"<p class=\"govuk-body\">Mae’r telerau defnyddio hyn yn cael eu llywodraethu gan gyfreithiau Cymru a Lloegr, gan gynnwys:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>Deddf Camddefnyddio Cyfrifiaduron 1990</li>\n"
+"<li>Y Rheoliad Cyffredinol ar Ddiogelu Data 2018</li>\n"
+"<li>Deddf Diogelu Data 2018</li>\n"
+"<li>Deddf Galluedd Meddyliol 2005</li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">Bydd llysoedd Cymru a Lloegr yn delio ag unrhyw anghydfod a gyfyd o’r telerau defnyddio hyn, neu eich defnydd o wasanaethau <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> (boed dan gontract neu beidio).</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:74
+msgid "terms-of-use.use.heading-about"
+msgstr "Ynghylch y telerau defnyddio hyn"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:75
+msgctxt "html"
+msgid "terms-of-use.use.content-about"
+msgstr "<p class=\"govuk-body\">Gwiriwch y telerau defnyddio hyn yn rheolaidd. Efallai y byddwn yn eu diweddaru heb rybudd. Gall hyn ddigwydd os oes newid yn y gyfraith neu i sut mae’r gwasanaeth yn gweithio. Byddwch yn cytuno i unrhyw newidiadau os byddwch yn parhau i ddefnyddio’r gwasanaeth ar ôl i’r telerau defnyddio gael eu diweddaru.</p>"
+
+#: src/Common/templates/common/contact-us.html.twig:3
+msgid "contact-us.home.title"
+msgstr "Cysylltu â ni"
+
+#: src/Common/templates/common/contact-us.html.twig:13
+msgid "contact-us.home.heading-page"
+msgstr "Cysylltu â ni"
+
+#. Contains a GOV.UK paragraph element and class. Preserve the HTML structure
+#. and classes when translating.
+#: src/Common/templates/common/contact-us.html.twig:15
+msgctxt "html"
+msgid "contact-us.home.content-intro"
+msgstr ""
+"<p class=\"govuk-body\">Os oes angen help arnoch gyda’r gwasnaeth hwn gallwch gysylltu â ni dros y ffôn neu drwy e-bost.</p>\n"
+"<p class=\"govuk-body\">Os ydych yn cysylltu â ni am <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> penodol, lle y bo’n bosibl bydd angen i chi roi:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr></li>\n"
+"<li>eich enw</li>\n"
+"<li>eich dyddiad geni</li>\n"
+"<li>eich rôl (a ydych yn rhoddwr neu’n atwrnai)</li>\n"
+"<li>enw’r rhoddwr (os nad chi yw’r rhoddwr)</li>\n"
+"<li>dyddiad geni’r rhoddwr</li>\n"
+"<li>cyfeiriad a chod post y rhoddwr</li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">Os mai chi yw’r rhoddwr, rhowch enw, gyfeiriad a dyddiad geni un o’ch atwrneiod hefyd.</p>"
+
+#: src/Common/templates/partials/contact-details/email.html.twig:1
+msgid "contact-details.email.heading-email"
+msgstr "E-bost"
+
+#: src/Common/templates/partials/contact-details/telephone.html.twig:1
+msgid "contact-details.telephone.heading-telephone"
+msgstr "Ffôn"
+
+#. Contains GOV.UK paragraph elements and classes, line breaks, a telephone
+#. link and a link to GOV.UK call charges guidance. Preserve the HTML
+#. structure, classes, telephone numbers and link destinations when
+#. translating.
+#: src/Common/templates/partials/contact-details/telephone.html.twig:2
+msgctxt "html"
+msgid "contact-details.telephone.content-details"
+msgstr ""
+"<p class=\"govuk-body\">Ffôn (yn Saesneg): <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br>\n"
+"Ffonio o’r tu allan i’r Deyrnas Unedig: +44 (0)203 518 9639<br>\n"
+"Relay UK (os na allwch glywed neu siarad ar y ffôn): 18001 0300 123 1300<br>\n"
+"Dydd Llun i ddydd Gwener, 9am tan 5pm, heblaw bob dydd Mercher, 10am tan 5pm</p>\n"
+"<p class=\"govuk-body\"><a class=\"govuk-link\" href=\"https://www.gov.uk/call-charges\">Gwybodaeth am brisiau galwadau</a></p>"
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:3
+msgid "view-lpa.enter-code.title"
+msgstr "Rhowch god mynediad yr LPA"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Viewer/templates/viewer/enter-code.html.twig:22
+msgctxt "html"
+msgid "view-lpa.enter-code.heading-page"
+msgstr "Rhowch god mynediad yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
+
+#. Contains a GOV.UK paragraph element and class and an abbr element for LPA.
+#. Preserve the HTML structure and classes when translating.
+#: src/Viewer/templates/viewer/enter-code.html.twig:28
+msgctxt "html"
+msgid "view-lpa.enter-code.content-intro"
+msgstr "<p class=\"govuk-body\">Cod unigryw yw cod mynediad <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> a gaiff ei roi i chi gan y rhoddwr neu atwrnai a enwir mewn atwrneiaeth arhosol. Mae codau mynediad yn gymysgedd o 13 llythyren a rhif ac yn dechrau gyda V.</p>"
