@@ -101,3 +101,7 @@ output "vpc_id" {
 output "cloudwatch_alarm_topic_arn" {
   value = aws_sns_topic.cloudwatch_to_pagerduty.arn
 }
+
+output "extended_support_sns_topic_arn" {
+  value = local.extended_support_sns_topic_arn
+}

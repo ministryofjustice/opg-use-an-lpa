@@ -13,8 +13,8 @@ resource "aws_cloudwatch_metric_alarm" "waf_blocked_rule_alarm" {
   threshold_metric_id       = "ad1"
   insufficient_data_actions = []
   treat_missing_data        = "notBreaching"
-  alarm_actions             = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
-  ok_actions                = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions             = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
+  ok_actions                = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
 
   metric_query {
     id          = "m1"
@@ -46,7 +46,7 @@ resource "aws_cloudwatch_metric_alarm" "waf_blocked_rule_alarm" {
 resource "aws_cloudwatch_metric_alarm" "elasticache_high_cpu_utilization" {
   for_each                  = toset(local.brute_force_cache_replication_group_members)
   actions_enabled           = true
-  alarm_actions             = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions             = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   alarm_description         = "High CPU usage on ${lower(each.value)}"
   alarm_name                = "High CPU Utilization on ${lower(each.value)}"
   comparison_operator       = "GreaterThanThreshold"
@@ -55,7 +55,7 @@ resource "aws_cloudwatch_metric_alarm" "elasticache_high_cpu_utilization" {
   insufficient_data_actions = []
   metric_name               = "CPUUtilization"
   namespace                 = "AWS/ElastiCache"
-  ok_actions                = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  ok_actions                = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   period                    = "60"
   statistic                 = "Average"
   threshold                 = 90
@@ -70,14 +70,14 @@ resource "aws_cloudwatch_metric_alarm" "elasticache_high_cpu_utilization" {
 resource "aws_cloudwatch_metric_alarm" "elasticache_memory_pressure" {
   for_each                  = toset(local.brute_force_cache_replication_group_members)
   actions_enabled           = true
-  alarm_actions             = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_actions             = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   alarm_description         = "Low freeable memory or high swap usage on ${lower(each.value)}"
   alarm_name                = "Memory pressure on ${lower(each.value)}"
   comparison_operator       = "GreaterThanThreshold"
   datapoints_to_alarm       = 2
   evaluation_periods        = 2
   insufficient_data_actions = []
-  ok_actions                = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  ok_actions                = compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn])
   threshold                 = 0
   treat_missing_data        = "notBreaching"
 
