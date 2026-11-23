@@ -24,8 +24,8 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_deletion_protection" {
   threshold           = 1
   comparison_operator = "GreaterThanOrEqualToThreshold"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [module.eu_west_1[0].cloudwatch_alarm_topic_arn]
-  ok_actions          = [module.eu_west_1[0].cloudwatch_alarm_topic_arn]
+  alarm_actions       = compact([module.eu_west_1[0].cloudwatch_alarm_topic_arn, module.eu_west_1[0].extended_support_sns_topic_arn])
+  ok_actions          = compact([module.eu_west_1[0].cloudwatch_alarm_topic_arn, module.eu_west_1[0].extended_support_sns_topic_arn])
 }
 
 resource "aws_cloudwatch_log_metric_filter" "dynamodb_export" {
@@ -54,8 +54,8 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_export" {
   threshold           = 1
   comparison_operator = "GreaterThanOrEqualToThreshold"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [module.eu_west_1[0].cloudwatch_alarm_topic_arn]
-  ok_actions          = [module.eu_west_1[0].cloudwatch_alarm_topic_arn]
+  alarm_actions       = compact([module.eu_west_1[0].cloudwatch_alarm_topic_arn, module.eu_west_1[0].extended_support_sns_topic_arn])
+  ok_actions          = compact([module.eu_west_1[0].cloudwatch_alarm_topic_arn, module.eu_west_1[0].extended_support_sns_topic_arn])
 }
 
 resource "aws_cloudwatch_log_metric_filter" "dynamodb_restore" {
@@ -84,8 +84,8 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_restore" {
   threshold           = 1
   comparison_operator = "GreaterThanOrEqualToThreshold"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [module.eu_west_1[0].cloudwatch_alarm_topic_arn]
-  ok_actions          = [module.eu_west_1[0].cloudwatch_alarm_topic_arn]
+  alarm_actions       = compact([module.eu_west_1[0].cloudwatch_alarm_topic_arn, module.eu_west_1[0].extended_support_sns_topic_arn])
+  ok_actions          = compact([module.eu_west_1[0].cloudwatch_alarm_topic_arn, module.eu_west_1[0].extended_support_sns_topic_arn])
 }
 
 # Nightly backups are made by AWS Backup using the backup role, so those are excluded.
@@ -115,8 +115,8 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_manual_backup" {
   threshold           = 1
   comparison_operator = "GreaterThanOrEqualToThreshold"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [module.eu_west_1[0].cloudwatch_alarm_topic_arn]
-  ok_actions          = [module.eu_west_1[0].cloudwatch_alarm_topic_arn]
+  alarm_actions       = compact([module.eu_west_1[0].cloudwatch_alarm_topic_arn, module.eu_west_1[0].extended_support_sns_topic_arn])
+  ok_actions          = compact([module.eu_west_1[0].cloudwatch_alarm_topic_arn, module.eu_west_1[0].extended_support_sns_topic_arn])
 }
 
 resource "aws_cloudwatch_log_metric_filter" "dynamodb_manual_copy" {
@@ -145,8 +145,8 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_manual_copy" {
   threshold           = 1
   comparison_operator = "GreaterThanOrEqualToThreshold"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [module.eu_west_1[0].cloudwatch_alarm_topic_arn]
-  ok_actions          = [module.eu_west_1[0].cloudwatch_alarm_topic_arn]
+  alarm_actions       = compact([module.eu_west_1[0].cloudwatch_alarm_topic_arn, module.eu_west_1[0].extended_support_sns_topic_arn])
+  ok_actions          = compact([module.eu_west_1[0].cloudwatch_alarm_topic_arn, module.eu_west_1[0].extended_support_sns_topic_arn])
 }
 
 resource "aws_cloudwatch_log_metric_filter" "dynamodb_copy_destination" {
@@ -175,6 +175,6 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_copy_destination" {
   threshold           = 1
   comparison_operator = "GreaterThanOrEqualToThreshold"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [module.eu_west_1[0].cloudwatch_alarm_topic_arn]
-  ok_actions          = [module.eu_west_1[0].cloudwatch_alarm_topic_arn]
+  alarm_actions       = compact([module.eu_west_1[0].cloudwatch_alarm_topic_arn, module.eu_west_1[0].extended_support_sns_topic_arn])
+  ok_actions          = compact([module.eu_west_1[0].cloudwatch_alarm_topic_arn, module.eu_west_1[0].extended_support_sns_topic_arn])
 }

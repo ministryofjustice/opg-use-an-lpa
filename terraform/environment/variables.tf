@@ -74,6 +74,7 @@ variable "environments" {
       csp_auth_domain                                  = string
       csp_iap_domain                                   = string
       event_bus_enabled                                = bool
+      extended_support_alerts_enabled                  = bool
       google_analytics_id_use                          = string
       google_analytics_id_view                         = string
       gov_uk_onelogin_client_id_secret_name            = string
