@@ -1,6 +1,6 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block page_title %}{% trans %}Enter LPA access code{% endtrans %}{% endblock %}
+{% block page_title %}{% trans %}view-lpa.enter-code.title{% endtrans %}{% endblock %}
 
 {% block content %}
 <div class="govuk-width-container">
@@ -19,29 +19,37 @@
 
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             <h1 class="govuk-heading-xl">
-                                {% trans %}Enter the LPA access code{% endtrans %}
+                                {% trans %}
+                                    view-lpa.enter-code.heading-page
+                                {% context %}html{% notes %}Contains an abbr element for LPA. Preserve the HTML when translating.{% endtrans %}
                             </h1>
                         </legend>
 
-                        <p class="govuk-body">
-                            {% trans %}An <abbr title="lasting power of attorney">LPA</abbr> access code is a unique code given to you by the donor or an attorney named on a lasting power of attorney.{% endtrans %}
-                        </p>
+                        {% trans %}
+                            view-lpa.enter-code.content-intro
+                        {% context %}html{% notes %}Contains a GOV.UK paragraph element and class and an abbr element for LPA. Preserve the HTML structure and classes when translating.{% endtrans %}
 
                         {{ govuk_form_element(form.get('__csrf')) }}
 
                         {{ govuk_form_element(form.get('donor_surname'),
                             {
-                                'label': 'Donor’s last name' | trans,
+                                'label': 'view-lpa.enter-code.field-donor-surname.label' | trans,
                                 'attr' : {'class': 'govuk-input--width-10'}
 
                             }
                         ) }}
 
+                        {% set lpaCodeHint %}
+                            {% trans %}
+                                view-lpa.enter-code.field-lpa-code.hint
+                            {% context %}html{% notes %}Contains an HTML line break. Preserve the line break and markup when translating.{% endtrans %}
+                        {% endset %}
+
                         {{ govuk_form_element(form.get('lpa_code'),
                             {
-                                'label': 'LPA access code' | trans,
+                                'label': 'view-lpa.enter-code.field-lpa-code.label' | trans,
                                 'input_prefix': 'V-',
-                                'hint': 'Access codes are 13 characters long and start with a V<br/>For example, V-AB12-CD34-EF56' | trans,
+                                'hint': lpaCodeHint,
                                 'attr' : {'class': 'govuk-input--width-10'}
                             }
                         ) }}
@@ -49,20 +57,25 @@
                         <details id="access-code-reveal" class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="AccessCodeReveal" data-gaCategory="Details" data-gaLabel="The code I\'ve been given does not begin with a V">
                             <summary class="govuk-details__summary" role="button" >
                                 <span class="govuk-details__summary-text">
-                                    {% trans %}The code I’ve been given does not begin with a V{% endtrans %}
+                                    {% trans %}view-lpa.enter-code.reveal-wrong-code-title{% endtrans %}
                                 </span>
                             </summary>
                             <div class="govuk-details__text">
-                                <p>{% trans %}The donor or attorney may have given you the wrong code.{% endtrans %}</p>
-                                <p>{% trans %}Ask them to go to www.gov.uk/use-lpa to create an LPA access code for your organisation.{% endtrans %}</p>
-                                <p>{% trans %}If you’re the donor or an attorney, you can view the LPA by signing into the <a href="https://www.gov.uk/manage-lasting-power-attorney/use-lasting-power-of-attorney" class="govuk-link">Use a lasting power of attorney service</a>.{% endtrans %}</p>
+                                {% trans %}
+                                    view-lpa.enter-code.reveal-wrong-code-content
+                                {% context %}html{% notes %}Contains paragraph elements, abbr elements for LPA and a link to the Use a lasting power of attorney service on GOV.UK. Preserve the HTML structure and link destination when translating.{% endtrans %}
                             </div>
                         </details>
 
-                        <p class="govuk-body">{% trans %}This service cannot be used for enduring powers of attorney.{% endtrans %}</p>
-                        <p class="govuk-body">{% trans with {'%link%': path('terms-of-use')} %}By continuing you agree to our <a href="%link%" target="_blank" class="govuk-link" rel="noreferrer noopener">terms of use (opens in new tab)</a>.{% endtrans %}</p>
+                        {% trans %}
+                            view-lpa.enter-code.content-epa
+                        {% context %}html{% notes %}Contains a GOV.UK paragraph element and class. Preserve the HTML structure and classes when translating.{% endtrans %}
 
-                        <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+                        {% trans with {'%link%': path('terms-of-use')} %}
+                            view-lpa.enter-code.content-terms
+                        {% context %}html-link{% notes %}Contains a GOV.UK paragraph element and a terms of use link, opening in a new tab, using the %link% placeholder. Preserve the HTML, link attributes and placeholder when translating.{% endtrans %}
+
+                        <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}common.button-continue{% endtrans %}</button>
 
                     </fieldset>
 

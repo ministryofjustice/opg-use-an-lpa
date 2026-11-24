@@ -1,20 +1,23 @@
 {% extends '@layout/default.html.twig' %}
 
-{% block html_title %}{% trans %}Contact us{% endtrans %} - {{ serviceName | trans }} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}contact-us.home.title{% endtrans %} - {{ serviceName | trans }} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
-        <a href="{{ referer }}" class="govuk-back-link">{% trans %}Back{% endtrans %}</a>
+        <a href="{{ referer }}" class="govuk-back-link">{% trans %}common.back-link{% endtrans %}</a>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">{% trans %}Contact us{% endtrans %}</h1>
-                    <p class="govuk-body">
-                        {% trans %}If you need help with this service you can get in touch by telephone or email.{% endtrans %}
-                    </p>
+                    <h1 class="govuk-heading-xl">{% trans %}contact-us.home.heading-page{% endtrans %}</h1>
+
+                    {% trans %}
+                        contact-us.home.content-intro
+                    {% context %}html{% notes %}Contains a GOV.UK paragraph element and class. Preserve the HTML structure and classes when translating.{% endtrans %}
+
                     {{ include('@partials/contact-details/email.html.twig', {heading_level: 2 }) }}
+
                     {{ include('@partials/contact-details/telephone.html.twig', {heading_level: 2 }) }}
                 </div>
             </div>

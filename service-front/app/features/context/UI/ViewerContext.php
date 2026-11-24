@@ -98,7 +98,7 @@ class ViewerContext implements Context
 
         $this->ui->visit('/home');
         $this->ui->assertPageAddress('/home');
-        $this->ui->assertPageContainsText('Enter the LPA access code');
+        $this->assertPageContainsTranslatedText('view-lpa.enter-code.heading-page', context: 'html');
     }
 
     #[Given('/^I am on the viewer privacy notice page$/')]
@@ -919,7 +919,7 @@ class ViewerContext implements Context
     #[When('/^I navigate to the viewer cookies page$/')]
     public function iNavigateToTheViewerCookiesPage(): void
     {
-        $this->ui->clickLink('cookie policy');
+        $this->followContentLink('/cookies');
     }
 
     #[Given('/^I navigate to the viewer privacy notice page$/')]
@@ -954,13 +954,13 @@ class ViewerContext implements Context
     #[When('/^I request to see the viewer privacy notice$/')]
     public function iRequestToSeeTheViewerPrivacyNotice(): void
     {
-        $this->ui->clickLink('privacy notice');
+        $this->followContentLink('/privacy-notice');
     }
 
     #[When('/^I request to see the viewer terms of use$/')]
     public function iRequestToSeeTheViewerTermsOfUse(): void
     {
-        $this->ui->clickLink('terms of use');
+        $this->followContentLink('/terms-of-use');
     }
 
     #[When('/^I request to view an LPA with an invalid access code of "([^"]*)"$/')]

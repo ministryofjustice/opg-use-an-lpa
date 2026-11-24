@@ -476,14 +476,19 @@ class LpaContext implements Context
     #[Then('/^I am told that I have 2 LPAs in my account$/')]
     public function iAmToldThatIHave2LPAsInMyAccount(): void
     {
-        $this->ui->assertPageContainsText('You have 2 LPAs in your account');
+        $this->assertPageContainsTranslatedText(
+            'dashboard.home.content-lpa-count',
+            context: 'html',
+            count: 2,
+            plural: 'dashboard.home.content-lpa-count-plural',
+        );
     }
 
     #[Then('/^I am told that I have duplicate LPAs in my account$/')]
     public function iAmToldThatIHaveDuplicateLPAsInMyAccount(): void
     {
         $this->ui->assertElementOnPage('div.moj-alert--information');
-        $this->ui->assertPageContainsText('Your account contains duplicate LPAs');
+        $this->assertPageContainsTranslatedText('dashboard.home.heading-duplicate-lpas', context: 'html');
     }
 
     #[Given('/^I have added an additional LPA to my account$/')]
@@ -2630,13 +2635,13 @@ class LpaContext implements Context
     #[When('/^I select to add an LPA$/')]
     public function iSelectToAddAnLPA(): void
     {
-        $this->ui->clickLink('Add another LPA');
+        $this->ui->clickLink($this->translatedText('dashboard.home.button-add-another-lpa', context: 'html'));
     }
 
     #[When('/^I choose to add my first LPA$/')]
     public function iChooseToAddMyFirstLPA(): void
     {
-        $this->ui->clickLink('Add your first LPA');
+        $this->ui->clickLink($this->translatedText('dashboard.home.button-add-first-lpa', context: 'html'));
     }
 
     #[When('/^I select to find out more if the donor or an attorney dies$/')]
