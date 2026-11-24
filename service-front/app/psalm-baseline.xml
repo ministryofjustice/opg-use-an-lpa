@@ -230,7 +230,6 @@
       <code><![CDATA[getActiveAttorneys]]></code>
       <code><![CDATA[getApplicationHasGuidance]]></code>
       <code><![CDATA[getApplicationHasRestrictions]]></code>
-      <code><![CDATA[getAttorneys]]></code>
       <code><![CDATA[getCaseAttorneyJointly]]></code>
       <code><![CDATA[getCaseAttorneyJointlyAndJointlyAndSeverally]]></code>
       <code><![CDATA[getCaseAttorneyJointlyAndSeverally]]></code>
@@ -238,7 +237,6 @@
       <code><![CDATA[getHowAttorneysMakeDecisions]]></code>
       <code><![CDATA[getLifeSustainingTreatment]]></code>
       <code><![CDATA[getLpaType]]></code>
-      <code><![CDATA[getTrustCorporations]]></code>
       <code><![CDATA[getWhenTheLpaCanBeUsed]]></code>
     </PossiblyUnusedMethod>
     <PossiblyUnusedProperty>
