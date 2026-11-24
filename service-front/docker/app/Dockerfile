@@ -22,7 +22,7 @@ COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN set -xe \
   && apk add --update --no-cache icu=78.1-r0 gettext=1.0-r0 fcgi=2.4.6-r0 \
-  && install-php-extensions apcu redis-^6 intl gettext opcache opentelemetry \
+  && install-php-extensions apcu redis-6.3.0 intl gettext opcache opentelemetry \
   && rm /usr/bin/install-php-extensions
 
 COPY service-front/docker/app/app-php.ini /usr/local/etc/php/conf.d/
