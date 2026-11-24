@@ -12,9 +12,11 @@
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
 
         {% if label is defined %}
+            {% if label_is_page_heading is defined and label_is_page_heading %}<h1 class="govuk-label-wrapper">{% endif %}
             <label class="govuk-label {{- block('input_extra_label_class') -}} " for="{{ element.getName() }}">
                 {{ label | raw }}
             </label>
+            {% if label_is_page_heading is defined and label_is_page_heading %}</h1>{% endif %}
         {% endif %}
 
         {{- block('input_hint') -}}
@@ -246,6 +248,17 @@
     {% endif %}
 {%- endblock input_hint -%}
 
+{%- block input_aria_describedby -%}
+    {%- set describedby = [] -%}
+    {%- if hint is defined and hint is not empty -%}
+        {%- set describedby = describedby|merge([element.getName() ~ '-hint']) -%}
+    {%- endif -%}
+    {%- if (fieldset is not defined or fieldset is empty) and element.getMessages() is not empty -%}
+        {%- set describedby = describedby|merge([element.getName() ~ '-error']) -%}
+    {%- endif -%}
+    {%- if describedby is not empty %} aria-describedby="{{ describedby|join(' ') }}"{% endif -%}
+{%- endblock input_aria_describedby -%}
+
 {%- block form_input -%}
     <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}"
            id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}"
@@ -253,6 +266,7 @@
             {% if pattern is defined and pattern is not empty %}pattern="{{ pattern }}"{% endif %}
             {% if spellcheck is defined and spellcheck is not empty %}spellcheck="{{ spellcheck }}"{% endif %}
             {% if autocomplete is defined and autocomplete is not empty %}autocomplete="{{ autocomplete }}"{% endif %}
+            {{- block('input_aria_describedby') }}
             {% if aria_labelledby is defined and aria_labelledby is not empty %}aria-labelledby="{{ aria_labelledby }}"{% endif %}/>
 {%- endblock form_input -%}
 

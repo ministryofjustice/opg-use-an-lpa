@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-17 14:01+0000\n"
+"PO-Revision-Date: 2026-11-23 12:35+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -3414,7 +3414,7 @@ msgid ""
 "We are unable to show the preferences for this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
 "            You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr>\n"
 "            to anyone who needs to see them."
-msgstr "Ni allwn ddangos y dymuniadau ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon. Bydd angen i chi ddangos yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i unrhyw un sydd angen ei gweld."
+msgstr "Ni allwn ddangos y dymuniadau ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon. Bydd angen i chi ddangos yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i unrhyw un sydd angen eu gweld."
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:54
 msgid "We cannot show the preferences for this LPA. Until we can fix this problem, if you need to see these you’ll need to ask the person who gave you the access code to show you the paper LPA."
@@ -3438,7 +3438,7 @@ msgid ""
 "We are unable to show the instructions for this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
 "            You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr>\n"
 "            to anyone who needs to see them."
-msgstr "Ni allwn ddangos y cyfarwyddiadau ar gyfer yr Atwrneiaeth Arhosol hon. Bydd angen i chi ddangos yr Atwrneiaeth Arhosol bapur i unrhyw un sydd angen ei gweld."
+msgstr "Ni allwn ddangos y cyfarwyddiadau ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon. Bydd angen i chi ddangos yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i unrhyw un sydd angen eu gweld."
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:83
 msgid "We cannot show the instructions for this LPA. Until we can fix this problem, if you need to see these you\"ll need to ask the person who gave you the access code to show you the paper LPA."
@@ -4649,7 +4649,7 @@ msgid ""
 "We are unable to show the words entered in this part of this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
 "            You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr>\n"
 "            to anyone who needs to see them."
-msgstr "Ni allwn ddangos y geiriau a roddwyd yn y rhan hon o'r LPA. Bydd angen i chi ddangos yr LPA bapur i unrhyw un sydd angen ei gweld."
+msgstr "Ni allwn ddangos y geiriau a roddwyd yn y rhan hon o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Bydd angen i chi ddangos yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i unrhyw un sydd angen eu gweld."
 
 #: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:10
 msgid "You’ve already asked for an activation key for this LPA today"
@@ -4802,7 +4802,7 @@ msgstr "Beth yw eich cod actifadu?"
 msgctxt "html-link"
 msgid "add-lpa.activation-key.content.instructions"
 msgstr ""
-"<p class=\"govuk-body\">Gwnewch yn siŵr mai dyma’r cod actifadu sydd yn y llythyr a anfonwyd atoch. Ni fyddwn yn gallu dod o hyd i’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> os byddwch yn rhoi cod actifadu a anfonwyd at rywun arall – hyd yn oed os yw ar gyfer yr un LPA.</p>\n"
+"<p class=\"govuk-body\">Gwnewch yn siŵr mai dyma’r cod actifadu sydd yn y llythyr a anfonwyd atoch. Ni fyddwn yn gallu dod o hyd i’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> os byddwch yn rhoi cod actifadu a anfonwyd at rywun arall – hyd yn oed os yw ar gyfer yr un <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>.</p>\n"
 "<p class=\"govuk-body\">Mae codau actifadu:</p>\n"
 "<ul class=\"govuk-list govuk-list--bullet\">\n"
 "    <li>yn gyfuniad o 13 o lythrennau a rhifau ac yn dechrau gydag C</li>\n"
@@ -4852,7 +4852,7 @@ msgctxt "html"
 msgid ""
 "add-lpa.lpa-reference-number.field-reference-number.hint-with-paper-"
 "verification"
-msgstr "Mae cyfeirnodau LPA yn cynnwys 12 rhif, er enghraifft 7000-0000-0000.<br>Mae rhai cyfeirnodau LPA yn dechrau gyda M, er enghraifft M-1111-2222-3333."
+msgstr "Mae cyfeirnodau <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn cynnwys 12 rhif, er enghraifft 7000-0000-0000.<br>Mae rhai cyfeirnodau <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn dechrau gydag M, er enghraifft M-1111-2222-3333."
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:31
 msgid ""
@@ -4876,17 +4876,13 @@ msgstr "Blwyddyn"
 msgid "request-activation-key.reference-number.title"
 msgstr "Beth yw cyfeirnod yr LPA?"
 
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:18
-msgid "request-activation-key.reference-number.heading-page"
-msgstr "Beth yw cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>?"
-
 #. Contains a line break. Preserve the HTML markup when translating.
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:26
 msgctxt "html"
 msgid ""
 "request-activation-key.reference-number.field-lpa-reference-number.hint-with-"
 "paper-verification"
-msgstr "Mae cyfeirnodau <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn cynnwys 12 rhif, er enghraifft 7000-0000-0000.<br>Mae rhai cyfeirnodau <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn dechrau gyda M, er enghraifft M-1111-2222-3333."
+msgstr "Mae cyfeirnodau <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn cynnwys 12 rhif, er enghraifft 7000-0000-0000.<br>Mae rhai cyfeirnodau <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn dechrau gydas M, er enghraifft M-1111-2222-3333."
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:26
 msgid ""
@@ -4922,3 +4918,711 @@ msgstr ""
 "<p class=\"govuk-body\">Mae angen eich cod actifadu unigryw eich hun arnoch i ychwanegu atwrneiaeth arhosol (<abbr title=\"atwrneiaeth arhosol\">LPA</abbr>) at eich cyfrif. Bydd cod actifadu yn cael ei anfon atoch pan fydd yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> wedi’i chofrestru. Bydd y cod yn dod i ben ar ôl 12 mis.</p>\n"
 "<p class=\"govuk-body\">Mae codau actifadu yn gyfuniad o 12 llythyren a rhif ac yn dechrau gydag C. Er enghraifft, C-AB12 CD34 EF56.</p>\n"
 "<p class=\"govuk-body\">Os ydych chi wedi colli eich cod actifadu, os ydy wedi dod i ben, neu os nad ydych wedi derbyn un o’r blaen, gallwch ofyn am un newydd.</p>"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:3
+msgid "dashboard.home.title"
+msgstr "Eich atwrneiaethau arhosol"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:25
+msgid "dashboard.home.heading-page"
+msgstr "Eich atwrneiaethau arhosol"
+
+#. Contains GOV.UK paragraph elements and classes, an abbr element for LPA and
+#. a link to GOV.UK guidance. Preserve the HTML structure, classes and link
+#. destination when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:31
+msgctxt "html"
+msgid "dashboard.home.content-intro"
+msgstr ""
+"<p class=\"govuk-body-l\">Bydd unrhyw atwrneiaeth arhosol (LPA) y byddwch yn ei hychwanegu at eich cyfrif yn ymddangos ar y dudalen hon.</p>\n"
+"<p class=\"govuk-body-m\">Dysgwch fwy am <a href=\"https://www.gov.uk/lasting-power-attorney-duties\" class=\"govuk-link\">sut i brofi eich bod yn atwrnai ar <abbr title=\"lasting power of attorney\">LPA</abbr></a> a sut i’w defnyddio.</p>"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:38
+msgid "dashboard.home.reveal-service-title"
+msgstr "Beth galla i ei wneud gyda’r gwasanaeth hwn?"
+
+#. Contains a paragraph and a GOV.UK bulleted list with abbr elements for LPA.
+#. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:42
+msgctxt "html"
+msgid "dashboard.home.reveal-service-content"
+msgstr ""
+"<p>Defnyddiwch y gwasanaeth hwn i:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>greu codau mynediad i alluogi sefydliadau i weld crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar-lein</li>\n"
+"<li>gweld pa sefydliadau sy’n gallu agor crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar-lein</li>\n"
+"<li>gofyn am god actifadu os nad ydych wedi cael un, neu os ydy wedi dod i ben</li>\n"
+"<li>gweld crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar-lein eich hun</li>\n"
+"</ul>\n"
+"<p>Nid yw crynodebau o LPA yn dangos enwau unrhyw atwrneiod wrth gefn oni bai eu bod yn camu i mewn ac yn cymryd lle atwrnai.</p>"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:50
+msgctxt "html"
+msgid "dashboard.home.button-add-another-lpa"
+msgstr "Ychwanegu <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> arall"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:54
+msgctxt "html"
+msgid "dashboard.home.button-add-first-lpa"
+msgstr "Ychwanegu eich <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> gyntaf"
+
+#. Contains an abbr element for LPA and a %count% placeholder for the number of
+#. LPAs in the account. Preserve the HTML and placeholder when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:66
+msgctxt "html"
+msgid "dashboard.home.content-lpa-count"
+msgid_plural "dashboard.home.content-lpa-count-plural"
+msgstr[0] "Mae gennych %count% <abbr title=\"lasting power of attorney\">LPA</abbr> yn eich cyfrif"
+msgstr[1] "Mae gennych %count% <abbr title=\"lasting power of attorney\">LPA</abbr> yn eich cyfrif"
+msgstr[2] "Mae gennych %count% <abbr title=\"lasting power of attorney\">LPA</abbr> yn eich cyfrif"
+msgstr[3] "Mae gennych %count% <abbr title=\"lasting power of attorney\">LPA</abbr> yn eich cyfrif"
+msgstr[4] "Mae gennych %count% <abbr title=\"lasting power of attorney\">LPA</abbr> yn eich cyfrif"
+msgstr[5] "Mae gennych %count% <abbr title=\"lasting power of attorney\">LPA</abbr> yn eich cyfrif"
+
+#. Contains an abbr element for LPAs. Preserve the HTML when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:84
+msgctxt "html"
+msgid "dashboard.home.heading-duplicate-lpas"
+msgstr "Mae eich cyfrif yn cynnwys <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> dyblyg"
+
+#. Contains GOV.UK paragraph elements and classes and abbr elements for LPA.
+#. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:89
+msgctxt "html"
+msgid "dashboard.home.content-duplicate-lpas"
+msgstr ""
+"<p class=\"govuk-body govuk-!-margin-top-2 govuk-!-margin-left-12\">Efallai y byddwch chi’n gweld bod rheoli eich cyfrif yn haws ar ôl cael gwared ar <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> dyblyg.</p>\n"
+"<p class=\"govuk-body\">Does dim ots pa <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> rydych chi’n ei dileu ond gallai fod yn fwy cywir cadw’r rhai sy’n dangos eu bod wedi cael eu hychwanegu gennych chi, yn enwedig wrth greu codau mynediad ar gyfer sefydliadau.</p>\n"
+"<p class=\"govuk-body\">Mae dileu <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> dyblyg yn ddewisol.</p>"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:3
+msgid "request-activation-key.lpa-not-found.title"
+msgstr "Methu dod o hyd i’r LPA"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:14
+msgid "request-activation-key.lpa-not-found.heading-page"
+msgstr "Nid oeddem yn gallu dod o hyd i’r atwrneiaeth arhosol (LPA)"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:16
+msgctxt "html"
+msgid "request-activation-key.lpa-not-found.content-reasons"
+msgstr ""
+"<p class=\"govuk-body\">Dyma’r rhesymau posibl dros hyn:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>mae cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> rydych wedi’i roi yn anghywir</li>\n"
+"<li>nid yw rhai o’r manylion rydych chi wedi’u rhoi yn cyfateb i’n cofnodion</li>\n"
+"</ul>"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:20
+msgid "request-activation-key.lpa-not-found.heading-your-answers"
+msgstr "Eich atebion"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:24
+msgctxt "html"
+msgid "request-activation-key.lpa-not-found.label-lpa-reference-number"
+msgstr "Cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:34
+msgid "request-activation-key.lpa-not-found.label-name"
+msgstr "Enw"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:42
+msgid "request-activation-key.lpa-not-found.label-dob"
+msgstr "Dyddiad geni"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:51
+msgid "request-activation-key.lpa-not-found.label-postcode"
+msgstr "Cod post"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:60
+msgid "request-activation-key.lpa-not-found.label-live-in-uk"
+msgstr "Ydych chi’n byw yn y Deyrnas Unedig?"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:63
+msgid "request-activation-key.lpa-not-found.value-live-in-uk-no"
+msgstr "Nac ydw"
+
+#. Contains a GOV.UK paragraph element and class. Preserve the HTML structure
+#. and classes when translating.
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:69
+msgctxt "html"
+msgid "request-activation-key.lpa-not-found.content-contact-us"
+msgstr "<p class=\"govuk-body\">Os ydych chi’n siŵr bod yr wybodaeth rydych wedi’i rhoi yn gywir, cysylltwch â ni.</p>"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:81
+msgid "request-activation-key.lpa-not-found.button-try-again"
+msgstr "Rhoi cynnig arall arni"
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:45
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:86
+#: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:25
+msgid "common.button-back-to-your-lpas"
+msgstr "Yn ôl i’ch LPAs"
+
+#: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:3
+msgid "request-activation-key.replacement-attorney.title"
+msgstr "Enw’r atwrnai"
+
+#: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:17
+msgid "request-activation-key.replacement-attorney.heading-page"
+msgstr "Ni chewch wneud cais am god actifadu os ydych yn atwrnai wrth gefn"
+
+#. Contains GOV.UK HTML elements and classes, and links to GOV.UK guidance.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:20
+msgctxt "html"
+msgid "request-activation-key.replacement-attorney.content-becoming-active"
+msgstr ""
+"<p class=\"govuk-body\">Dim ond y rhoddwr neu atwrnai gweithredol gaiff ofyn am god actifadu.</p>\n"
+"<p class=\"govuk-body\">Byddwch yn atwrnai gweithredol os bydd un o’r atwrneiod yn rhoi’r gorau i gyflawni ei rôl. Bydd hyn yn digwydd os yw:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>wedi marw</li>\n"
+"<li>wedi <a href=\"https://www.gov.uk/lasting-power-attorney-duties/stop-attorney\" class=\"govuk-link\">cam i lawr yn ffurfiol</a> (‘ymwrthod â'i benodiad’)</li>\n"
+"<li>wedi cael ei <a href=\"https://www.gov.uk/power-of-attorney/change-your-lasting-power-of-attorney\" class=\"govuk-link\">dynnu o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> gan y rhoddwr</a></li>\n"
+"<li>wedi colli galluedd meddyliol</li>\n"
+"<li>wedi’i ddatgan yn fethdalwr neu fod ganddo orchymyn rhyddhau o ddyled (atwrneiod eiddo a materion ariannol yn unig)</li>\n"
+"<li>wedi bod yn briod â’r rhoddwr neu mewn partneriaeth sifil â’r rhoddwr, ac mae’r berthynas wedi dod i ben yn gyfreithiol (oni bai bod y rhoddwr wedi dweud fel arall yn y cyfarwyddiadau a roesant ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>)</li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">Rhaid i chi <a href=\"https://www.gov.uk/lasting-power-attorney-duties/changes-you-need-to-report\" class=\"govuk-link\">roi gwybod i ni os ydych yn credu bod angen i chi gamu i mewn fel atwrnai gweithredol</a>. Ar ôl i ni ddiweddaru ein cofnodion i ddangos eich bod yn atwrnai gweithredol, byddwch yn gallu gofyn am god actifadu.</p>"
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:3
+msgid "request-activation-key.received.title"
+msgstr "Rydym wedi derbyn eich cais am god actifadu"
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:12
+msgid "request-activation-key.received.heading-page"
+msgstr "Rydym wedi derbyn eich cais am god actifadu"
+
+#. Contains GOV.UK paragraph elements and classes, and a %date% placeholder for
+#. the date by which the user should have heard from us. Preserve the HTML
+#. structure, classes and placeholder when translating.
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:18
+msgctxt "html"
+msgid "request-activation-key.received.content-what-happens-next"
+msgstr ""
+"<p class=\"govuk-body\">Ar ôl i ni wirio’r holl fanylion byddwn yn anfon llythyr atoch gyda’ch cod actifadu ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon. Byddwn yn ei anfon drwy’r post oherwydd bod hynny’n fwy diogel.</p>\n"
+"<p class=\"govuk-body\">Byddwn yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom.</p>\n"
+"<p class=\"govuk-body\">Rydym wedi anfon e-bost atoch yn cadarnhau’r holl fanylion hyn.</p>\n"
+"<p class=\"govuk-body\">Bydd y rhan fwyaf o bobl yn clywed gennym neu’n derbyn cod actifadu o fewn 2 wythnos i wneud cais. Fodd bynnag, weithiau bydd yn cymryd mwy o amser. Os na fyddwch wedi clywed gennym erbyn %date%, cysylltwch â ni.</p>"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:27
+msgctxt "html"
+msgid "request-activation-key.received.heading-more-than-one-lpa"
+msgstr "A oes gennych chi fwy nag un <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>?"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:32
+msgctxt "html"
+msgid "request-activation-key.received.content-more-than-one-lpa"
+msgstr "<p class=\"govuk-body\">Bydd angen cod actifadu arnoch ar gyfer pob <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yr hoffech ei hychwanegu at eich cyfrif.</p>"
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:40
+msgid "request-activation-key.received.button-request-another"
+msgstr "Gofyn am god actifadu arall"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:3
+msgid "terms-of-use.use.title"
+msgstr "Telerau defnyddio"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:10
+msgid "terms-of-use.use.heading-page"
+msgstr "Telerau defnyddio"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:12
+msgctxt "html"
+msgid "terms-of-use.use.content-intro"
+msgstr ""
+"<p class=\"govuk-body\">Mae’r gwasanaeth Defnyddio atwrneiaeth arhosol (LPA) yn eich galluiogi i greu codau mynediad i’w rhoi i bobl broffesiynol neu sefydliadau fel y gallant weld crynodeb o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar-lein. Er enghraifft, sefydliadau ariannol, gweithwyr proffesiynol meddygol a sefydliadau gofal.</p>\n"
+"<p class=\"govuk-body\">Mae’r gwasanaeth ar gyfer rhoddwyr ac atwrneiod wedi’u henwi mewn <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Nid yw ar gyfer atwrneiod wrth gefn.</p>\n"
+"<p class=\"govuk-body\">Dylech allu defnyddio’r gwasanaeth hwn yn lle dangos yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur lawn i rywun.</p>"
+
+#. Visually hidden prefix read out by screen readers before GOV.UK warning
+#. text, shown alongside a “!” icon. It is not visible on screen.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:19
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:26
+msgid "common.warning-hidden-text"
+msgstr "Rhybudd"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:20
+msgctxt "html"
+msgid "terms-of-use.use.warning-download-print"
+msgstr "Ni chewch ddefnyddio copi wedi’i lawrlwytho neu gopi wedi’i argraffu o’r crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar-lein, yn lle’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur lawn neu gopi swyddogol ohoni"
+
+#. Contains GOV.UK HTML elements and classes, and links to external websites.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:26
+msgctxt "html"
+msgid "terms-of-use.use.content-agreement"
+msgstr "<p class=\"govuk-body\">Trwy ddefnyddio’r gwasanaeth hwn rydych yn cytuno i’r telerau defnyddio hyn a <a class=\"govuk-link\" href=\"https://www.gov.uk/help/terms-conditions\">thelerau ac amodau GOV.UK</a>.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:30
+msgid "terms-of-use.use.heading-attorney-responsibilities"
+msgstr "Eich cyfrifoldebau fel atwrnai"
+
+#. Contains GOV.UK HTML elements and classes, and links to external websites.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
+msgctxt "html"
+msgid "terms-of-use.use.content-attorney-responsibilities"
+msgstr ""
+"<p class=\"govuk-body\">Os ydych yn atwrnai, cofiwch bod defnyddio’r gwasanaeth hwn i roi mynediad i rywun i grynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yr un fath â defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur lawn.</p>\n"
+"<p class=\"govuk-body\">Pan fyddwch yn defnyddio <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> mae’n rhaid i chi wastad ddilyn y cyfrifoldebau cyfreithiol y gwnaethoch gytuno iddynt wrth lofnodi’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Er enghraifft, mae’n rhaid i chi wastad:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>ddilyn egwyddorion <a class=\"govuk-link\" href=\"https://www.gov.uk/government/publications/mental-capacity-act-code-of-practice\">y Ddeddf Galluedd Meddyliol</a></li>\n"
+"<li>ystyried unrhyw ddymuniadau neu gyfarwyddiadau a nodwyd gan y rhoddwr yn ei <abbr title=\"atwrneiaeth arhosol\">LPA</abbr></li>\n"
+"<li>gweithredu er lles pennaf y rhoddwr</li>\n"
+"</ul>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:35
+msgid "terms-of-use.use.heading-account-security"
+msgstr "Diogelu eich cyfrif"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:36
+msgctxt "html"
+msgid "terms-of-use.use.content-account-security"
+msgstr ""
+"<p class=\"govuk-body\">Pan fyddwch yn creu cyfrif ar-lein ar gyfer y gwasanaeth hwn, defnyddiwch gyfeiriad e-bost dilys a defnyddiwch gyfrinair cadarn na all rhywun arall ddyfalu beth ydyw yn hawdd.</p>\n"
+"<p class=\"govuk-body\">Eich cyfrifoldeb chi yw cadw eich manylion mewngofnodi yn ddiogel. Ni ddylech ddefnyddio cyfeiriad e-bost rydych yn ei rannu â rhywun arall i greu eich cyfrif. Peidiwch â rhannu eich cyfrinair gyda neb neu ei ysgrifennu ar ddarn o bapur.</p>\n"
+"<p class=\"govuk-body\">Chi sy’n gyfrifol am yr holl weithgaredd ar eich cyfrif gwasanaeth Defnyddio atwrneiaeth arhosol. Rydym yn cadw cofnod o’ch gweithgaredd at ddibenion diogelwch ac i atal twyll.</p>\n"
+"<p class=\"govuk-body\">Rydym yn argymell eich bod yn allgofnodi o’ch cyfrif pan nad ydych yn defnyddio’r gwasanaeth. Byddwn yn eich allgofnodi’n awtomatig os nad ydych wedi defnyddio’r gwasanaeth am 60 munud.</p>\n"
+"<p class=\"govuk-body\">Os ydych yn lawrlwytho neu’n argraffu copi o grynodeb yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, gwnewch yn siŵr eich bod yn cadw’r wybodaeth yn saff ac yn ddiogel.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:40
+msgid "terms-of-use.use.heading-access-codes"
+msgstr "Defnyddio codau mynediad yn gyfrifol"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:41
+msgctxt "html"
+msgid "terms-of-use.use.content-access-codes"
+msgstr ""
+"<p class=\"govuk-body\">Pan fyddwch yn rhoi cod mynediad <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> i rywun, rydych yn gadael iddynt weld gwybodaeth bersonol am y rhoddwr a’r atwrneiod yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>.</p>\n"
+"<p class=\"govuk-body\">Cadwch y codau mynediad yn ddiogel. Rhowch godau mynediad i weithwyr proffesiynol a sefydliadau rydych yn ymddiried ynddynt yn unig ac y mae’n briodol iddynt fod angen gweld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>.</p>\n"
+"<p class=\"govuk-body\">Nid ydym yn gyfrifol am sut y defnyddir, y rhennir neu y cedwir gwybodaeth bersonol a gaiff ei gweld drwy ddefnyddio cod rydych wedi’i greu.</p>\n"
+"<p class=\"govuk-body\">Os byddwch yn colli cod neu’n poeni y gall cod gael ei ddefnyddio gan unigolyn heb awdurdod, gallwch ganslo’r cod drwy’r gwasanaeth.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:45
+msgid "terms-of-use.use.heading-access-securely"
+msgstr "Defnyddio’r gwasanaeth yn ddiogel"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:46
+msgctxt "html"
+msgid "terms-of-use.use.content-access-securely"
+msgstr ""
+"<p class=\"govuk-body\">Rydych chi’n gyfrifol am ddefnyddio’r gwasanaeth yn ddiogel. Ni ddylech ddefnyddio’r gwasanaeth ar gyfrifiadur neu rwydwaith a allai adael gwybodaeth bersonol yn hygyrch i eraill neu a allai fod yn anniogel. Er enghraifft, ni ddylech:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>adael cyfrifiadur heb ei warchod wrth ddefnydio’r gwasanaeth</li>\n"
+"<li>defnyddio’r gwasanaeth gyda chyfrifiadur cyhoeddus neu gyfrifiadur sy’n cael ei rannu gyda phobl eraill</li>\n"
+"</ul>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:50
+msgid "terms-of-use.use.heading-information-safe"
+msgstr "Cadw eich gwybodaeth yn ddiogel"
+
+#. Contains GOV.UK HTML markup, a privacy notice link using the %privacy-
+#. notice% placeholder and a cookie policy link using the %cookie% placeholder.
+#. Preserve the HTML and placeholders when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:51
+msgctxt "html-link"
+msgid "terms-of-use.use.content-information-safe"
+msgstr "<p class=\"govuk-body\">Bydd unrhyw wybodaeth a roddir gennych yn cael ei storio’n ddiogel a’i defnyddio yn unol â’n <a class=\"govuk-link\" href=\"%privacy-notice%\">hysbysiad preifatrwydd</a> a’n <a class=\"govuk-link\" href=\"%cookie%\">polisi cwcis</a>.</p>"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:56
+msgctxt "html"
+msgid "terms-of-use.use.heading-change-lpa"
+msgstr "Rhowch wybod i ni os ydych am i ni newid yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
+
+#. Contains GOV.UK HTML elements and classes, and links to external websites.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:60
+msgctxt "html"
+msgid "terms-of-use.use.content-change-lpa"
+msgstr ""
+"<p class=\"govuk-body\">Pan fydd gweithwyr proffesiynol a sefydliadau yn edrych ar grynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, mae’n bwysig eu bod yn gweld gwybodaeth gyfredol.</p>\n"
+"<p class=\"govuk-body\">Rhowch wybod i Swyddfa’r Gwarcheidwad Cyhoeddus (OPG) os oes <a class=\"govuk-link\" href=\"https://www.gov.uk/power-of-attorney/change-your-lasting-power-of-attorney\"> angen gwneud newidiadau i wybodaeth mewn <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> </a>. Yna byddwn yn diweddaru’r gofrestr atwrneiaethau arhosol ac yn gwneud y newidiadau angenrheidiol i’r crynodeb ar-lein.</p>\n"
+"<p class=\"govuk-body\">Er enghraifft, dylech roi gwybod i ni os yw:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>y rhoddwr neu atwrnai wedi newid ei enw neu ei gyfeiriad</li>\n"
+"<li>y rhoddwr eisiau tynnu enw atwrnai oddi ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr></li>\n"
+"<li>atwrnai wedi marw neu os nad yw’n gallu parhau i weithredu fel atwrnai</li>\n"
+"<li>y rhoddwr eisiau conslo ei <abbr title=\"atwrneiaeth arhosol\">LPA</abbr></li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">Wedi i chi roi gwybod i ni am newid, fe all gymryd ychydig o ddyddiau cyn iddo ddangos ar y gwasanaeth ar-lein.</p>\n"
+"<p class=\"govuk-body\">Rhowch wybod i ni am newidiadau mae angen eu gwneud cyn gynted â phosibl.</p>\n"
+"<p class=\"govuk-body\"><b>Only the Court of Protection can change a registeredDim ond y Llys Gwarchod gaiff newid <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> gofrestredig</b>. Ni ddylech wneud newidiadau i’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur gyda beiro, hylif cywiro neu mewn unrhyw ffordd arall. Mae hyn yn wir am bob newid, hyd yn oed pethau bychan megis cywiro gwall sillafu yn enw unigolyn. Os byddwch yn newid yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, mae’n bosib na fyddwch yn gallu ei defnyddio mwyach.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:64
+msgid "terms-of-use.use.heading-online-summary"
+msgstr "Y crynodeb ar-lein"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:65
+msgctxt "html"
+msgid "terms-of-use.use.content-online-summary"
+msgstr ""
+"<p class=\"govuk-body\">Nid yw sgrinluniau, copi wedi’i lawrlwytho neu gopi wedi’i argraffu o grynodeb <abbr title=\"lasting power of attorney\">LPA</abbr> ar-lein yn brawf o <abbr title=\"lasting power of attorney\">LPA</abbr> ar mae’n bosib na fydd yn dangos status diweddaraf <abbr title=\"lasting power of attorney\">LPA</abbr>.</p>\n"
+"<p class=\"govuk-body\">Ni fydd enwau unrhyw rai a nodir fel atwrneiod wrth gefn i’w gweld yn y crynodeb o’r <abbr title=\"lasting power of attorney\">LPA</abbr>. Bydd yr enwau’n ymddangos os byddant yn camu i mewn fel atwrnai a bod <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> wedi diweddaru ei chofnodion.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:69
+msgid "terms-of-use.use.heading-governing-law"
+msgstr "Y gyfraith lywodraethu"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:70
+msgctxt "html"
+msgid "terms-of-use.use.content-governing-law"
+msgstr ""
+"<p class=\"govuk-body\">Mae’r telerau defnyddio hyn yn cael eu llywodraethu gan gyfreithiau Cymru a Lloegr, gan gynnwys:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>Deddf Camddefnyddio Cyfrifiaduron 1990</li>\n"
+"<li>Y Rheoliad Cyffredinol ar Ddiogelu Data 2018</li>\n"
+"<li>Deddf Diogelu Data 2018</li>\n"
+"<li>Deddf Galluedd Meddyliol 2005</li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">Bydd llysoedd Cymru a Lloegr yn delio ag unrhyw anghydfod a gyfyd o’r telerau defnyddio hyn, neu eich defnydd o wasanaethau <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> (boed dan gontract neu beidio).</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:74
+msgid "terms-of-use.use.heading-about"
+msgstr "Ynghylch y telerau defnyddio hyn"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:75
+msgctxt "html"
+msgid "terms-of-use.use.content-about"
+msgstr "<p class=\"govuk-body\">Gwiriwch y telerau defnyddio hyn yn rheolaidd. Efallai y byddwn yn eu diweddaru heb rybudd. Gall hyn ddigwydd os oes newid yn y gyfraith neu i sut mae’r gwasanaeth yn gweithio. Byddwch yn cytuno i unrhyw newidiadau os byddwch yn parhau i ddefnyddio’r gwasanaeth ar ôl i’r telerau defnyddio gael eu diweddaru.</p>"
+
+#: src/Common/templates/common/contact-us.html.twig:3
+msgid "contact-us.home.title"
+msgstr "Cysylltu â ni"
+
+#: src/Common/templates/common/contact-us.html.twig:13
+msgid "contact-us.home.heading-page"
+msgstr "Cysylltu â ni"
+
+#. Contains a GOV.UK paragraph element and class. Preserve the HTML structure
+#. and classes when translating.
+#: src/Common/templates/common/contact-us.html.twig:15
+msgctxt "html"
+msgid "contact-us.home.content-intro"
+msgstr ""
+"<p class=\"govuk-body\">Os oes angen help arnoch gyda’r gwasnaeth hwn gallwch gysylltu â ni dros y ffôn neu drwy e-bost.</p>\n"
+"<p class=\"govuk-body\">Os ydych yn cysylltu â ni am <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> penodol, lle y bo’n bosibl bydd angen i chi roi:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr></li>\n"
+"<li>eich enw</li>\n"
+"<li>eich dyddiad geni</li>\n"
+"<li>eich rôl (a ydych yn rhoddwr neu’n atwrnai)</li>\n"
+"<li>enw’r rhoddwr (os nad chi yw’r rhoddwr)</li>\n"
+"<li>dyddiad geni’r rhoddwr</li>\n"
+"<li>cyfeiriad a chod post y rhoddwr</li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">Os mai chi yw’r rhoddwr, rhowch enw, gyfeiriad a dyddiad geni un o’ch atwrneiod hefyd.</p>"
+
+#: src/Common/templates/partials/contact-details/email.html.twig:1
+msgid "contact-details.email.heading-email"
+msgstr "E-bost"
+
+#: src/Common/templates/partials/contact-details/telephone.html.twig:1
+msgid "contact-details.telephone.heading-telephone"
+msgstr "Ffôn"
+
+#. Contains GOV.UK paragraph elements and classes, line breaks, a telephone
+#. link and a link to GOV.UK call charges guidance. Preserve the HTML
+#. structure, classes, telephone numbers and link destinations when
+#. translating.
+#: src/Common/templates/partials/contact-details/telephone.html.twig:2
+msgctxt "html"
+msgid "contact-details.telephone.content-details"
+msgstr ""
+"<p class=\"govuk-body\">Ffôn (yn Saesneg): <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br>\n"
+"Ffonio o’r tu allan i’r Deyrnas Unedig: +44 (0)203 518 9639<br>\n"
+"Relay UK (os na allwch glywed neu siarad ar y ffôn): 18001 0300 123 1300<br>\n"
+"Dydd Llun i ddydd Gwener, 9am tan 5pm, heblaw bob dydd Mercher, 10am tan 5pm</p>\n"
+"<p class=\"govuk-body\"><a class=\"govuk-link\" href=\"https://www.gov.uk/call-charges\">Gwybodaeth am brisiau galwadau</a></p>"
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:3
+msgid "view-lpa.enter-code.title"
+msgstr "Rhowch god mynediad yr LPA"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Viewer/templates/viewer/enter-code.html.twig:22
+msgctxt "html"
+msgid "view-lpa.enter-code.heading-page"
+msgstr "Rhowch god mynediad yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
+
+#. Contains a GOV.UK paragraph element and class and an abbr element for LPA.
+#. Preserve the HTML structure and classes when translating.
+#: src/Viewer/templates/viewer/enter-code.html.twig:28
+msgctxt "html"
+msgid "view-lpa.enter-code.content-intro"
+msgstr "<p class=\"govuk-body\">Cod unigryw yw cod mynediad <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> a gaiff ei roi i chi gan y rhoddwr neu atwrnai a enwir mewn atwrneiaeth arhosol. Mae codau mynediad yn gymysgedd o 13 llythyren a rhif ac yn dechrau gyda V.</p>"
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:36
+msgid "view-lpa.enter-code.field-donor-surname.label"
+msgstr "Cyfenw’r rhoddwr"
+
+#. Contains an HTML line break. Preserve the line break and markup when
+#. translating.
+#: src/Viewer/templates/viewer/enter-code.html.twig:43
+msgctxt "html"
+msgid "view-lpa.enter-code.field-lpa-code.hint"
+msgstr "Er enghraifft, V-AB12-CD34-EF56"
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:50
+msgid "view-lpa.enter-code.field-lpa-code.label"
+msgstr "Cod mynediad LPA"
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:60
+msgid "view-lpa.enter-code.reveal-wrong-code-title"
+msgstr "Nid yw’r cod a gefais yn dechrau gyda V"
+
+#. Contains paragraph elements, abbr elements for LPA and a link to the Use a
+#. lasting power of attorney service on GOV.UK. Preserve the HTML structure and
+#. link destination when translating.
+#: src/Viewer/templates/viewer/enter-code.html.twig:64
+msgctxt "html"
+msgid "view-lpa.enter-code.reveal-wrong-code-content"
+msgstr ""
+"<p>Efallai bod y rhoddwr neu’r atwrnai wedi rhoi’r cod anghywir i chi.</p>\n"
+"<p>Gofynnwch iddyn nhw fynd i www.gov.uk/defnyddio-atwrneiaeth-arhosol i greu cod mynediad <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar gyfer eich sefydliad.</p>\n"
+"<p>Os ydych yn rhoddwr neu’n atwrnai, gallwch weld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> drwy fewngofnodi i’r gwasanaeth <a href=\"https://use-lasting-power-of-attorney.service.gov.uk/cy/\" class=\"govuk-link\">Defnyddio atwrneiaeth arhosol</a>.</p>"
+
+#. Contains a GOV.UK paragraph element and class. Preserve the HTML structure
+#. and classes when translating.
+#: src/Viewer/templates/viewer/enter-code.html.twig:70
+msgctxt "html"
+msgid "view-lpa.enter-code.content-epa"
+msgstr "<p class=\"govuk-body\">Ni ellir defnyddio’r gwasanaeth hwn ar gyfer atwrneiaethau parhaus.</p>"
+
+#. Contains a GOV.UK paragraph element and a terms of use link, opening in a
+#. new tab, using the %link% placeholder. Preserve the HTML, link attributes
+#. and placeholder when translating.
+#: src/Viewer/templates/viewer/enter-code.html.twig:74
+msgctxt "html-link"
+msgid "view-lpa.enter-code.content-terms"
+msgstr "<p class=\"govuk-body\">Trwy barhau rydych yn cytuno i’n <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">telerau defnyddio (yn agor mewn tab newydd)</a>.</p>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:3
+msgid "terms-of-use.view.title"
+msgstr "Telerau defnyddio"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:12
+msgid "terms-of-use.view.heading-page"
+msgstr "Telerau defnyddio"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:15
+msgctxt "html"
+msgid "terms-of-use.view.content-intro"
+msgstr ""
+"<p class=\"govuk-body\">Mae’r gwasanaeth Defnyddio atwrneiaeth arhosol (LPA) yn caniatáu i roddwyr ac atwrneiod rannu crynodeb o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> gyda gweithwyr proffesiynol neu sefydliadau drwy greu cod mynediad unigryw.</p>\n"
+"<p class=\"govuk-body\">Gweld atwrneiaeth arhosol yw’r rhan o’r gwasanaeth hwn sy'n caniatáu i chi weld crynodeb o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, gan ddefnyddio’r cod mynediad a roddwyd i chi gan y rhoddwr neu gan atwrnai. Mae’r rhan hon o’r gwasanaeth ar gyfer gweithwyr proffesiynol neu sefydliadau sy’n darparu gwasanaeth i’r rhoddwr. Er enghraifft, sefydliadau ariannol, gweithwyr meddygol proffesiynol, a sefydliadau gofal.</p>\n"
+"<p class=\"govuk-body\">Gellir defnyddio’r gwasanaeth hwn yn lle gofyn am gael gweld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur wreiddiol. Os bydd rhoddwr neu atwrnai yn dangos sgrinlun, neu gopi o grynodeb o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> wedi ei lawrlwytho neu ei argraffu oddi ar gyfrifiadur, ni ellir eu defnyddio fel tystiolaeth o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Yn hytrach, dylid gofyn iddynt ddefnyddio’r gwasanaeth Defnyddio atwrneiaeth arhosol i greu cod mynediad <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>.</p>"
+
+#. Contains GOV.UK HTML elements and classes, and links to external websites.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:19
+msgctxt "html"
+msgid "terms-of-use.view.content-agreement"
+msgstr ""
+"<p class=\"govuk-body\">Trwy ddefnyddio’r gwasanaeth hwn rydych yn:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>cytuno i’r telerau defnyddio hyn a <a class=\"govuk-link\" href=\"https://www.gov.uk/help/terms-conditions\">thelerau ac amodau GOV.UK</a></li>\n"
+"<li>cadarnhau bod rhoddwr neu atwrnai eisiau i chi weld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ac wedi rhoi cod mynediad i chi</li>\n"
+"</ul>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:27
+msgid "terms-of-use.view.warning-personal-information"
+msgstr "Gall defnyddio gwybodaeth bersonol rhywun heb ei ganiatâd fod yn drosedd."
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:33
+msgid "terms-of-use.view.heading-information-security"
+msgstr "Diogelwch gwybodaeth"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:34
+msgctxt "html"
+msgid "terms-of-use.view.content-information-security"
+msgstr ""
+"<p class=\"govuk-body\">Rydych chi a’ch sefydliad yn gyfrifol am sut y byddwch yn defnyddio’r gwasanaeth Gweld atwrneiaeth arhosol.</p>\n"
+"<p class=\"govuk-body\">Os byddwch yn lawrlwytho copi o grynodeb o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, neu’n cofnodi manylion y crynodeb, <b>daw eich sefydliad yn ‘rheolwr data’ yr wybodaeth hone.</b> Mae hyn yn golygu y bydd eich sefydliad yn gyfrifol am gadw’r wybodaeth yn ddiogel, yn unol â Deddf Diogelu Data 2018.</p>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:38
+msgid "terms-of-use.view.heading-access-securely"
+msgstr "Defnyddio’r gwasanaeth yn ddiogel"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:39
+msgctxt "html"
+msgid "terms-of-use.view.content-access-securely"
+msgstr ""
+"<p class=\"govuk-body\">Rydych chi’n gyfrifol am ddefnyddio’r gwasanaeth yn ddiogel. Ni ddylech ddefnyddio’r gwasanaeth ar gyfrifiadur neu rwydwaith a allai adael gwybodaeth bersonol yn hygyrch i eraill neu a allai fod yn anniogel. Er enghraifft, ni ddylid:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>gadael cyfrifiadur heb ei warchod wrth ddefnyddio’r gwasanaeth</li>\n"
+"<li>defnyddio’r gwasanaeth gyda chyfrifiadur cyhoeddus neu gyfrifiadur sy’n cael ei rannu gyda phobl eraill</li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">Rydym yn argymell eich bod yn cau’r tab ar eich porwr gwe pan fyddwch wedi gorffen defnyddio’r gwasanaeth. Bydd y ffesnestr yn dychwelyd yn awtomatig i dudalen cychwyn y gwasanaeth os na fyddwch wedi defnyddio’r gwasanaeth am 60 munud.</p>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:43
+msgid "terms-of-use.view.heading-keeping-up-to-date"
+msgstr "Cadw gwybodaeth yn gyfredol"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:44
+msgctxt "html"
+msgid "terms-of-use.view.content-keeping-up-to-date"
+msgstr ""
+"<p class=\"govuk-body\">Gall <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> newid. Er enghraifft, gall atwrneiod newid, gall enwau neu gyfeiriadau pobl newid, neu gall y rhoddwr ganslo ei <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>.</p>\n"
+"<p class=\"govuk-body\">Rydym yn defnyddio cofnodion <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> am <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> cofrestredig i gadw’r gwasanaeth hwn yn gyfredol. Fodd bynnag:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>rydym yn dibynnu ar roddwyr ac atwrneiod i ddweud wrthym am unrhyw newidiadau</li>\n"
+"<li>pan fyddwn wedi cael gwybod am newid, gall gymryd sawl diwrnod cyn i ni ddiweddaru’r crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar y gwasanaeth</li>\n"
+"</ul>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:48
+msgid "terms-of-use.view.heading-tracking"
+msgstr "Olrhain y defnydd o’r gwasanaeth"
+
+#. Contains GOV.UK HTML markup, a privacy notice link using the %privacy-link%
+#. placeholder and a cookie policy link using the %cookies-link% placeholder.
+#. Preserve the HTML and placeholders when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:49
+msgctxt "html-link"
+msgid "terms-of-use.view.content-tracking"
+msgstr ""
+"<p class=\"govuk-body\">Rydym yn cadw cofnod o pryd y defnyddiwyd cod mynediad i weld <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Mae’r wybodaeth hon ar gael i’r rhoddwr a’r atwrneiod.</p>\n"
+"<p class=\"govuk-body\">Bydd yr wybodaeth yn cael ei storio’n ddiogel a’i defnyddio yn unol â’n <a class=\"govuk-link\" href=\"%privacy-link%\">hysbysiad preifatrwydd</a> a’n <a class=\"govuk-link\" href=\"%cookies-link%\">polisi cwcis</a>.</p>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:53
+msgid "terms-of-use.view.heading-fraud"
+msgstr "Os ydych chi’n amau bod rhywun yn twyllo neu’n camdrin"
+
+#. Contains GOV.UK HTML elements and classes, and links to external websites.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:54
+msgctxt "html"
+msgid "terms-of-use.view.content-fraud"
+msgstr ""
+"<p class=\"govuk-body\"><a class=\"govuk-link\" href=\"https://www.gov.uk/report-concern-about-attorney-deputy\"> Cysylltwch â Swyddfa’r Gwarcheidwad Cyhoeddus</a> os oes gennych bryderon am weithredoedd atwrnai. Er enghraifft, os ydych chi’n pryderu bod atwrnai yn camddefnyddio arian rhoddwr neu’n gwneud penderfyniadau nad ydynt er lles pennaf y rhoddwr.</p>\n"
+"<p class=\"govuk-body\">Os ydych chi’n amau camdriniaeth, trosedd, neu os ydych yn credu bod rhywun mewn perygl uniongyrchol, <a class=\"govuk-link\" href=\"https://www.gov.uk/contact-police\">cysylltwch â’r heddlu</a> yn gyntaf.</p>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:58
+msgid "terms-of-use.view.heading-governing-law"
+msgstr "Y gyfraith lywodraethu"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:59
+msgctxt "html"
+msgid "terms-of-use.view.content-governing-law"
+msgstr ""
+"<p class=\"govuk-body\">Mae’r telerau defnyddio hyn yn cael eu llywodraethu gan gyfreithiau Cymru a Lloegr, gan gynnwys:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>Deddf Camddefnyddio Cyfrifiaduron 1990</li>\n"
+"<li>Y Rheoliad Cyffredinol ar Ddiogelu Data 2018</li>\n"
+"<li>Deddf Diogelu Data 2018</li>\n"
+"<li>Deddf Galluedd Meddyliol 2005</li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">Bydd llysoedd Cymru a Lloegr yn delio ag unrhyw anghydfod a gyfyd o’r telerau defnyddio hyn, neu eich defnydd o wasanaethau <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> (boed dan gontract neu beidio).</p>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:63
+msgid "terms-of-use.view.heading-about"
+msgstr "Ynghylch y telerau defnyddio hyn"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:64
+msgctxt "html"
+msgid "terms-of-use.view.content-about"
+msgstr "<p class=\"govuk-body\">Mae’r telerau defnyddio hyn yn effeithio ar eich hawliau a’ch cyfrifoldebau o dan y gyfraith. Maent yn llywodaethu eich defnydd o’r gwasanaeth Gweld atwrneiaeth arhosol. Nid ydynt yn berthnasol i unrhyw adran neu wasanaeth ar-lein arall. Gwiriwch y telerau defnyddio hyn yn rheolaidd. Efallai y byddwn yn eu diweddaru heb rybudd. Gallai hyn ddigwydd os bydd newid yn y gyfraith neu newid i’r ffordd y mae’r gwasanaeth yn gweithio. Byddwch yn cytuno i unrhyw newidadau os byddwch yn parhau i ddefnyddio’r gwasanaeth ar ôl i’r telerau defnyddio gael eu diweddaru.</p>"
+
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:3
+msgid "view-lpa.enter-code-paper-verification.title"
+msgstr "Rhowch y cod gwirio papur neu’r cod mynediad ar gyfer yr LPA"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:19
+msgctxt "html"
+msgid "view-lpa.enter-code-paper-verification.heading-page"
+msgstr "Rhowch y cod gwirio papur neu’r cod mynediad ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:28
+msgctxt "html"
+msgid "view-lpa.enter-code-paper-verification.reveal-code-types-title"
+msgstr "Beth yw codau gwirio papur a chodau mynediad <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>?"
+
+#. Contains GOV.UK paragraph, heading and list elements and classes, and abbr
+#. elements for LPA. Preserve the HTML structure and classes when translating.
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:34
+msgctxt "html"
+msgid "view-lpa.enter-code-paper-verification.reveal-code-types-content"
+msgstr ""
+"<p class=\"govuk-body\">Codau unigryw yw’r rhain, a roddir i chi gan y rhoddwr neu un o’r atwrneiod a enwir ar atwrneiaeth arhosol.</p>\n"
+"<h3 class=\"govuk-heading-s\">Codau mynediad</h3>\n"
+"<p class=\"govuk-body\">Mae rhoddwyr ac atwrneiod yn gofyn am y codau hyn ar-lein, gan ddefnyddio eu cyfrif Defnyddio atwrneiaeth arhosol.</p>\n"
+"<h3 class=\"govuk-heading-s\">Codau gwirio papur</h3>\n"
+"<p class=\"govuk-body\">Caiff y codau hyn eu postio at roddwyr ac atwrneiod nad ydynt eisiau defnyddio <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar-lein. Mae pob cod yn unigryw i’r sawl a’i derbyniodd. Pan fyddwch yn cael cod gwirio papur i weld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, dylech hefyd gael y canlynol:</p>\n"
+"<ul class=\"list list-bullet\">\n"
+"<li>cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> – bydd hwn ar unrhyw lythyrau rydym wedi’u hanfon at y rhoddwr neu’r atwrneiod</li>\n"
+"<li>dyddiad geni’r sawl yr anfonwyd y cod gwirio papur ato</li>\n"
+"<li>nifer yr atwrneiod a enwir yn yr hysbysiad cofrestru</li>\n"
+"<li>enw un atwrnai a enwir yn yr hysbysiad cofrestru</li>\n"
+"</ul>"
+
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:41
+msgid "view-lpa.enter-code-paper-verification.field-donor-surname.label"
+msgstr "Cyfenw’r rhoddwr"
+
+#. Contains an HTML line break. Preserve the line break and markup when
+#. translating.
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:45
+msgctxt "html"
+msgid "view-lpa.enter-code-paper-verification.field-lpa-code.hint"
+msgstr "Mae codau mynediad yn dechrau gyda V. Er enghraifft, V-AB12-CD34-EF56.<br>Mae codau gwirio papur yn dechrau gyda P. Er enghraifft, P-AB12-CD34-EF56-G7"
+
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:51
+msgid "view-lpa.enter-code-paper-verification.field-lpa-code.label"
+msgstr "Cod gwirio papur neu god mynediad yr LPA"
+
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:58
+msgid "view-lpa.enter-code-paper-verification.reveal-wrong-code-title"
+msgstr "Nid yw’r cod a roddwyd i mi yn dechrau gyda V na P."
+
+#. Contains a GOV.UK paragraph element and class. Preserve the HTML structure
+#. and classes when translating.
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:62
+msgctxt "html"
+msgid "view-lpa.enter-code-paper-verification.reveal-wrong-code-content"
+msgstr "<p class=\"govuk-body\">Efallai bod y rhoddwr neu’r atwrnai wedi rhoi’r cod anghywir i chi. Gofynnwch iddyn nhw wneud yn siŵr bod y cod maen nhw wedi’i roi i chi yn gywir.</p>"
+
+#. Contains a GOV.UK paragraph element and a terms of use link, opening in a
+#. new tab, using the %link% placeholder. Preserve the HTML, link attributes
+#. and placeholder when translating.
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:68
+msgctxt "html-link"
+msgid "view-lpa.enter-code-paper-verification.content-terms"
+msgstr "<p class=\"govuk-body\">Trwy barhau rydych yn cytuno i’n <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">telerau defnyddio (yn agor mewn tab newydd)</a>.</p>"
