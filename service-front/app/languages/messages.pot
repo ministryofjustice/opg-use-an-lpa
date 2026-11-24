@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2026-11-18T16:23:36+00:00\n"
+"POT-Creation-Date: 2026-11-23T16:23:36+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -4711,4 +4711,8 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:68
 msgctxt "html-link"
 msgid "view-lpa.enter-code-paper-verification.content-terms"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:21
+msgid "Access code expires today"
 msgstr ""

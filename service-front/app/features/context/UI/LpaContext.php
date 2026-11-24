@@ -584,13 +584,17 @@ class LpaContext implements Context
     #[Then('/^I can see the relevant (.*) and (.*) of my access codes and their details$/')]
     public function iCanSeeAllOfMyActiveAndInactiveAccessCodesAndTheirDetails($activeTitle, $inactiveTitle): void
     {
-        $this->ui->assertPageContainsText($activeTitle);
+        $this->ui->assertElementOnPage(
+            'h2[data-content-id="access-codes-active-heading"]'
+        );
         $this->ui->assertElementContainsText(
             '#accordion-default-content-1 dl.govuk-summary-list',
             'V-XYZ3-21AB-C987'
         );
 
-        $this->ui->assertPageContainsText($inactiveTitle);
+        $this->ui->assertElementOnPage(
+            'h2[data-content-id="access-codes-inactive-heading"]'
+        );
         $this->ui->assertElementContainsText(
             '#accordion-default-content-2 dl.govuk-summary-list',
             'V-ABC3-21AB-CXYZ'
@@ -1193,7 +1197,7 @@ class LpaContext implements Context
                         0 => [
                             'SiriusUid'    => $this->lpa->uId,
                             'Added'        => '2020-01-01T23:59:59+00:00',
-                            'Expires'      => '2021-02-01T23:59:59+00:00',
+                            'Expires'      => (new DateTime('tomorrow'))->format('c'),
                             'UserLpaActor' => $this->userLpaActorToken,
                             'Organisation' => $this->organisation,
                             'ViewerCode'   => $this->accessCode,
