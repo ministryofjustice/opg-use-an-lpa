@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-17 15:06+0000\n"
+"PO-Revision-Date: 2026-11-23 12:35+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
@@ -3392,10 +3392,7 @@ msgid ""
 "We are unable to show the preferences for this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
 "            You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr>\n"
 "            to anyone who needs to see them."
-msgstr ""
-"We are unable to show the preferences for this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
-"            You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr>\n"
-"            to anyone who needs to see them."
+msgstr "We are unable to show the preferences for this <abbr title=\"lasting power of attorney\">LPA</abbr>. You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr> to anyone who needs to see them."
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:54
 msgid "We cannot show the preferences for this LPA. Until we can fix this problem, if you need to see these you’ll need to ask the person who gave you the access code to show you the paper LPA."
@@ -3424,10 +3421,7 @@ msgid ""
 "We are unable to show the instructions for this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
 "            You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr>\n"
 "            to anyone who needs to see them."
-msgstr ""
-"We are unable to show the instructions for this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
-"            You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr>\n"
-"            to anyone who needs to see them."
+msgstr "We are unable to show the instructions for this <abbr title=\"lasting power of attorney\">LPA</abbr>. You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr> to anyone who needs to see them."
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:83
 msgid "We cannot show the instructions for this LPA. Until we can fix this problem, if you need to see these you\"ll need to ask the person who gave you the access code to show you the paper LPA."
@@ -4627,10 +4621,7 @@ msgid ""
 "We are unable to show the words entered in this part of this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
 "            You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr>\n"
 "            to anyone who needs to see them."
-msgstr ""
-"We are unable to show the words entered in this part of this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
-"            You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr>\n"
-"            to anyone who needs to see them."
+msgstr "We are unable to show the words entered in this part of this <abbr title=\"lasting power of attorney\">LPA</abbr>. You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr> to anyone who needs to see them."
 
 #: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:10
 msgid "You’ve already asked for an activation key for this LPA today"
@@ -4907,3 +4898,707 @@ msgstr "Yes, I have an activation key"
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:38
 msgid "add-lpa.triage.field-activation-key-triage.label-no"
 msgstr "No, I need to request an activation key"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:3
+msgid "dashboard.home.title"
+msgstr "Your lasting powers of attorney"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:25
+msgid "dashboard.home.heading-page"
+msgstr "Your lasting powers of attorney"
+
+#. Contains GOV.UK paragraph elements and classes, an abbr element for LPA and
+#. a link to GOV.UK guidance. Preserve the HTML structure, classes and link
+#. destination when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:31
+msgctxt "html"
+msgid "dashboard.home.content-intro"
+msgstr ""
+"<p class=\"govuk-body-l\">Any lasting power of attorney (LPA) you add to your account will appear on this page.</p>\n"
+"<p class=\"govuk-body-m\">Find out how to <a href=\"https://www.gov.uk/lasting-power-attorney-duties\" class=\"govuk-link\">prove you’re an attorney on an <abbr title=\"lasting power of attorney\">LPA</abbr></a> and how to use it.</p>"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:38
+msgid "dashboard.home.reveal-service-title"
+msgstr "What can I do with this service?"
+
+#. Contains a paragraph and a GOV.UK bulleted list with abbr elements for LPA.
+#. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:42
+msgctxt "html"
+msgid "dashboard.home.reveal-service-content"
+msgstr ""
+"<p>Use this service to:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>create access codes that enable organisations to view the online summary of an <abbr title=\"lasting power of attorney\">LPA</abbr></li>\n"
+"<li>keep track of the organisations that have online access to an <abbr title=\"lasting power of attorney\">LPA</abbr></li>\n"
+"<li>ask for an activation key if you have not been given one, or if it has expired</li>\n"
+"<li>view the online summary of an <abbr title=\"lasting power of attorney\">LPA</abbr> yourself</li>\n"
+"</ul>\n"
+"<p>LPA summaries do not show the names of any replacement attorneys unless they step in to replace an attorney</p>"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:50
+msgctxt "html"
+msgid "dashboard.home.button-add-another-lpa"
+msgstr "Add another <abbr title=\"lasting power of attorney\">LPA</abbr>"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:54
+msgctxt "html"
+msgid "dashboard.home.button-add-first-lpa"
+msgstr "Add your first <abbr title=\"lasting power of attorney\">LPA</abbr>"
+
+#. Contains an abbr element for LPA and a %count% placeholder for the number of
+#. LPAs in the account. Preserve the HTML and placeholder when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:66
+msgctxt "html"
+msgid "dashboard.home.content-lpa-count"
+msgid_plural "dashboard.home.content-lpa-count-plural"
+msgstr[0] "You have %count% <abbr title=\"lasting power of attorney\">LPA</abbr> in your account"
+msgstr[1] "You have %count% <abbr title=\"lasting powers of attorney\">LPAs</abbr> in your account"
+
+#. Contains an abbr element for LPAs. Preserve the HTML when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:84
+msgctxt "html"
+msgid "dashboard.home.heading-duplicate-lpas"
+msgstr "Your account contains duplicate <abbr title=\"lasting powers of attorney\">LPAs</abbr>"
+
+#. Contains GOV.UK paragraph elements and classes and abbr elements for LPA.
+#. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:89
+msgctxt "html"
+msgid "dashboard.home.content-duplicate-lpas"
+msgstr ""
+"<p class=\"govuk-body govuk-!-margin-top-2 govuk-!-margin-left-12\">You might find it easier to manage your account by removing duplicate <abbr title=\"lasting powers of attorney\">LPAs</abbr>.</p>\n"
+"<p class=\"govuk-body\">It doesn’t matter which <abbr title=\"lasting power of attorney\">LPA</abbr> you remove but it would be more accurate to keep those that show as added by you, especially when creating access codes for organisations.</p>\n"
+"<p class=\"govuk-body\">Removing duplicate <abbr title=\"lasting powers of attorney\">LPAs</abbr> is optional.</p>"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:3
+msgid "request-activation-key.lpa-not-found.title"
+msgstr "Cannot find LPA"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:14
+msgid "request-activation-key.lpa-not-found.heading-page"
+msgstr "Lasting power of attorney not found"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:16
+msgctxt "html"
+msgid "request-activation-key.lpa-not-found.content-reasons"
+msgstr ""
+"<p class=\"govuk-body\">This could be because:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number you entered is incorrect</li>\n"
+"<li>some of the details you entered about yourself do not match our records</li>\n"
+"</ul>"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:20
+msgid "request-activation-key.lpa-not-found.heading-your-answers"
+msgstr "Your answers"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:24
+msgctxt "html"
+msgid "request-activation-key.lpa-not-found.label-lpa-reference-number"
+msgstr "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:34
+msgid "request-activation-key.lpa-not-found.label-name"
+msgstr "Name"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:42
+msgid "request-activation-key.lpa-not-found.label-dob"
+msgstr "Date of birth"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:51
+msgid "request-activation-key.lpa-not-found.label-postcode"
+msgstr "Postcode"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:60
+msgid "request-activation-key.lpa-not-found.label-live-in-uk"
+msgstr "Do you live in the UK?"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:63
+msgid "request-activation-key.lpa-not-found.value-live-in-uk-no"
+msgstr "No"
+
+#. Contains a GOV.UK paragraph element and class. Preserve the HTML structure
+#. and classes when translating.
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:69
+msgctxt "html"
+msgid "request-activation-key.lpa-not-found.content-contact-us"
+msgstr "<p class=\"govuk-body\">If you’re sure you entered the correct information, contact us.</p>"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:81
+msgid "request-activation-key.lpa-not-found.button-try-again"
+msgstr "Try again"
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:45
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:86
+#: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:25
+msgid "common.button-back-to-your-lpas"
+msgstr "Back to your LPAs"
+
+#: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:3
+msgid "request-activation-key.replacement-attorney.title"
+msgstr "Attorney details"
+
+#: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:17
+msgid "request-activation-key.replacement-attorney.heading-page"
+msgstr "You cannot request an activation key if you are a replacement attorney"
+
+#. Contains GOV.UK HTML elements and classes, and links to GOV.UK guidance.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:20
+msgctxt "html"
+msgid "request-activation-key.replacement-attorney.content-becoming-active"
+msgstr ""
+"<p class=\"govuk-body\">Only the donor or an active attorney can request an activation key.</p>\n"
+"<p class=\"govuk-body\">You can only become an active attorney if one of the attorneys has stopped carrying out their role. This happens if they:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>have died</li>\n"
+"<li>have <a href=\"https://www.gov.uk/lasting-power-attorney-duties/stop-attorney\" class=\"govuk-link\">formally stepped down</a> (‘disclaimed their appointment’)</li>\n"
+"<li>have been <a href=\"https://www.gov.uk/power-of-attorney/change-your-lasting-power-of-attorney\" class=\"govuk-link\">removed from the <abbr title=\"lasting power of attorney\">LPA</abbr> by the donor</a></li>\n"
+"<li>have lost mental capacity</li>\n"
+"<li>have been declared bankrupt or have a debt relief order (property and finance attorneys only)</li>\n"
+"<li>were married to, or in a civil partnership with, the donor, and the relationship has legally ended (unless the donor said otherwise in the instructions they made on the <abbr title=\"lasting power of attorney\">LPA</abbr>)</li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">You must <a href=\"https://www.gov.uk/lasting-power-attorney-duties/changes-you-need-to-report\" class=\"govuk-link\">let us know if you think you need to step in as an active attorney</a>. Once we’ve updated our records to show you are an active attorney, you’ll be able to request an activation key.</p>"
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:3
+msgid "request-activation-key.received.title"
+msgstr "We've got your activation key request"
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:12
+msgid "request-activation-key.received.heading-page"
+msgstr "We've got your activation key request"
+
+#. Contains GOV.UK paragraph elements and classes, and a %date% placeholder for
+#. the date by which the user should have heard from us. Preserve the HTML
+#. structure, classes and placeholder when translating.
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:18
+msgctxt "html"
+msgid "request-activation-key.received.content-what-happens-next"
+msgstr ""
+"<p class=\"govuk-body\">Once we’ve checked all the details, we’ll post you a letter with your activation key for this <abbr title=\"lasting power of attorney\">LPA</abbr>. We send it by post because it’s more secure.</p>\n"
+"<p class=\"govuk-body\">We’ll contact you if we need any more information.</p>\n"
+"<p class=\"govuk-body\">We’ve sent you an email to confirm all these details.</p>\n"
+"<p class=\"govuk-body\">Most people hear from us or get the activation key within 2 weeks of requesting it. However, sometimes it can take a bit longer. If you have not heard from us by %date%, please get in touch.</p>"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:27
+msgctxt "html"
+msgid "request-activation-key.received.heading-more-than-one-lpa"
+msgstr "Have more than one <abbr title=\"lasting power of attorney\">LPA</abbr>?"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:32
+msgctxt "html"
+msgid "request-activation-key.received.content-more-than-one-lpa"
+msgstr "<p class=\"govuk-body\">You’ll need an activation key for each <abbr title=\"lasting power of attorney\">LPA</abbr> that you’d like to add to your account.</p>"
+
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:40
+msgid "request-activation-key.received.button-request-another"
+msgstr "Request another activation key"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:3
+msgid "terms-of-use.use.title"
+msgstr "Terms of use"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:10
+msgid "terms-of-use.use.heading-page"
+msgstr "Terms of use"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:12
+msgctxt "html"
+msgid "terms-of-use.use.content-intro"
+msgstr ""
+"<p class=\"govuk-body\">The Use a lasting power of attorney (LPA) service lets you create access codes to give to professionals or organisations so they can view an online summary of an <abbr title=\"lasting power of attorney\">LPA</abbr>. For example, financial institutions, medical professionals, and care organisations.</p>\n"
+"<p class=\"govuk-body\">The service is for donors and attorneys named in an <abbr title=\"lasting power of attorney\">LPA</abbr>. It is not for replacement attorneys.</p>\n"
+"<p class=\"govuk-body\">You should be able to use this service instead of showing someone the full paper <abbr title=\"lasting power of attorney\">LPA</abbr>.</p>"
+
+#. Visually hidden prefix read out by screen readers before GOV.UK warning
+#. text, shown alongside a “!” icon. It is not visible on screen.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:19
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:26
+msgid "common.warning-hidden-text"
+msgstr "Warning"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:20
+msgctxt "html"
+msgid "terms-of-use.use.warning-download-print"
+msgstr "You cannot use a download or print out of the <abbr title=\"lasting power of attorney\">LPA</abbr> summary in place of the original or office copy of the full paper <abbr title=\"lasting power of attorney\">LPA</abbr>, or instead of giving someone an access code"
+
+#. Contains GOV.UK HTML elements and classes, and links to external websites.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:26
+msgctxt "html"
+msgid "terms-of-use.use.content-agreement"
+msgstr "<p class=\"govuk-body\">By using this service you agree to these terms of use and the <a class=\"govuk-link\" href=\"https://www.gov.uk/help/terms-conditions\">GOV.UK terms and conditions</a>.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:30
+msgid "terms-of-use.use.heading-attorney-responsibilities"
+msgstr "Your responsibilities as an attorney"
+
+#. Contains GOV.UK HTML elements and classes, and links to external websites.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:31
+msgctxt "html"
+msgid "terms-of-use.use.content-attorney-responsibilities"
+msgstr ""
+"<p class=\"govuk-body\">If you’re an attorney, remember that using this service to give someone access to a summary of the <abbr title=\"lasting power of attorney\">LPA</abbr>, is the same as using the full paper <abbr title=\"lasting power of attorney\">LPA</abbr>.</p>\n"
+"<p class=\"govuk-body\">When using an <abbr title=\"lasting power of attorney\">LPA</abbr> you must always follow the legal responsibilities you agreed to when you signed the <abbr title=\"lasting power of attorney\">LPA</abbr>. For example, you must always:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>follow the principles of the <a class=\"govuk-link\" href=\"https://www.gov.uk/government/publications/mental-capacity-act-code-of-practice\">Mental Capacity Act</a></li>\n"
+"<li>take into account any preferences or instructions the donor set out in their <abbr title=\"lasting power of attorney\">LPA</abbr></li>\n"
+"<li>act in the best interests of the donor</li>\n"
+"</ul>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:35
+msgid "terms-of-use.use.heading-account-security"
+msgstr "Your account security"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:36
+msgctxt "html"
+msgid "terms-of-use.use.content-account-security"
+msgstr ""
+"<p class=\"govuk-body\">When you create an online account for this service, use a valid email address and choose a strong password that someone else will not be able to guess easily.</p>\n"
+"<p class=\"govuk-body\">It’s your responsibility to keep your sign-in details safe. You should not use a shared email address to create your account. Do not share your password with anyone or write it down.</p>\n"
+"<p class=\"govuk-body\">You’re responsible for all activity on your Use a lasting power of attorney service account. We keep a record of activity for security and anti-fraud purposes.</p>\n"
+"<p class=\"govuk-body\">We recommend that you sign out of your account when you’re not using the service. We’ll automatically sign you out if you’ve not used the service for 60 minutes.</p>\n"
+"<p class=\"govuk-body\">If you download or print a copy of the <abbr title=\"lasting power of attorney\">LPA</abbr> summary, make sure you keep the information safe and secure.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:40
+msgid "terms-of-use.use.heading-access-codes"
+msgstr "Use access codes responsibly"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:41
+msgctxt "html"
+msgid "terms-of-use.use.content-access-codes"
+msgstr ""
+"<p class=\"govuk-body\">When you give someone an <abbr title=\"lasting power of attorney\">LPA</abbr> access code, you’re giving them access to personal information about the donor and attorneys named in an <abbr title=\"lasting power of attorney\">LPA</abbr>.</p>\n"
+"<p class=\"govuk-body\">Keep access codes secure. Only give access codes to professionals and organisations you trust and who have an appropriate need to view the <abbr title=\"lasting power of attorney\">LPA</abbr>.</p>\n"
+"<p class=\"govuk-body\">We’re not responsible for how personal information, accessed using a code you’ve created, is used, shared, or held.</p>\n"
+"<p class=\"govuk-body\">If you lose a code or are worried a code may be used by an unauthorised person, you can cancel the code within the service.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:45
+msgid "terms-of-use.use.heading-access-securely"
+msgstr "Access the service securely"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:46
+msgctxt "html"
+msgid "terms-of-use.use.content-access-securely"
+msgstr ""
+"<p class=\"govuk-body\">You’re responsible for accessing the service securely. You should not access it using a computer or network that may leave personal information accessible to others or if you think it may not be secure. For example, you should not:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>leave a computer unprotected while you’re using the service</li>\n"
+"<li>access the service using a shared or public computer</li>\n"
+"</ul>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:50
+msgid "terms-of-use.use.heading-information-safe"
+msgstr "Keeping your information safe"
+
+#. Contains GOV.UK HTML markup, a privacy notice link using the %privacy-
+#. notice% placeholder and a cookie policy link using the %cookie% placeholder.
+#. Preserve the HTML and placeholders when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:51
+msgctxt "html-link"
+msgid "terms-of-use.use.content-information-safe"
+msgstr "<p class=\"govuk-body\">Any information you submit will be stored securely and used in line with our <a class=\"govuk-link\" href=\"%privacy-notice%\">privacy notice</a> and <a class=\"govuk-link\" href=\"%cookie%\">cookie policy</a>.</p>"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:56
+msgctxt "html"
+msgid "terms-of-use.use.heading-change-lpa"
+msgstr "Let us know if you want us to change the <abbr title=\"lasting power of attorney\">LPA</abbr>"
+
+#. Contains GOV.UK HTML elements and classes, and links to external websites.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:60
+msgctxt "html"
+msgid "terms-of-use.use.content-change-lpa"
+msgstr ""
+"<p class=\"govuk-body\">When professionals and organisations view the <abbr title=\"lasting power of attorney\">LPA</abbr> summary, it’s important they see up to date information.</p>\n"
+"<p class=\"govuk-body\">Let the Office of the Public Guardian (OPG) know if <a class=\"govuk-link\" href=\"https://www.gov.uk/power-of-attorney/change-your-lasting-power-of-attorney\"> changes need to be made to information in an <abbr title=\"lasting power of attorney\">LPA</abbr> </a>. We’ll then update the lasting power of attorney register and make the changes for you to the online summary.</p>\n"
+"<p class=\"govuk-body\">For example, you should let us know us if:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>the donor or an attorney changes their name or address</li>\n"
+"<li>the donor wants to remove an attorney</li>\n"
+"<li>an attorney dies or can no longer act</li>\n"
+"<li>the donor wants to cancel their <abbr title=\"lasting power of attorney\">LPA</abbr></li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">Once you’ve let us know about a change, it may be a few days before this shows on the online service.</p>\n"
+"<p class=\"govuk-body\">Please let us know if changes need to be made as soon as you can.</p>\n"
+"<p class=\"govuk-body\"><b>Only the Court of Protection can change a registered <abbr title=\"lasting power of attorney\">LPA</abbr></b>. You must not make changes to the paper <abbr title=\"lasting power of attorney\">LPA</abbr> with a pen, correction fluid or in any other way. This applies to all changes, even small things like correcting a spelling mistake in someone’s name. If you change the <abbr title=\"lasting power of attorney\">LPA</abbr>, you may not be able to use it anymore.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:64
+msgid "terms-of-use.use.heading-online-summary"
+msgstr "The online summary"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:65
+msgctxt "html"
+msgid "terms-of-use.use.content-online-summary"
+msgstr ""
+"<p class=\"govuk-body\">Screenshots, downloads or print outs of the online <abbr title=\"lasting power of attorney\">LPA</abbr> summary are not proof of an <abbr title=\"lasting power of attorney\">LPA</abbr> and may not show the latest status of an <abbr title=\"lasting power of attorney\">LPA</abbr>.</p>\n"
+"<p class=\"govuk-body\">Anyone named as a replacement attorney will not appear in the <abbr title=\"lasting power of attorney\">LPA</abbr> summary. Their name will only appear if they step in as an attorney and <abbr title=\"Office of the Public Guardian\">OPG</abbr> has updated its records.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:69
+msgid "terms-of-use.use.heading-governing-law"
+msgstr "Governing law"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:70
+msgctxt "html"
+msgid "terms-of-use.use.content-governing-law"
+msgstr ""
+"<p class=\"govuk-body\">These terms of use are governed by the laws of England and Wales, including:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>Computer Misuse Act 1990</li>\n"
+"<li>General Data Protection Regulation 2018</li>\n"
+"<li>Data Protection Act 2018</li>\n"
+"<li>Mental Capacity Act 2005</li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">Any dispute you have about these terms of use, or your use of <abbr title=\"Office of the Public Guardian\">OPG</abbr> services (whether it be contractual or non-contractual), will be dealt with by the courts of England and Wales.</p>"
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:74
+msgid "terms-of-use.use.heading-about"
+msgstr "About these terms of use"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:75
+msgctxt "html"
+msgid "terms-of-use.use.content-about"
+msgstr "<p class=\"govuk-body\">Please check these terms of use regularly. We may update them without notice. This might happen if there’s a change in the law or to the way the service works. You’ll agree to any changes if you continue to use the service after the terms of use have been updated.</p>"
+
+#: src/Common/templates/common/contact-us.html.twig:3
+msgid "contact-us.home.title"
+msgstr "Contact us"
+
+#: src/Common/templates/common/contact-us.html.twig:13
+msgid "contact-us.home.heading-page"
+msgstr "Contact us"
+
+#. Contains a GOV.UK paragraph element and class. Preserve the HTML structure
+#. and classes when translating.
+#: src/Common/templates/common/contact-us.html.twig:15
+msgctxt "html"
+msgid "contact-us.home.content-intro"
+msgstr ""
+"<p class=\"govuk-body\">If you need help with this service you can get in touch by telephone or email.</p>\n"
+"<p class=\"govuk-body\">If you’re contacting us about a specific <abbr title=\"lasting power of attorney\">LPA</abbr>, where possible you will need to tell us:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number</li>\n"
+"<li>your name</li>\n"
+"<li>your date of birth</li>\n"
+"<li>your role (whether you are the donor or an attorney)</li>\n"
+"<li>the donor’s name (if you are not the donor)</li>\n"
+"<li>the donor’s date of birth</li>\n"
+"<li>the donor’s address and postcode</li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">If you are the donor, also provide the name and address of one of your attorneys.</p>"
+
+#: src/Common/templates/partials/contact-details/email.html.twig:1
+msgid "contact-details.email.heading-email"
+msgstr "Email"
+
+#: src/Common/templates/partials/contact-details/telephone.html.twig:1
+msgid "contact-details.telephone.heading-telephone"
+msgstr "Telephone"
+
+#. Contains GOV.UK paragraph elements and classes, line breaks, a telephone
+#. link and a link to GOV.UK call charges guidance. Preserve the HTML
+#. structure, classes, telephone numbers and link destinations when
+#. translating.
+#: src/Common/templates/partials/contact-details/telephone.html.twig:2
+msgctxt "html"
+msgid "contact-details.telephone.content-details"
+msgstr ""
+"<p class=\"govuk-body\">Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br>\n"
+"Calling from outside the UK: +44 (0)203 518 9639<br>\n"
+"Relay UK (if you cannot hear or speak on the phone): 18001 0300 123 1300<br>\n"
+"Monday to Friday, 9am to 5pm, except Wednesday, 10am to 5pm</p>\n"
+"<p class=\"govuk-body\"><a class=\"govuk-link\" href=\"https://www.gov.uk/call-charges\">Find out about call charges</a></p>"
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:3
+msgid "view-lpa.enter-code.title"
+msgstr "Enter LPA access code"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Viewer/templates/viewer/enter-code.html.twig:22
+msgctxt "html"
+msgid "view-lpa.enter-code.heading-page"
+msgstr "Enter the <abbr title=\"lasting power of attorney\">LPA</abbr> access code"
+
+#. Contains a GOV.UK paragraph element and class and an abbr element for LPA.
+#. Preserve the HTML structure and classes when translating.
+#: src/Viewer/templates/viewer/enter-code.html.twig:28
+msgctxt "html"
+msgid "view-lpa.enter-code.content-intro"
+msgstr "<p class=\"govuk-body\">An <abbr title=\"lasting power of attorney\">LPA</abbr> access code is a unique code given to you by the donor or an attorney named on a lasting power of attorney. Access codes are 13 characters long and start with a V.</p>"
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:36
+msgid "view-lpa.enter-code.field-donor-surname.label"
+msgstr "Donor’s last name"
+
+#. Contains an HTML line break. Preserve the line break and markup when
+#. translating.
+#: src/Viewer/templates/viewer/enter-code.html.twig:43
+msgctxt "html"
+msgid "view-lpa.enter-code.field-lpa-code.hint"
+msgstr "For example, V-AB12-CD34-EF56"
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:50
+msgid "view-lpa.enter-code.field-lpa-code.label"
+msgstr "LPA access code"
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:60
+msgid "view-lpa.enter-code.reveal-wrong-code-title"
+msgstr "The code I’ve been given does not begin with a V"
+
+#. Contains paragraph elements, abbr elements for LPA and a link to the Use a
+#. lasting power of attorney service on GOV.UK. Preserve the HTML structure and
+#. link destination when translating.
+#: src/Viewer/templates/viewer/enter-code.html.twig:64
+msgctxt "html"
+msgid "view-lpa.enter-code.reveal-wrong-code-content"
+msgstr ""
+"<p>The donor or attorney may have given you the wrong code.</p>\n"
+"<p>Ask them to go to www.gov.uk/use-lpa to create an <abbr title=\"lasting power of attorney\">LPA</abbr> access code for your organisation.</p>\n"
+"<p>If you’re the donor or an attorney, you can view the <abbr title=\"lasting power of attorney\">LPA</abbr> by signing into the <a href=\"https://www.gov.uk/manage-lasting-power-attorney/use-lasting-power-of-attorney\" class=\"govuk-link\">Use a lasting power of attorney service</a>.</p>"
+
+#. Contains a GOV.UK paragraph element and class. Preserve the HTML structure
+#. and classes when translating.
+#: src/Viewer/templates/viewer/enter-code.html.twig:70
+msgctxt "html"
+msgid "view-lpa.enter-code.content-epa"
+msgstr "<p class=\"govuk-body\">This service cannot be used for enduring powers of attorney.</p>"
+
+#. Contains a GOV.UK paragraph element and a terms of use link, opening in a
+#. new tab, using the %link% placeholder. Preserve the HTML, link attributes
+#. and placeholder when translating.
+#: src/Viewer/templates/viewer/enter-code.html.twig:74
+msgctxt "html-link"
+msgid "view-lpa.enter-code.content-terms"
+msgstr "<p class=\"govuk-body\">By continuing you agree to our <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>.</p>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:3
+msgid "terms-of-use.view.title"
+msgstr "Terms of use"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:12
+msgid "terms-of-use.view.heading-page"
+msgstr "Terms of use"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:15
+msgctxt "html"
+msgid "terms-of-use.view.content-intro"
+msgstr ""
+"<p class=\"govuk-body\">The Use a lasting power of attorney (LPA) service lets donors and attorneys share a summary of an <abbr title=\"lasting power of attorney\">LPA</abbr> with professionals or organisations by creating a unique ‘access code’.</p>\n"
+"<p class=\"govuk-body\">View a lasting power of attorney is the part of this service that lets you see a summary of an <abbr title=\"lasting power of attorney\">LPA</abbr>, using the access code given to you by the donor or an attorney. This part of the service is for professionals or organisations providing a service to the donor. For example, financial institutions, medical professionals, and care organisations.</p>\n"
+"<p class=\"govuk-body\">You can use this service instead of asking to see the original paper <abbr title=\"lasting power of attorney\">LPA</abbr>. If a donor or attorney shows you a screenshot, download or printout of an <abbr title=\"lasting power of attorney\">LPA</abbr> summary this cannot be used as proof of an <abbr title=\"lasting power of attorney\">LPA</abbr>. Instead, ask them to use the Use a lasting power of attorney service to make an <abbr title=\"lasting power of attorney\">LPA</abbr> access code.</p>"
+
+#. Contains GOV.UK HTML elements and classes, and links to external websites.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:19
+msgctxt "html"
+msgid "terms-of-use.view.content-agreement"
+msgstr ""
+"<p class=\"govuk-body\">By using this service you:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>agree to these terms of use and the <a class=\"govuk-link\" href=\"https://www.gov.uk/help/terms-conditions\">GOV.UK terms and conditions</a></li>\n"
+"<li>confirm that a donor or attorney wants you to view the <abbr title=\"lasting power of attorney\">LPA</abbr> and has given you an access code</li>\n"
+"</ul>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:27
+msgid "terms-of-use.view.warning-personal-information"
+msgstr "It can be a criminal offence to use someone’s personal information without their permission."
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:33
+msgid "terms-of-use.view.heading-information-security"
+msgstr "Information security"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:34
+msgctxt "html"
+msgid "terms-of-use.view.content-information-security"
+msgstr ""
+"<p class=\"govuk-body\">You and your organisation are responsible for your use of View a lasting power of attorney.</p>\n"
+"<p class=\"govuk-body\">If you download a copy of an <abbr title=\"lasting power of attorney\">LPA</abbr> summary, or record details of the summary, <b>your organisation becomes the ‘data controller’ of that information.</b> This means your organisation will be responsible for keeping the information safe and secure, in line with Data Protection Act 2018.</p>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:38
+msgid "terms-of-use.view.heading-access-securely"
+msgstr "Accessing the service securely"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:39
+msgctxt "html"
+msgid "terms-of-use.view.content-access-securely"
+msgstr ""
+"<p class=\"govuk-body\">You’re responsible for accessing the service securely. You should not access it using a computer or network that may leave personal information accessible to others or if you think it may not be secure. For example, you should not:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>leave a computer unprotected while you’re using the service</li>\n"
+"<li>access the service using a shared or public computer</li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">We recommend that you close the tab on your web browser when you’ve finished using the service. We’ll automatically return you to the service start page if you have not used the service for 60 minutes.</p>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:43
+msgid "terms-of-use.view.heading-keeping-up-to-date"
+msgstr "Keeping information up to date"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:44
+msgctxt "html"
+msgid "terms-of-use.view.content-keeping-up-to-date"
+msgstr ""
+"<p class=\"govuk-body\"><abbr title=\"lasting powers of attorney\">LPAs</abbr> can change. For example, attorneys may change, people’s names or addresses may change, or the donor may cancel their <abbr title=\"lasting power of attorney\">LPA</abbr>.</p>\n"
+"<p class=\"govuk-body\">We use <abbr title=\"Office of the Public Guardian\">OPG</abbr>’s records about registered <abbr title=\"lasting powers of attorney\">LPAs</abbr> to keep this service up to date. However:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>we rely on donors and attorneys to tell us about any changes</li>\n"
+"<li>once we’re told about a change, it may take several days before we update the <abbr title=\"lasting power of attorney\">LPA</abbr> summary on the service</li>\n"
+"</ul>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:48
+msgid "terms-of-use.view.heading-tracking"
+msgstr "Tracking use of the service"
+
+#. Contains GOV.UK HTML markup, a privacy notice link using the %privacy-link%
+#. placeholder and a cookie policy link using the %cookies-link% placeholder.
+#. Preserve the HTML and placeholders when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:49
+msgctxt "html-link"
+msgid "terms-of-use.view.content-tracking"
+msgstr ""
+"<p class=\"govuk-body\">We keep a record of when an access code has been used to view an <abbr title=\"lasting power of attorney\">LPA</abbr>. This information is available to the donor and attorneys.</p>\n"
+"<p class=\"govuk-body\">The information will be stored securely and used in line with our <a class=\"govuk-link\" href=\"%privacy-link%\">privacy notice</a> and <a class=\"govuk-link\" href=\"%cookies-link%\">cookie policy</a>.</p>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:53
+msgid "terms-of-use.view.heading-fraud"
+msgstr "If you suspect fraud or abuse"
+
+#. Contains GOV.UK HTML elements and classes, and links to external websites.
+#. Preserve the HTML structure, classes and link destinations when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:54
+msgctxt "html"
+msgid "terms-of-use.view.content-fraud"
+msgstr ""
+"<p class=\"govuk-body\"><a class=\"govuk-link\" href=\"https://www.gov.uk/report-concern-about-attorney-deputy\"> Contact the Office of the Public Guardian</a> if you have concerns about the actions of an attorney. For example, if you’re concerned they’re misusing a donor’s money or are making decisions that are not in the donor’s best interests.</p>\n"
+"<p class=\"govuk-body\">If you suspect abuse, a criminal offence, or think someone is in immediate danger, <a class=\"govuk-link\" href=\"https://www.gov.uk/contact-police\">contact the police</a> first.</p>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:58
+msgid "terms-of-use.view.heading-governing-law"
+msgstr "Governing law"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:59
+msgctxt "html"
+msgid "terms-of-use.view.content-governing-law"
+msgstr ""
+"<p class=\"govuk-body\">These terms of use are governed by the laws of England and Wales, including:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>Computer Misuse Act 1990</li>\n"
+"<li>General Data Protection Regulation 2018</li>\n"
+"<li>Data Protection Bill 2018</li>\n"
+"<li>Mental Capacity Act 2005</li>\n"
+"</ul>\n"
+"<p class=\"govuk-body\">Any dispute you have about these terms of use, or your use of <abbr title=\"Office of the Public Guardian\">OPG</abbr> services (whether it be contractual or non-contractual), will be subject to the exclusive jurisdiction of the courts of England and Wales.</p>"
+
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:63
+msgid "terms-of-use.view.heading-about"
+msgstr "About these terms of use"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and
+#. classes when translating.
+#: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:64
+msgctxt "html"
+msgid "terms-of-use.view.content-about"
+msgstr "<p class=\"govuk-body\">These terms of use affect your rights and responsibilities under the law. They govern your use of the View a lasting power of attorney service. They do not apply to any other department or online service. Please check these terms of use regularly. We may update them without notice. This might happen if there’s a change in the law or to the way the service works. You’ll agree to any changes if you continue to use the service after the terms of use have been updated.</p>"
+
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:3
+msgid "view-lpa.enter-code-paper-verification.title"
+msgstr "Enter the LPA access or paper verification code"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:19
+msgctxt "html"
+msgid "view-lpa.enter-code-paper-verification.heading-page"
+msgstr "Enter the <abbr title=\"lasting power of attorney\">LPA</abbr> access or paper verification code"
+
+#. Contains an abbr element for LPA. Preserve the HTML when translating.
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:28
+msgctxt "html"
+msgid "view-lpa.enter-code-paper-verification.reveal-code-types-title"
+msgstr "What are <abbr title=\"lasting power of attorney\">LPA</abbr> access and paper verification codes?"
+
+#. Contains GOV.UK paragraph, heading and list elements and classes, and abbr
+#. elements for LPA. Preserve the HTML structure and classes when translating.
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:34
+msgctxt "html"
+msgid "view-lpa.enter-code-paper-verification.reveal-code-types-content"
+msgstr ""
+"<p class=\"govuk-body\">These are codes given to you by the donor or an attorney named on a lasting power of attorney.</p>\n"
+"<h3 class=\"govuk-heading-s\">Access codes</h3>\n"
+"<p class=\"govuk-body\">Donors and attorneys request these codes online, using their Use a lasting power of attorney account.</p>\n"
+"<h3 class=\"govuk-heading-s\">Paper verification codes</h3>\n"
+"<p class=\"govuk-body\">These codes are posted to donors and attorneys who do not want to use an <abbr title=\"lasting power of attorney\">LPA</abbr> online. Each code is unique to the person who received it. When you are given a paper verification code to view the <abbr title=\"lasting power of attorney\">LPA</abbr>, you should also be given the:</p>\n"
+"<ul class=\"list list-bullet\">\n"
+"<li><abbr title=\"lasting power of attorney\">LPA</abbr> reference number this will be on any letters we’ve sent to the donor or attorneys</li>\n"
+"<li>date of birth of the person who the paper verification code was sent to</li>\n"
+"<li>number of attorneys named on the notice of registration</li>\n"
+"<li>name of 1 attorney named on the notice of registration</li>\n"
+"</ul>"
+
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:41
+msgid "view-lpa.enter-code-paper-verification.field-donor-surname.label"
+msgstr "Donor’s last name"
+
+#. Contains an HTML line break. Preserve the line break and markup when
+#. translating.
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:45
+msgctxt "html"
+msgid "view-lpa.enter-code-paper-verification.field-lpa-code.hint"
+msgstr "Access codes start with a V. For example, V-AB12-CD34-EF56.<br/>Paper verification codes start with a P. For example, P-AB12-CD34-EF56-G7"
+
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:51
+msgid "view-lpa.enter-code-paper-verification.field-lpa-code.label"
+msgstr "LPA access or paper verification code"
+
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:58
+msgid "view-lpa.enter-code-paper-verification.reveal-wrong-code-title"
+msgstr "The code I’ve been given does not start with V or P."
+
+#. Contains a GOV.UK paragraph element and class. Preserve the HTML structure
+#. and classes when translating.
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:62
+msgctxt "html"
+msgid "view-lpa.enter-code-paper-verification.reveal-wrong-code-content"
+msgstr "<p class=\"govuk-body\">The donor or attorney may have given you the wrong code. Ask them to check the code they’ve given you is correct.</p>"
+
+#. Contains a GOV.UK paragraph element and a terms of use link, opening in a
+#. new tab, using the %link% placeholder. Preserve the HTML, link attributes
+#. and placeholder when translating.
+#: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:68
+msgctxt "html-link"
+msgid "view-lpa.enter-code-paper-verification.content-terms"
+msgstr "<p class=\"govuk-body\">By continuing you agree to our <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>.</p>"
