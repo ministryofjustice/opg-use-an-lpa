@@ -4876,10 +4876,6 @@ msgstr "Blwyddyn"
 msgid "request-activation-key.reference-number.title"
 msgstr "Beth yw cyfeirnod yr LPA?"
 
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:18
-msgid "request-activation-key.reference-number.heading-page"
-msgstr "Beth yw cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>?"
-
 #. Contains a line break. Preserve the HTML markup when translating.
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:26
 msgctxt "html"

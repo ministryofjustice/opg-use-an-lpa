@@ -28,7 +28,7 @@
     {% if errors|length > 0 %}
         {# ... display the errors for a single field #}
         {%- for error in errors -%}
-            <span class="govuk-error-message">
+            <span class="govuk-error-message"{% if loop.first %} id="{{ element.getName() }}-error"{% endif %}>
                 <span data-gaEventType="onLoad" data-gaCategory="Form errors" data-gaAction="{{ (element.label != '') ? element.label : element.getName() }}" data-gaLabel="#{{ element.getName() }} - {{ error }}" class="govuk-visually-hidden">{% trans %}Error:{% endtrans %}</span> {{ error | trans([], null, 'error') | raw }}
             </span>
         {%- endfor -%}
