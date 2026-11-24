@@ -327,3 +327,7 @@ variable "gotenberg_tag" {
 variable "cloudwatch_anomaly_detection_alarms_enabled" {
   type = bool
 }
+
+variable "extended_support_alerts_enabled" {
+  type = bool
+}

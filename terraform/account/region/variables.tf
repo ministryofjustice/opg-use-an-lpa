@@ -1,11 +1,12 @@
 variable "account" {
   description = "The account object"
   type = object({
-    account_id             = string
-    is_production          = bool
-    retention_in_days      = number
-    pagerduty_service_name = string
-    pagerduty_service_id   = string
+    account_id                      = string
+    is_production                   = bool
+    retention_in_days               = number
+    pagerduty_service_name          = string
+    pagerduty_service_id            = string
+    extended_support_alerts_enabled = bool
     opg_metrics = optional(object({
       enabled                     = bool
       api_key_secretsmanager_name = string
