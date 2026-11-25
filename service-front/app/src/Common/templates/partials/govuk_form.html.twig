@@ -112,7 +112,7 @@
                     <label class="govuk-label govuk-radios__label" for="{{ element.getName() }}-{{ loop.index }}">
                         {{ option.label | raw }}
                     </label>
-                    {%- if option.hint is defined -%}
+                    {%- if option.hint is defined and option.hint is not no_hint -%}
                         <span id="{{ element.getName() }}-{{ loop.index }}-hint" class="govuk-hint govuk-radios__hint">
                             {{ option.hint | raw }}
                         </span>
@@ -137,7 +137,7 @@
         <fieldset
                 name="{{ fieldset.getName() }}"
                 class="govuk-fieldset"
-                aria-describedby="{{ fieldset.getName() }}-hint"
+                {% if hint is defined and hint is not no_hint %}aria-describedby="{{ fieldset.getName() }}-hint"{% endif %}
                 {%- if aria_labelledby is defined -%}aria-labelledby="{{ aria_labelledby }}"{% endif %}
                 role="group">
             {% if label is defined %}
@@ -241,7 +241,7 @@
 
 
 {%- block input_hint -%}
-    {% if hint is defined %}
+    {% if hint is defined and hint is not no_hint %}
         <div id="{{ element.getName() }}-hint" class="govuk-hint">
             {{ hint | raw }}
         </div>

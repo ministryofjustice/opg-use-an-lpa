@@ -5997,7 +5997,7 @@ msgstr "Back"
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:53
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:44
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:46
-#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:39
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:59
 #: src/Viewer/templates/viewer/enter-code.html.twig:78
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:72
 msgid "common.button-continue"
@@ -6956,11 +6956,12 @@ msgstr "What is your name?"
 msgid "request-activation-key.your-name.heading-page"
 msgstr "What is your name?"
 
-#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:24
+#. Hint shown below the “First names” field label. Translate as [no-hint] to show no hint.
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:23
 msgid "request-activation-key.your-name.field-first-names.hint"
 msgstr "Include any middle names."
 
-#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:29
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:41
 msgid "request-activation-key.your-name.field-first-names.label-single"
 msgstr "First name"
 
@@ -7421,13 +7422,13 @@ msgstr "Confirm and submit request"
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:29
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:25
-#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:23
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:29
 msgid "common.field-first-names.label"
 msgstr "First names"
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:34
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:29
-#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:35
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:54
 msgid "common.field-last-name.label"
 msgstr "Last name"
 
@@ -7444,3 +7445,13 @@ msgstr "Donor"
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:67
 msgid "common.value-attorney"
 msgstr "Attorney"
+
+#. Hint shown below the “First name” field label. Translate as [no-hint] to show no hint.
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:35
+msgid "request-activation-key.your-name.field-first-names.hint-single"
+msgstr "[no-hint]"
+
+#. Hint shown below the “Last name” field label. Translate as [no-hint] to show no hint.
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:48
+msgid "request-activation-key.your-name.field-last-name.hint"
+msgstr "[no-hint]"

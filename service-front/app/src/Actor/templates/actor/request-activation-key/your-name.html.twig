@@ -19,20 +19,40 @@
                     {{ govuk_form_element(form.get('__csrf')) }}
 
                     {% if isModernised %}
+                        {% set firstNamesHint %}
+                            {% trans %}
+                                request-activation-key.your-name.field-first-names.hint
+                            {% notes %}Hint shown below the “First names” field label. Translate as [no-hint] to show no hint.{% endtrans %}
+                        {% endset %}
+
                         {{ govuk_form_element(form.get('first_names'), {
                             'label': 'common.field-first-names.label' | trans,
-                            'hint': 'request-activation-key.your-name.field-first-names.hint' | trans,
+                            'hint': firstNamesHint,
                             'attr' : {'class': 'govuk-input--width-20'}
                         }) }}
                     {% else %}
+                        {% set firstNamesHint %}
+                            {% trans %}
+                                request-activation-key.your-name.field-first-names.hint-single
+                            {% notes %}Hint shown below the “First name” field label. Translate as [no-hint] to show no hint.{% endtrans %}
+                        {% endset %}
+
                         {{ govuk_form_element(form.get('first_names'), {
                             'label': 'request-activation-key.your-name.field-first-names.label-single' | trans,
+                            'hint': firstNamesHint,
                             'attr' : {'class': 'govuk-input--width-20'}
                         }) }}
                     {% endif %}
 
+                    {% set lastNameHint %}
+                        {% trans %}
+                            request-activation-key.your-name.field-last-name.hint
+                        {% notes %}Hint shown below the “Last name” field label. Translate as [no-hint] to show no hint.{% endtrans %}
+                    {% endset %}
+
                     {{ govuk_form_element(form.get('last_name'), {
                         'label': 'common.field-last-name.label' | trans,
+                        'hint': lastNameHint,
                         'attr' : {'class': 'govuk-input--width-20'}
                     }) }}
 
