@@ -1,5 +1,5 @@
 module "network" {
-  source                              = "github.com/ministryofjustice/opg-terraform-aws-firewalled-network?ref=v1.3.2"
+  source                              = "github.com/ministryofjustice/opg-terraform-aws-firewalled-network?ref=v1.5.0"
   cidr                                = var.network_cidr_block
   enable_dns_hostnames                = true
   enable_dns_support                  = true
@@ -7,6 +7,12 @@ module "network" {
   default_security_group_egress       = []
   aws_networkfirewall_firewall_policy = aws_networkfirewall_firewall_policy.main
   network_firewall_enabled            = var.account.network_firewall_enabled
+  nat_gateway_egress_alarm_config = {
+    "alarm_actions" : compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn]),
+    "datapoints_to_alarm" : "5",
+    "evaluation_periods" : "5",
+    "threshold" : "5300000"
+  }
   shared_firewall_configuration = var.account.shared_firewall_configuration.enabled != true ? null : {
     account_id   = var.account.shared_firewall_configuration.account_id
     account_name = var.account.shared_firewall_configuration.account_name
