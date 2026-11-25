@@ -32,6 +32,6 @@ done
 echo "cleaning up workspace $workspace_name..."
 terraform init -input=false
 terraform workspace select $workspace_name
-terraform destroy -auto-approve
+terraform destroy -auto-approve -var="use_gotenberg_latest_green=true"
 terraform workspace select default
 terraform workspace delete $workspace_name

@@ -29,7 +29,7 @@ do
     *)
       echo "cleaning up workspace $workspace..."
       terraform workspace select $workspace
-      terraform destroy -auto-approve
+      terraform destroy -auto-approve -var="use_gotenberg_latest_green=true"
       terraform workspace select default
       terraform workspace delete $workspace
       ;;
