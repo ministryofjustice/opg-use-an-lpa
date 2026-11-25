@@ -5598,3 +5598,443 @@ msgstr "<p class=\"govuk-body\">The donor or attorney may have given you the wro
 msgctxt "html-link"
 msgid "view-lpa.enter-code-paper-verification.content-terms"
 msgstr "<p class=\"govuk-body\">By continuing you agree to our <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>.</p>"
+
+#: src/Actor/templates/actor/contact-details.html.twig:3
+msgid "request-activation-key.contact-details.title"
+msgstr "Your phone number"
+
+#: src/Actor/templates/actor/contact-details.html.twig:18
+msgid "request-activation-key.contact-details.heading-page"
+msgstr "Your phone number"
+
+#: src/Actor/templates/actor/contact-details.html.twig:19
+msgid "request-activation-key.contact-details.hint-page"
+msgstr "We may need to contact you to ask for more information."
+
+#: src/Actor/templates/actor/contact-details.html.twig:26
+msgid "request-activation-key.contact-details.field-telephone.label"
+msgstr "What is your phone number?"
+
+#. Shown between the phone number field and the “I do not have a phone” checkbox.
+#: src/Actor/templates/actor/contact-details.html.twig:32
+msgid "request-activation-key.contact-details.separator-or"
+msgstr "or"
+
+#: src/Actor/templates/actor/contact-details.html.twig:35
+msgid "request-activation-key.contact-details.field-no-phone.label"
+msgstr "I do not have a phone or cannot use a phone to take calls"
+
+#. Contains GOV.UK HTML elements and classes. The %email% placeholder is replaced with the user’s account email address. Preserve the HTML structure, classes and placeholder when translating.
+#: src/Actor/templates/actor/contact-details.html.twig:38
+msgctxt "html"
+msgid "request-activation-key.contact-details.content-email"
+msgstr "<p class=\"govuk-body\">We may also contact you by email on <b>%email%</b></p>"
+
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:3
+msgid "request-activation-key.your-name.title"
+msgstr "What is your name?"
+
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:16
+msgid "request-activation-key.your-name.heading-page"
+msgstr "What is your name?"
+
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:24
+msgid "request-activation-key.your-name.field-first-names.hint"
+msgstr "Include any middle names."
+
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:29
+msgid "request-activation-key.your-name.field-first-names.label-single"
+msgstr "First name"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:3
+msgid "request-activation-key.attorney-details.title"
+msgstr "Attorney details"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:18
+msgid "request-activation-key.attorney-details.heading-page"
+msgstr "Attorney details"
+
+#. Contains GOV.UK HTML elements and classes, and an abbreviation element for LPA. Preserve the HTML structure, classes and title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:19
+msgctxt "html"
+msgid "request-activation-key.attorney-details.content-intro"
+msgstr ""
+"<p class=\"govuk-body\">Tell us the details of an attorney named in the <abbr title=\"lasting power of attorney\">LPA</abbr>.</p>\n"
+"<p class=\"govuk-body\">If you have more than one attorney, it doesn’t matter whose details you choose to enter.</p>"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:27
+msgid "request-activation-key.attorney-details.heading-attorney-name"
+msgstr "Attorney’s name"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:39
+msgid "request-activation-key.attorney-details.field-attorney-dob.label"
+msgstr "Attorney’s date of birth"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:40
+msgid "request-activation-key.attorney-details.field-attorney-dob.hint"
+msgstr "For example, 08 04 2004"
+
+#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:3
+msgid "request-activation-key.date-of-birth.title"
+msgstr "What is your date of birth?"
+
+#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:18
+msgid "request-activation-key.date-of-birth.heading-page"
+msgstr "What is your date of birth?"
+
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:3
+msgid "request-activation-key.info.title"
+msgstr "Check if you can ask for an activation key"
+
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:15
+msgid "request-activation-key.info.heading-page"
+msgstr "Check if you can ask for an activation key"
+
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:17
+msgid "request-activation-key.info.heading-can-only-ask"
+msgstr "You can only ask for an activation key if:"
+
+#. Contains a GOV.UK bulleted list and abbreviation elements for LPA. Preserve the HTML structure, classes and title attributes when translating.
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:18
+msgctxt "html"
+msgid "request-activation-key.info.content-can-only-ask"
+msgstr ""
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>your <abbr title=\"lasting power of attorney\">LPA</abbr> was registered on or after 1 September 2019</li>\n"
+"<li>you’re a donor or an attorney named in the <abbr title=\"lasting power of attorney\">LPA</abbr> (not a replacement attorney)</li>\n"
+"</ul>"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:25
+msgctxt "html"
+msgid "request-activation-key.info.reveal-registration-date-title"
+msgstr "Where to find the <abbr title=\"lasting power of attorney\">LPA</abbr> registration date"
+
+#. Contains HTML paragraphs and abbreviation elements for LPA. Preserve the HTML structure and title attributes when translating.
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:29
+msgctxt "html"
+msgid "request-activation-key.info.reveal-registration-date-content"
+msgstr ""
+"<p>You can find the registration date on the letter that told you the <abbr title=\"lasting power of attorney\">LPA</abbr> had been registered, or on the stamp on the first page of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>.</p>\n"
+"<p>If you’re not sure when the <abbr title=\"lasting power of attorney\">LPA</abbr> was registered, you can continue and we’ll check for you.</p>"
+
+#. Contains an HTML abbreviation element for LPAs. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:38
+msgctxt "html"
+msgid "request-activation-key.info.reveal-registered-before-title"
+msgstr "<abbr title=\"lasting powers of attorney\">LPAs</abbr> registered before 1 September 2019"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:42
+msgctxt "html"
+msgid "request-activation-key.info.reveal-registered-before-content"
+msgstr "If the <abbr title=\"lasting power of attorney\">LPA</abbr> was registered before 1 September 2019, you cannot get an activation key for it. If organisations want to see the <abbr title=\"lasting power of attorney\">LPA</abbr>, show them the paper copy."
+
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:48
+msgid "request-activation-key.info.heading-details-changed"
+msgstr "Let us know if your details have changed"
+
+#. Contains GOV.UK paragraphs, a bulleted list and abbreviation elements for LPA, and a link to the change details page using the %link% placeholder. Preserve the HTML structure, classes, title attributes and placeholder when translating.
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:49
+msgctxt "html-link"
+msgid "request-activation-key.info.content-details-changed"
+msgstr ""
+"<p class=\"govuk-body\">If we do not have your correct details, you will not be able to get an activation key.</p>\n"
+"<p class=\"govuk-body\"><a class=\"govuk-link\" href=\"%link%\">Let us know if your details have changed</a> and you’ve not told us.</p>\n"
+"<p class=\"govuk-body\">We need to know if:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>you’ve moved house - so we can post the key to the right address</li>\n"
+"<li>you’ve changed your name</li>\n"
+"<li>your name or address is spelt wrong on the <abbr title=\"lasting power of attorney\">LPA</abbr></li>\n"
+"<li>your date of birth is wrong on the <abbr title=\"lasting power of attorney\">LPA</abbr></li>\n"
+"</ul>"
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:3
+msgid "request-activation-key.actor-address.title"
+msgstr "What is your current address?"
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:19
+msgid "request-activation-key.actor-address.heading-page"
+msgstr "What is your current address?"
+
+#. Contains GOV.UK HTML elements and classes, and an abbreviation element for LPA. Preserve the HTML structure, classes and title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:20
+msgctxt "html"
+msgid "request-activation-key.actor-address.content-intro"
+msgstr "<p class=\"govuk-body\">We need a few extra details to make sure we have the correct <abbr title=\"lasting power of attorney\">LPA</abbr> for your activation key request.</p>"
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:28
+msgid "request-activation-key.actor-address.field-actor-abroad-address.label"
+msgstr "Address"
+
+#. Contains GOV.UK HTML elements and classes. The %postcode% placeholder is replaced with the postcode the user entered on the previous page. Preserve the HTML structure, classes and placeholder when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:32
+msgctxt "html"
+msgid "request-activation-key.actor-address.content-postcode-given"
+msgstr "<p class=\"govuk-body\">You’ve already given your postcode as %postcode%.</p>"
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:37
+msgid "request-activation-key.actor-address.field-actor-address-1.label"
+msgstr "Address line 1"
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:42
+msgid "request-activation-key.actor-address.field-actor-address-2.label"
+msgstr "Address line 2 (optional)"
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:47
+msgid "request-activation-key.actor-address.field-actor-address-3.label"
+msgstr "Address line 3"
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:52
+msgid "request-activation-key.actor-address.field-actor-address-4.label"
+msgstr "Address line 4 (optional)"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:58
+msgctxt "html"
+msgid "request-activation-key.actor-address.field-actor-address-check.label-yes"
+msgstr "Yes, it’s the same as my address in the paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:59
+msgctxt "html"
+msgid "request-activation-key.actor-address.field-actor-address-check.label-no"
+msgstr "No, it’s different to my address in the paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:60
+msgctxt "html"
+msgid "request-activation-key.actor-address.field-actor-address-check.label-not-sure"
+msgstr "I’m not sure if it’s the same address in the paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:67
+msgctxt "html"
+msgid "request-activation-key.actor-address.field-actor-address-check.legend"
+msgstr "Is this the same address as your address on the paper <abbr title=\"lasting power of attorney\">LPA</abbr>?"
+
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:3
+msgid "request-activation-key.donor-details.title"
+msgstr "The donor’s details"
+
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:18
+msgid "request-activation-key.donor-details.heading-page"
+msgstr "The donor’s details"
+
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:33
+msgid "request-activation-key.donor-details.field-donor-dob.label"
+msgstr "Donor’s date of birth"
+
+#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:3
+msgid "request-activation-key.address-on-paper.title"
+msgstr "What is your address on the paper LPA?"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:18
+msgctxt "html"
+msgid "request-activation-key.address-on-paper.heading-page"
+msgstr "What is your address on the paper <abbr title=\"lasting power of attorney\">LPA</abbr>?"
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:3
+msgid "request-activation-key.postcode.title"
+msgstr "What is your current postcode?"
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:19
+msgid "request-activation-key.postcode.heading-page"
+msgstr "Where do you currently live?"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:20
+msgctxt "html"
+msgid "request-activation-key.postcode.content-intro"
+msgstr "<p class=\"govuk-body\">We’ll send your activation key to you by post.</p>"
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:31
+msgid "request-activation-key.postcode.field-live-in-uk.label-yes"
+msgstr "I live in the UK"
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:33
+msgid "request-activation-key.postcode.field-postcode.label"
+msgstr "What is your UK postcode?"
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:36
+msgid "request-activation-key.postcode.field-live-in-uk.label-no"
+msgstr "I do not live in the UK"
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:3
+msgid "request-activation-key.actor-role.title"
+msgstr "What is your role on the LPA?"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:23
+msgctxt "html"
+msgid "request-activation-key.actor-role.field-actor-role.hint-donor"
+msgstr "The donor is the person the <abbr title=\"lasting power of attorney\">LPA</abbr> is made for. They appoint attorneys to make decisions on their behalf."
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:29
+msgctxt "html"
+msgid "request-activation-key.actor-role.heading-page"
+msgstr "What is your role on the <abbr title=\"lasting power of attorney\">LPA</abbr>?"
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:36
+msgid "request-activation-key.actor-role.field-actor-role.label-donor"
+msgstr "I am the donor"
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:41
+msgid "request-activation-key.actor-role.field-actor-role.label-attorney"
+msgstr "I am an attorney"
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:42
+msgid "request-activation-key.actor-role.field-actor-role.hint-attorney"
+msgstr "An attorney is appointed by the donor to make decisions on the donor’s behalf."
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:46
+msgid "request-activation-key.actor-role.field-actor-role.label-replacement-attorney"
+msgstr "I am a replacement attorney"
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:47
+msgid "request-activation-key.actor-role.field-actor-role.hint-replacement-attorney"
+msgstr "A replacement attorney is appointed by the donor to step in for an attorney if they can no longer act on the donor’s behalf."
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:3
+msgid "request-activation-key.check-details.title"
+msgstr "Check your answers"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:12
+msgid "request-activation-key.check-details.heading-page"
+msgstr "Check your answers"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:19
+msgid "request-activation-key.check-details.label-current-address"
+msgstr "Your current address"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the current address being changed. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:28
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-current-address"
+msgstr "Change<span class=\"govuk-visually-hidden\"> address</span>"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:34
+msgctxt "html"
+msgid "request-activation-key.check-details.label-address-on-paper"
+msgstr "Your address on paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:38
+msgid "request-activation-key.check-details.value-not-sure"
+msgstr "Not sure"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:42
+msgid "request-activation-key.check-details.value-same-as-above"
+msgstr "Same as above"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the address on the paper LPA being changed. Contains an abbreviation element for LPA; preserve its title attribute. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:48
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-address-on-paper"
+msgstr "Change<span class=\"govuk-visually-hidden\"> address on paper <abbr title=\"lasting power of attorney\">LPA</abbr></span>"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the address on the paper LPA, shown when it is the same as the current address. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:50
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-address-on-paper-same"
+msgstr "Change<span class=\"govuk-visually-hidden\"> address</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:59
+msgid "request-activation-key.check-details.label-role"
+msgstr "Your role"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the role being changed. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:72
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-role"
+msgstr "Change<span class=\"govuk-visually-hidden\"> role</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:79
+msgid "request-activation-key.check-details.label-donor-name"
+msgstr "Donor’s name"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the donor’s name being changed. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:86
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-donor-name"
+msgstr "Change<span class=\"govuk-visually-hidden\"> donor’s name</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:92
+msgid "request-activation-key.check-details.label-donor-dob"
+msgstr "Donor’s date of birth"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the donor’s date of birth being changed. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:99
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-donor-dob"
+msgstr "Change<span class=\"govuk-visually-hidden\"> donor’s date of birth</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:107
+msgid "request-activation-key.check-details.label-attorney-name"
+msgstr "Attorney’s name"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the attorney’s name being changed. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:114
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-attorney-name"
+msgstr "Change<span class=\"govuk-visually-hidden\"> attorney’s name</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:120
+msgid "request-activation-key.check-details.label-attorney-dob"
+msgstr "Attorney’s date of birth"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the attorney’s date of birth being changed. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:127
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-attorney-dob"
+msgstr "Change<span class=\"govuk-visually-hidden\"> attorney’s date of birth</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:135
+msgid "request-activation-key.check-details.label-telephone"
+msgstr "Your phone number"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:141
+msgid "request-activation-key.check-details.value-not-provided"
+msgstr "Not provided"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the phone number being changed. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:146
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-telephone"
+msgstr "Change<span class=\"govuk-visually-hidden\"> telephone number</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:156
+msgid "request-activation-key.check-details.warning-consent"
+msgstr "I understand that the information I’ve given will be stored securely and used to process my activation key request."
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:164
+msgid "request-activation-key.check-details.button-submit"
+msgstr "Confirm and submit request"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:29
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:25
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:23
+msgid "common.field-first-names.label"
+msgstr "First names"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:34
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:29
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:35
+msgid "common.field-last-name.label"
+msgstr "Last name"
+
+#: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:25
+#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:25
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:34
+msgid "common.field-dob.hint"
+msgstr "For example, 31 03 1980"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:63
+msgid "common.value-donor"
+msgstr "Donor"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:67
+msgid "common.value-attorney"
+msgstr "Attorney"

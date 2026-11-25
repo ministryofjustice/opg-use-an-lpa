@@ -5965,9 +5965,19 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:8
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:8
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:8
+#: src/Actor/templates/actor/contact-details.html.twig:8
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:9
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:10
+#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:8
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:8
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:9
+#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:8
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:8
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:8
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:9
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:8
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:9
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:8
 #: src/Common/templates/common/contact-us.html.twig:7
 msgid "common.back-link"
 msgstr "Back"
@@ -5976,8 +5986,18 @@ msgstr "Back"
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:41
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:45
+#: src/Actor/templates/actor/contact-details.html.twig:42
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:92
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:56
+#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:31
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:44
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:54
+#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:33
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:53
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:44
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:46
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:39
 #: src/Viewer/templates/viewer/enter-code.html.twig:78
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:72
 msgid "common.button-continue"
@@ -6033,11 +6053,6 @@ msgstr "What is your date of birth?"
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:18
 msgid "add-lpa.date-of-birth.heading-page"
 msgstr "What is your date of birth?"
-
-#: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:25
-#, fuzzy
-msgid "add-lpa.date-of-birth.field-dob.hint"
-msgstr "For example, 31 03 1980"
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:3
 msgid "add-lpa.lpa-reference-number.title"
