@@ -15,8 +15,6 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl" id="ref_number_heading">{% trans %}request-activation-key.reference-number.heading-page{% endtrans %}</h1>
-
                     {% if feature_enabled('paper_verification') %}
                         {% set referenceNumberHint %}
                             {% trans %}
