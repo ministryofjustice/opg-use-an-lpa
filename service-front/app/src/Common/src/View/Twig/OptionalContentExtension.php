@@ -11,7 +11,7 @@ use Twig\TwigTest;
 /**
  * Allows translators to remove optional content, such as form field hints, by translating its key to a marker value
  */
-class OptionalContentExtension extends AbstractExtension
+final class OptionalContentExtension extends AbstractExtension
 {
     public const string NO_HINT = '[no-hint]';
 
