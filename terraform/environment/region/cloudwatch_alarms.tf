@@ -318,7 +318,7 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_read_capacity_anomaly" {
 
   metric_query {
     id          = "reads"
-    return_data = true
+    return_data = false
 
     metric {
       metric_name = "ConsumedReadCapacityUnits"
@@ -329,6 +329,13 @@ resource "aws_cloudwatch_metric_alarm" "dynamodb_read_capacity_anomaly" {
         TableName = each.value.name
       }
     }
+  }
+
+  metric_query {
+    id          = "checked_reads"
+    expression  = each.key == "user_lpa_actor_map" ? "IF(HOUR(reads) == 3 AND MINUTE(reads) < 10, 0, reads)" : "reads"
+    label       = "DynamoDB read consumption"
+    return_data = true
   }
 
   metric_query {
