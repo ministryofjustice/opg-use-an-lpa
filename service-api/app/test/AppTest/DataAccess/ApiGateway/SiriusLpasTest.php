@@ -12,6 +12,7 @@ use App\DataAccess\Repository\Response\LpaInterface;
 use App\Entity\Lpa;
 use App\Exception\ApiException;
 use App\Service\Features\FeatureEnabled;
+use App\Service\Log\EventCodes;
 use App\Service\Lpa\LpaDataFormatter;
 use App\Value\LpaUid;
 use Aws\EventBridge\EventBridgeClient;
@@ -19,9 +20,17 @@ use Aws\Result;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Promise\FulfilledPromise;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Psr7\HttpFactory;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -35,6 +44,7 @@ use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
+#[CoversClass(SiriusLpas::class)]
 class SiriusLpasTest extends TestCase
 {
     use ProphecyTrait;
@@ -495,5 +505,114 @@ class SiriusLpasTest extends TestCase
 
         $this->expectException(ApiException::class);
         $service->requestLetter(new LpaUid((string) $caseUid), (string) $actorUid, null);
+    }
+
+    #[Test]
+    public function it_should_invoke_the_callback_for_each_lpa_and_wait_for_its_promise(): void
+    {
+        $handler = new MockHandler([
+            new Response(StatusCodeInterface::STATUS_OK, ['Date' => 'Wed, 16 Feb 2022 16:45:46 GMT'], '{"uId":"1"}'),
+            new Response(StatusCodeInterface::STATUS_OK, ['Date' => 'Wed, 16 Feb 2022 16:45:46 GMT'], '{"uId":"2"}'),
+        ]);
+
+        $lpaOne = $this->createStub(Lpa::class);
+        $lpaTwo = $this->createStub(Lpa::class);
+
+        $formatter = $this->createMock(LpaDataFormatter::class);
+        $formatter
+            ->method('__invoke')
+            ->willReturnCallback(fn (array $data): Lpa => $data['uId'] === '1' ? $lpaOne : $lpaTwo);
+
+        $seen   = [];
+        $result = $this->createSiriusLpas($handler, $formatter)
+            ->lookupAsync(
+                [
+                    '700000000001',
+                    '700000000002',
+                ],
+                function (LpaInterface $lpa, string $uid) use (&$seen): PromiseInterface {
+                    return Create::promiseFor(null)->then(function () use ($lpa, $uid, &$seen): void {
+                        $seen[$uid] = $lpa->getData();
+                    });
+                },
+            )
+            ->wait();
+
+        $this->assertCount(2, $result);
+        $this->assertSame($lpaOne, $result['700000000001']->getData());
+        $this->assertSame($lpaTwo, $result['700000000002']->getData());
+        $this->assertSame(['700000000001' => $lpaOne, '700000000002' => $lpaTwo], $seen);
+    }
+
+    #[Test]
+    public function it_should_log_and_skip_lpas_that_could_not_be_fetched(): void
+    {
+        $handler = new MockHandler([
+            new Response(StatusCodeInterface::STATUS_NOT_FOUND),
+            new ConnectException('Connection refused', new Request('GET', 'localhost')),
+        ]);
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->exactly(2))
+            ->method('warning')
+            ->willReturnCallback(function (string $message, array $context): void {
+                $this->assertSame(EventCodes::UNEXPECTED_DATA_LPA_API_RESPONSE, $context['event_code']);
+            });
+
+        $callback = function (): never {
+            $this->fail('Callback should not be invoked for LPAs that were not fetched');
+        };
+
+        $result = $this->createSiriusLpas($handler, $this->createStub(LpaDataFormatter::class), $logger)
+            ->lookupAsync(['700000000001', '700000000002'], $callback)
+            ->wait();
+
+        $this->assertSame([], $result);
+    }
+
+    #[Test]
+    public function it_should_reject_when_an_lpa_cannot_be_formatted(): void
+    {
+        $handler = new MockHandler([
+            new Response(StatusCodeInterface::STATUS_OK, ['Date' => 'Wed, 16 Feb 2022 16:45:46 GMT'], '{"uId":"1"}'),
+        ]);
+
+        $formatter = $this->createMock(LpaDataFormatter::class);
+        $formatter->method('__invoke')->willThrowException(UnableToHydrateObject::dueToError(Lpa::class));
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('Not possible to create LPA from response data');
+
+        $this->createSiriusLpas($handler, $formatter)->lookupAsync(['700000000001'])->wait();
+    }
+
+    private function createSiriusLpas(
+        MockHandler $handler,
+        LpaDataFormatter $formatter,
+        ?LoggerInterface $logger = null,
+    ): SiriusLpas {
+        $signer = $this->createMock(RequestSigner::class);
+        $signer->method('sign')->willReturnArgument(0);
+
+        $signerFactory = $this->createMock(RequestSignerFactory::class);
+        $signerFactory->method('__invoke')->willReturn($signer);
+
+        $featureEnabled = $this->createMock(FeatureEnabled::class);
+        $featureEnabled->method('__invoke')->with('support_datastore_lpas')->willReturn(true);
+
+        return new SiriusLpas(
+            new GuzzleClient(['handler' => HandlerStack::create($handler)]),
+            new HttpFactory(),
+            new HttpFactory(),
+            $signerFactory,
+            'localhost',
+            'my test bus',
+            $this->createStub(DataSanitiserStrategy::class),
+            $logger ?? $this->createStub(LoggerInterface::class),
+            $featureEnabled,
+            $formatter,
+            $this->createStub(EventBridgeClient::class),
+        );
     }
 }

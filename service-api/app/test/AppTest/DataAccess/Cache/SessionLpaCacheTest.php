@@ -7,10 +7,13 @@ namespace AppTest\DataAccess\Cache;
 use App\DataAccess\Cache\SessionLpaCache;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response\Lpa;
+use App\DataAccess\Repository\Response\LpaInterface;
 use App\Service\Cache\CacheFactory;
 use App\Service\Lpa\LpaDataFormatter;
 use App\Service\Lpa\SiriusLpa;
 use DateTimeImmutable;
+use GuzzleHttp\Promise\Create;
+use GuzzleHttp\Promise\PromiseInterface;
 use Monolog\Logger;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -354,6 +357,100 @@ final class SessionLpaCacheTest extends TestCase
             'invalidateLpa' => $sut->invalidateLpa('uid'),
             'invalidateLpaInSession' => $sut->invalidateLpaInSession('session', 'uid'),
         };
+    }
+
+    #[Test]
+    public function it_should_invoke_the_callback_for_cached_and_fetched_lpas_asynchronously(): void
+    {
+        $one    = $this->lpa();
+        $two    = $this->lpa('4000.json');
+        $uidOne = $one->getData()->getUid();
+        $uidTwo = $two->getData()->getUid();
+        $calls  = [];
+        $lookup = static function (array $uids, ?callable $onLpa) use (&$calls, $uidOne, $uidTwo, $one, $two) {
+            $calls[] = $uids;
+            $lpas    = array_intersect_key([$uidOne => $one, $uidTwo => $two], array_flip($uids));
+
+            return Create::promiseFor(null)->then(function () use ($lpas, $onLpa): array {
+                foreach ($lpas as $uid => $lpa) {
+                    $onLpa($lpa, (string) $uid);
+                }
+
+                return $lpas;
+            });
+        };
+
+        $seen  = [];
+        $onLpa = static function (LpaInterface $lpa, string $uid) use (&$seen): PromiseInterface {
+            return Create::promiseFor(null)->then(function () use ($lpa, $uid, &$seen): void {
+                $seen[$uid] = $lpa->getData()::class;
+            });
+        };
+
+        $this->sut->lookupAsync([$uidOne], 'session', $lookup)->wait();
+
+        $secondRequest = new SessionLpaCache($this->cacheFactory, $this->logger);
+        $result        = $secondRequest->lookupAsync([$uidOne, $uidTwo], 'session', $lookup, $onLpa)->wait();
+
+        self::assertSame([[$uidOne], [$uidTwo]], $calls);
+        self::assertEquals([$uidOne => $one, $uidTwo => $two], $result);
+        self::assertSame(
+            [
+                $uidOne => $one->getData()::class,
+                $uidTwo => $two->getData()::class,
+            ],
+            $seen,
+        );
+        self::assertCount(2, array_filter($this->pool->getValues()));
+    }
+
+    #[Test]
+    #[DataProvider('absentSessions')]
+    public function it_should_bypass_caching_without_a_session_asynchronously(?string $sessionId): void
+    {
+        $lpa   = $this->lpa();
+        $uid   = $lpa->getData()->getUid();
+        $onLpa = static fn (): null => null;
+
+        $this->cacheFactory->expects($this->never())->method('taggable');
+
+        $lookup = $this->createMock(LpasInterface::class);
+        $lookup->expects($this->once())
+            ->method('lookupAsync')
+            ->with([$uid], $onLpa)
+            ->willReturn(Create::promiseFor([$lpa]));
+
+        self::assertSame(
+            [$lpa],
+            $this->sut->lookupAsync([$uid], $sessionId, $lookup->lookupAsync(...), $onLpa)->wait(),
+        );
+    }
+
+    #[Test]
+    public function it_should_not_lookup_an_empty_collection_asynchronously(): void
+    {
+        $this->cacheFactory->expects($this->never())->method('taggable');
+
+        $lookup = $this->createMock(LpasInterface::class);
+        $lookup->expects($this->never())->method('lookupAsync');
+
+        self::assertSame([], $this->sut->lookupAsync([], 'session', $lookup->lookupAsync(...))->wait());
+    }
+
+    #[Test]
+    public function it_should_reject_asynchronous_upstream_responses_without_lpa_data(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Missing LPA data');
+
+        $this->sut
+            ->lookupAsync(
+                ['uid'],
+                'session',
+                static fn (array $uids, callable $onLpa): PromiseInterface => Create::promiseFor(null)
+                    ->then(fn (): mixed => $onLpa(new Lpa(null, null), 'uid')),
+            )
+            ->wait();
     }
 
     private function lpa(string $fixture = 'test_lpa.json', bool $legacy = false): Lpa

@@ -11,6 +11,7 @@ use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use App\DataAccess\Repository\{AuditableLpasInterface, Response, Response\LpaInterface};
 use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
+use GuzzleHttp\Promise\{PromiseInterface, Utils};
 use Psr\Container\{ContainerExceptionInterface, NotFoundExceptionInterface};
 use Psr\Http\Client\{ClientExceptionInterface, ClientInterface};
 use Psr\Http\Message\{RequestFactoryInterface, ResponseInterface, StreamFactoryInterface};
@@ -74,6 +75,11 @@ class DataStoreLpas extends AbstractApiClient implements AuditableLpasInterface
 
     public function lookup(array $uids): array
     {
+        return $this->lookupAsync($uids)->wait();
+    }
+
+    public function lookupAsync(array $uids, ?callable $onLpa = null): PromiseInterface
+    {
         $url = sprintf('%s/lpas', $this->apiBaseUri);
 
         $request = $this->requestFactory
@@ -85,23 +91,38 @@ class DataStoreLpas extends AbstractApiClient implements AuditableLpasInterface
             );
         $request = $this->createRequestSigner()->sign($this->attachHeaders($request));
 
-        try {
-            $response = $this->httpClient->sendRequest($request);
-        } catch (ClientExceptionInterface $ce) {
-            throw ApiException::create(
-                'Error whilst communicating with LPA data store',
-                null,
-                $ce,
-            );
-        }
+        return $this->sendAsync($request)
+            ->then(
+                function (ResponseInterface $response) use ($onLpa): PromiseInterface {
+                    $lpas = match ($response->getStatusCode()) {
+                        StatusCodeInterface::STATUS_OK => $this->formatMultipleLpaResponse($response),
+                        default => throw ApiException::create(
+                            'LPA data store returned non-ok response',
+                            $response,
+                        ),
+                    };
 
-        return match ($response->getStatusCode()) {
-            StatusCodeInterface::STATUS_OK => $this->formatMultipleLpaResponse($response),
-            default => throw ApiException::create(
-                'LPA data store returned non-ok response',
-                $response,
-            ),
-        };
+                    $callbacks = [];
+                    if ($onLpa !== null) {
+                        foreach ($lpas as $uid => $lpa) {
+                            $callbacks[] = $onLpa($lpa, $uid);
+                        }
+                    }
+
+                    return Utils::all($callbacks)->then(fn (): array => array_values($lpas));
+                },
+                function (mixed $reason): never {
+                    if ($reason instanceof Throwable && !$reason instanceof ClientExceptionInterface) {
+                        throw $reason;
+                    }
+
+                    throw ApiException::create(
+                        'Error whilst communicating with LPA data store',
+                        null,
+                        $reason instanceof ClientExceptionInterface ? $reason : null,
+                    );
+                },
+            );
     }
 
     /**
@@ -156,7 +177,7 @@ class DataStoreLpas extends AbstractApiClient implements AuditableLpasInterface
 
     /**
      * @param ResponseInterface $response
-     * @return Response\Lpa[]
+     * @return array<string, Response\Lpa> LPAs keyed by uid
      * @throws ApiException
      */
     private function formatMultipleLpaResponse(ResponseInterface $response): array
@@ -177,8 +198,10 @@ class DataStoreLpas extends AbstractApiClient implements AuditableLpasInterface
         $result = [];
         foreach ($lpas as $lpa) {
             try {
-                $result[] = new Response\Lpa(
-                    ($this->lpaDataFormatter)($lpa),
+                $data = ($this->lpaDataFormatter)($lpa);
+
+                $result[$data->getUid()] = new Response\Lpa(
+                    $data,
                     new DateTimeImmutable($response->getHeaderLine('Date'))
                 );
             } catch (UnableToHydrateObject | Throwable) {

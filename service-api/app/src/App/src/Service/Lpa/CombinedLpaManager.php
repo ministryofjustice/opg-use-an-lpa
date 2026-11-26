@@ -22,6 +22,8 @@ use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\Value\LpaUid;
 use DateTimeInterface;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Utils;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -268,17 +270,24 @@ class CombinedLpaManager implements LpaManagerInterface
             $dataStoreUids,
         ] = ($this->resolveLpaTypes)($lpaActorMaps);
 
-        $siriusLpas = $this->sessionLpaCache->lookup(
-            $siriusUids,
-            $sessionId,
-            $this->siriusLpas->lookup(...),
-        );
-
-        $dataStoreLpas = $this->sessionLpaCache->lookup(
-            $dataStoreUids,
-            $sessionId,
-            fn (array $uids): array => $this->dataStoreLpas->setOriginatorId($originatorId)->lookup($uids),
-        );
+        // Start both sets of requests before waiting so that they run concurrently
+        [
+            $siriusLpas,
+            $dataStoreLpas,
+        ] = Utils::all([
+            $this->sessionLpaCache->lookupAsync(
+                $siriusUids,
+                $sessionId,
+                $this->siriusLpas->lookupAsync(...),
+            ),
+            $this->sessionLpaCache->lookupAsync(
+                $dataStoreUids,
+                $sessionId,
+                fn (array $uids, ?callable $onLpa): PromiseInterface => $this->dataStoreLpas
+                    ->setOriginatorId($originatorId)
+                    ->lookupAsync($uids, $onLpa),
+            ),
+        ])->wait();
 
         $keyedDataStoreLpas = [];
 
