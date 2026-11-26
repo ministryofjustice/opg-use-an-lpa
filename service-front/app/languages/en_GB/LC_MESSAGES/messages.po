@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-23 12:35+0000\n"
-"Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
+"PO-Revision-Date: 2026-11-26 19:06+0000\n"
+"Last-Translator: Adam Cooper <adam.cooper@publicguardian.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
@@ -6049,3 +6049,7 @@ msgstr "[no-hint]"
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:48
 msgid "request-activation-key.your-name.field-last-name.hint"
 msgstr "[no-hint]"
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:21
+msgid "Access code expires today"
+msgstr "Access code expires today"
