@@ -28,6 +28,8 @@ integration:
         tags: "@integration"
 
 acceptance:
+  extensions:
+    BehatTest\Common\I18n\Behat\UntranslatedKeysExtension: ~
   suites:
     actor:
       contexts:
