@@ -1,13 +1,13 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}What is your role on the LPA?{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}request-activation-key.actor-role.title{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
 
         <div role="navigation" aria-labelledby="back-link-navigation">
             <a href="{{ path(back) }}" class="govuk-back-link"
-               id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+               id="back-link-navigation">{% trans %}common.back-link{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -20,29 +20,31 @@
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
+                    {% set hint_donor %}{% trans %}request-activation-key.actor-role.field-actor-role.hint-donor{% context %}html{% notes %}Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.{% endtrans %}{% endset %}
+
                     <div class="govuk-form-group">
                         <fieldset class="govuk-fieldset">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
                                 <h1 class="govuk-fieldset__heading">
-                                    {% trans %}What is your role on the LPA?{% endtrans %}
+                                    {% trans %}request-activation-key.actor-role.heading-page{% context %}html{% notes %}Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.{% endtrans %}
                                 </h1>
                             </legend>
 
                             {{ govuk_form_element(form.get('actor_role_radio'), {'value_options':
                                 [
                                     {
-                                        'label': 'I am the \'donor\''|trans,
-                                        'hint': 'The donor is the person the LPA is made for. They appoint attorneys to make decisions on their behalf.'| trans,
+                                        'label': 'request-activation-key.actor-role.field-actor-role.label-donor'|trans,
+                                        'hint': hint_donor,
                                         'value': 'Donor'
                                     },
                                     {
-                                        'label': 'I am an \'attorney\''|trans,
-                                        'hint': 'An attorney is appointed by the donor to make decisions on the donor\'s behalf.'| trans,
+                                        'label': 'request-activation-key.actor-role.field-actor-role.label-attorney'|trans,
+                                        'hint': 'request-activation-key.actor-role.field-actor-role.hint-attorney'|trans,
                                         'value': 'Attorney'
                                     },
                                     {
-                                        'label': 'I am a \'replacement attorney\''|trans,
-                                        'hint': 'A replacement attorney is appointed by the donor to step in for an attorney if they can no longer act on the donor\'s behalf.'| trans,
+                                        'label': 'request-activation-key.actor-role.field-actor-role.label-replacement-attorney'|trans,
+                                        'hint': 'request-activation-key.actor-role.field-actor-role.hint-replacement-attorney'|trans,
                                         'value': 'ReplacementAttorney'
                                     }
                                 ]}
@@ -51,7 +53,8 @@
                     </div>
 
                     <button data-prevent-double-click="true" type="submit"
-                            class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+                            class="govuk-button">{% trans %}common.button-continue{% endtrans %}</button>
+
                     {{ govuk_form_close() }}
                 </div>
             </div>

@@ -5626,3 +5626,454 @@ msgstr "<p class=\"govuk-body\">Efallai bod y rhoddwr neu’r atwrnai wedi rhoi�
 msgctxt "html-link"
 msgid "view-lpa.enter-code-paper-verification.content-terms"
 msgstr "<p class=\"govuk-body\">Trwy barhau rydych yn cytuno i’n <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">telerau defnyddio (yn agor mewn tab newydd)</a>.</p>"
+
+#: src/Actor/templates/actor/contact-details.html.twig:3
+msgid "request-activation-key.contact-details.title"
+msgstr "Eich rhif ffôn"
+
+#: src/Actor/templates/actor/contact-details.html.twig:18
+msgid "request-activation-key.contact-details.heading-page"
+msgstr "Eich rhif ffôn"
+
+#: src/Actor/templates/actor/contact-details.html.twig:19
+msgid "request-activation-key.contact-details.hint-page"
+msgstr "Efallai y bydd angen i ni gysylltu â chi i ofyn am ragor o wybodaeth."
+
+#: src/Actor/templates/actor/contact-details.html.twig:26
+msgid "request-activation-key.contact-details.field-telephone.label"
+msgstr "Beth yw eich rhif ffôn?"
+
+#. Shown between the phone number field and the “I do not have a phone” checkbox.
+#: src/Actor/templates/actor/contact-details.html.twig:32
+msgid "request-activation-key.contact-details.separator-or"
+msgstr "neu"
+
+#: src/Actor/templates/actor/contact-details.html.twig:35
+msgid "request-activation-key.contact-details.field-no-phone.label"
+msgstr "Does gen i ddim ffôn neu alla i ddim defnyddio ffôn i dderbyn galwadau"
+
+#. Contains GOV.UK HTML elements and classes. The %email% placeholder is replaced with the user’s account email address. Preserve the HTML structure, classes and placeholder when translating.
+#: src/Actor/templates/actor/contact-details.html.twig:38
+msgctxt "html"
+msgid "request-activation-key.contact-details.content-email"
+msgstr "<p class=\"govuk-body\">Mae’n bosib y byddwn hefyd yn cysylltu â chi dros e-bost at <b>%email%</b></p>"
+
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:3
+msgid "request-activation-key.your-name.title"
+msgstr "Beth yw eich enw?"
+
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:16
+msgid "request-activation-key.your-name.heading-page"
+msgstr "Beth yw eich enw?"
+
+#. Hint shown below the “First names” field label. Translate as [no-hint] to show no hint.
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:23
+msgid "request-activation-key.your-name.field-first-names.hint"
+msgstr "Dylech gynnwys unrhyw enwau cano."
+
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:41
+msgid "request-activation-key.your-name.field-first-names.label-single"
+msgstr "Enw cyntaf"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:3
+msgid "request-activation-key.attorney-details.title"
+msgstr "Manylion atwrnai"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:18
+msgid "request-activation-key.attorney-details.heading-page"
+msgstr "Manylion atwrnai"
+
+#. Contains GOV.UK HTML elements and classes, and an abbreviation element for LPA. Preserve the HTML structure, classes and title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:19
+msgctxt "html"
+msgid "request-activation-key.attorney-details.content-intro"
+msgstr ""
+"<p class=\"govuk-body\">Rhowch fanylion atwrnai a enwir yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>.</p>\n"
+"<p class=\"govuk-body\">Os oes gennych fwy nag un atwrnai, nid oes ots pa atwrnai a ddewiswch yma.</p>"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:27
+msgid "request-activation-key.attorney-details.heading-attorney-name"
+msgstr "Enw’r atwrnai"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:39
+msgid "request-activation-key.attorney-details.field-attorney-dob.label"
+msgstr "Dyddiad geni’r atwrnai"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:40
+msgid "request-activation-key.attorney-details.field-attorney-dob.hint"
+msgstr "Er enghraifft, 08 04 2004"
+
+#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:3
+msgid "request-activation-key.date-of-birth.title"
+msgstr "Beth yw eich dyddiad geni?"
+
+#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:18
+msgid "request-activation-key.date-of-birth.heading-page"
+msgstr "Beth yw eich dyddiad geni?"
+
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:3
+msgid "request-activation-key.info.title"
+msgstr "Gwirio a chewch ofyn am god actifadu"
+
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:15
+msgid "request-activation-key.info.heading-page"
+msgstr "Gwirio a chewch ofyn am god actifadu"
+
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:17
+msgid "request-activation-key.info.heading-can-only-ask"
+msgstr "Gallwch ofyn am god actifadu os:"
+
+#. Contains a GOV.UK bulleted list and abbreviation elements for LPA. Preserve the HTML structure, classes and title attributes when translating.
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:18
+msgctxt "html"
+msgid "request-activation-key.info.content-can-only-ask"
+msgstr ""
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>os cofrestrwyd eich <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> rhwng 1 Medi 2019 a 16 Gorffennaf 2020</li>\n"
+"<li>ydych yn rhoddwr neu’n atwrnai wedi eich enwi yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (nid yn atwrnai wrth gefn)</li>\n"
+"</ul>"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:25
+msgctxt "html"
+msgid "request-activation-key.info.reveal-registration-date-title"
+msgstr "Ble i ddod o hyd i ddyddiad cofrestru’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
+
+#. Contains HTML paragraphs and abbreviation elements for LPA. Preserve the HTML structure and title attributes when translating.
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:29
+msgctxt "html"
+msgid "request-activation-key.info.reveal-registration-date-content"
+msgstr ""
+"<p>Mae’r dyddiad cofrestru i’w weld ar y llythyr a oedd yn dweud bod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> wedi cael ei chofrestru, neu ar y stamp ar dudalen gyntaf yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur.</p>\n"
+"<p>Os nad ydych yn siŵr pryd cofrestrwyd yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, fe gewch barhau ac fe wnawn ni chwilio drosoch chi.</p>"
+
+#. Contains an HTML abbreviation element for LPAs. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:38
+msgctxt "html"
+msgid "request-activation-key.info.reveal-registered-before-title"
+msgstr "Os cofrestrwyd yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> cyn 1 Medi 2019"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:42
+msgctxt "html"
+msgid "request-activation-key.info.reveal-registered-before-content"
+msgstr "Os cofrestrwyd yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> cyn 1 Medi 2019, ni chewch dderbyn cod actifadu ar ei chyfer. Os yw sefydliadau am weld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, dangoswch y copi papur iddynt."
+
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:48
+msgid "request-activation-key.info.heading-details-changed"
+msgstr "Rhowch wybod i ni os yw eich manylion wedi newid"
+
+#. Contains GOV.UK paragraphs, a bulleted list and abbreviation elements for LPA, and a link to the change details page using the %link% placeholder. Preserve the HTML structure, classes, title attributes and placeholder when translating.
+#: src/Actor/templates/actor/request-activation-key/info.html.twig:49
+msgctxt "html-link"
+msgid "request-activation-key.info.content-details-changed"
+msgstr ""
+"<p class=\"govuk-body\">Os nad yw eich manylion cywir gennym, ni fyddwch yn gallu derbyn cod actifadu.</p>\n"
+"<p class=\"govuk-body\"><a class=\"govuk-link\" href=\"%link%\">Rhowch wybod i ni os yw eich manylion wedi newid</a> a chithau heb ddweud wrthym.</p>\n"
+"<p class=\"govuk-body\">Mae arnom angen gwybod:</p>\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"<li>os ydych wedi symud tŷ – er mwyn i ni allu postio’r cod i’r cyfeiriad cywir</li>\n"
+"<li>os ydych wedi newid eich enw</li>\n"
+"<li>os cafodd eich enw neu’ch cyfeiriad eu sillafu yn anghywir ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr></li>\n"
+"<li>yw eich dyddiad geni ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn anghywir</li>\n"
+"</ul>"
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:3
+msgid "request-activation-key.actor-address.title"
+msgstr "Beth yw eich cyfeiriad ar hyn o bryd?"
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:19
+msgid "request-activation-key.actor-address.heading-page"
+msgstr "Beth yw eich cyfeiriad ar hyn o bryd?"
+
+#. Contains GOV.UK HTML elements and classes, and an abbreviation element for LPA. Preserve the HTML structure, classes and title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:20
+msgctxt "html"
+msgid "request-activation-key.actor-address.content-intro"
+msgstr "<p class=\"govuk-body\">Mae angen ychydig o fanylion ychwanegol arnom i wneud yn siŵr bod gennym yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> gywir ar gyfer eich cais am god actifadu.</p>"
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:28
+msgid "request-activation-key.actor-address.field-actor-abroad-address.label"
+msgstr "Cyfeiriad"
+
+#. Contains GOV.UK HTML elements and classes. The %postcode% placeholder is replaced with the postcode the user entered on the previous page. Preserve the HTML structure, classes and placeholder when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:32
+msgctxt "html"
+msgid "request-activation-key.actor-address.content-postcode-given"
+msgstr "<p class=\"govuk-body\">Rydych chi eisoes wedi rhoi %postcode% fel eich cod post.</p>"
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:37
+msgid "request-activation-key.actor-address.field-actor-address-1.label"
+msgstr "Llinell 1 y cyfeiriad"
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:42
+msgid "request-activation-key.actor-address.field-actor-address-2.label"
+msgstr "Llinell 2 y cyfeiriad (dewisol)"
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:47
+msgid "request-activation-key.actor-address.field-actor-address-3.label"
+msgstr "Llinell 3 y cyfeiriad"
+
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:52
+msgid "request-activation-key.actor-address.field-actor-address-4.label"
+msgstr "Llinell 4 y cyfeiriad (dewisol)"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:58
+msgctxt "html"
+msgid "request-activation-key.actor-address.field-actor-address-check.label-yes"
+msgstr "Ie, mae’r un fath â fy nghyfeiriad yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:59
+msgctxt "html"
+msgid "request-activation-key.actor-address.field-actor-address-check.label-no"
+msgstr "Na, mae’n wahanol i’m cyfeiriad yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:60
+msgctxt "html"
+msgid "request-activation-key.actor-address.field-actor-address-check.label-not-sure"
+msgstr "Dydw i ddim yn siŵr a yw’r un fath â fy nghyfeiriad yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:67
+msgctxt "html"
+msgid "request-activation-key.actor-address.field-actor-address-check.legend"
+msgstr "Ai dyma’r un cyfeiriad â’r cyfeiriad sydd ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur?"
+
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:3
+msgid "request-activation-key.donor-details.title"
+msgstr "Manylion y rhoddwr"
+
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:18
+msgid "request-activation-key.donor-details.heading-page"
+msgstr "Manylion y rhoddwr"
+
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:33
+msgid "request-activation-key.donor-details.field-donor-dob.label"
+msgstr "Dyddiad geni’r rhoddwr"
+
+#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:3
+msgid "request-activation-key.address-on-paper.title"
+msgstr "Beth yw eich cyfeiriad ar yr LPA bapur?"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:18
+msgctxt "html"
+msgid "request-activation-key.address-on-paper.heading-page"
+msgstr "Beth yw eich cyfeiriad ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur?"
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:3
+msgid "request-activation-key.postcode.title"
+msgstr "Beth yw eich cod post ar hyn o bryd?"
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:19
+msgid "request-activation-key.postcode.heading-page"
+msgstr "Ble rydych chi’n byw ar hyn o bryd?"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:20
+msgctxt "html"
+msgid "request-activation-key.postcode.content-intro"
+msgstr "<p class=\"govuk-body\">Byddwn yn anfon eich cod actifadu atoch chi yn y post.</p>"
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:31
+msgid "request-activation-key.postcode.field-live-in-uk.label-yes"
+msgstr "Rwy’n byw yn y Deyrnas Unedig"
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:33
+msgid "request-activation-key.postcode.field-postcode.label"
+msgstr "Beth yw eich cod post yn y Deyrnas Unedig?"
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:36
+msgid "request-activation-key.postcode.field-live-in-uk.label-no"
+msgstr "Nid wyf yn byw yn y Deyrnas Unedig"
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:3
+msgid "request-activation-key.actor-role.title"
+msgstr "Beth yw eich rôl yn yr LPA hon?"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:23
+msgctxt "html"
+msgid "request-activation-key.actor-role.field-actor-role.hint-donor"
+msgstr "Y rhoddwr yw’r unigolyn y gwneir yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar ei gyfer. Mae’n penodi atwrneiod i wneud penderfyniadau ar ei ran."
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:29
+msgctxt "html"
+msgid "request-activation-key.actor-role.heading-page"
+msgstr "Beth yw eich rôl yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon?"
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:36
+msgid "request-activation-key.actor-role.field-actor-role.label-donor"
+msgstr "Fi yw’r rhoddwr"
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:41
+msgid "request-activation-key.actor-role.field-actor-role.label-attorney"
+msgstr "Rwy’n atwrnai"
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:42
+msgid "request-activation-key.actor-role.field-actor-role.hint-attorney"
+msgstr "Mae atwrnai yn cael ei benodi gan y rhoddwr i wneud penderfyniadau ar ran y rhoddwr."
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:46
+msgid "request-activation-key.actor-role.field-actor-role.label-replacement-attorney"
+msgstr "Rwy’n atwrnai wrth gefn"
+
+#: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:47
+msgid "request-activation-key.actor-role.field-actor-role.hint-replacement-attorney"
+msgstr "Mae atwrnai wrth gefn yn cael ei benodi gan y rhoddwr i gymryd lle atwrnai os nad yw’n gallu gweithredu ar ran y rhoddwr mwyach."
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:3
+msgid "request-activation-key.check-details.title"
+msgstr "Gwiriwch eich atebion"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:12
+msgid "request-activation-key.check-details.heading-page"
+msgstr "Gwiriwch eich atebion"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:19
+msgid "request-activation-key.check-details.label-current-address"
+msgstr "Eich cyfeiriad presennol"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the current address being changed. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:28
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-current-address"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad</span>"
+
+#. Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:34
+msgctxt "html"
+msgid "request-activation-key.check-details.label-address-on-paper"
+msgstr "Eich cyfeiriad ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:38
+msgid "request-activation-key.check-details.value-not-sure"
+msgstr "Ddim yn siŵr"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:42
+msgid "request-activation-key.check-details.value-same-as-above"
+msgstr "Yr un peth ag uchod"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the address on the paper LPA being changed. Contains an abbreviation element for LPA; preserve its title attribute. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:48
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-address-on-paper"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> papur</span>"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the address on the paper LPA, shown when it is the same as the current address. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:50
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-address-on-paper-same"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:59
+msgid "request-activation-key.check-details.label-role"
+msgstr "Eich rôl"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the role being changed. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:72
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-role"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> rôl</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:79
+msgid "request-activation-key.check-details.label-donor-name"
+msgstr "Enw’r rhoddwr"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the donor’s name being changed. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:86
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-donor-name"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> enw’r rhoddwr</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:92
+msgid "request-activation-key.check-details.label-donor-dob"
+msgstr "Dyddiad geni’r rhoddwr"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the donor’s date of birth being changed. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:99
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-donor-dob"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> dyddiad geni’r rhoddwr</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:107
+msgid "request-activation-key.check-details.label-attorney-name"
+msgstr "Enw’r atwrnai"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the attorney’s name being changed. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:114
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-attorney-name"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> enw’r atwrnai</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:120
+msgid "request-activation-key.check-details.label-attorney-dob"
+msgstr "Dyddiad geni’r atwrnai"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the attorney’s date of birth being changed. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:127
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-attorney-dob"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad geni atwrnai</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:135
+msgid "request-activation-key.check-details.label-telephone"
+msgstr "Eich rhif ffôn"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:141
+msgid "request-activation-key.check-details.value-not-provided"
+msgstr "Heb ei roi"
+
+#. Visible link text “Change” followed by visually hidden text, read by screen readers, describing the phone number being changed. Preserve the span and its class when translating.
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:146
+msgctxt "html"
+msgid "request-activation-key.check-details.link-change-telephone"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> rhif ffôn</span>"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:156
+msgid "request-activation-key.check-details.warning-consent"
+msgstr "Rwy’n deall y bydd yr wybodaeth a roddais yn cael ei storio’n ddiogel a’i defnyddio i brosesu fy nghais am god actifadu."
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:164
+msgid "request-activation-key.check-details.button-submit"
+msgstr "Cadarnhau a chyflwyno’r cais"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:29
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:25
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:29
+msgid "common.field-first-names.label"
+msgstr "Enwau cyntaf"
+
+#: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:34
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:29
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:54
+msgid "common.field-last-name.label"
+msgstr "Cyfenw"
+
+#: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:25
+#: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:25
+#: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:34
+msgid "common.field-dob.hint"
+msgstr "Er enghraifft, 31 03 1980"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:63
+msgid "common.value-donor"
+msgstr "Rhoddwr"
+
+#: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:67
+msgid "common.value-attorney"
+msgstr "Atwrnai"
+
+#. Hint shown below the “First name” field label. Translate as [no-hint] to show no hint.
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:35
+msgid "request-activation-key.your-name.field-first-names.hint-single"
+msgstr "[no-hint]"
+
+#. Hint shown below the “Last name” field label. Translate as [no-hint] to show no hint.
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:48
+msgid "request-activation-key.your-name.field-last-name.hint"
+msgstr "[no-hint]"

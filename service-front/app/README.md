@@ -91,32 +91,32 @@ When adding or changing translatable content, follow the process below.
     - the correct gettext context has been included where required
     - placeholders such as %link% are preserved
 
-   Merge the updated POT file into the en_devel PO file using Poedit or msgmerge.
+   Add the new entries from the POT file to the en_devel PO file, editing one entry at a time in a text editor.
+   Avoid re-saving the whole file with tools such as msgmerge or Poedit, as they rewrap existing entries and create unrelated changes.
 
-   Add the designed HTML to the relevant translation entries in en_devel.po, using Poedit or a text editor.
+   Add the designed HTML to the relevant translation entries in en_devel.po.
    Ensure that HTML markup, placeholders and quotation marks are preserved correctly.
 
-   Commit both the updated messages.pot and en_devel PO file in the initial PR.
-
-   Do not manually add or edit the English or Welsh translations in the application PO files at this stage.
+   Commit the updated messages.pot and en_devel PO file in the same PR as the template changes.
 
 
-3. Add the English and Welsh translations in Weblate
+3. Add the English and Welsh translations to the application PO files
 
-   Once the initial PR has been merged, the new translation keys will become available in Weblate.
+   Weblate is under a change freeze while templates are migrated to translation keys, so the English (en_GB) and Welsh (cy) PO files are updated in the same PR rather than through Weblate.
 
-   Content writers and translators can then add or update the translations in Weblate.
+   Add each new translation key to the en_GB and cy PO files, appending them to the end of the file with the notes, references and context from messages.pot.
 
-   Any required HTML, placeholders, or other translator guidance should be preserved according to the context and notes associated with the translation key.
+    - en_GB: use the English content from en_devel.
+    - cy: use the existing Welsh translation of the original string(s) the key replaces, with the same HTML, placeholders and links as the English.
 
-   Do not manually edit the generated PO/MO files in the repository for these translations.
+   Do not remove the original string-based entries from the en_GB or cy PO files. Weblate will remove them once the change freeze ends.
+
+   Do not write new Welsh. Flag any original string with a missing Welsh translation to the translators.
 
 
-4. Push the translations from Weblate
+4. Review in Weblate after the change freeze
 
-    Once the English and Welsh translations are complete and have been reviewed, use Weblate to push the translation changes back to the repository.
-
-    Weblate will create a PR containing the updated translation files.
+   Once the change freeze ends, Weblate picks up the new keys from the repository. Content writers and translators can then review or update the translations in Weblate, and Weblate pushes any changes back to the repository in a PR.
 
 
 5. Fix any test breakages and review

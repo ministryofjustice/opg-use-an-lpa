@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use Acpr\I18n\TranslatorInterface;
 use Aws\Sdk;
+use BehatTest\Common\I18n\RecordingTranslatorDelegatorFactory;
 use BehatTest\Common\Service\ApiClient\TestGuzzleClientFactory;
 use BehatTest\Common\Service\Aws\SdkFactory;
 use Common\Service\Log\RequestTracingLogProcessorFactory;
@@ -18,10 +20,15 @@ return [
     ConfigInterface::ENABLE_CACHE_DEFINITION => false,
     'debug'                                  => false,
     'dependencies'                           => [
-        'factories' => [
+        'factories'  => [
             Client::class                 => TestGuzzleClientFactory::class,
             Sdk::class                    => SdkFactory::class,
             ErrorResponseGenerator::class => ErrorResponseGeneratorFactory::class,
+        ],
+        'delegators' => [
+            TranslatorInterface::class => [
+                RecordingTranslatorDelegatorFactory::class,
+            ],
         ],
     ],
     'api'                                    => [

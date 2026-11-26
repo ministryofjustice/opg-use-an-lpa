@@ -1,12 +1,12 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}What is your current address?{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}request-activation-key.actor-address.title{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
             <a href="{{ path(back) }}" class="govuk-back-link"
-               id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+               id="back-link-navigation">{% trans %}common.back-link{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -16,59 +16,70 @@
             <div class="govuk-grid-row">
                 {{ govuk_form_open(form) }}
                 <div class="govuk-grid-column-three-quarters">
-                    <h1 class="govuk-heading-xl">{% trans %}What is your current address?{% endtrans %}</h1>
-                    <p class="govuk-body">{% trans %}We need a few extra details to make sure we have the right LPA for your activation key request.{% endtrans %}</p>
+                    <h1 class="govuk-heading-xl">{% trans %}request-activation-key.actor-address.heading-page{% endtrans %}</h1>
+                    {% trans %}
+                        request-activation-key.actor-address.content-intro
+                    {% context %}html{% notes %}Contains GOV.UK HTML elements and classes, and an abbreviation element for LPA. Preserve the HTML structure, classes and title attribute when translating.{% endtrans %}
+
                     {{ govuk_form_element(form.get('__csrf')) }}
+
                     {% if live_in_uk == 'No' %}
                         {{ govuk_form_element(form.get('actor_abroad_address'), {
-                            'label': 'Address' | trans,
+                            'label': 'request-activation-key.actor-address.field-actor-abroad-address.label' | trans,
                             'autocomplete': 'street-address',
                         }) }}
                     {% else %}
-                        <p class="govuk-body">{% trans with {'%postcode%': postcode } %}You've already given your postcode as %postcode%{% endtrans %}
+                        {% trans with {'%postcode%': postcode|e} %}
+                            request-activation-key.actor-address.content-postcode-given
+                        {% context %}html{% notes %}Contains GOV.UK HTML elements and classes. The %postcode% placeholder is replaced with the postcode the user entered on the previous page. Preserve the HTML structure, classes and placeholder when translating.{% endtrans %}
+
                         {{ govuk_form_element(form.get('actor_address_1'), {
-                            'label': 'Address line 1' | trans,
+                            'label': 'request-activation-key.actor-address.field-actor-address-1.label' | trans,
                             'autocomplete': 'address-line1',
                         }) }}
 
                         {{ govuk_form_element(form.get('actor_address_2'), {
-                            'label': 'Address line 2 (optional)' | trans,
+                            'label': 'request-activation-key.actor-address.field-actor-address-2.label' | trans,
                             'autocomplete': 'address-line2',
                         }) }}
 
                         {{ govuk_form_element(form.get('actor_address_town'), {
-                            'label': 'Town or city' | trans,
+                            'label': 'request-activation-key.actor-address.field-actor-address-3.label' | trans,
                             'attr': { 'class': 'govuk-input govuk-!-width-two-thirds', 'autocomplete': 'address-level1'}
                         }) }}
 
                         {{ govuk_form_element(form.get('actor_address_county'), {
-                            'label': 'County (optional)' | trans,
+                            'label': 'request-activation-key.actor-address.field-actor-address-4.label' | trans,
                             'attr': { 'class': 'govuk-input govuk-!-width-two-thirds', 'autocomplete': 'address-level2'}
                         }) }}
 
                     {% endif %}
+
+                    {% set label_same %}{% trans %}request-activation-key.actor-address.field-actor-address-check.label-yes{% context %}html{% notes %}Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.{% endtrans %}{% endset %}
+                    {% set label_different %}{% trans %}request-activation-key.actor-address.field-actor-address-check.label-no{% context %}html{% notes %}Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.{% endtrans %}{% endset %}
+                    {% set label_not_sure %}{% trans %}request-activation-key.actor-address.field-actor-address-check.label-not-sure{% context %}html{% notes %}Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.{% endtrans %}{% endset %}
 
                     <div class="govuk-form-group">
                         <fieldset class="govuk-fieldset">
 
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                                 <h2 class="govuk-fieldset__heading">
-                                    {% trans %}Is this the same address as your address on the paper LPA?{% endtrans %}
+                                    {% trans %}request-activation-key.actor-address.field-actor-address-check.legend{% context %}html{% notes %}Contains an HTML abbreviation element for LPA. Preserve the element and its title attribute when translating.{% endtrans %}
                                 </h2>
                             </legend>
 
                             {{ govuk_form_element(form.get('actor_address_check_radio'), {'value_options':
                                 [
                                     {
-                                        'label': 'Yes, it is the same as my address on the paper LPA'|trans,
+                                        'label': label_same,
                                         'value': enum('Actor\\Workflow\\ActorAddressResponse').YES.value
                                     },
                                     {
-                                        'label': 'No, it is different to my address on the paper LPA'|trans,
+                                        'label': label_different,
                                         'value': enum('Actor\\Workflow\\ActorAddressResponse').NO.value
                                     },
                                     {
-                                        'label': 'I am not sure if it\'s the same address on the paper LPA'|trans,
+                                        'label': label_not_sure,
                                         'value': enum('Actor\\Workflow\\ActorAddressResponse').NOT_SURE.value
                                     }
                                 ]}
@@ -78,7 +89,7 @@
                     </div>
 
                     <button data-prevent-double-click="true" type="submit"
-                            class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+                            class="govuk-button">{% trans %}common.button-continue{% endtrans %}</button>
 
                     {{ govuk_form_close() }}
 

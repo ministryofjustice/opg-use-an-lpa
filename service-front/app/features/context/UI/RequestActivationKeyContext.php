@@ -79,7 +79,7 @@ class RequestActivationKeyContext implements Context
     public function iAmAskedForTheAttorneyDetails(): void
     {
         $this->ui->assertPageAddress('/lpa/add/attorney-details');
-        $this->ui->assertPageContainsText('Attorney details');
+        $this->assertPageContainsTranslatedText('request-activation-key.attorney-details.heading-page');
     }
 
     #[When('/^I provide the attorney details$/')]
@@ -100,10 +100,7 @@ class RequestActivationKeyContext implements Context
     public function iAmAskedForMyContactDetails(): void
     {
         $this->ui->assertPageAddress('/lpa/add/contact-details');
-
-        # This should likely be replaced with a more obvious key on when the template gets reworked.
-        # Something like $this->assertPageContainsTranslatedText('requestkey.contact-details.heading');
-        $this->assertPageContainsTranslatedText('Your contact details');
+        $this->assertPageContainsTranslatedText('request-activation-key.contact-details.heading-page');
     }
 
     #[Then('/^I am asked to check my answers before requesting an activation key$/')]
@@ -246,14 +243,14 @@ class RequestActivationKeyContext implements Context
     public function iAmAskedToProvideTheDonorSDetailsToVerifyThatIAmTheAttorney(): void
     {
         $this->ui->assertPageAddress('/lpa/add/donor-details');
-        $this->assertPageContainsTranslatedText("The donor's details");
+        $this->assertPageContainsTranslatedText('request-activation-key.donor-details.heading-page');
     }
 
     #[Given('/^I am asked for my role on the LPA$/')]
     public function iAmAskedForMyRoleOnTheLPA(): void
     {
         $this->ui->assertPageAddress('/lpa/add/actor-role');
-        $this->ui->assertPageContainsText('What is your role on the LPA?');
+        $this->assertPageContainsTranslatedText('request-activation-key.actor-role.heading-page', context: 'html');
     }
 
     #[Given('/^I do not provide any selections (.*) on the LPA$/')]
@@ -426,7 +423,7 @@ class RequestActivationKeyContext implements Context
     {
         $this->ui->assertPageContainsText($this->lpa->donor->addresses[0]->addressLine1);
         $this->ui->assertPageContainsText($this->lpa->donor->addresses[0]->town);
-        $this->ui->assertPageContainsText('Attorney');
+        $this->assertPageContainsTranslatedText('common.value-attorney');
         $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . $this->lpa->donor->surname);
         $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
         $this->ui->assertPageContainsText('0123456789');
@@ -437,10 +434,10 @@ class RequestActivationKeyContext implements Context
     {
         $this->ui->assertPageContainsText($this->lpa->donor->addresses[0]->addressLine1);
         $this->ui->assertPageContainsText($this->lpa->donor->addresses[0]->town);
-        $this->ui->assertPageContainsText('Attorney');
+        $this->assertPageContainsTranslatedText('common.value-attorney');
         $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . $this->lpa->donor->surname);
         $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
-        $this->ui->assertPageContainsText('Not provided');
+        $this->assertPageContainsTranslatedText('request-activation-key.check-details.value-not-provided');
     }
 
     #[Given('/^I can see my address, attorney role, donor details and address on paper LPA marked unsure$/')]
@@ -448,10 +445,10 @@ class RequestActivationKeyContext implements Context
     {
         $this->ui->assertPageContainsText($this->lpa->donor->addresses[0]->addressLine1);
         $this->ui->assertPageContainsText($this->lpa->donor->addresses[0]->town);
-        $this->ui->assertPageContainsText('Attorney');
+        $this->assertPageContainsTranslatedText('common.value-attorney');
         $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . $this->lpa->donor->surname);
         $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
-        $this->ui->assertPageContainsText('Not sure');
+        $this->assertPageContainsTranslatedText('request-activation-key.check-details.value-not-sure');
     }
 
     #[Then('/^I can see the paper address I have input$/')]
@@ -465,7 +462,7 @@ class RequestActivationKeyContext implements Context
     {
         $this->ui->assertPageContainsText($this->lpa->donor->addresses[0]->addressLine1);
         $this->ui->assertPageContainsText($this->lpa->donor->addresses[0]->town);
-        $this->ui->assertPageContainsText('Donor');
+        $this->assertPageContainsTranslatedText('common.value-donor');
         $this->ui->assertPageContainsText(
             $this->lpa->attorneys[0]->firstname . ' ' . $this->lpa->attorneys[0]->surname
         );
@@ -477,9 +474,9 @@ class RequestActivationKeyContext implements Context
     public function iCanOnlySeeMyTelephoneNumber(): void
     {
         $this->ui->assertPageContainsText('0123456789');
-        $this->ui->assertPageNotContainsText('Your role');
-        $this->ui->assertPageNotContainsText("Donor's name");
-        $this->ui->assertPageNotContainsText("Donor's date of birth");
+        $this->assertPageNotContainsTranslatedText('request-activation-key.check-details.label-role');
+        $this->assertPageNotContainsTranslatedText('request-activation-key.check-details.label-donor-name');
+        $this->assertPageNotContainsTranslatedText('request-activation-key.check-details.label-donor-dob');
     }
 
     #[Given('/^I can see my address, donor role, attorney details and that I have not provided a telephone number$/')]
@@ -491,23 +488,24 @@ class RequestActivationKeyContext implements Context
             $this->lpa->attorneys[0]->firstname . ' ' . $this->lpa->attorneys[0]->surname
         );
         $this->ui->assertPageContainsText((new DateTime($this->lpa->attorneys[0]->dob))->format('j F Y'));
-        $this->ui->assertPageContainsText('Donor');
-        $this->ui->assertPageContainsText('Not provided');
+        $this->assertPageContainsTranslatedText('common.value-donor');
+        $this->assertPageContainsTranslatedText('request-activation-key.check-details.value-not-provided');
     }
 
     #[Given('/^I can see my role is now correctly set as the Attorney$/')]
     public function iCanSeeMyRoleIsNowCorrectlySetAsTheAttorney(): void
     {
-        $this->ui->assertPageContainsText('Donor');
+        $this->assertPageContainsTranslatedText('common.value-attorney');
+        $this->assertPageContainsTranslatedText('request-activation-key.check-details.label-donor-name');
         $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . $this->lpa->donor->surname);
         $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
-        $this->ui->assertPageContainsText('Not provided');
+        $this->assertPageContainsTranslatedText('request-activation-key.check-details.value-not-provided');
     }
 
     #[Given('/^I can see my role is now correctly set as the Donor$/')]
     public function iCanSeeMyRoleIsNowCorrectlySetAsTheDonor(): void
     {
-        $this->ui->assertPageContainsText('Donor');
+        $this->assertPageContainsTranslatedText('common.value-donor');
         $this->ui->assertPageNotContainsText($this->lpa->donor->firstname . ' ' . 'Different');
         $this->ui->assertPageNotContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
         $this->ui->assertPageContainsText('0123456789');
@@ -516,7 +514,7 @@ class RequestActivationKeyContext implements Context
     #[Given('/^I can see the donors name is now correct$/')]
     public function iCanSeeTheDonorsNameIsNowCorrect(): void
     {
-        $this->ui->assertPageContainsText('Attorney');
+        $this->assertPageContainsTranslatedText('common.value-attorney');
         $this->ui->assertPageContainsText($this->lpa->donor->firstname . ' ' . 'Different');
         $this->ui->assertPageContainsText((new DateTime($this->lpa->donor->dob))->format('j F Y'));
         $this->ui->assertPageContainsText('0123456789');
@@ -1331,19 +1329,19 @@ class RequestActivationKeyContext implements Context
     #[Given('/^I request to change my role$/')]
     public function iRequestToChangeMyRole(): void
     {
-        $this->ui->clickLink('Change role');
+        $this->ui->clickLink('change-your-role');
     }
 
     #[Given('/^I request to change the donors name$/')]
     public function iRequestToChangeTheDonorsName(): void
     {
-        $this->ui->clickLink("Change donor's name");
+        $this->ui->clickLink('change-donors-name');
     }
 
     #[Given('/^I request to change the address response$/')]
     public function iRequestToChangeTheAddressResponse(): void
     {
-        $this->ui->clickLink('Change address on paper LPA');
+        $this->ui->clickLink('change-address-on-paper');
     }
 
     #[When('/^I request to go back and change my date of birth/')]
@@ -1829,7 +1827,7 @@ class RequestActivationKeyContext implements Context
         $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
         $this->ui->assertElementOnPage('form[name="check_details_and_consent"]');
 
-        $this->assertPageContainsTranslatedText('Check your details');
+        $this->assertPageContainsTranslatedText('request-activation-key.check-details.heading-page');
 
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
