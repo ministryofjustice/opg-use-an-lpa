@@ -11,7 +11,7 @@ module "network" {
     "alarm_actions" : compact([aws_sns_topic.cloudwatch_to_pagerduty.arn, local.extended_support_sns_topic_arn]),
     "datapoints_to_alarm" : "5",
     "evaluation_periods" : "5",
-    "threshold" : "5300000"
+    "threshold" : "800000"
   }
   shared_firewall_configuration = var.account.shared_firewall_configuration.enabled != true ? null : {
     account_id   = var.account.shared_firewall_configuration.account_id
