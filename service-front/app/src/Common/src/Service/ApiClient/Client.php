@@ -7,12 +7,16 @@ namespace Common\Service\ApiClient;
 use Common\Exception\ApiException;
 use Common\Service\Context\UserContext;
 use Fig\Http\Message\StatusCodeInterface;
+use GuzzleHttp\ClientInterface as GuzzleClientInterface;
 use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Promise\Create;
+use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 class Client
 {
@@ -40,13 +44,7 @@ class Client
      */
     public function httpGet(string $path, array $query = []): array
     {
-        $url = new Uri($this->apiBaseUri . $path);
-
-        foreach ($query as $name => $value) {
-            $url = Uri::withQueryValue($url, $name, $value);
-        }
-
-        $request = new Request('GET', $url, $this->buildHeaders());
+        $request = $this->buildGetRequest($path, $query);
 
         //  Can throw RuntimeException if there is a problem
         try {
@@ -61,6 +59,54 @@ class Client
 
             throw ApiException::create('Error whilst making http GET request', $response, $ex, 502);
         }
+    }
+
+    /**
+     * Performs a GET against the API asynchronously
+     *
+     * The returned promise is fulfilled with the decoded response body or rejected with an ApiException,
+     * mirroring the behaviour of httpGet.
+     *
+     * @param string $path
+     * @param array $query
+     * @return PromiseInterface Fulfilled with the decoded response body array
+     */
+    public function httpGetAsync(string $path, array $query = []): PromiseInterface
+    {
+        $request = $this->buildGetRequest($path, $query);
+
+        $promise = $this->httpClient instanceof GuzzleClientInterface
+            ? $this->httpClient->sendAsync($request)
+            : Create::promiseFor(null)->then(fn () => $this->httpClient->sendRequest($request));
+
+        return $promise->then(
+            fn (ResponseInterface $response): array => match ($response->getStatusCode()) {
+                StatusCodeInterface::STATUS_OK => $this->handleResponse($response),
+                default => throw ApiException::create(null, $response),
+            },
+            function (mixed $reason): never {
+                if ($reason instanceof ClientExceptionInterface) {
+                    $response = $reason instanceof BadResponseException
+                        ? $reason->getResponse()
+                        : null;
+
+                    throw ApiException::create('Error whilst making http GET request', $response, $reason, 502);
+                }
+
+                throw $reason instanceof Throwable ? $reason : Create::exceptionFor($reason);
+            },
+        );
+    }
+
+    private function buildGetRequest(string $path, array $query): Request
+    {
+        $url = new Uri($this->apiBaseUri . $path);
+
+        foreach ($query as $name => $value) {
+            $url = Uri::withQueryValue($url, $name, $value);
+        }
+
+        return new Request('GET', $url, $this->buildHeaders());
     }
 
     /**

@@ -456,11 +456,6 @@
       <code><![CDATA[$data]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="src/Common/src/Service/Lpa/PopulateLpaMetadata.php">
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$shareCodes->activeCodeCount]]></code>
-    </UndefinedPropertyFetch>
-  </file>
   <file src="src/Common/src/Service/Lpa/Response/PaperVerificationCode.php">
     <PossiblyUnusedProperty>
       <code><![CDATA[$donorName]]></code>

@@ -8,6 +8,7 @@ use ArrayObject;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use DateTime;
+use GuzzleHttp\Promise\PromiseInterface;
 
 class ViewerCodeService
 {
@@ -57,8 +58,33 @@ class ViewerCodeService
      */
     public function getShareCodes(string $lpaId, bool $withActiveCount): ?ArrayObject
     {
-        $shareCodes = $this->apiClient->httpGet('/v1/lpas/' . $lpaId . '/codes');
+        return $this->formatShareCodes(
+            $this->apiClient->httpGet('/v1/lpas/' . $lpaId . '/codes'),
+            $withActiveCount,
+        );
+    }
 
+    /**
+     * Gets a list of viewer codes for a given lpa asynchronously
+     *
+     * @param string $lpaId
+     * @param bool $withActiveCount
+     * @return PromiseInterface Fulfilled with an ArrayObject of share codes
+     */
+    public function getShareCodesAsync(string $lpaId, bool $withActiveCount): PromiseInterface
+    {
+        return $this->apiClient
+            ->httpGetAsync('/v1/lpas/' . $lpaId . '/codes')
+            ->then(fn (array $shareCodes): ArrayObject => $this->formatShareCodes($shareCodes, $withActiveCount));
+    }
+
+    /**
+     * @param array $shareCodes
+     * @param bool $withActiveCount
+     * @return ArrayObject<int|string, mixed>
+     */
+    private function formatShareCodes(array $shareCodes, bool $withActiveCount): ArrayObject
+    {
         //sort the result array to appear in order of most recent added
         usort($shareCodes, function ($a, $b) {
             return strtotime($b[self::SORT_ADDED]) - strtotime($a[self::SORT_ADDED]);
