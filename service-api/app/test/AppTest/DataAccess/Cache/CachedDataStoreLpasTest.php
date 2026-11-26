@@ -8,6 +8,9 @@ use App\DataAccess\ApiGateway\DataStoreLpas;
 use App\DataAccess\Cache\CachedDataStoreLpas;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Entity\Lpa;
+use GuzzleHttp\Promise\Create;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Utils;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -138,9 +141,14 @@ class CachedDataStoreLpasTest extends TestCase
 
         $this->dataStoreLpas
             ->expects($this->exactly(2))
-            ->method('lookup')
+            ->method('lookupAsync')
             ->with(['M-0000-0000-0001'])
-            ->willReturn([$lpa]);
+            ->willReturnCallback(
+                fn (array $uids, ?callable $onLpa): PromiseInterface => $this->fulfilLookup(
+                    ['M-0000-0000-0001' => $lpa],
+                    $onLpa,
+                ),
+            );
 
         $sut = $this->createCachedDataStoreLpas();
 
@@ -165,25 +173,22 @@ class CachedDataStoreLpasTest extends TestCase
 
         $this->dataStoreLpas
             ->expects($this->exactly(2))
-            ->method('lookup')
-            ->willReturnMap(
-                [
+            ->method('lookupAsync')
+            ->willReturnCallback(
+                fn (array $uids, ?callable $onLpa): PromiseInterface => match ($uids) {
                     [
+                        'M-0000-0000-0002',
+                        'M-0000-0000-0003',
+                        'M-0000-0000-0004',
+                    ] => $this->fulfilLookup(
                         [
-                            'M-0000-0000-0002',
-                            'M-0000-0000-0003',
-                            'M-0000-0000-0004',
+                            'M-0000-0000-0002' => $lpaTwo,
+                            'M-0000-0000-0003' => $lpaThree,
                         ],
-                        [
-                            $lpaTwo,
-                            $lpaThree,
-                        ],
-                    ],
-                    [
-                        ['M-0000-0000-0004'],
-                        [],
-                    ],
-                ]
+                        $onLpa,
+                    ),
+                    ['M-0000-0000-0004'] => $this->fulfilLookup([], $onLpa),
+                }
             );
 
         $sut = $this->createCachedDataStoreLpas();
@@ -214,7 +219,7 @@ class CachedDataStoreLpasTest extends TestCase
             ->with('M-0000-0000-0001')
             ->willReturn($lpa);
 
-        $this->dataStoreLpas->expects($this->never())->method('lookup');
+        $this->dataStoreLpas->expects($this->never())->method('lookupAsync');
 
         $sut = $this->createCachedDataStoreLpas();
         $sut->setOriginatorId('originator');
@@ -235,6 +240,68 @@ class CachedDataStoreLpasTest extends TestCase
         $sut = new CachedDataStoreLpas($this->dataStoreLpas, $this->createCache(), $logger);
         $sut->setOriginatorId('originator');
         $sut->get('M-0000-0000-0001');
+    }
+
+    #[Test]
+    public function it_should_invoke_the_callback_for_cached_and_fetched_lpas(): void
+    {
+        $lpaOne = $this->createLpa('M-0000-0000-0001');
+        $lpaTwo = $this->createLpa('M-0000-0000-0002');
+
+        $this->dataStoreLpas->method('get')->willReturn($lpaOne);
+        $this->dataStoreLpas
+            ->expects($this->once())
+            ->method('lookupAsync')
+            ->with(['M-0000-0000-0002'])
+            ->willReturnCallback(
+                fn (array $uids, ?callable $onLpa): PromiseInterface => $this->fulfilLookup(
+                    ['M-0000-0000-0002' => $lpaTwo],
+                    $onLpa,
+                ),
+            );
+
+        $sut = $this->createCachedDataStoreLpas();
+        $sut->setOriginatorId('originator');
+        $sut->get('M-0000-0000-0001');
+
+        $seen   = [];
+        $result = $sut
+            ->lookupAsync(
+                [
+                    'M-0000-0000-0001',
+                    'M-0000-0000-0002',
+                ],
+                function (LpaInterface $lpa, string $uid) use (&$seen): PromiseInterface {
+                    return Create::promiseFor(null)->then(function () use ($lpa, $uid, &$seen): void {
+                        $seen[$uid] = $lpa;
+                    });
+                },
+            )
+            ->wait();
+
+        $this->assertSame([$lpaOne, $lpaTwo], $result);
+        $this->assertSame(
+            [
+                'M-0000-0000-0001' => $lpaOne,
+                'M-0000-0000-0002' => $lpaTwo,
+            ],
+            $seen,
+        );
+    }
+
+    /**
+     * Fulfils a lookup in the same way as DataStoreLpas, invoking the callback for each LPA.
+     *
+     * @param array<string, LpaInterface> $lpas
+     */
+    private function fulfilLookup(array $lpas, ?callable $onLpa): PromiseInterface
+    {
+        $promises = [];
+        foreach ($lpas as $uid => $lpa) {
+            $promises[] = $onLpa !== null ? $onLpa($lpa, $uid) : null;
+        }
+
+        return Utils::all($promises)->then(fn (): array => array_values($lpas));
     }
 
     private function createLpa(string $uid): LpaInterface

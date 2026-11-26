@@ -7,6 +7,9 @@ namespace AppTest\DataAccess\Cache;
 use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\Cache\CachedSiriusLpas;
 use App\DataAccess\Repository\Response\LpaInterface;
+use GuzzleHttp\Promise\Create;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Utils;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -99,25 +102,22 @@ class CachedSiriusLpasTest extends TestCase
 
         $this->siriusLpas
             ->expects($this->exactly(2))
-            ->method('lookup')
-            ->willReturnMap(
-                [
+            ->method('lookupAsync')
+            ->willReturnCallback(
+                fn (array $uids, ?callable $onLpa): PromiseInterface => match ($uids) {
                     [
-                        [
-                            '700000000002',
-                            '700000000003',
-                            '700000000004',
-                        ],
+                        '700000000002',
+                        '700000000003',
+                        '700000000004',
+                    ] => $this->fulfilLookup(
                         [
                             '700000000002' => $lpaTwo,
                             '700000000003' => $lpaThree,
                         ],
-                    ],
-                    [
-                        ['700000000004'],
-                        [],
-                    ],
-                ]
+                        $onLpa,
+                    ),
+                    ['700000000004'] => $this->fulfilLookup([], $onLpa),
+                }
             );
 
         $sut = $this->createCachedSiriusLpas();
@@ -153,7 +153,7 @@ class CachedSiriusLpasTest extends TestCase
             ->with('700000000001')
             ->willReturn($lpa);
 
-        $this->siriusLpas->expects($this->never())->method('lookup');
+        $this->siriusLpas->expects($this->never())->method('lookupAsync');
 
         $sut = $this->createCachedSiriusLpas();
 
@@ -172,6 +172,66 @@ class CachedSiriusLpasTest extends TestCase
 
         $sut = new CachedSiriusLpas($this->siriusLpas, $this->createCache(), $logger);
         $sut->get('700000000001');
+    }
+
+    #[Test]
+    public function it_should_invoke_the_callback_for_cached_and_fetched_lpas(): void
+    {
+        $lpaOne = $this->createStub(LpaInterface::class);
+        $lpaTwo = $this->createStub(LpaInterface::class);
+
+        $this->siriusLpas->method('get')->willReturn($lpaOne);
+        $this->siriusLpas
+            ->expects($this->once())
+            ->method('lookupAsync')
+            ->with(['700000000002'])
+            ->willReturnCallback(
+                fn (array $uids, ?callable $onLpa): PromiseInterface => $this->fulfilLookup(
+                    ['700000000002' => $lpaTwo],
+                    $onLpa,
+                ),
+            );
+
+        $sut = $this->createCachedSiriusLpas();
+        $sut->get('700000000001');
+
+        $seen   = [];
+        $result = $sut
+            ->lookupAsync(
+                [
+                    '700000000001',
+                    '700000000002',
+                ],
+                function (LpaInterface $lpa, string $uid) use (&$seen): PromiseInterface {
+                    return Create::promiseFor(null)->then(function () use ($lpa, $uid, &$seen): void {
+                        $seen[$uid] = $lpa;
+                    });
+                },
+            )
+            ->wait();
+
+        $expected = [
+            '700000000001' => $lpaOne,
+            '700000000002' => $lpaTwo,
+        ];
+
+        $this->assertSame($expected, $result);
+        $this->assertSame($expected, $seen);
+    }
+
+    /**
+     * Fulfils a lookup in the same way as SiriusLpas, invoking the callback for each LPA.
+     *
+     * @param array<string, LpaInterface> $lpas
+     */
+    private function fulfilLookup(array $lpas, ?callable $onLpa): PromiseInterface
+    {
+        $promises = [];
+        foreach ($lpas as $uid => $lpa) {
+            $promises[] = $onLpa !== null ? $onLpa($lpa, (string) $uid) : null;
+        }
+
+        return Utils::all($promises)->then(fn (): array => $lpas);
     }
 
     private function createCachedSiriusLpas(): CachedSiriusLpas

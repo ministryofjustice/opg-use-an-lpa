@@ -20,9 +20,10 @@ use Aws\EventBridge\EventBridgeClient;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use Fig\Http\Message\StatusCodeInterface;
+use Generator;
 use GuzzleHttp\Client;
-use GuzzleHttp\Pool;
-use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use GuzzleHttp\Promise\Each;
+use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -39,6 +40,8 @@ use Throwable;
  */
 class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLetterInterface
 {
+    private const int CONCURRENCY = 50;
+
     /** @psalm-var Client */
     protected readonly ClientInterface $httpClient;
 
@@ -72,65 +75,58 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
 
     public function lookup(array $uids): array
     {
-        // Builds an array of Requests to send
-        // The key for each request is the original uid.
+        return $this->lookupAsync($uids)->wait();
+    }
+
+    public function lookupAsync(array $uids, ?callable $onLpa = null): PromiseInterface
+    {
         $signer   = $this->createRequestSigner();
-        $requests = array_combine(
-            $uids,  // Use as array key
-            array_map(function ($v) use ($signer) {
-                $url     = $this->apiBaseUri . sprintf('/v1/use-an-lpa/lpas/%s', $v);
-                $request = $this->requestFactory->createRequest('GET', $url);
-                $request = $this->attachHeaders($request);
+        $requests = [];
+        foreach (array_unique($uids) as $uid) {
+            $url     = $this->apiBaseUri . sprintf('/v1/use-an-lpa/lpas/%s', $uid);
+            $request = $this->attachHeaders($this->requestFactory->createRequest('GET', $url));
 
-                return $signer->sign($request);
-            }, $uids)
-        );
-
-        /** @var ResponseInterface[] $results */
-        $results = [];
-
-        $pool = new Pool(
-            $this->httpClient,
-            $requests,
-            [
-                'concurrency' => 50,
-                'fulfilled'   => function (GuzzleResponse $response, int $id) use (&$results) {
-                    $results[$id] = $response;
-                },
-                'rejected'    => function ($reason, $id) {
-                    // Log?
-                },
-            ]
-        );
-
-        // Initiate transfers and create a promise
-        $promise = $pool->promise();
-
-        // Force the pool of requests to complete
-        $promise->wait();
-
-        // Handle all request response now
-        foreach ($results as $uid => $result) {
-            $statusCode = $result->getStatusCode();
-            switch ($statusCode) {
-                case 200:
-                    $results[$uid] = $this->formatSingleLpaResponse($result);
-                    break;
-                default:
-                    $this->logger->warning(
-                        'Unexpected {status} response from gateway for request of LPA {lpaUid}',
-                        [
-                            'event_code' => EventCodes::UNEXPECTED_DATA_LPA_API_RESPONSE,
-                            'status'     => $statusCode,
-                            'lpaUid'     => $uid,
-                        ]
-                    );
-                    unset($results[$uid]);
-            }
+            $requests[] = [
+                $uid,
+                $signer->sign($request),
+            ];
         }
 
-        /** @var LpaInterface[] */
-        return $results;
+        /** @var LpaInterface[] $results */
+        $results = [];
+
+        $promises = (function () use ($requests, $onLpa, &$results): Generator {
+            foreach ($requests as [$uid, $request]) {
+                yield $this->sendAsync($request)->then(
+                    function (ResponseInterface $response) use ($uid, $onLpa, &$results): mixed {
+                        $lpa = $this->handleLpaResponse($uid, $response);
+                        if ($lpa === null) {
+                            return null;
+                        }
+
+                        $results[$uid] = $lpa;
+
+                        return $onLpa !== null ? $onLpa($lpa, $uid) : null;
+                    },
+                    function (mixed $reason) use ($uid): void {
+                        $this->logger->warning(
+                            'Unable to request LPA {lpaUid} from gateway',
+                            [
+                                'event_code' => EventCodes::UNEXPECTED_DATA_LPA_API_RESPONSE,
+                                'lpaUid'     => $uid,
+                                'reason'     => $reason instanceof Throwable ? $reason->getMessage() : $reason,
+                            ]
+                        );
+                    },
+                );
+            }
+        })();
+
+        // Each LPA promise includes the work done by the callback so the concurrency limit applies to both
+        return Each::ofLimitAll($promises, self::CONCURRENCY)
+            ->then(function () use (&$results): array {
+                return $results;
+            });
     }
 
     public function requestLetter(LpaUid $caseId, ?string $actorId, ?string $additionalInfo): void
@@ -208,6 +204,28 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
                 $exception,
             );
         }
+    }
+
+    /**
+     * @throws ApiException
+     */
+    private function handleLpaResponse(string $uid, ResponseInterface $response): ?Lpa
+    {
+        $statusCode = $response->getStatusCode();
+        if ($statusCode === StatusCodeInterface::STATUS_OK) {
+            return $this->formatSingleLpaResponse($response);
+        }
+
+        $this->logger->warning(
+            'Unexpected {status} response from gateway for request of LPA {lpaUid}',
+            [
+                'event_code' => EventCodes::UNEXPECTED_DATA_LPA_API_RESPONSE,
+                'status'     => $statusCode,
+                'lpaUid'     => $uid,
+            ]
+        );
+
+        return null;
     }
 
     /**

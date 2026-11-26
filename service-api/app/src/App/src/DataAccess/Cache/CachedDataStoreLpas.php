@@ -7,7 +7,8 @@ namespace App\DataAccess\Cache;
 use App\DataAccess\ApiGateway\DataStoreLpas;
 use App\DataAccess\Repository\AuditableLpasInterface;
 use App\DataAccess\Repository\Response\LpaInterface;
-use App\Entity\Lpa;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\Utils;
 use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
 
@@ -68,22 +69,29 @@ final class CachedDataStoreLpas implements AuditableLpasInterface
 
     public function lookup(array $uids): array
     {
+        return $this->lookupAsync($uids)->wait();
+    }
+
+    public function lookupAsync(array $uids, ?callable $onLpa = null): PromiseInterface
+    {
         if ($this->originatorId === null) {
             $this->logger->debug(
                 'Data store LPA cache bypassed for lookup of {count} LPAs as no originator id is set',
                 ['count' => count($uids)],
             );
 
-            return $this->dataStoreLpas->lookup($uids);
+            return $this->dataStoreLpas->lookupAsync($uids, $onLpa);
         }
 
         $uids         = array_values(array_unique($uids));
         $originatorId = $this->originatorId;
         $results      = [];
+        $promises     = [];
         foreach ($uids as $uid) {
             $lpa = $this->cache->get($this->cacheKey($originatorId, $uid));
             if ($lpa instanceof LpaInterface) {
                 $results[$uid] = $lpa;
+                $promises[]    = $onLpa !== null ? $onLpa($lpa, $uid) : null;
             }
         }
 
@@ -100,18 +108,22 @@ final class CachedDataStoreLpas implements AuditableLpasInterface
         );
 
         if ($missing !== []) {
-            foreach ($this->dataStoreLpas->lookup($missing) as $lpa) {
-                $data = $lpa->getData();
-                if ($data instanceof Lpa) {
-                    $uid           = $data->getUid();
-                    $results[$uid] = $lpa;
-                    $this->cache->set($this->cacheKey($originatorId, $uid), $lpa);
-                }
-            }
+            $promises[] = $this->dataStoreLpas
+                ->lookupAsync(
+                    $missing,
+                    function (LpaInterface $lpa, string $uid) use ($onLpa, $originatorId, &$results): mixed {
+                        $results[$uid] = $lpa;
+                        $this->cache->set($this->cacheKey($originatorId, $uid), $lpa);
+
+                        return $onLpa !== null ? $onLpa($lpa, $uid) : null;
+                    },
+                );
         }
 
         // Why datastore lpas don't have keys and sirius ones do? Unsure.
-        return array_values($results);
+        return Utils::all($promises)->then(function () use (&$results): array {
+            return array_values($results);
+        });
     }
 
     private function cacheKey(string $originatorId, string $uid): string

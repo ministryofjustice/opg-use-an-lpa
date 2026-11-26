@@ -27,6 +27,8 @@ use App\Value\LpaUid;
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
+use GuzzleHttp\Promise\Create;
+use GuzzleHttp\Promise\PromiseInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -67,9 +69,14 @@ class CombinedLpaManagerTest extends TestCase
         $this->rejectInvalidLpaMock   = $this->createMock(RejectInvalidLpa::class);
         $this->loggerMock             = $this->createMock(LoggerInterface::class);
         $this->sessionLpaCacheMock    = $this->createMock(SessionLpaCacheInterface::class);
-        $this->sessionLpaCacheMock->method('lookup')->willReturnCallback(
-            static function (array $uids, ?string $sessionId, callable $lookup): array {
-                return $uids === [] ? [] : $lookup(array_values($uids));
+        $this->sessionLpaCacheMock->method('lookupAsync')->willReturnCallback(
+            static function (
+                array $uids,
+                ?string $sessionId,
+                callable $lookup,
+                ?callable $onLpa = null,
+            ): PromiseInterface {
+                return $uids === [] ? Create::promiseFor([]) : $lookup(array_values($uids), $onLpa);
             },
         );
     }
@@ -124,9 +131,9 @@ class CombinedLpaManagerTest extends TestCase
             ->with($testUserId)
             ->willReturnSelf();
         $this->dataStoreLpasMock
-            ->method('lookup')
+            ->method('lookupAsync')
             ->with([$dataStoreLpaResponse->getData()->uId ?? ''])
-            ->willReturn([$dataStoreLpaResponse]);
+            ->willReturn(Create::promiseFor([$dataStoreLpaResponse]));
         $this->resolveActorMock
             ->method('__invoke')
             ->with(
@@ -197,22 +204,22 @@ class CombinedLpaManagerTest extends TestCase
                 ]
             );
         $this->siriusLpasMock
-            ->method('lookup')
+            ->method('lookupAsync')
             ->with([$siriusLpaResponse->getData()->uId])
-            ->willReturn(
+            ->willReturn(Create::promiseFor(
                 [
                     $siriusLpaResponse->getData()->uId ?? '' => $siriusLpaResponse,
                 ],
-            );
+            ));
         $this->dataStoreLpasMock
             ->expects($this->once())
             ->method('setOriginatorId')
             ->with($testUserId)
             ->willReturnSelf();
         $this->dataStoreLpasMock
-            ->method('lookup')
+            ->method('lookupAsync')
             ->with([$dataStoreLpaResponse->getData()->uId ?? ''])
-            ->willReturn([$dataStoreLpaResponse]);
+            ->willReturn(Create::promiseFor([$dataStoreLpaResponse]));
         $this->resolveActorMock
             ->method('__invoke')
             ->willReturnMap(
@@ -290,9 +297,9 @@ class CombinedLpaManagerTest extends TestCase
                 ]
             );
         $this->siriusLpasMock
-            ->method('lookup')
+            ->method('lookupAsync')
             ->with(['700000000047'])
-            ->willReturn([]);
+            ->willReturn(Create::promiseFor([]));
 
         $service = $this->getLpaService();
         $result  = $service->getAllActiveForUser($testUserId);
@@ -1152,21 +1159,21 @@ class CombinedLpaManagerTest extends TestCase
         $this->isValidLpaMock->method('__invoke')->willReturn(true);
 
         $this->siriusLpasMock->expects($cached ? self::never() : self::once())
-            ->method('lookup')
+            ->method('lookupAsync')
             ->with([$siriusUid])
-            ->willReturn([$siriusUid => $sirius]);
+            ->willReturn(Create::promiseFor([$siriusUid => $sirius]));
         $this->dataStoreLpasMock->expects($cached ? self::never() : self::once())
             ->method('setOriginatorId')
             ->with('user')
             ->willReturnSelf();
         $this->dataStoreLpasMock->expects($cached ? self::never() : self::once())
-            ->method('lookup')
+            ->method('lookupAsync')
             ->with([$storeUid])
-            ->willReturn([$store]);
+            ->willReturn(Create::promiseFor([$store]));
 
         $this->sessionLpaCacheMock = $this->createMock(SessionLpaCacheInterface::class);
         $this->sessionLpaCacheMock->expects(self::exactly(4))
-            ->method('lookup')
+            ->method('lookupAsync')
             ->with(
                 self::callback(static fn (array $uids): bool => in_array(
                     $uids,
@@ -1185,19 +1192,20 @@ class CombinedLpaManagerTest extends TestCase
                     array $uids,
                     ?string $session,
                     callable $lookup,
+                    ?callable $onLpa = null,
                 ) use (
                     $cached,
                     $siriusUid,
                     $sirius,
                     $store,
-                ): array {
+                ): PromiseInterface {
                     if ($uids === []) {
-                        return [];
+                        return Create::promiseFor([]);
                     }
 
                     return $cached
-                        ? ($uids === [$siriusUid] ? [$siriusUid => $sirius] : [$store])
-                        : $lookup($uids);
+                        ? Create::promiseFor($uids === [$siriusUid] ? [$siriusUid => $sirius] : [$store])
+                        : $lookup($uids, $onLpa);
                 },
             );
 
