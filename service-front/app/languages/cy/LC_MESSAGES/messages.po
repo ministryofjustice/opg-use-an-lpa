@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-23 12:35+0000\n"
+"PO-Revision-Date: 2026-11-27 11:30+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -6077,3 +6077,7 @@ msgstr "[no-hint]"
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:48
 msgid "request-activation-key.your-name.field-last-name.hint"
 msgstr "[no-hint]"
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:21
+msgid "Access code expires today"
+msgstr "Daw’r cod mynediad i ben heddiw"
