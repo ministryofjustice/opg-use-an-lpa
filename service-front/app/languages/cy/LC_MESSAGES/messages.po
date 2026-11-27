@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-27 11:47+0000\n"
+"PO-Revision-Date: 2026-11-27 14:17+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -1818,7 +1818,7 @@ msgstr "<a class=\"govuk-link\" href=\"%link%\">Rhowch wybod i ni os yw eich man
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:51
 msgid "We need to know if:"
-msgstr "Mae arnom angen gwybod:"
+msgstr "Mae angen i ni wybod:"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:54
 msgid "you’ve moved house - so we can post the key to the right address"
@@ -5770,7 +5770,7 @@ msgid "request-activation-key.info.content-details-changed"
 msgstr ""
 "<p class=\"govuk-body\">Os nad yw eich manylion cywir gennym, ni fyddwch yn gallu derbyn cod actifadu.</p>\n"
 "<p class=\"govuk-body\"><a class=\"govuk-link\" href=\"%link%\">Rhowch wybod i ni os yw eich manylion wedi newid</a> a chithau heb ddweud wrthym.</p>\n"
-"<p class=\"govuk-body\">Mae arnom angen gwybod:</p>\n"
+"<p class=\"govuk-body\">Mae angen i ni wybod:</p>\n"
 "<ul class=\"govuk-list govuk-list--bullet\">\n"
 "<li>os ydych wedi symud tŷ – er mwyn i ni allu postio’r cod i’r cyfeiriad cywir</li>\n"
 "<li>os ydych wedi newid eich enw</li>\n"
