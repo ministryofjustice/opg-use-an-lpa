@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-27 11:47+0000\n"
+"PO-Revision-Date: 2026-11-27 14:58+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -121,11 +121,11 @@ msgstr "Bydd eich <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">adbo
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:12
 msgid "VIEWED"
-msgstr "GWELD"
+msgstr "WEDI AGOR YR LPA"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:14
 msgid "NOT VIEWED"
-msgstr "HEB WELD YR LPA"
+msgstr "HEB AGOR YR LPA"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:21
 msgid "Access code expires in %count% day"
@@ -155,11 +155,11 @@ msgstr "Crëwyd gan"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:49
 msgid "LPA viewed"
-msgstr "Wedi gweld yr LPA"
+msgstr "Wedi agor yr LPA"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:61
 msgid "Viewed"
-msgstr "Gweld"
+msgstr "Wedi’i hagor"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:65
 msgid "%organisation% on %date%"
@@ -167,7 +167,7 @@ msgstr "%organisation% ar %date%"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:71
 msgid "Not viewed"
-msgstr "Heb weld yr LPA"
+msgstr "Heb agor yr LPA"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:79
 #: src/Common/templates/common/cookies.html.twig:105
@@ -1108,7 +1108,7 @@ msgstr "Rydych ar fin canslo cod mynediad"
 
 #: src/Actor/templates/actor/confirm-cancel-code.html.twig:15
 msgid "Doing this will stop the organisation from accessing the <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You can give access again by creating a new code."
-msgstr "Bydd gwneud hyn yn atal y sefydliad rhag gweld y crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> . Gallwch roi mynediad unwaith eto i’r sefydliad drwy greu cod newydd."
+msgstr "Bydd gwneud hyn yn atal y sefydliad rhag gweld y crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Gallwch roi mynediad unwaith eto i’r sefydliad drwy greu cod newydd."
 
 #: src/Actor/templates/actor/confirm-cancel-code.html.twig:25
 msgid "No, return to access codes"
@@ -1818,7 +1818,7 @@ msgstr "<a class=\"govuk-link\" href=\"%link%\">Rhowch wybod i ni os yw eich man
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:51
 msgid "We need to know if:"
-msgstr "Mae arnom angen gwybod:"
+msgstr "Mae angen i ni wybod:"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:54
 msgid "you’ve moved house - so we can post the key to the right address"
@@ -2564,7 +2564,7 @@ msgstr "Dymuniadau a chyfarwyddiadau"
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:21
 msgid "If an <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences or instructions (also known as restrictions and conditions), we show a scanned image in the LPA summary. The scanned image is also shown to anyone you give an access code to."
-msgstr "Os oes gan <abbr title=“atwrneiaeth arhosol”>LPA</abbr> ddymuniadau a chyfarwyddiadau (a elwir hefyd yn gyfyngiadau ac amodau), byddwn yn dangos delwedd wedi’i sganio ohonynt yng nghrynodeb yr LPA. Bydd y ddelwedd wedi’i sganio hefyd yn cael ei dangos i unrhyw un rydych chi’n rhoi cod mynediad iddynt."
+msgstr "Os oes gan <abbr title=\"“atwrneiaeth\">LPA</abbr> ddymuniadau a chyfarwyddiadau (a elwir hefyd yn gyfyngiadau ac amodau), byddwn yn dangos delwedd wedi’i sganio ohonynt yng nghrynodeb yr LPA. Bydd y ddelwedd wedi’i sganio hefyd yn cael ei dangos i unrhyw un rydych chi’n rhoi cod mynediad iddynt."
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:28
 msgid "You’ll need to show organisations the paper LPA if any part of your preferences and instructions cannot be read properly."
@@ -5770,7 +5770,7 @@ msgid "request-activation-key.info.content-details-changed"
 msgstr ""
 "<p class=\"govuk-body\">Os nad yw eich manylion cywir gennym, ni fyddwch yn gallu derbyn cod actifadu.</p>\n"
 "<p class=\"govuk-body\"><a class=\"govuk-link\" href=\"%link%\">Rhowch wybod i ni os yw eich manylion wedi newid</a> a chithau heb ddweud wrthym.</p>\n"
-"<p class=\"govuk-body\">Mae arnom angen gwybod:</p>\n"
+"<p class=\"govuk-body\">Mae angen i ni wybod:</p>\n"
 "<ul class=\"govuk-list govuk-list--bullet\">\n"
 "<li>os ydych wedi symud tŷ – er mwyn i ni allu postio’r cod i’r cyfeiriad cywir</li>\n"
 "<li>os ydych wedi newid eich enw</li>\n"
