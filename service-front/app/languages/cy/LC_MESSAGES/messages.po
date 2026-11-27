@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-11-23 12:35+0000\n"
+"PO-Revision-Date: 2026-11-27 11:47+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -653,7 +653,7 @@ msgstr "yw’r <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> yn parhau i fod
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:25
 msgid "you have not been removed as an attorney"
-msgstr "nad yw eich new wedi ei dynnu oddi ar rhestr atwrneiod yr LPA"
+msgstr "nad yw eich enw wedi ei dynnu oddi ar rhestr atwrneiod yr LPA"
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:28
 msgid "Return to settings"
@@ -3385,7 +3385,7 @@ msgstr "Cyfeirnod yr <abbr title=\"atwrneiaethau arhosol\">LPA</abbr>"
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:215
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:86
 msgid "Some words in these preferences or instructions have been removed by the Court of Protection. To check which words have been removed, please ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr> or the court order."
-msgstr "Mae rhai geiriau wedi eu tynnu o’r dymuniadau neu'r cyfarwyddiadau hyn gan y Llys Gwarchod. I weld pa eiriau a dynnwyd, gofynnwch i gael gweld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur neu’r gorchymyn llys."
+msgstr "Mae rhai geiriau wedi eu tynnu o’r dymuniadau neu'r cyfarwyddiadau hyn gan y Llys Gwarchod. I weld pa eiriau a dynnwyd, gofynnwch am gael gweld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur neu’r gorchymyn llys."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:229
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:99
@@ -3934,7 +3934,7 @@ msgstr "Cod mynediad LPA wedi darfod"
 
 #: src/Viewer/templates/viewer/check-code-expired.html.twig:10
 msgid "The access code you entered has expired"
-msgstr "Mae’r cod mynediad a roesoch wedi dod"
+msgstr "Mae’r cod mynediad a roesoch wedi dod i ben"
 
 #: src/Viewer/templates/viewer/check-code-cancelled.html.twig:14
 #: src/Viewer/templates/viewer/check-code-expired.html.twig:12
@@ -4393,7 +4393,7 @@ msgstr "Mae’r cod gwirio ar bapur a roddwyd gennych wedi dod i ben"
 
 #: src/Viewer/templates/viewer/paper-verification/code-expired.html.twig:12
 msgid "To see this <abbr title=\"lasting power of attorney\">LPA</abbr>, ask the donor or attorney you are dealing with for the new paper verification code that was sent to them."
-msgstr "I weld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon, gofynnwch i gofynnwch i’r rhoddwr neu’r atwrnai yr ydych yn delio â nhw am y cod dilysu ar bapur newydd a anfonwyd atynt."
+msgstr "I weld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon, gofynnwch i’r rhoddwr neu’r atwrnai yr ydych yn delio â nhw am y cod gwirio papur newydd a anfonwyd atynt."
 
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:22
 msgid "Enter the total number of attorneys listed on the notice of registration including %attorneyName%"
@@ -6077,3 +6077,7 @@ msgstr "[no-hint]"
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:48
 msgid "request-activation-key.your-name.field-last-name.hint"
 msgstr "[no-hint]"
+
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:21
+msgid "Access code expires today"
+msgstr "Daw’r cod mynediad i ben heddiw"
